@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Max Core Token Export</title>
+<style>
+  :root {
+    --bg: var(--figma-color-bg, #ffffff);
+    --bg-secondary: var(--figma-color-bg-secondary, #f5f5f5);
+    --text: var(--figma-color-text, #1e1e1e);
+    --text-secondary: var(--figma-color-text-secondary, #5e5e5e);
+    --border: var(--figma-color-border, #e5e5e5);
+    --accent: var(--figma-color-bg-brand, #0d99ff);
+    --accent-text: var(--figma-color-text-onbrand, #ffffff);
+    --danger: var(--figma-color-bg-danger, #f24822);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 16px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 12px;
+    color: var(--text);
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 220px;
+  }
+  h1 {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  p {
+    margin: 0;
+    color: var(--text-secondary);
+    line-height: 1.45;
+  }
+  .status {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--bg-secondary);
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 11px;
+    white-space: pre-wrap;
+    overflow-y: auto;
+    min-height: 60px;
+  }
+  .status.error { color: var(--danger); }
+  .actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+  button {
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  button.primary {
+    background: var(--accent);
+    color: var(--accent-text);
+    border-color: var(--accent);
+  }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+</style>
+</head>
+<body>
+  <h1>Max Core Token Export</h1>
+  <p>Reads Primitives, Semantics and Colors collections from the open Figma file and downloads a <code>tokens.json</code> matching the <code>@max-core/tokens</code> contract.</p>
+  <div class="status" id="status">Ready to export.</div>
+  <div class="actions">
+    <button id="cancel">Cancel</button>
+    <button id="export" class="primary">Export tokens.json</button>
+  </div>
+
+  <script>
+    const statusEl = document.getElementById('status');
+    const exportBtn = document.getElementById('export');
+    const cancelBtn = document.getElementById('cancel');
+
+    function setStatus(text, isError) {
+      statusEl.textContent = text;
+      statusEl.classList.toggle('error', !!isError);
+    }
+
+    function triggerDownload(payload, counts) {
+      const json = JSON.stringify(payload, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'tokens.json';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      const summary =
+        '✓ Downloaded tokens.json\n' +
+        '  ' + counts.primitives + ' primitives\n' +
+        '  ' + counts.semantics + ' semantics\n' +
+        '  ' + counts.light + ' light colors\n' +
+        '  ' + counts.dark + ' dark colors';
+      setStatus(summary, false);
+      exportBtn.disabled = false;
+    }
+
+    exportBtn.onclick = () => {
+      exportBtn.disabled = true;
+      setStatus('Exporting…');
+      parent.postMessage({ pluginMessage: { type: 'export' } }, '*');
+    };
+
+    cancelBtn.onclick = () => {
+      parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*');
+    };
+
+    window.onmessage = (event) => {
+      const msg = event.data && event.data.pluginMessage;
+      if (!msg) return;
+      if (msg.type === 'tokens') {
+        triggerDownload(msg.payload, msg.counts);
+      } else if (msg.type === 'status') {
+        setStatus(msg.text);
+      } else if (msg.type === 'error') {
+        setStatus('Error: ' + msg.message, true);
+        exportBtn.disabled = false;
+      }
+    };
+  </script>
+</body>
+</html>

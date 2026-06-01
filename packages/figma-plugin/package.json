@@ -1,0 +1,18 @@
+{
+  "name": "@max-core/figma-plugin",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Max Core token export plugin for Figma Desktop",
+  "type": "module",
+  "scripts": {
+    "build": "node esbuild.config.mjs",
+    "dev": "node esbuild.config.mjs --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@figma/plugin-typings": "^1.111.0",
+    "@max-core/tokens": "workspace:*",
+    "esbuild": "^0.28.0",
+    "typescript": "^5.7.2"
+  }
+}

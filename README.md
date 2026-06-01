@@ -1,0 +1,417 @@
+# Max Core
+
+A parameterized React design system **template** driven by Figma variables.
+
+Max Core is not a single design system — it's a starting point that consuming
+organizations clone, fork, and customize. The same component code can power
+any number of branded design systems; what differs is the `tokens.json` each
+consumer maintains in sync with their own Figma file.
+
+The headline claim: **designer changes a variable in Figma → plugin exports JSON
+→ CLI syncs it into the repo → CSS regenerates → every component reflects
+the change.** No code edits required for token updates.
+
+---
+
+## Quick start
+
+```bash
+# Install all workspace dependencies
+pnpm install
+
+# Generate tokens.css from tokens.json
+pnpm -F @max-core/tokens build
+
+# Open Storybook (component workshop)
+pnpm storybook
+
+# Full build (all packages + storybook static site)
+pnpm build
+```
+
+---
+
+## Project structure
+
+```
+max-core/
+├── CLAUDE.md                         # Agent guardrails and project rules
+├── PLAN.md                           # Phase-by-phase implementation plan
+├── docs/
+│   ├── MAX-CORE-SUMMARY.md           # System specification
+│   ├── CLAUDE-ARCHIVE.md             # Historical component QA notes
+│   └── max-core-business-plan.md     # Product strategy
+├── packages/
+│   ├── tokens/                       # @max-core/tokens
+│   ├── react/                        # @max-core/react
+│   └── figma-plugin/                 # @max-core/figma-plugin
+├── apps/
+│   └── storybook/                    # Storybook 10 component workshop
+├── package.json                      # Workspace root scripts
+├── pnpm-workspace.yaml               # Workspace package paths
+├── turbo.json                        # Task orchestration
+├── biome.json                        # Lint + format
+└── tsconfig.base.json                # Shared TypeScript config
+```
+
+---
+
+## Packages
+
+### `@max-core/tokens`
+
+**What it is.** The token source of truth + the build pipeline that turns it
+into something usable.
+
+**What's inside.**
+
+- `src/tokens.json` — the canonical token data, mirroring the cascade in the
+  Figma file (Primitives → Semantics → Colors with light/dark modes).
+- `src/transform.ts` — pure function: token tree → CSS string with `:root` +
+  `[data-theme="dark"]` blocks.
+- `src/cli.ts` — entrypoint that reads the JSON, runs the transform, writes
+  `dist/tokens.css`.
+- `src/sync.ts` — CLI that ingests a fresh `tokens.json` produced by the Figma
+  plugin (default location: `~/Downloads/tokens.json`).
+- `src/types.ts` — the `TokensFile` interface, shared with the Figma plugin
+  package.
+
+**How to use it.**
+
+```bash
+# Build CSS variables from the current tokens.json
+pnpm -F @max-core/tokens build
+
+# Sync from a fresh plugin export (preview first)
+pnpm -F @max-core/tokens sync --dry-run
+pnpm -F @max-core/tokens sync
+
+# Sync from a custom location
+pnpm -F @max-core/tokens sync --input /path/to/tokens.json
+```
+
+**What it produces.**
+
+```css
+/* dist/tokens.css */
+:root {
+  --spacing-04: 4px;
+  --accent-default: #4F46E5;
+  --bg-surface: #FFFFFF;
+  /* ...156 variables */
+}
+[data-theme="dark"] {
+  --accent-default: #818CF8;
+  --bg-surface: #1E293B;
+  /* ...51 dark-mode overrides */
+}
+```
+
+The `tokens.json` is **committed to git** — it's the source of build, not
+a build artifact. Anyone can clone the repo and produce `tokens.css`
+without needing Figma access.
+
+---
+
+### `@max-core/react`
+
+**What it is.** The React component library. Atoms today; molecules and
+organisms in future phases.
+
+**What's inside.**
+
+- `src/components/Button` — 3 variants × 4 tones × 4 sizes, with optional
+  left/right icons. Built on Base UI's `Button` primitive.
+- `src/components/Avatar` — 5 sizes, image with initials fallback. Base UI
+  `Avatar.{Root, Image, Fallback}`.
+- `src/components/Badge` — 5 tones × 3 sizes. Pure visual atom (no Base UI
+  dependency).
+- `src/components/Tag` — 3 variants × 4 tones × 2 sizes, with `selected`
+  state and optional icons.
+- `src/components/Input` — 3 sizes, with label / helper / error states. Base
+  UI `Field` + `Input`.
+- `src/utils/cn.ts` — `clsx` + `tailwind-merge` helper used by every
+  component.
+
+**How consumers use it.**
+
+```tsx
+import { Button, Avatar, Input } from '@max-core/react';
+import { Plus } from 'lucide-react';
+
+<Button variant="primary" tone="danger" size="l" leftIcon={<Plus size={20} />}>
+  Add user
+</Button>
+<Avatar src={src} fallback="JD" size="m" />
+<Input label="Email" placeholder="you@example.com" />
+```
+
+**What you'll need on the consumer side.**
+
+1. Import `@max-core/tokens/tokens.css` in your global CSS entry.
+2. Tailwind v4 (or any CSS that supports `var()`) so the utility classes
+   resolve our CSS variables.
+3. Your own icon library — components accept `ReactNode` for `leftIcon` /
+   `rightIcon`. We don't bundle icons; Storybook uses `lucide-react` (matches
+   the Figma file).
+
+**Variants are CVA-driven.** Each component uses `class-variance-authority`
+for variant matrices. Adding a new variant is a few lines in the `cva()`
+call.
+
+**Build.**
+
+```bash
+pnpm -F @max-core/react build
+# → dist/index.js (ESM), dist/index.cjs (CJS), dist/index.d.ts (types)
+```
+
+---
+
+### `@max-core/figma-plugin`
+
+**What it is.** A Figma Desktop plugin that reads the Max Core file's
+variables and exports a `tokens.json` matching `@max-core/tokens`'s contract.
+
+**Why it exists.** The Figma REST API for variables requires an Enterprise
+plan. The Plugin API works on any tier. This is the "any tier" bridge.
+
+**What's inside.**
+
+- `manifest.json` — Figma plugin manifest. Declares `editorType: ["figma",
+  "dev"]` and `capabilities: ["inspect"]` so it runs in design mode AND
+  Dev Mode's right-side panel.
+- `src/code.ts` — the sandbox entrypoint. Opens the UI, handles messages.
+- `src/ui.html` — Figma-themed panel with an Export button. Receives the
+  JSON, creates a `Blob`, triggers a download.
+- `src/transform.ts` — Figma Plugin API → `TokensFile`. Walks Primitives,
+  Semantics, and Colors collections, resolves alias chains, normalizes
+  naming and units.
+- `esbuild.config.mjs` — bundles `src/code.ts` to a single IIFE for the
+  sandbox.
+
+**How to install in Figma Desktop.**
+
+1. Build the plugin:
+   ```bash
+   pnpm -F @max-core/figma-plugin build
+   ```
+2. Open the Max Core file in Figma Desktop.
+3. **Plugins → Development → Import plugin from manifest…**
+4. Select `packages/figma-plugin/manifest.json`.
+5. Run the plugin from **Plugins → Development → Max Core Token Export**
+   (or from the Dev Mode panel if you're in `Shift + D`).
+
+The plugin runs only when you have **edit access** to the file (Figma
+restriction on development plugins, even read-only ones).
+
+**Output.** Downloads `tokens.json` to your browser's Downloads folder.
+Then `pnpm -F @max-core/tokens sync` pulls it into the repo.
+
+**Skipped intentionally.** The Components-level collection (Layer 3 of the
+cascade) is not exported. Current atoms read semantic tokens directly;
+component-level tokens become useful when consumers want to re-wire which
+semantic each component slot uses without code changes. Deferred to a
+later phase.
+
+---
+
+### `apps/storybook`
+
+**What it is.** A Storybook 10 app for browsing and stress-testing components.
+
+**What's inside.**
+
+- `.storybook/main.ts` — framework config (React + Vite), addon list.
+- `.storybook/preview.tsx` — global decorators including the dark-mode
+  toggle. Imports `src/global.css`.
+- `src/global.css` — Tailwind v4 entry + `@source` directives pointing at
+  `packages/react/src/**` so utility classes used there are emitted.
+- `src/stories/` — one stories file per atom + a Foundations / Tokens story
+  with color, spacing, and radius reference swatches.
+- `vite.config.ts` — wires the Tailwind v4 Vite plugin.
+
+**How to use it.**
+
+```bash
+# Dev server with hot reload
+pnpm storybook
+# → http://localhost:6006
+
+# Static build (for deployment)
+pnpm -F storybook build
+# → apps/storybook/storybook-static/
+```
+
+**The Foundations / Tokens story** is the canonical visual reference for the
+token system. Toggle dark mode (top toolbar) to verify the cascade swaps
+correctly across colors, then look at the spacing scale and radius scale
+ramps.
+
+**Storybook is not shipped to consumers.** It's a dev workshop. If you want
+to publish it as documentation, build the static site and deploy to GitHub
+Pages, Netlify, etc.
+
+---
+
+## How the token pipeline works (end-to-end)
+
+```
+┌─ Figma file ──────────────────────────────────────────────────┐
+│  Designer edits a variable (e.g. spacing/scale/16: 16 → 20).  │
+└─────────────────────────────┬─────────────────────────────────┘
+                              ↓
+┌─ Plugin ──────────────────────────────────────────────────────┐
+│  Designer (or dev) runs the Max Core Token Export plugin.     │
+│  Plugin reads all collections via Figma Plugin API, builds    │
+│  a TokensFile JSON, triggers browser download.                │
+└─────────────────────────────┬─────────────────────────────────┘
+                              ↓
+              ~/Downloads/tokens.json
+                              ↓
+┌─ Sync CLI ────────────────────────────────────────────────────┐
+│  Developer runs: pnpm -F @max-core/tokens sync                │
+│  Validates shape, diffs vs current, writes to                 │
+│  packages/tokens/src/tokens.json.                             │
+└─────────────────────────────┬─────────────────────────────────┘
+                              ↓
+       Developer commits the updated tokens.json
+                              ↓
+┌─ Build CLI ───────────────────────────────────────────────────┐
+│  pnpm -F @max-core/tokens build                               │
+│  → packages/tokens/dist/tokens.css                            │
+└─────────────────────────────┬─────────────────────────────────┘
+                              ↓
+┌─ Consumers ───────────────────────────────────────────────────┐
+│  Storybook hot-reloads, atoms reflect the new value.          │
+│  Downstream consumer apps that import @max-core/tokens get    │
+│  the same CSS when they rebuild.                              │
+└───────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Architecture decisions (brief)
+
+- **Headless library: Base UI** (`@base-ui/react`, formerly
+  `@base-ui-components/react`). Multi-select, Number Field, Drawer, OTP
+  Field, and Toast all ship native — Radix doesn't have these. Same
+  accessibility quality.
+- **Tokens are CSS variables**, not JS objects. Components read `var(--...)`
+  so a single `tokens.css` change updates the visual output without
+  rebuilding the component bundle.
+- **Tailwind v4** with arbitrary-value classes (`bg-[var(--accent-default)]`).
+  Allows direct binding to tokens without a JS config file.
+- **CVA** for variant matrices. Cleanest known pattern for "3 variants × 4
+  tones × 4 sizes" without combinatorial component duplication.
+- **No icon library in `@max-core/react`.** Icons are passed as `ReactNode`;
+  consumers pick `lucide-react` (matches Figma), `@heroicons/react`, or
+  anything else. We don't lock the choice.
+- **Monorepo via pnpm + Turborepo.** Tokens, React, Figma plugin, Storybook
+  all share workspace types and build in topological order.
+- **No tests yet.** Honest gap. See "Status" below.
+
+---
+
+## Status
+
+Phases 1 and 2 of `PLAN.md` are complete:
+
+- ✅ Repo skeleton, workspace tooling, configs
+- ✅ Token pipeline (transform CLI + sync CLI + `tokens.json` from Figma)
+- ✅ 5 atoms (Button, Avatar, Badge, Tag, Input) with CVA variants
+- ✅ Storybook with dark-mode toggle, per-atom stories, token reference
+- ✅ Figma plugin building and verified end-to-end
+
+Gaps to "production-ready":
+
+- ❌ No tests (Vitest + axe deferred)
+- ❌ ~45 more components (atoms 6-20, molecules, organisms, data table)
+- ❌ Atoms are approximations — not yet pixel-matched to Figma showcases
+- ❌ Components-level tokens (Layer 3 cascade) not yet bridged
+- ❌ Not published to npm
+- ❌ No CI/CD
+- ❌ Figma plugin not on the public Community marketplace
+
+See `PLAN.md` for what each phase contained and what's next.
+
+---
+
+## Development
+
+### Common commands (run from repo root)
+
+```bash
+pnpm install                    # Install all workspace deps
+pnpm build                      # Build everything (turbo + cache)
+pnpm typecheck                  # Run tsc across all packages
+pnpm lint                       # Biome check
+pnpm format                     # Biome format (--write)
+pnpm storybook                  # Storybook dev server
+```
+
+### Per-package commands
+
+```bash
+# Tokens
+pnpm -F @max-core/tokens build         # tokens.json → tokens.css
+pnpm -F @max-core/tokens sync          # Figma export → tokens.json
+pnpm -F @max-core/tokens sync --dry-run
+
+# React library
+pnpm -F @max-core/react build          # ESM + CJS + .d.ts
+pnpm -F @max-core/react dev            # tsup watch mode
+
+# Figma plugin
+pnpm -F @max-core/figma-plugin build   # esbuild → dist/
+pnpm -F @max-core/figma-plugin dev     # esbuild watch mode
+
+# Storybook
+pnpm -F storybook dev                  # http://localhost:6006
+pnpm -F storybook build                # storybook-static/
+```
+
+### Toolchain versions
+
+- Node 20+ (tested on 22.14)
+- pnpm 11+
+- TypeScript 5.7+, strict mode
+- Biome 1.9
+- Turborepo 2.9
+- React 18.3 (peer 18 or 19)
+- Base UI 1.5+
+- Storybook 10.4+
+- Tailwind v4
+
+### Adding a new component
+
+1. Scaffold under `packages/react/src/components/YourComponent/`:
+   - `YourComponent.tsx` — CVA + Tailwind classes reading `var(--token)`
+   - `index.ts` — re-exports
+2. Add to `packages/react/src/index.ts` barrel.
+3. Add a story under `apps/storybook/src/stories/YourComponent.stories.tsx`.
+4. Run `pnpm typecheck && pnpm storybook` to verify.
+
+Story discipline: keep named stories minimal. Use Controls for prop
+variations. Reserve separate stories for ReactNode compositions (icons,
+slots), matrix views (`AllVariants`), and states that need setup data
+(error states with prepopulated values).
+
+---
+
+## Documentation
+
+- **`PLAN.md`** — implementation plans per phase
+- **`CLAUDE.md`** — agent guardrails and project rules; references the docs
+  below via `@`-imports
+- **`docs/MAX-CORE-SUMMARY.md`** — system specification (token architecture,
+  color system, typography, component inventory)
+- **`docs/CLAUDE-ARCHIVE.md`** — historical component QA notes from the
+  Figma side of the project
+- **`docs/max-core-business-plan.md`** — product strategy
+
+---
+
+## License
+
+(To be added.)

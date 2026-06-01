@@ -1,0 +1,26 @@
+{
+  "name": "max-core",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Max Core design system — React UI library and token pipeline",
+  "type": "module",
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "storybook": "pnpm --filter storybook dev"
+  },
+  "packageManager": "pnpm@11.2.2",
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "turbo": "^2.5.4",
+    "typescript": "^5.7.2"
+  }
+}

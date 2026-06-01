@@ -1,0 +1,26 @@
+{
+  "name": "@max-core/tokens",
+  "version": "0.0.0",
+  "description": "Max Core design tokens — JSON source of truth and CSS variable generator",
+  "type": "module",
+  "exports": {
+    "./tokens.css": "./dist/tokens.css",
+    "./tokens.json": "./src/tokens.json",
+    "./types": "./src/types.ts",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "src/tokens.json"
+  ],
+  "scripts": {
+    "build": "tsx src/cli.ts",
+    "sync": "tsx src/sync.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
