@@ -76,7 +76,7 @@
 </head>
 <body>
   <h1>Max Core Token Export</h1>
-  <p>Reads Primitives, Semantics and Colors collections from the open Figma file and downloads a <code>tokens.json</code> matching the <code>@max-core/tokens</code> contract.</p>
+  <p>Reads Primitives, Semantics, Colors and Components collections plus shadow effect styles from the open Figma file and downloads a <code>tokens.json</code> matching the <code>@max-core/tokens</code> contract.</p>
   <div class="status" id="status">Ready to export.</div>
   <div class="actions">
     <button id="cancel">Cancel</button>
@@ -109,7 +109,9 @@
         '  ' + counts.primitives + ' primitives\n' +
         '  ' + counts.semantics + ' semantics\n' +
         '  ' + counts.light + ' light colors\n' +
-        '  ' + counts.dark + ' dark colors';
+        '  ' + counts.dark + ' dark colors\n' +
+        '  ' + counts.components + ' components\n' +
+        '  ' + counts.effects + ' shadow effects';
       setStatus(summary, false);
       exportBtn.disabled = false;
     }

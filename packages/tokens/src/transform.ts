@@ -5,7 +5,7 @@
  * variables under `:root` plus a `[data-theme="dark"]` override block.
  */
 
-import type { TokensFile, Tree } from './types.js';
+import type { EffectShadowLayer, TokensFile, Tree } from './types.js';
 
 function getPath(tree: Tree, path: string[]): unknown {
   let current: unknown = tree;
@@ -38,8 +38,11 @@ function resolve(value: unknown, root: Tree, trail: string[] = []): string | num
 }
 
 function cssVarName(key: string): string {
-  // `bg/surface` → `--bg-surface`, `status/danger/default` → `--status-danger-default`
-  return `--${key.replace(/\//g, '-')}`;
+  // `bg/surface` → `--bg-surface`
+  // `overlay/default black` → `--overlay-default-black` (spaces collapsed to dashes)
+  // Any non-identifier character becomes a dash; consecutive dashes collapse.
+  const normalized = key.replace(/[^a-zA-Z0-9_-]/g, '-').replace(/-+/g, '-');
+  return `--${normalized}`;
 }
 
 function px(value: string | number): string {
@@ -70,6 +73,29 @@ function emitColors(comment: string, entries: Tree, root: Tree): string {
   return lines.join('\n');
 }
 
+/**
+ * Emit shadow effect styles as composite `box-shadow` custom properties, e.g.
+ * `--effect-shadow-down-lg: 0px 2px 6px 0px var(--shadow-color-4), …;`.
+ *
+ * Geometry is mode-independent so these live in `:root` only; each layer's
+ * color is referenced via `var(--shadow-color-*)`, which carries the light/dark
+ * value, so the shadow re-tints per theme without duplicating the rule.
+ */
+function emitEffects(comment: string, effects: Record<string, EffectShadowLayer[]>): string {
+  const lines: string[] = [`  /* ${comment} */`];
+  for (const [name, layers] of Object.entries(effects)) {
+    const shadow = layers
+      .map((l) => {
+        const color = l.colorVar ? `var(${cssVarName(l.colorVar)})` : (l.color ?? 'transparent');
+        const inset = l.inset ? 'inset ' : '';
+        return `${inset}${l.x}px ${l.y}px ${l.blur}px ${l.spread}px ${color}`;
+      })
+      .join(', ');
+    lines.push(`  ${cssVarName(name)}: ${shadow};`);
+  }
+  return lines.join('\n');
+}
+
 export function generateTokensCss(tokens: TokensFile): string {
   const root = tokens as unknown as Tree;
   const sections = [
@@ -83,6 +109,10 @@ export function generateTokensCss(tokens: TokensFile): string {
     emitGroup('Opacity', tokens.semantics.opacity, root, { prefix: 'opacity', unit: 'raw' }),
     emitColors('Colors — light mode (default)', tokens.colors.light, root),
   ];
+
+  if (tokens.effects && Object.keys(tokens.effects).length > 0) {
+    sections.push(emitEffects('Effects — shadows', tokens.effects));
+  }
 
   return [
     '/**',

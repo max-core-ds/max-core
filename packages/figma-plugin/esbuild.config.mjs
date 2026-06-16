@@ -12,8 +12,10 @@ mkdirSync(outDir, { recursive: true });
 const baseOptions = {
   entryPoints: [resolve(here, 'src/code.ts')],
   bundle: true,
+  // Figma's plugin runtime rejects ES2020 syntax (`??`, `?.`); es2017 makes
+  // esbuild down-level those to compatible code while keeping async/await.
   format: 'iife',
-  target: 'es2020',
+  target: 'es2017',
   platform: 'browser',
   outfile: resolve(outDir, 'code.js'),
   logLevel: 'info',

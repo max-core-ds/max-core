@@ -1,21 +1,23 @@
 /**
  * Plugin transform: Figma variables → TokensFile.
  *
- * Walks the three relevant collections (Primitives, Semantics, Colors) in the
- * `Max core` / `Light Mode` / `Dark Mode` modes, and produces JSON matching the
- * existing `tokens.json` shape so the downstream CSS pipeline doesn't change.
- *
- * Components collection is intentionally skipped (Phase 2 scope; see PLAN.md).
+ * Walks the four relevant collections (Primitives, Semantics, Colors,
+ * Components) in the `Max core` / `Light Mode` / `Dark Mode` modes, and produces
+ * JSON matching the `tokens.json` shape. The first three feed the existing CSS
+ * pipeline unchanged; `components` is an additive, flat-keyed block (level 3/4
+ * tokens) that the CSS transform does not yet consume.
  */
 
-import type { TokensFile, Tree } from '@max-core/tokens/types';
+import type { EffectShadowLayer, TokensFile, Tree } from '@max-core/tokens/types';
 
 const PRIM_COLLECTION = 'Max Core - Primitives';
 const SEM_COLLECTION = 'Max Core - Semantics';
 const COL_COLLECTION = 'Max Core - Colors';
+const COMP_COLLECTION = 'Max Core - Components';
 
 const PRIM_MODE = 'Max core';
 const SEM_MODE = 'Max core';
+const COMP_MODE = 'Max core';
 const LIGHT_MODE = 'Light Mode';
 const DARK_MODE = 'Dark Mode';
 
@@ -264,9 +266,9 @@ function buildColors(
     // Skip palette + non-semantic-color entries (they go to primitives via the
     // primitives collection, not via colors).
     if (v.name.startsWith('Palette/') || v.name.startsWith('Grayscale/')) continue;
-    // Skip shadow/, info raw colors that don't fit the semantic mold cleanly.
-    // We DO include status/info/* (semantic) but its values are raw hex in Figma.
-    if (v.name.startsWith('shadow/')) continue;
+    // `shadow/color *` and `shadow/inner/color *` are mode-aware color
+    // variables referenced by the shadow effect styles (see buildEffects), so
+    // they ARE included here — emitted as `--shadow-color-*` / `--shadow-inner-color-*`.
 
     const raw = v.valuesByMode[modeId];
 
@@ -294,6 +296,93 @@ function buildColors(
   return out;
 }
 
+/**
+ * Components collection (`-- Atoms/...`, `-- Molecule/...`, `--Organism/...`):
+ * level 3/4 tokens read in the `Max core` (production) mode. Flat-keyed by the
+ * full Figma variable name, mirroring `buildColors`.
+ *
+ * Most component tokens alias a semantic (e.g. `-- Atoms/Buttons/Global/Radius`
+ * → `- Radius -/sm`); those emit a `{semantics.radius.sm}` reference so the
+ * cascade is preserved. Where the alias target is itself a component token
+ * (level 4 → level 3) or otherwise unmappable, we resolve to the final leaf
+ * value so the export still carries the concrete number/hex.
+ */
+function buildComponents(
+  col: VariableCollection,
+  modeId: string,
+  ctx: BuildContext,
+): Tree {
+  const out: Tree = {};
+
+  for (const vid of col.variableIds) {
+    const v = ctx.varsById.get(vid);
+    if (!v) continue;
+    const raw = v.valuesByMode[modeId];
+
+    if (isAlias(raw)) {
+      const target = ctx.varsById.get(raw.id);
+      if (!target) continue;
+      const targetRaw = target.valuesByMode[modeId];
+      const targetValue = typeof targetRaw === 'number' ? targetRaw : undefined;
+      const alias = aliasReference(target, targetValue);
+      if (alias) {
+        out[v.name] = alias;
+      } else {
+        const resolved = resolveLeaf(v, modeId, ctx);
+        if (typeof resolved === 'number' || typeof resolved === 'string') {
+          out[v.name] = resolved;
+        } else if (typeof resolved === 'object' && resolved !== null && 'r' in resolved) {
+          out[v.name] = rgbToHex(resolved as RGB);
+        }
+      }
+    } else if (typeof raw === 'number' || typeof raw === 'string') {
+      out[v.name] = raw;
+    } else if (typeof raw === 'object' && raw !== null && 'r' in raw) {
+      out[v.name] = rgbToHex(raw as RGB);
+    }
+  }
+
+  return out;
+}
+
+/**
+ * Shadow effect styles. Geometry lives in Figma Effect Styles (not variables),
+ * so this reads `getLocalEffectStylesAsync()` directly. Only DROP_SHADOW and
+ * INNER_SHADOW layers are kept — background-blur and glass map to
+ * `backdrop-filter`, not `box-shadow`, so styles with only those layers are
+ * dropped. Each kept layer records its bound `shadow/color *` variable name so
+ * the CSS transform can reference it (and inherit light/dark for free).
+ */
+async function buildEffects(ctx: BuildContext): Promise<Record<string, EffectShadowLayer[]>> {
+  const out: Record<string, EffectShadowLayer[]> = {};
+  const styles = await figma.getLocalEffectStylesAsync();
+
+  for (const s of styles) {
+    const layers: EffectShadowLayer[] = [];
+    for (const e of s.effects) {
+      if (e.type !== 'DROP_SHADOW' && e.type !== 'INNER_SHADOW') continue;
+      const layer: EffectShadowLayer = {
+        inset: e.type === 'INNER_SHADOW',
+        x: e.offset.x,
+        y: e.offset.y,
+        blur: e.radius,
+        spread: e.spread ?? 0,
+      };
+      const bound = e.boundVariables?.color;
+      const target = bound?.id ? ctx.varsById.get(bound.id) : undefined;
+      if (target) {
+        layer.colorVar = target.name;
+      } else if (e.color) {
+        layer.color = rgbToHex(e.color as RGB);
+      }
+      layers.push(layer);
+    }
+    if (layers.length > 0) out[s.name] = layers;
+  }
+
+  return out;
+}
+
 export async function buildTokensFile(): Promise<TokensFile> {
   const collections = await figma.variables.getLocalVariableCollectionsAsync();
 
@@ -310,10 +399,12 @@ export async function buildTokensFile(): Promise<TokensFile> {
   const primCol = collections.find((c) => c.name === PRIM_COLLECTION);
   const semCol = collections.find((c) => c.name === SEM_COLLECTION);
   const colCol = collections.find((c) => c.name === COL_COLLECTION);
+  const compCol = collections.find((c) => c.name === COMP_COLLECTION);
 
   if (!primCol) throw new Error(`Missing collection: ${PRIM_COLLECTION}`);
   if (!semCol) throw new Error(`Missing collection: ${SEM_COLLECTION}`);
   if (!colCol) throw new Error(`Missing collection: ${COL_COLLECTION}`);
+  if (!compCol) throw new Error(`Missing collection: ${COMP_COLLECTION}`);
 
   const findMode = (col: VariableCollection, name: string) => {
     const m = col.modes.find((mode) => mode.name === name);
@@ -323,6 +414,7 @@ export async function buildTokensFile(): Promise<TokensFile> {
 
   const primMode = findMode(primCol, PRIM_MODE);
   const semMode = findMode(semCol, SEM_MODE);
+  const compMode = findMode(compCol, COMP_MODE);
   const lightMode = findMode(colCol, LIGHT_MODE);
   const darkMode = findMode(colCol, DARK_MODE);
 
@@ -335,6 +427,8 @@ export async function buildTokensFile(): Promise<TokensFile> {
       light: buildColors(colCol, lightMode, ctx),
       dark: buildColors(colCol, darkMode, ctx),
     },
+    components: buildComponents(compCol, compMode, ctx),
+    effects: await buildEffects(ctx),
   };
 }
 
@@ -343,6 +437,8 @@ export interface ExportCounts {
   semantics: number;
   light: number;
   dark: number;
+  components: number;
+  effects: number;
 }
 
 export function countTokens(tokens: TokensFile): ExportCounts {
@@ -358,5 +454,7 @@ export function countTokens(tokens: TokensFile): ExportCounts {
     semantics: leafCount(tokens.semantics),
     light: Object.keys(tokens.colors.light).length,
     dark: Object.keys(tokens.colors.dark).length,
+    components: tokens.components ? Object.keys(tokens.components).length : 0,
+    effects: tokens.effects ? Object.keys(tokens.effects).length : 0,
   };
 }
