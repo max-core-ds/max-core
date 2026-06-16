@@ -1,7 +1,9 @@
 # Max Core Design System — Reguli pentru Claude Code
 
 @docs/MAX-CORE-SUMMARY.md
-@docs/CLAUDE-ARCHIVE.md
+
+<!-- docs/CLAUDE-ARCHIVE.md holds completed per-component QA logs. Not auto-imported (too large) — read it on demand when a task touches past component work. -->
+
 
 ## Context general
 

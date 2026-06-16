@@ -363,3 +363,41 @@ For `@max-core/tokens` — none.
 - [Figma REST API — Variables (Enterprise-only confirmation)](https://developers.figma.com/docs/rest-api/variables/)
 - [Figma plugin manifest reference](https://www.figma.com/plugin-docs/manifest/)
 - Existing project artifacts: `packages/tokens/src/{tokens.json,transform.ts,cli.ts}`, the `use_figma` script we ran in this conversation
+
+---
+
+# Deferred decisions
+
+Open decisions intentionally parked. Resolve before the work that depends on them.
+
+## D1 — Token cascade: should component code read Component-level CSS vars, or stay on Semantic vars?
+
+**Status: DECIDE LATER** (blocks how Phase 3 components bind their dimensions).
+
+**Background.** The Figma **Components collection** (414 tokens, e.g. `-- Atoms/Buttons/Global/Size M/Padding → {semantics.spacing.10}`) is now exported into `tokens.json`, but the CSS transform does **not** consume it. Every component built so far binds straight to *semantic* vars (`var(--size-40)`, `var(--spacing-10)`), skipping the Component and Variant levels of the 4-level cascade described in `CLAUDE.md` / `MAX-CORE-SUMMARY.md`.
+
+**Option 1 — wire component vars in.**
+Add an `emitComponents()` to `packages/tokens/src/transform.ts` that emits each component token as a `var(--semantic)` *alias* (not a resolved literal), preserving the cascade:
+```css
+--atoms-buttons-global-size-m-padding:    var(--spacing-10);
+--atoms-buttons-global-size-m-min-height: var(--size-40);
+```
+Then refactor components to read the component var (`px-[var(--atoms-buttons-global-size-m-padding)]`). Backfill the 5 existing atoms.
+- **Pro:** faithful 4-level cascade in code; a consumer can rebrand *one* component (e.g. pad only buttons) without moving the global spacing scale.
+- **Con:** +414 verbose vars, an indirection layer, a refactor of existing atoms. Names are tunable (`--btn-*` via a mapping table vs. the mechanical 1:1 path mirror).
+
+**Option 2 — keep semantic vars (current state).**
+Leave the components block as forward-compatible JSON only; components keep reading semantic vars.
+- **Pro:** simpler, fewer vars, no refactor. A rebrand via primitives/semantics **still flows to components for free**.
+- **Con:** loses *per-single-component* override granularity in code.
+
+**What the Components collection is worth under each option:**
+
+| | Role of the Components collection |
+|---|---|
+| Option 1 | A **runtime CSS layer** — emitted as `var()` aliases, components read them. |
+| Option 2 | A **build-time spec** — the authoring lookup table ("which semantic token does each component property bind to?", which is what was consulted to build Button) **plus** a potential **drift-detection test** source (assert each component's code uses the alias the export records). Never emitted, never read at runtime. |
+
+**Note for Option 2:** today use as a spec is *manual* and the drift check doesn't exist. To make the block earn its keep under Option 2, Phase 3 should add that conformance test.
+
+**Related:** memory `project-archive-token-values-can-drift` (validate component values against the exported components block, not `CLAUDE-ARCHIVE.md`).
