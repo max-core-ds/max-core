@@ -15,7 +15,8 @@
     "format": "biome format --write .",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
-    "storybook": "pnpm --filter storybook dev"
+    "storybook": "pnpm --filter storybook dev",
+    "showcase": "pnpm --filter showcase dev"
   },
   "packageManager": "pnpm@11.2.2",
   "devDependencies": {

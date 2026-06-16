@@ -1,0 +1,25 @@
+@import 'tailwindcss';
+
+/* Scan our own files + the consumed @max-core/react sources so Tailwind
+ * emits the utility classes that components use. */
+@source '../../../packages/react/src/**/*.{ts,tsx}';
+@source './**/*.{ts,tsx}';
+
+/* Bring in the design tokens. This file defines :root and
+ * [data-theme="dark"] CSS variable scopes. */
+@import '@max-core/tokens/tokens.css';
+
+html,
+body {
+  background-color: var(--bg-default);
+  color: var(--text-primary);
+  font-family:
+    'Inter',
+    system-ui,
+    sans-serif;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
