@@ -14,10 +14,11 @@ const avatarStyles = cva(
   ],
   {
     variants: {
+      // Sizes match -- Atoms/Avatar/Size */Size (24/32/40/48/64).
       size: {
-        xs: 'size-[var(--size-16)] text-[8px]',
-        s: 'size-[var(--size-24)] text-[10px]',
-        m: 'size-[var(--size-32)] text-xs',
+        xs: 'size-[var(--size-24)] text-[10px]',
+        s: 'size-[var(--size-32)] text-xs',
+        m: 'size-[var(--size-40)] text-sm',
         l: 'size-[var(--size-48)] text-base',
         xl: 'size-[var(--size-64)] text-xl',
       },

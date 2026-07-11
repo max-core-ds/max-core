@@ -12,6 +12,9 @@
     "typecheck": {
       "dependsOn": ["^build"]
     },
+    "drift": {
+      "inputs": ["src/**", "../react/src/**"]
+    },
     "test": {
       "dependsOn": ["^build"]
     }

@@ -5,26 +5,32 @@ import { Input as BaseInput } from '@base-ui/react/input';
 import { cva, type VariantProps } from 'class-variance-authority';
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
+import { focusRingInset } from '../../utils/focus-ring.js';
 
 const inputStyles = cva(
   [
     'w-full',
-    'rounded-[var(--radius-l)]',
+    // Radius, border weight and padding-x match -- Molecule/Input/Global/General/*.
+    'rounded-[var(--radius-md)]',
     'bg-[var(--bg-surface)] text-[var(--text-primary)]',
     'border border-[var(--border-default)]',
+    'px-[var(--spacing-12)]',
     'placeholder:text-[var(--text-muted)]',
     'transition-colors',
+    // Focus ring lives on the wrapper frame (focusRingInset), not here — the
+    // input only recolors its own border on focus.
     'focus:outline-none focus:border-[var(--border-focus)]',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-default)]',
     'disabled:opacity-[var(--opacity-disabled)] disabled:cursor-not-allowed',
     'data-[invalid]:border-[var(--status-danger-default)]',
   ],
   {
     variants: {
+      // Padding-y + min-width match -- Molecule/Input/Global/Size */*. Height is
+      // padding-driven (Figma Input has no height token); min-widths are raw px.
       size: {
-        s: 'h-[var(--size-32)] px-[var(--spacing-12)] text-xs',
-        m: 'h-[var(--size-40)] px-[var(--spacing-16)] text-sm',
-        l: 'h-[var(--size-48)] px-[var(--spacing-20)] text-base',
+        s: 'min-w-[160px] py-[var(--spacing-12)] text-xs',
+        m: 'min-w-[180px] py-[var(--spacing-12)] text-sm',
+        l: 'min-w-[200px] py-[var(--spacing-16)] text-base',
       },
     },
     defaultVariants: {
@@ -58,7 +64,11 @@ export function Input({
       {label ? (
         <Field.Label className="text-sm font-bold text-[var(--text-primary)]">{label}</Field.Label>
       ) : null}
-      <BaseInput className={cn(inputStyles({ size }), className)} {...rest} />
+      {/* Input frame: hosts the inset -3px focus ring (an <input> can't carry a
+          ::before). The ring hugs the field and is unaffected by title/helper. */}
+      <div className={cn('relative w-full rounded-[var(--radius-md)]', focusRingInset)}>
+        <BaseInput className={cn(inputStyles({ size }), className)} {...rest} />
+      </div>
       {errorMessage ? (
         <Field.Error className="text-xs text-[var(--status-danger-default)]">
           {errorMessage}

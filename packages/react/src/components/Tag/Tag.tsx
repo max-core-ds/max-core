@@ -1,14 +1,17 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
+import { ring } from '../../utils/focus-ring.js';
+import { accentFill, statusFill, statusOutline, statusText, statusToneCompounds } from '../../utils/tone.js';
 
 const tagStyles = cva(
   [
     'inline-flex items-center justify-center',
-    'rounded-[var(--radius-full)]',
+    // Radius, border weight and icon size match -- Atoms/Tag/Global/*.
+    'rounded-[var(--radius-sm)]',
     'border transition-colors',
     'font-bold whitespace-nowrap',
-    'gap-[var(--spacing-04)]',
+    '[&_svg]:size-[var(--size-16)]',
   ],
   {
     variants: {
@@ -23,66 +26,34 @@ const tagStyles = cva(
         success: '',
         warning: '',
       },
+      // Padding X/Y, Gap and Min Height match -- Atoms/Tag/{S,M}/*.
+      // (S Min Height is a raw 28px in Figma; M Min Height = size.32.)
       size: {
-        s: 'h-[var(--size-24)] px-[var(--spacing-08)] text-xs',
-        m: 'h-[var(--size-32)] px-[var(--spacing-12)] text-sm',
+        s: 'min-h-[28px] px-[var(--spacing-06)] py-[var(--spacing-06)] gap-[var(--spacing-04)] text-xs',
+        m: 'min-h-[var(--size-32)] px-[var(--spacing-08)] py-[var(--spacing-08)] gap-[var(--spacing-06)] text-sm',
       },
       selected: {
-        true: 'ring-2 ring-[var(--border-focus)] ring-offset-2 ring-offset-[var(--bg-default)]',
+        true: ring,
         false: '',
       },
     },
+    // Status tones (danger/success/warning) come from statusToneCompounds; the
+    // `default` tone is neutral here (unlike Button's accent default) and stays
+    // bespoke per variant.
     compoundVariants: [
-      // Filled
-      {
-        variant: 'filled',
-        tone: 'default',
-        class: 'bg-[var(--accent-default)] border-transparent text-[var(--text-on-accent)]',
-      },
-      {
-        variant: 'filled',
-        tone: 'danger',
-        class:
-          'bg-[var(--status-danger-default)] border-transparent text-[var(--text-on-accent)]',
-      },
-      {
-        variant: 'filled',
-        tone: 'success',
-        class:
-          'bg-[var(--status-success-default)] border-transparent text-[var(--text-on-accent)]',
-      },
-      {
-        variant: 'filled',
-        tone: 'warning',
-        class:
-          'bg-[var(--status-warning-default)] border-transparent text-[var(--text-on-accent)]',
-      },
-      // Outline
+      // Filled — solid tone fill.
+      { variant: 'filled', tone: 'default', class: accentFill },
+      ...statusToneCompounds('filled', statusFill),
+      // Outline — tone border + text; default is neutral.
       {
         variant: 'outline',
         tone: 'default',
         class: 'border-[var(--border-default)] text-[var(--text-primary)]',
       },
-      {
-        variant: 'outline',
-        tone: 'danger',
-        class: 'border-[var(--status-danger-default)] text-[var(--status-danger-default)]',
-      },
-      {
-        variant: 'outline',
-        tone: 'success',
-        class: 'border-[var(--status-success-default)] text-[var(--status-success-default)]',
-      },
-      {
-        variant: 'outline',
-        tone: 'warning',
-        class: 'border-[var(--status-warning-default)] text-[var(--status-warning-default)]',
-      },
-      // Ghost
+      ...statusToneCompounds('outline', statusOutline),
+      // Ghost — tone text; default is neutral.
       { variant: 'ghost', tone: 'default', class: 'text-[var(--text-primary)]' },
-      { variant: 'ghost', tone: 'danger', class: 'text-[var(--status-danger-default)]' },
-      { variant: 'ghost', tone: 'success', class: 'text-[var(--status-success-default)]' },
-      { variant: 'ghost', tone: 'warning', class: 'text-[var(--status-warning-default)]' },
+      ...statusToneCompounds('ghost', statusText),
     ],
     defaultVariants: {
       variant: 'filled',

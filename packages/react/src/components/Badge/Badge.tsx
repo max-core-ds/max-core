@@ -1,26 +1,32 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
+import { accentFill, statusFill } from '../../utils/tone.js';
 
 const badgeStyles = cva(
   [
     'inline-flex items-center justify-center',
-    'rounded-[var(--radius-full)]',
+    // Radius + border weight match -- Atoms/Badge/Global/*.
+    'rounded-[var(--radius-sm)]',
     'border font-bold whitespace-nowrap',
   ],
   {
     variants: {
+      // Solid fills; `neutral` is bespoke (subtle bg, neutral border/text).
       tone: {
-        default: 'bg-[var(--accent-default)] border-transparent text-[var(--text-on-accent)]',
-        danger: 'bg-[var(--status-danger-default)] border-transparent text-[var(--text-on-accent)]',
-        success: 'bg-[var(--status-success-default)] border-transparent text-[var(--text-on-accent)]',
-        warning: 'bg-[var(--status-warning-default)] border-transparent text-[var(--text-on-accent)]',
+        default: accentFill,
+        danger: statusFill.danger,
+        success: statusFill.success,
+        warning: statusFill.warning,
         neutral: 'bg-[var(--bg-subtle)] border-[var(--border-default)] text-[var(--text-primary)]',
       },
+
+      // Padding X/Y match -- Atoms/Badge/{S,M,L}/*; height is padding-driven
+      // (Figma Badge has no height token).
       size: {
-        s: 'h-[var(--size-16)] px-[var(--spacing-04)] text-[10px]',
-        m: 'h-[var(--size-20)] px-[var(--spacing-08)] text-xs',
-        l: 'h-[var(--size-24)] px-[var(--spacing-08)] text-sm',
+        s: 'px-[var(--spacing-10)] py-[var(--spacing-06)] text-[10px]',
+        m: 'px-[var(--spacing-12)] py-[var(--spacing-08)] text-xs',
+        l: 'px-[var(--spacing-14)] py-[var(--spacing-10)] text-sm',
       },
     },
     defaultVariants: {
