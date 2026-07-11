@@ -137,7 +137,9 @@ max-core/
 
 ---
 
-## Phase 1 deliverables (foundation — this plan)
+## Phase 1 deliverables (foundation — this plan) — ✅ DONE
+
+> **Status:** Shipped. Token pipeline + 5 atoms (Avatar, Badge, Button, Input, Tag) + Storybook (incl. Tokens reference story) all in place. Automated tests (Vitest + axe) were deferred to a later phase by decision — not delivered here.
 
 ### 1. Repo bootstrap
 - pnpm workspace + Turborepo at root
@@ -176,10 +178,6 @@ For each atom:
 - Dark mode toggle that flips `[data-theme="dark"]` on the preview root
 - Token reference page (renders all `--bg-*`, `--text-*`, `--accent-*` swatches with their resolved values) — useful for visual QA against Figma
 - Component stories per atom
-
-### 5. Conventions documented in code
-- `CONTRIBUTING.md` covers: adding a new component, the naming → CSS variable mapping (from `CLAUDE.md`), the `--`/`-`/`---` token prefix meanings.
-- One-page `ARCHITECTURE.md` summarizing the diagram above.
 
 ---
 
@@ -235,7 +233,9 @@ After phase 1 build is complete:
 
 ---
 
-# Phase 2 — Token sync (plugin + CLI)
+# Phase 2 — Token sync (plugin + CLI) — ✅ DONE
+
+> **Status:** Shipped. `packages/figma-plugin` (export) + `packages/tokens/src/sync.ts` (ingest) + extracted `types.ts` all in place. Scope note: the Components collection (414 tokens) and shadow Effect Styles (12) are now **exported** into `tokens.json` — going beyond the "skip Components" deferral written below — but they are **not yet consumed by CSS** (see Deferred decision D1).
 
 ## Context
 
@@ -372,7 +372,7 @@ Open decisions intentionally parked. Resolve before the work that depends on the
 
 ## D1 — Token cascade: should component code read Component-level CSS vars, or stay on Semantic vars?
 
-**Status: DECIDE LATER** (blocks how Phase 3 components bind their dimensions).
+**Status: DECIDED — Option 2 (keep semantic vars).** (Resolved 2026-07-11, before Phase 3.) Components bind directly to semantic CSS vars; the transform does **not** gain an `emitComponents()`. The 414-token Components collection stays a **build-time spec** and now earns its keep as the source for the **drift-check conformance test** built in Phase 3 Batch 0 (see Phase 3). Rationale: fastest path, no refactor of existing atoms, rebrand-via-primitives still cascades; the only thing given up is per-single-component override in code, which no current requirement needs.
 
 **Background.** The Figma **Components collection** (414 tokens, e.g. `-- Atoms/Buttons/Global/Size M/Padding → {semantics.spacing.10}`) is now exported into `tokens.json`, but the CSS transform does **not** consume it. Every component built so far binds straight to *semantic* vars (`var(--size-40)`, `var(--spacing-10)`), skipping the Component and Variant levels of the 4-level cascade described in `CLAUDE.md` / `MAX-CORE-SUMMARY.md`.
 
@@ -401,3 +401,56 @@ Leave the components block as forward-compatible JSON only; components keep read
 **Note for Option 2:** today use as a spec is *manual* and the drift check doesn't exist. To make the block earn its keep under Option 2, Phase 3 should add that conformance test.
 
 **Related:** memory `project-archive-token-values-can-drift` (validate component values against the exported components block, not `CLAUDE-ARCHIVE.md`).
+
+---
+
+# Phase 3 — React component buildout (~40 components)
+
+## Context
+
+Phases 1 & 2 are shipped: the token pipeline and 5 reference atoms (Button, Avatar, Badge, Tag, Input) that prove the architecture. Phase 3 scales the React library to cover the rest of the Max Core design system — **repeating the proven pattern ~40 times, consistently**, without letting per-component inline duplication (focus ring, tone map, state-layer overlay) metastasize.
+
+**Locked decisions:** D1 = Option 2 (semantic vars, above); Step 0 foundation refactor first; mega-systems (Data Table, Date Picker, Bottom Sheet + premades) deferred to Phase 4.
+
+## Convention (from the existing 5 — do not deviate)
+
+- Folder `packages/react/src/components/<Name>/{<Name>.tsx, index.ts}`; barrel re-exports `{ Component, type ComponentProps }` from `src/index.ts` (`.js`-extension imports).
+- Module-scope `cva([...base...], { variants, compoundVariants?, defaultVariants })`. Axes `variant`/`tone`/`size`/booleans. Tone-varies-by-variant → empty tone strings + compoundVariants; self-contained tone → classes on tone.
+- Tokens read ONLY as arbitrary-value utilities (`px-[var(--spacing-10)]`). Font micro-steps may be literals; larger use Tailwind scale.
+- Props `interface XProps extends Omit<ComponentPropsWithoutRef<typeof Base…>, '…'>, VariantProps<typeof xStyles> { slots… }`; `className={cn(xStyles({…}), className)}`; `...rest` to root. Icons = consumer-provided ReactNode slots. Base UI per-primitive subpath; `'use client'` only when wiring Base UI. One Storybook story per component (light + dark).
+
+## Batch 0 — Foundation refactor + conformance (first)
+
+New `packages/react/src/utils/`: **`focus-ring.ts`** (`focusRing` outset + `focusRingInset` = `before:-inset-[3px]` STRETCH ring for the Input frame per CLAUDE.md:237), **`tone.ts`** (`Tone` type + `toneVar` table + `toneCompounds(variant, role)` factory replacing the hand-written 12–16 compoundVariants), **`state-layer.ts`** (`stateLayer` `::before` overlay + `elevatePress`). Refactor Button/Tag/Badge/Input/Avatar onto them (behavior-preserving); Input gets the inset focus-ring fix.
+
+**Drift-check** — `packages/tokens/src/conformance.ts` + `drift.ts` CLI (`tsx`; add `"drift"` script, wire into `turbo.json`/CI). Parse `components` block → family per key; resolve `{semantics.<group>.<key>}` → `--<group>-<key>`; exempt raw numbers + `{primitives.*}`. Assert `spec[family] ⊆ bound(component source)`; explicit family→component name table; unmapped families skipped → passes incrementally.
+
+## Batches 1–7 (dependency- then complexity-ordered)
+
+| B | Theme | Components |
+|---|---|---|
+| 1 | Button family | Spinner, Icon Only Button, Link Button, Pay Button, Split Button, FAB |
+| 2 | Display atoms | Divider, Progress Bar, Tooltip, Knob*, Thumbnail, Content Blocks (Heading/Text/Image) |
+| 3 | Selection & interaction | Checkbox, Radio, Switch, Segmented Control*, List Item |
+| 4 | Input molecules | Input: Bottom Line, Select, Multiselect, Stepper, Textarea; Search Bar* |
+| 5 | Composition I | List Item→Item List→Dropdown, Tabs, Pagination, Avatar Group, Range, Pin*, Switcher* |
+| 6 | Entity & overlay | Entity Item→Entity Card, Form Group, Toast/Snackbar, Dialogs |
+| 7 | Organisms (simpler) | Top Bar (Desktop+Mobile), Side Bar, Bottom Nav, Stats Card (S+Big), Stacked List (9 rows), Share Item |
+
+Hard deps: `List Item→Item List→Dropdown`; `Entity Item→Entity Card→Stacked List`; `Avatar→Avatar Group`; `Selection→Form Group/Stacked List`; `Input base→all Input variants/Search Bar/Stepper/Form Group`. `*` = semantics/headless choice needs a 1-line Figma decision (see Risks).
+
+**Base UI mapping:** button-based (Icon Only/Link→`<a>`/Pay/Split+`menu`/FAB+`menu`) → `button`; `separator`/`progress`/`tooltip`/`checkbox`/`radio`/`switch`/`tabs`/`select`/`combobox`(Multiselect)/`number-field`(Stepper)/`slider`(Range)/`toast`/`dialog`+`alert-dialog`/`menu`(Dropdown)/`fieldset`+`field`(Form Group). Custom: Spinner, Thumbnail, Content Blocks, Pagination, Avatar Group, List Item, Item List, Entity Item/Card, Stats Card, Stacked List, Share Item, bars. Textarea = native `<textarea>` + `field`.
+
+## Per-batch verification (before each commit)
+typecheck + tsup build pass · Storybook story per component with `AllVariants`, light **and** dark · Figma parity via MCP (`get_design_context`/`get_screenshot`, `figma-design-to-code` skill) · `drift` green for the batch · Biome clean · one commit per batch on a feature branch.
+
+## Risks / gates
+- **Base UI subpath availability** (before B3–B5): resolve-check `toggle-group`, `combobox` multi-select, `number-field`, `toast`, `collapsible`, `otp-field` in `@base-ui/react@1.5.0`; missing → custom fallback.
+- **forwardRef gap** — the 5 atoms use none, but Tooltip/Menu/Dialog triggers need forwarded ref / `render` prop. Set the convention at B1/B2.
+- **Unclear semantics** (1-line Figma decision): Knob (B2), Segmented Control headless choice (B3), Switcher (B5), Search Bar suggestions (B4), Pin OTP-vs-custom (B5).
+- **Stacked List (B7)** — 9 row types; compose from List Item + Entity Item + Selection; may warrant its own batch.
+- **Providers** — Toast/Dialog need Provider/portal; decide ship-vs-document (affects B6 Storybook decorators).
+- **Drift exemptions** — organism `primitives.opacity.*` and raw-number tokens have no semantic var; exempt to avoid false positives.
+
+## Out of scope (Phase 4)
+Data Table system, Date Picker, Bottom Sheet + 18 premades. Automated test infra (vitest/axe) stays deferred — drift check is Phase 3's only automated gate.

@@ -148,10 +148,25 @@ import { Plus } from 'lucide-react';
 
 **What you'll need on the consumer side.**
 
-1. Import `@max-core/tokens/tokens.css` in your global CSS entry.
-2. Tailwind v4 (or any CSS that supports `var()`) so the utility classes
-   resolve our CSS variables.
-3. Your own icon library — components accept `ReactNode` for `leftIcon` /
+1. **Tailwind v4**, pointed at the library so it emits our classes. The
+   components are arbitrary-value utilities (`h-[var(--size-40)]`), and
+   Tailwind only generates a class it can *see* in scanned source — so add an
+   `@source` directive covering the built library:
+
+   ```css
+   @import 'tailwindcss';
+   @source '../node_modules/@max-core/react/dist/**/*.js';
+   @import '@max-core/tokens/tokens.css';   /* after Tailwind — see below */
+   ```
+
+   Tailwind isn't optional: `var()` support resolves the token *values*, but
+   something still has to generate the utility classes that reference them.
+2. **Import `@max-core/tokens/tokens.css`** in your global CSS entry, *after*
+   Tailwind, so its `:root` definitions win on any shared variable names
+   (e.g. `--radius-md`). Without this import the `var(--…)` references resolve
+   to nothing and components render unstyled.
+3. **React 18+** — it's a peer dependency (`react`, `react-dom` `>=18`).
+4. **Your own icon library** — components accept `ReactNode` for `leftIcon` /
    `rightIcon`. We don't bundle icons; Storybook uses `lucide-react` (matches
    the Figma file).
 
