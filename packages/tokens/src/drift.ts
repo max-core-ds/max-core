@@ -243,6 +243,32 @@ const SPECS: ComponentSpec[] = [
     source: 'components/Switcher/Switcher.tsx',
     prefixes: ['Molecule/Switcher'],
   },
+  // --- Batch 6: Entity & overlay ---
+  {
+    name: 'Entity Item',
+    source: 'components/EntityItem/EntityItem.tsx',
+    prefixes: ['Molecule/Entity Item'],
+  },
+  {
+    name: 'Entity Card',
+    source: 'components/EntityCard/EntityCard.tsx',
+    prefixes: ['Molecule/Entity Card'],
+  },
+  {
+    name: 'Form Group',
+    source: 'components/FormGroup/FormGroup.tsx',
+    prefixes: ['Molecule/Form Group'],
+  },
+  {
+    name: 'Toast',
+    source: 'components/Toast/Toast.tsx',
+    prefixes: ['Molecule/Toast Snackbar'],
+  },
+  {
+    name: 'Dialog',
+    source: 'components/Dialog/Dialog.tsx',
+    prefixes: ['Molecule/Dialogs'],
+  },
 ];
 
 const tokens = JSON.parse(readFileSync(tokensPath, 'utf8')) as TokensFile;

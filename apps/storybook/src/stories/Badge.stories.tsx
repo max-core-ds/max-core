@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Badge } from '@max-core/react';
 
 const meta = {
-  title: 'Atoms/Badge',
+  title: 'Atoms/Data Display/Badge',
   component: Badge,
   parameters: { layout: 'centered' },
   argTypes: {

@@ -3,7 +3,7 @@ import { Hash, Star, X } from 'lucide-react';
 import { Tag } from '@max-core/react';
 
 const meta = {
-  title: 'Atoms/Tag',
+  title: 'Atoms/Data Display/Tag',
   component: Tag,
   parameters: { layout: 'centered' },
   argTypes: {
