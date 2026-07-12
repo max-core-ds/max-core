@@ -2,7 +2,7 @@ import { Divider } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
-  title: 'Atoms/Divider',
+  title: 'Atoms/Display/Divider',
   component: Divider,
   parameters: { layout: 'padded' },
   argTypes: {

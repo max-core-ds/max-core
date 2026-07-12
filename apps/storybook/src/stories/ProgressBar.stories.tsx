@@ -2,7 +2,7 @@ import { ProgressBar } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
-  title: 'Atoms/Progress Bar',
+  title: 'Atoms/Display/Progress Bar',
   component: ProgressBar,
   parameters: { layout: 'padded' },
   args: { value: 60, size: 'm' },

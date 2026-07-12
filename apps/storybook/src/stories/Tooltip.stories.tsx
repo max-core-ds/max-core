@@ -2,7 +2,7 @@ import { Button, Tooltip } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
-  title: 'Atoms/Tooltip',
+  title: 'Atoms/Display/Tooltip',
   component: Tooltip,
   parameters: { layout: 'centered' },
   argTypes: {

@@ -2,7 +2,7 @@ import { HeadingBlock, ImagePlaceholder, TextBlock } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
-  title: 'Atoms/Content Blocks',
+  title: 'Atoms/Display/Content Blocks',
   component: HeadingBlock,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof HeadingBlock>;
