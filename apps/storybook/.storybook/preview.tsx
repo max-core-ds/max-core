@@ -1,5 +1,5 @@
-import type { Preview } from '@storybook/react-vite';
 import { withThemeByDataAttribute } from '@storybook/addon-themes';
+import type { Preview } from '@storybook/react-vite';
 import '../src/global.css';
 
 const preview: Preview = {
@@ -12,6 +12,12 @@ const preview: Preview = {
       },
     },
     backgrounds: { disable: true },
+    options: {
+      // Foundations (tokens) first, then the component tiers.
+      storySort: {
+        order: ['Foundations', 'Atoms', 'Molecules', 'Organisms'],
+      },
+    },
   },
   decorators: [
     withThemeByDataAttribute({
