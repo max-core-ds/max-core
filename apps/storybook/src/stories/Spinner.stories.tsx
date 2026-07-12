@@ -2,7 +2,7 @@ import { Spinner } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
-  title: 'Atoms/Spinner',
+  title: 'Atoms/Display/Spinner',
   component: Spinner,
   parameters: { layout: 'centered' },
   argTypes: {
