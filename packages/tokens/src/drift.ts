@@ -138,6 +138,36 @@ const SPECS: ComponentSpec[] = [
     source: 'components/ContentBlocks/ContentBlocks.tsx',
     prefixes: ['Atoms/Content Blocks'],
   },
+  // --- Batch 3: Selection & interaction ---
+  // Checkbox owns the shared Selection Control Global tokens (size boxes, text
+  // gap, padding); Radio/Switch check only their dedicated prefixes.
+  {
+    name: 'Checkbox',
+    source: 'components/Checkbox/Checkbox.tsx',
+    prefixes: ['Atoms/Selection Control/Checkbox', 'Atoms/Selection Control/Global'],
+    exempt: ['--spacing-08'], // Global/Item Gap — group-level (CheckboxGroup), not a single control
+  },
+  {
+    name: 'Radio',
+    source: 'components/Radio/Radio.tsx',
+    prefixes: ['Atoms/Selection Control/Radio Button'],
+    exempt: ['--radius-xs'], // Focus Radius — the ring follows the circular box, no rounded-xs square
+  },
+  {
+    name: 'Switch',
+    source: 'components/Switch/Switch.tsx',
+    prefixes: ['Atoms/Selection Control/Switch'],
+  },
+  {
+    name: 'Segmented Control',
+    source: 'components/SegmentedControl/SegmentedControl.tsx',
+    prefixes: ['Atoms/Segmented Control'],
+  },
+  {
+    name: 'List Item',
+    source: 'components/ListItem/ListItem.tsx',
+    prefixes: ['Atoms/List Item'],
+  },
 ];
 
 const tokens = JSON.parse(readFileSync(tokensPath, 'utf8')) as TokensFile;
