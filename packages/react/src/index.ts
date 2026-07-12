@@ -40,3 +40,20 @@ export {
   type SegmentedItem,
 } from './components/SegmentedControl/index.js';
 export { ListItem, type ListItemProps } from './components/ListItem/index.js';
+export { Textarea, type TextareaProps } from './components/Textarea/index.js';
+export {
+  BottomLineInput,
+  type BottomLineInputProps,
+} from './components/BottomLineInput/index.js';
+export { Stepper, type StepperProps } from './components/Stepper/index.js';
+export {
+  SelectInput,
+  type SelectInputProps,
+  type SelectOption,
+} from './components/SelectInput/index.js';
+export {
+  Multiselect,
+  type MultiselectProps,
+  type MultiselectOption,
+} from './components/Multiselect/index.js';
+export { SearchBar, type SearchBarProps } from './components/SearchBar/index.js';

@@ -2,26 +2,19 @@
 
 import { Field } from '@base-ui/react/field';
 import { Input as BaseInput } from '@base-ui/react/input';
-import { cva, type VariantProps } from 'class-variance-authority';
+import { type VariantProps, cva } from 'class-variance-authority';
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
+import { fieldSurface } from '../../utils/field.js';
 import { focusRingInset } from '../../utils/focus-ring.js';
 
 const inputStyles = cva(
   [
-    'w-full',
-    // Radius, border weight and padding-x match -- Molecule/Input/Global/General/*.
-    'rounded-[var(--radius-md)]',
-    'bg-[var(--bg-surface)] text-[var(--text-primary)]',
-    'border border-[var(--border-default)]',
-    'px-[var(--spacing-12)]',
-    'placeholder:text-[var(--text-muted)]',
-    'transition-colors',
-    // Focus ring lives on the wrapper frame (focusRingInset), not here — the
-    // input only recolors its own border on focus.
-    'focus:outline-none focus:border-[var(--border-focus)]',
-    'disabled:opacity-[var(--opacity-disabled)] disabled:cursor-not-allowed',
-    'data-[invalid]:border-[var(--status-danger-default)]',
+    // Radius and padding-x match -- Molecule/Input/Global/General/*; the shared
+    // fill/border/focus/disabled treatment comes from fieldSurface. The focus
+    // ring lives on the wrapper frame (focusRingInset), not here.
+    'w-full rounded-[var(--radius-md)] px-[var(--spacing-12)]',
+    fieldSurface,
   ],
   {
     variants: {
@@ -47,20 +40,10 @@ export interface InputProps
   errorMessage?: ReactNode;
 }
 
-export function Input({
-  label,
-  helper,
-  errorMessage,
-  size,
-  className,
-  ...rest
-}: InputProps) {
+export function Input({ label, helper, errorMessage, size, className, ...rest }: InputProps) {
   const isInvalid = Boolean(errorMessage);
   return (
-    <Field.Root
-      className="flex flex-col gap-[var(--spacing-04)]"
-      invalid={isInvalid}
-    >
+    <Field.Root className="flex flex-col gap-[var(--spacing-04)]" invalid={isInvalid}>
       {label ? (
         <Field.Label className="text-sm font-bold text-[var(--text-primary)]">{label}</Field.Label>
       ) : null}

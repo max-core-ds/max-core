@@ -168,6 +168,40 @@ const SPECS: ComponentSpec[] = [
     source: 'components/ListItem/ListItem.tsx',
     prefixes: ['Atoms/List Item'],
   },
+  // --- Batch 4: Input molecules ---
+  // Textarea/Select/Multiselect own only raw-number tokens (min width/height),
+  // so their checked spec is empty; radius/padding come from the Input Global
+  // tokens (checked via the base Input).
+  {
+    name: 'Textarea',
+    source: 'components/Textarea/Textarea.tsx',
+    prefixes: ['Molecule/Input/Textarea'],
+  },
+  {
+    name: 'Bottom Line Input',
+    source: 'components/BottomLineInput/BottomLineInput.tsx',
+    prefixes: ['Molecule/Input/Bottom Line'],
+  },
+  {
+    name: 'Stepper',
+    source: 'components/Stepper/Stepper.tsx',
+    prefixes: ['Molecule/Input/Stepper'],
+  },
+  {
+    name: 'Select Input',
+    source: 'components/SelectInput/SelectInput.tsx',
+    prefixes: ['Molecule/Input/Select Input'],
+  },
+  {
+    name: 'Multiselect',
+    source: 'components/Multiselect/Multiselect.tsx',
+    prefixes: ['Molecule/Input/Multiselect'],
+  },
+  {
+    name: 'Search Bar',
+    source: 'components/SearchBar/SearchBar.tsx',
+    prefixes: ['Molecule/Search Bar'],
+  },
 ];
 
 const tokens = JSON.parse(readFileSync(tokensPath, 'utf8')) as TokensFile;
