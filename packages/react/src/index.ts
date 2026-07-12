@@ -13,3 +13,16 @@ export {
   type SplitMenuItem,
 } from './components/SplitButton/index.js';
 export { Fab, type FabProps, type FabAction } from './components/Fab/index.js';
+export { Divider, type DividerProps } from './components/Divider/index.js';
+export { ProgressBar, type ProgressBarProps } from './components/ProgressBar/index.js';
+export { Tooltip, type TooltipProps } from './components/Tooltip/index.js';
+export { Knob, type KnobProps } from './components/Knob/index.js';
+export { Thumbnail, type ThumbnailProps } from './components/Thumbnail/index.js';
+export {
+  HeadingBlock,
+  type HeadingBlockProps,
+  TextBlock,
+  type TextBlockProps,
+  ImagePlaceholder,
+  type ImagePlaceholderProps,
+} from './components/ContentBlocks/index.js';

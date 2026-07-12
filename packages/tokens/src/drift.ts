@@ -107,6 +107,37 @@ const SPECS: ComponentSpec[] = [
     source: 'components/Fab/Fab.tsx',
     prefixes: ['Atoms/Buttons/Fab'],
   },
+  // --- Batch 2: Display atoms ---
+  {
+    name: 'Divider',
+    source: 'components/Divider/Divider.tsx',
+    prefixes: ['Atoms/Divider'], // only a border-weight token — nothing dimensional to check
+  },
+  {
+    name: 'Progress Bar',
+    source: 'components/ProgressBar/ProgressBar.tsx',
+    prefixes: ['Atoms/Progress Bar'],
+  },
+  {
+    name: 'Tooltip',
+    source: 'components/Tooltip/Tooltip.tsx',
+    prefixes: ['Atoms/Tooltip'],
+  },
+  {
+    name: 'Knob',
+    source: 'components/Knob/Knob.tsx',
+    prefixes: ['Atoms/Knob'],
+  },
+  {
+    name: 'Thumbnail',
+    source: 'components/Thumbnail/Thumbnail.tsx',
+    prefixes: ['Atoms/Thumbnail'],
+  },
+  {
+    name: 'Content Blocks',
+    source: 'components/ContentBlocks/ContentBlocks.tsx',
+    prefixes: ['Atoms/Content Blocks'],
+  },
 ];
 
 const tokens = JSON.parse(readFileSync(tokensPath, 'utf8')) as TokensFile;
