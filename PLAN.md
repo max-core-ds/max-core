@@ -406,6 +406,11 @@ Leave the components block as forward-compatible JSON only; components keep read
 
 # Phase 3 — React component buildout (~40 components)
 
+> **Status (2026-07-12):** Batch 0 (foundation + drift gate) and Batches 1–7 shipped —
+> 48 components, drift-green, in tiered Storybook folders (Atoms/Molecules/Organisms ×
+> functional themes). **Remaining:** Batch 8 (Stacked List) + the deferred visual-parity
+> pass (see [[project-phase3-visual-verification-deferred]]).
+
 ## Context
 
 Phases 1 & 2 are shipped: the token pipeline and 5 reference atoms (Button, Avatar, Badge, Tag, Input) that prove the architecture. Phase 3 scales the React library to cover the rest of the Max Core design system — **repeating the proven pattern ~40 times, consistently**, without letting per-component inline duplication (focus ring, tone map, state-layer overlay) metastasize.
@@ -435,7 +440,8 @@ New `packages/react/src/utils/`: **`focus-ring.ts`** (`focusRing` outset + `focu
 | 4 | Input molecules | Input: Bottom Line, Select, Multiselect, Stepper, Textarea; Search Bar* |
 | 5 | Composition I | List Item→Item List→Dropdown, Tabs, Pagination, Avatar Group, Range, Pin*, Switcher* |
 | 6 | Entity & overlay | Entity Item→Entity Card, Form Group, Toast/Snackbar, Dialogs |
-| 7 | Organisms (simpler) | Top Bar (Desktop+Mobile), Side Bar, Bottom Nav, Stats Card (S+Big), Stacked List (9 rows), Share Item |
+| 7 | Organisms (simpler) | Top Bar (Desktop+Mobile), Side Bar, Bottom Nav, Stats Card (S+Big), Share Item |
+| 8 | Stacked List | Stacked List — 9 row types (split out of Batch 7: mega-system, per the risk note below) |
 
 Hard deps: `List Item→Item List→Dropdown`; `Entity Item→Entity Card→Stacked List`; `Avatar→Avatar Group`; `Selection→Form Group/Stacked List`; `Input base→all Input variants/Search Bar/Stepper/Form Group`. `*` = semantics/headless choice needs a 1-line Figma decision (see Risks).
 
@@ -448,7 +454,7 @@ typecheck + tsup build pass · Storybook story per component with `AllVariants`,
 - **Base UI subpath availability** (before B3–B5): resolve-check `toggle-group`, `combobox` multi-select, `number-field`, `toast`, `collapsible`, `otp-field` in `@base-ui/react@1.5.0`; missing → custom fallback.
 - **forwardRef gap** — the 5 atoms use none, but Tooltip/Menu/Dialog triggers need forwarded ref / `render` prop. Set the convention at B1/B2.
 - **Unclear semantics** (1-line Figma decision): Knob (B2), Segmented Control headless choice (B3), Switcher (B5), Search Bar suggestions (B4), Pin OTP-vs-custom (B5).
-- **Stacked List (B7)** — 9 row types; compose from List Item + Entity Item + Selection; may warrant its own batch.
+- **Stacked List** — 9 row types; compose from List Item + Entity Item + Selection. RESOLVED: split into its own **Batch 8** (mega-system, ~22 tokens across distinct row layouts).
 - **Providers** — Toast/Dialog need Provider/portal; decide ship-vs-document (affects B6 Storybook decorators).
 - **Drift exemptions** — organism `primitives.opacity.*` and raw-number tokens have no semantic var; exempt to avoid false positives.
 
