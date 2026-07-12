@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ArrowRight, ExternalLink } from 'lucide-react';
 
 const meta = {
-  title: 'Atoms/Link Button',
+  title: 'Atoms/Buttons/Link',
   component: LinkButton,
   parameters: { layout: 'centered' },
   args: { children: 'Learn more' },

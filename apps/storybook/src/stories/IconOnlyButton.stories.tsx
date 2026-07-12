@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Heart } from 'lucide-react';
 
 const meta = {
-  title: 'Atoms/Icon Only Button',
+  title: 'Atoms/Buttons/Icon Only',
   component: IconOnlyButton,
   parameters: { layout: 'centered' },
   args: { icon: <Heart />, 'aria-label': 'Favorite' },

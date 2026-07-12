@@ -2,7 +2,7 @@ import { PayButton } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
-  title: 'Atoms/Pay Button',
+  title: 'Atoms/Buttons/Pay',
   component: PayButton,
   parameters: { layout: 'centered' },
   args: { children: 'Pay' },

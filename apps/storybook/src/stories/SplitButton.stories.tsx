@@ -10,7 +10,7 @@ const items = [
 ];
 
 const meta = {
-  title: 'Atoms/Split Button',
+  title: 'Atoms/Buttons/Split',
   component: SplitButton,
   parameters: { layout: 'centered' },
   args: { children: 'Save', items },
