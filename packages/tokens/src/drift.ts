@@ -202,6 +202,47 @@ const SPECS: ComponentSpec[] = [
     source: 'components/SearchBar/SearchBar.tsx',
     prefixes: ['Molecule/Search Bar'],
   },
+  // --- Batch 5: Composition I ---
+  {
+    name: 'Item List',
+    source: 'components/ItemList/ItemList.tsx',
+    prefixes: ['Molecule/Item List'],
+  },
+  {
+    name: 'Dropdown',
+    source: 'components/Dropdown/Dropdown.tsx',
+    prefixes: ['Molecule/Dropdown'],
+  },
+  {
+    name: 'Tabs',
+    source: 'components/Tabs/Tabs.tsx',
+    prefixes: ['Molecule/Tabs'],
+  },
+  {
+    name: 'Pagination',
+    source: 'components/Pagination/Pagination.tsx',
+    prefixes: ['Molecule/Pagination'],
+  },
+  {
+    name: 'Avatar Group',
+    source: 'components/AvatarGroup/AvatarGroup.tsx',
+    prefixes: ['Molecule/Avatar Group'], // Gap is a raw negative overlap — nothing dimensional to check
+  },
+  {
+    name: 'Range',
+    source: 'components/Range/Range.tsx',
+    prefixes: ['Molecule/Range'],
+  },
+  {
+    name: 'Pin',
+    source: 'components/Pin/Pin.tsx',
+    prefixes: ['Molecule/Pin'],
+  },
+  {
+    name: 'Switcher',
+    source: 'components/Switcher/Switcher.tsx',
+    prefixes: ['Molecule/Switcher'],
+  },
 ];
 
 const tokens = JSON.parse(readFileSync(tokensPath, 'utf8')) as TokensFile;
