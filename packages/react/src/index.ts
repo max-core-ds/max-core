@@ -78,3 +78,12 @@ export { EntityCard, type EntityCardProps } from './components/EntityCard/index.
 export { FormGroup, type FormGroupProps } from './components/FormGroup/index.js';
 export { Dialog, type DialogProps } from './components/Dialog/index.js';
 export { ToastProvider, useToast } from './components/Toast/index.js';
+export { TopBar, type TopBarProps } from './components/TopBar/index.js';
+export { SideBar, type SideBarProps } from './components/SideBar/index.js';
+export {
+  BottomNavigation,
+  type BottomNavigationProps,
+  type BottomNavItem,
+} from './components/BottomNavigation/index.js';
+export { StatsCard, type StatsCardProps } from './components/StatsCard/index.js';
+export { ShareItem, type ShareItemProps } from './components/ShareItem/index.js';

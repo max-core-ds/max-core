@@ -269,6 +269,27 @@ const SPECS: ComponentSpec[] = [
     source: 'components/Dialog/Dialog.tsx',
     prefixes: ['Molecule/Dialogs'],
   },
+  // --- Batch 7: Organisms (Share Item has no tokens; Stacked List → Batch 8) ---
+  {
+    name: 'Top Bar',
+    source: 'components/TopBar/TopBar.tsx',
+    prefixes: ['Organism/Top Bar'], // Background opacity is a {primitives.opacity} ref — auto-excluded
+  },
+  {
+    name: 'Side Bar',
+    source: 'components/SideBar/SideBar.tsx',
+    prefixes: ['Organism/Side Bar'],
+  },
+  {
+    name: 'Bottom Navigation',
+    source: 'components/BottomNavigation/BottomNavigation.tsx',
+    prefixes: ['Organism/Bottom Navigation Bar'],
+  },
+  {
+    name: 'Stats Card',
+    source: 'components/StatsCard/StatsCard.tsx',
+    prefixes: ['Organism/Stats card'],
+  },
 ];
 
 const tokens = JSON.parse(readFileSync(tokensPath, 'utf8')) as TokensFile;
