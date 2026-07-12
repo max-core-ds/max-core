@@ -66,6 +66,47 @@ const SPECS: ComponentSpec[] = [
       '--spacing-08', // General Inner/Items Gap — base field has no internal items
     ],
   },
+  // --- Batch 1: Button family ---
+  {
+    name: 'Spinner',
+    source: 'components/Spinner/Spinner.tsx',
+    prefixes: ['Atoms/Spinner'],
+  },
+  {
+    name: 'Icon Only Button',
+    source: 'components/IconOnlyButton/IconOnlyButton.tsx',
+    prefixes: ['Atoms/Buttons/Global'],
+    exempt: [
+      // Padding X and Gap are Standard Button tokens; the icon button is square
+      // with a centered icon and no horizontal padding/gap.
+      '--spacing-06',
+      '--spacing-08',
+      '--spacing-10',
+      '--spacing-12',
+      '--spacing-14',
+      '--spacing-16',
+    ],
+  },
+  {
+    name: 'Link Button',
+    source: 'components/LinkButton/LinkButton.tsx',
+    prefixes: ['Atoms/Buttons/Link Button'],
+  },
+  {
+    name: 'Pay Button',
+    source: 'components/PayButton/PayButton.tsx',
+    prefixes: ['Atoms/Buttons/Pay Button'],
+  },
+  {
+    name: 'Split Button',
+    source: 'components/SplitButton/SplitButton.tsx',
+    prefixes: ['Atoms/Buttons/Split Button'],
+  },
+  {
+    name: 'FAB',
+    source: 'components/Fab/Fab.tsx',
+    prefixes: ['Atoms/Buttons/Fab'],
+  },
 ];
 
 const tokens = JSON.parse(readFileSync(tokensPath, 'utf8')) as TokensFile;
