@@ -406,10 +406,10 @@ Leave the components block as forward-compatible JSON only; components keep read
 
 # Phase 3 — React component buildout (~40 components)
 
-> **Status (2026-07-12):** Batch 0 (foundation + drift gate) and Batches 1–7 shipped —
-> 48 components, drift-green, in tiered Storybook folders (Atoms/Molecules/Organisms ×
-> functional themes). **Remaining:** Batch 8 (Stacked List) + the deferred visual-parity
-> pass (see [[project-phase3-visual-verification-deferred]]).
+> **Status (2026-07-13):** Batch 0 (foundation + drift gate) and Batches 1–7 shipped —
+> 46 components, drift-green, in tiered Storybook folders (Atoms/Molecules/Organisms ×
+> functional themes). **Remaining:** Batch 8 (Stacked List) + the visual cross-check
+> pass, now underway (see **Phase 3.5** below and `PROGRESS.md` for live status).
 
 ## Context
 
@@ -460,3 +460,51 @@ typecheck + tsup build pass · Storybook story per component with `AllVariants`,
 
 ## Out of scope (Phase 4)
 Data Table system, Date Picker, Bottom Sheet + 18 premades. Automated test infra (vitest/axe) stays deferred — drift check is Phase 3's only automated gate.
+
+---
+
+# Phase 3.5 — Visual cross-check against Figma showcases
+
+> **Why:** components were built from the exported `tokens.json` `components` block,
+> which only carries **dimensions** (spacing/size/radius). It does **not** carry states,
+> colors, per-variant fills, or whole axes. So a component can be drift-green yet still be
+> visually wrong or missing a variant. This pass reconciles each component against its
+> Figma showcase before Phase 4. Live status: **`PROGRESS.md`**.
+
+## Input: `figma-node-links/*.json`
+The designer exports one JSON per component group — the showcase node tree, including the
+component set's **variant names** (`Size=…, Variant=…, Tone=…`) and, crucially, **description
+text nodes** that spell out states/structure/tokens the variables omit. Cross-check file key:
+**`sX5tikviuBEhNbu2iPVya5`** (note: differs from the CLAUDE.md production key). Node IDs use
+colons (`51:656`); Figma URLs use dashes (`node-id=51-656`).
+
+## Process (one file at a time, in the order the designer provides)
+1. **Summarize the JSON** — extract variant names + description nodes (helper script:
+   `node figma-node-links/summarize.js figma-node-links/<file>.json` — walks the tree, prints top frames, long
+   description strings, and every `X=Y` variant). This reveals the true axes/states.
+2. **Compare to the React impl** — does it have every axis (variant/tone/size/state), the
+   right defaults, correct structure? List gaps.
+3. **Confirm intent from Figma** — `get_screenshot` (curl the returned URL → PNG → Read) and
+   `get_variable_defs` on the component-set node and a few representative variant nodes.
+   Descriptions lie less than screenshots; read both. For exact fills use `get_design_context`
+   (the generated Tailwind names the bound token, e.g. `bg-[var(--bg/surface)]`).
+   **Token names are mode-independent; the hex you see depends on which mode the file is in —
+   map by token name, not hex.**
+4. **Fix** — put shared color literals in `packages/react/src/utils/*` (Tailwind can't see
+   interpolated classes); keep every class a full literal. Match Figma variant **names** where
+   reasonable (e.g. Tag `filled`→`primary`).
+5. **Verify** — the standard gate (typecheck · build · Storybook tsc · `drift` · biome).
+   Rebuild `@max-core/react` before the Storybook tsc + drift — both read the built `dist`.
+6. **Update the story** — expose any new axis; add an `AllVariants`/matrix story.
+7. **Commit** (one per file; message names the Figma finding) and **`git mv` the file into
+   `figma-node-links/checked/`**, then tick it in `PROGRESS.md`.
+
+## Findings so far (drift-green components that were still wrong)
+- **Badge** collapsed a whole axis (no Default/Outline/Ghost).
+- **PayButton** conflated Color with Provider (hardcoded black/white instead of theme-aware token pairs).
+- **Tag** treated the Selected state as a focus ring; the "filled" look was actually Selected.
+- **LinkButton** was bold with no Pressed state (Figma: Light label, 4 states).
+- **Checkbox/Radio/Switch** were missing the entire Validation axis + helper text.
+
+**Lesson:** the recurring failure is *missing axes/states*, not wrong numbers — the drift gate
+guarantees dimensions, never appearance. Treat description nodes as the spec of record.
