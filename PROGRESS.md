@@ -3,6 +3,10 @@
 > Living status doc for the `@max-core/react` buildout. Update it whenever a
 > component is added or a `figma-node-links/*.json` file is cross-checked.
 > Last updated: **2026-07-13** · Branch: **`feat/phase3-buildout`**
+>
+> **To pick up the work**, paste one of the guides in `prompts/` into a new conversation:
+> [`figma-cross-check.md`](prompts/figma-cross-check.md) (continue the cross-check) or
+> [`implement-component.md`](prompts/implement-component.md) (build a new component + story).
 
 ---
 

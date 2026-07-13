@@ -37,10 +37,14 @@ pnpm build
 max-core/
 ├── CLAUDE.md                         # Agent guardrails and project rules
 ├── PLAN.md                           # Phase-by-phase implementation plan
+├── PROGRESS.md                       # Live component + cross-check status
 ├── docs/
 │   ├── MAX-CORE-SUMMARY.md           # System specification
 │   ├── CLAUDE-ARCHIVE.md             # Historical component QA notes
 │   └── max-core-business-plan.md     # Product strategy
+├── prompts/                          # Reusable handoff / authoring guides
+│   ├── figma-cross-check.md          # Continue the Figma visual cross-check
+│   └── implement-component.md        # Build a new component + story
 ├── packages/
 │   ├── tokens/                       # @max-core/tokens
 │   ├── react/                        # @max-core/react
@@ -417,6 +421,9 @@ slots), matrix views (`AllVariants`), and states that need setup data
 ## Documentation
 
 - **`PLAN.md`** — implementation plans per phase
+- **`PROGRESS.md`** — live component + Figma cross-check status (handoff doc)
+- **`prompts/`** — reusable copy-paste guides: `figma-cross-check.md` (continue
+  the visual cross-check) and `implement-component.md` (build a new component + story)
 - **`CLAUDE.md`** — agent guardrails and project rules; references the docs
   below via `@`-imports
 - **`docs/MAX-CORE-SUMMARY.md`** — system specification (token architecture,
