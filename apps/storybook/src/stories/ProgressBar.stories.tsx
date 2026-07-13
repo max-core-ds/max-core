@@ -9,6 +9,7 @@ const meta = {
   argTypes: {
     value: { control: { type: 'range', min: 0, max: 100 } },
     size: { control: 'select', options: ['s', 'm', 'l'] },
+    showRangeLabels: { control: 'boolean' },
   },
   decorators: [(Story) => <div className="w-96">{Story()}</div>],
 } satisfies Meta<typeof ProgressBar>;
@@ -18,7 +19,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-export const WithLabel: Story = { args: { value: 72, label: 'Uploading…' } };
+export const WithRangeLabels: Story = { args: { value: 72, showRangeLabels: true } };
 
 export const Sizes: Story = {
   render: () => (

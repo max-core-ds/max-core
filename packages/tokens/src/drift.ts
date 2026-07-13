@@ -115,12 +115,14 @@ const SPECS: ComponentSpec[] = [
   },
   {
     name: 'Progress Bar',
-    source: 'components/ProgressBar/ProgressBar.tsx',
+    // Track heights + radius live in the shared util (also used by Range).
+    source: ['components/ProgressBar/ProgressBar.tsx', 'utils/progress.ts'],
     prefixes: ['Atoms/Progress Bar'],
   },
   {
     name: 'Tooltip',
-    source: 'components/Tooltip/Tooltip.tsx',
+    // Padding/radius/arrow-radius live in the shared bubble util (also used by Range).
+    source: ['components/Tooltip/Tooltip.tsx', 'utils/tooltip-surface.ts'],
     prefixes: ['Atoms/Tooltip'],
   },
   {
@@ -297,7 +299,8 @@ const tokens = JSON.parse(readFileSync(tokensPath, 'utf8')) as TokensFile;
 let failed = 0;
 console.log('Token drift check — spacing/size/radius conformance\n');
 for (const spec of SPECS) {
-  const source = readFileSync(resolve(reactSrc, spec.source), 'utf8');
+  const paths = Array.isArray(spec.source) ? spec.source : [spec.source];
+  const source = paths.map((p) => readFileSync(resolve(reactSrc, p), 'utf8')).join('\n');
   const r = checkComponent(tokens, spec, source);
   if (r.ok) {
     console.log(`  ✓ ${r.name}`);

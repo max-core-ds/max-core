@@ -25,14 +25,19 @@ export function refToVar(value: unknown): string | null {
   const m = value.match(/^\{semantics\.([a-z-]+)\.([^}]+)\}$/);
   if (!m) return null; // {primitives.*} or non-ref
   const [, group, key] = m;
+  if (!group || !key) return null;
   return (CHECKED_GROUPS as readonly string[]).includes(group) ? `--${group}-${key}` : null;
 }
 
 export interface ComponentSpec {
   /** Component display name (used in the family→component report). */
   name: string;
-  /** Path to the component source, relative to the react package `src/`. */
-  source: string;
+  /**
+   * Path(s) to the source that binds this component's tokens, relative to the
+   * react package `src/`. Use an array when the bindings live partly in a shared
+   * util (e.g. Progress Bar's track heights in utils/progress.ts).
+   */
+  source: string | string[];
   /** `components` key prefixes this component owns (leading `-- ` stripped). */
   prefixes: string[];
   /** Vars intentionally not bound — pair each with a reason in the caller. */
@@ -66,7 +71,7 @@ export function specVarsFor(tokens: TokensFile, spec: ComponentSpec): Set<string
 export function boundVarsIn(source: string): Set<string> {
   const out = new Set<string>();
   for (const m of source.matchAll(/var\((--(?:spacing|size|radius)-[a-zA-Z0-9-]+)\)/g)) {
-    out.add(m[1]);
+    if (m[1]) out.add(m[1]);
   }
   return out;
 }

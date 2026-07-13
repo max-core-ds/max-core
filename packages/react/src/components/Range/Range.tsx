@@ -1,13 +1,16 @@
 'use client';
 
 import { Slider } from '@base-ui/react/slider';
-import type { ComponentPropsWithoutRef } from 'react';
+import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
+import { progressFill, progressTrack } from '../../utils/progress.js';
+import { tooltipArrow, tooltipBubble } from '../../utils/tooltip-surface.js';
 import { Knob } from '../Knob/Knob.js';
 
-// Slider built on the Knob handle. A thumb is rendered per value, so a range
-// (array value) shows two knobs. The only Figma token is Tooltip Knob Gap (16)
-// — the space between a thumb and its value tooltip.
+// Composed from the Progress Bar (track + fill), Knob (thumb) and Tooltip (value
+// bubble) atoms, per the Figma Range page. A thumb is rendered per value, so a
+// range (array value) shows two knobs. Tooltip Knob Gap (16) spaces each bubble
+// above its thumb.
 export interface RangeProps
   extends Omit<ComponentPropsWithoutRef<typeof Slider.Root>, 'className'> {
   className?: string;
@@ -15,12 +18,15 @@ export interface RangeProps
   showTooltip?: boolean;
   /** Show the min/max bound labels beneath the track. */
   showLabels?: boolean;
+  /** Format the bound labels (e.g. `(v) => `$${v}``). */
+  formatLabel?: (value: number) => ReactNode;
 }
 
 export function Range({
   className,
   showTooltip,
   showLabels,
+  formatLabel = (v) => v,
   value,
   defaultValue,
   min = 0,
@@ -40,12 +46,12 @@ export function Range({
       defaultValue={defaultValue}
       min={min}
       max={max}
-      className={cn('w-full', className)}
+      className={cn('flex w-full flex-col gap-[var(--spacing-08)]', className)}
       {...rest}
     >
       <Slider.Control className="flex w-full items-center py-[var(--spacing-08)]">
-        <Slider.Track className="h-[6px] w-full rounded-[var(--radius-full)] bg-[var(--bg-subtle)]">
-          <Slider.Indicator className="rounded-[var(--radius-full)] bg-[var(--accent-default)]" />
+        <Slider.Track className={progressTrack('s')}>
+          <Slider.Indicator className={progressFill} />
           {Array.from({ length: thumbCount }, (_, i) => (
             <Slider.Thumb
               // biome-ignore lint/suspicious/noArrayIndexKey: thumbs are a fixed, ordered set
@@ -55,9 +61,14 @@ export function Range({
             >
               <Knob />
               {showTooltip ? (
-                <span className="pointer-events-none absolute bottom-full left-1/2 mb-[var(--spacing-16)] -translate-x-1/2 rounded-[var(--radius-sm)] bg-[var(--text-primary)] px-[var(--spacing-08)] py-[var(--spacing-04)] text-xs text-[var(--bg-surface)]">
-                  <Slider.Value>{(_, v) => (Array.isArray(v) ? v[i] : v)}</Slider.Value>
-                </span>
+                <div className="pointer-events-none absolute bottom-full left-1/2 mb-[var(--spacing-16)] -translate-x-1/2">
+                  <div className={cn('relative', tooltipBubble)}>
+                    <Slider.Value>{(_, v) => (Array.isArray(v) ? v[i] : v)}</Slider.Value>
+                    <span
+                      className={cn('absolute -bottom-1 left-1/2 -translate-x-1/2', tooltipArrow)}
+                    />
+                  </div>
+                </div>
               ) : null}
             </Slider.Thumb>
           ))}
@@ -65,8 +76,8 @@ export function Range({
       </Slider.Control>
       {showLabels ? (
         <div className="flex justify-between text-xs text-[var(--text-muted)]">
-          <span>{min}</span>
-          <span>{max}</span>
+          <span>{formatLabel(min)}</span>
+          <span>{formatLabel(max)}</span>
         </div>
       ) : null}
     </Slider.Root>

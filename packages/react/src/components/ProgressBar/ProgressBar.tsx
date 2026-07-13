@@ -1,51 +1,48 @@
 'use client';
 
 import { Progress } from '@base-ui/react/progress';
-import { type VariantProps, cva } from 'class-variance-authority';
-import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import type { ComponentPropsWithoutRef } from 'react';
 import { cn } from '../../utils/cn.js';
-
-// Heights match -- Atoms/Progress Bar/Size */Height (4/8/16); radius full.
-const trackStyles = cva(
-  ['w-full overflow-hidden rounded-[var(--radius-full)] bg-[var(--bg-subtle)]'],
-  {
-    variants: {
-      size: {
-        s: 'h-[var(--size-4)]',
-        m: 'h-[var(--size-8)]',
-        l: 'h-[var(--size-16)]',
-      },
-    },
-    defaultVariants: { size: 'm' },
-  },
-);
+import { type ProgressSize, progressFill, progressTrack } from '../../utils/progress.js';
 
 export interface ProgressBarProps
-  extends Omit<ComponentPropsWithoutRef<typeof Progress.Root>, 'className' | 'value'>,
-    VariantProps<typeof trackStyles> {
+  extends Omit<ComponentPropsWithoutRef<typeof Progress.Root>, 'className' | 'value'> {
   /** 0–100 (or null for indeterminate). */
   value?: number | null;
+  size?: ProgressSize;
   className?: string;
-  /** Optional label rendered above the track. */
-  label?: ReactNode;
+  /** Show the min/max range labels below the track (Figma: "Show Range Labels"). */
+  showRangeLabels?: boolean;
+  min?: number;
+  max?: number;
 }
 
-export function ProgressBar({ value = null, size, className, label, ...rest }: ProgressBarProps) {
+export function ProgressBar({
+  value = null,
+  size = 'm',
+  className,
+  showRangeLabels,
+  min = 0,
+  max = 100,
+  ...rest
+}: ProgressBarProps) {
   return (
     <Progress.Root
       value={value}
+      max={max}
+      // Item Gaps (8px) between the track and the range labels.
       className={cn('flex w-full flex-col gap-[var(--spacing-08)]', className)}
       {...rest}
     >
-      {label ? (
-        <div className="flex items-center justify-between text-sm text-[var(--text-secondary)]">
-          <Progress.Label>{label}</Progress.Label>
-          <Progress.Value />
+      <Progress.Track className={cn(progressTrack(size), 'overflow-hidden')}>
+        <Progress.Indicator className={progressFill} />
+      </Progress.Track>
+      {showRangeLabels ? (
+        <div className="flex justify-between text-xs text-[var(--text-muted)]">
+          <span>{min}%</span>
+          <span>{max}%</span>
         </div>
       ) : null}
-      <Progress.Track className={trackStyles({ size })}>
-        <Progress.Indicator className="h-full rounded-[var(--radius-full)] bg-[var(--accent-default)] transition-all" />
-      </Progress.Track>
     </Progress.Root>
   );
 }
