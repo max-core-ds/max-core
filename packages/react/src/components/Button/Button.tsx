@@ -1,8 +1,8 @@
 'use client';
 
 import { Button as BaseButton } from '@base-ui/react/button';
-import { cva, type VariantProps } from 'class-variance-authority';
-import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import { type VariantProps, cva } from 'class-variance-authority';
+import { type ComponentPropsWithoutRef, type ElementRef, type ReactNode, forwardRef } from 'react';
 import { cn } from '../../utils/cn.js';
 import { focusRing } from '../../utils/focus-ring.js';
 import { elevatePress, stateLayer } from '../../utils/state-layer.js';
@@ -86,21 +86,21 @@ export interface ButtonProps
   children?: ReactNode;
 }
 
-export function Button({
-  variant,
-  tone,
-  size,
-  className,
-  leftIcon,
-  rightIcon,
-  children,
-  ...rest
-}: ButtonProps) {
+// forwardRef so the button can anchor Base UI popups (Tooltip/Dropdown/Dialog
+// triggers pass a ref to position against).
+export const Button = forwardRef<ElementRef<typeof BaseButton>, ButtonProps>(function Button(
+  { variant, tone, size, className, leftIcon, rightIcon, children, ...rest },
+  ref,
+) {
   return (
-    <BaseButton className={cn(buttonStyles({ variant, tone, size }), className)} {...rest}>
+    <BaseButton
+      ref={ref}
+      className={cn(buttonStyles({ variant, tone, size }), className)}
+      {...rest}
+    >
       {leftIcon}
       {children}
       {rightIcon}
     </BaseButton>
   );
-}
+});

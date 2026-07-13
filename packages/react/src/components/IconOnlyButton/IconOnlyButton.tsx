@@ -2,7 +2,7 @@
 
 import { Button as BaseButton } from '@base-ui/react/button';
 import { type VariantProps, cva } from 'class-variance-authority';
-import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import { type ComponentPropsWithoutRef, type ElementRef, type ReactNode, forwardRef } from 'react';
 import { cn } from '../../utils/cn.js';
 import { focusRing } from '../../utils/focus-ring.js';
 import { elevatePress, stateLayer } from '../../utils/state-layer.js';
@@ -73,17 +73,17 @@ export interface IconOnlyButtonProps
   'aria-label': string;
 }
 
-export function IconOnlyButton({
-  variant,
-  tone,
-  size,
-  className,
-  icon,
-  ...rest
-}: IconOnlyButtonProps) {
-  return (
-    <BaseButton className={cn(iconOnlyButtonStyles({ variant, tone, size }), className)} {...rest}>
-      {icon}
-    </BaseButton>
-  );
-}
+// forwardRef so it can anchor Base UI popups (icon buttons are common tooltip triggers).
+export const IconOnlyButton = forwardRef<ElementRef<typeof BaseButton>, IconOnlyButtonProps>(
+  function IconOnlyButton({ variant, tone, size, className, icon, ...rest }, ref) {
+    return (
+      <BaseButton
+        ref={ref}
+        className={cn(iconOnlyButtonStyles({ variant, tone, size }), className)}
+        {...rest}
+      >
+        {icon}
+      </BaseButton>
+    );
+  },
+);
