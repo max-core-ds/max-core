@@ -18,6 +18,10 @@ export interface TooltipProps {
   children: ReactElement;
   side?: 'top' | 'bottom' | 'left' | 'right';
   sideOffset?: number;
+  /** Delay before the tooltip opens, in ms. */
+  delay?: number;
+  /** Delay before the tooltip closes, in ms. */
+  closeDelay?: number;
   rootProps?: ComponentPropsWithoutRef<typeof BaseTooltip.Root>;
 }
 
@@ -26,9 +30,11 @@ export function Tooltip({
   children,
   side = 'top',
   sideOffset = 8,
+  delay,
+  closeDelay,
   rootProps,
 }: TooltipProps) {
-  return (
+  const root = (
     <BaseTooltip.Root {...rootProps}>
       <BaseTooltip.Trigger render={children} />
       <BaseTooltip.Portal>
@@ -40,5 +46,14 @@ export function Tooltip({
         </BaseTooltip.Positioner>
       </BaseTooltip.Portal>
     </BaseTooltip.Root>
+  );
+
+  // delay/closeDelay live on the Provider. Only wrap when set, so an app-level
+  // Tooltip.Provider (delay grouping) still applies when they're omitted.
+  if (delay == null && closeDelay == null) return root;
+  return (
+    <BaseTooltip.Provider delay={delay} closeDelay={closeDelay}>
+      {root}
+    </BaseTooltip.Provider>
   );
 }

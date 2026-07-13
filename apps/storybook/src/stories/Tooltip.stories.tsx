@@ -12,6 +12,8 @@ const meta = {
   argTypes: {
     side: { control: 'select', options: ['top', 'bottom', 'left', 'right'] },
     content: { control: 'text' },
+    delay: { control: 'number' },
+    closeDelay: { control: 'number' },
     children: { control: false },
   },
 } satisfies Meta<typeof Tooltip>;
@@ -19,9 +21,9 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// Hover the trigger to reveal the tooltip.
+// Hover the trigger to reveal the tooltip. Tune `delay` / `closeDelay` in Controls.
 export const Default: Story = {
-  args: { content: 'Saved automatically', side: 'top' },
+  args: { content: 'Saved automatically', side: 'top', delay: 200 },
   render: (args) => (
     <Tooltip {...args}>
       <Button variant="secondary">Hover me</Button>
