@@ -1,0 +1,202 @@
+[
+  {
+    "name": "Segmented Control ",
+    "id": "3538:3",
+    "children": [
+      {
+        "name": "Frame 1",
+        "id": "3520:29958",
+        "children": [
+          {
+            "name": "Frame",
+            "id": "3538:5",
+            "children": [
+              {
+                "name": "Segmented Control",
+                "id": "3538:6"
+              },
+              {
+                "name": "See documentation →",
+                "id": "3538:7"
+              },
+              {
+                "name": "A tab-like selection control for switching between views or filtering content. Two components: an item (.Segmented control-item) with Active on/off, and a container (Segmented control) holding multiple items.",
+                "id": "3538:8"
+              },
+              {
+                "name": "Rectangle",
+                "id": "3520:29959"
+              }
+            ]
+          },
+          {
+            "name": "Frame",
+            "id": "3538:10",
+            "children": [
+              {
+                "name": ".Segmented control-item",
+                "id": "3538:11"
+              },
+              {
+                "name": "Individual tab item with 2 states: Active=on (selected, filled background) and Active=off (unselected). 3 tokens: Item/Radius (full), Item/Padding (8px), Item/Border Weight (none). Property: Item text (editable label).",
+                "id": "3538:12"
+              },
+              {
+                "name": "Frame",
+                "id": "3538:13",
+                "children": [
+                  {
+                    "name": "li:triangle-alert",
+                    "id": "3538:14",
+                    "children": [
+                      {
+                        "name": "Icon",
+                        "id": "I3538:14;118:4787"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Internal component — use Segmented control in layouts.",
+                    "id": "3538:16"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": ".Segmented control-item",
+            "id": "2106:595",
+            "children": [
+              {
+                "name": "Active=off",
+                "id": "2106:594",
+                "children": [
+                  {
+                    "name": "Map",
+                    "id": "2106:593"
+                  }
+                ]
+              },
+              {
+                "name": "Active=on",
+                "id": "2106:596",
+                "children": [
+                  {
+                    "name": "Map",
+                    "id": "2106:597"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Frame",
+            "id": "3538:17",
+            "children": [
+              {
+                "name": "Segmented control",
+                "id": "3538:18"
+              },
+              {
+                "name": "Container that holds multiple .Segmented control-item instances. Currently 1 variant: Options=3 items (5 item slots). 4 tokens: main/Radius (full), main/Padding (8px), main/Gap (16px), main/Border Weight (thin/1px).",
+                "id": "3538:19"
+              },
+              {
+                "name": "Frame",
+                "id": "3538:20",
+                "children": [
+                  {
+                    "name": "li:check",
+                    "id": "3538:21",
+                    "children": [
+                      {
+                        "name": "Icon",
+                        "id": "I3538:21;118:3659"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "This is the component to use in layouts.",
+                    "id": "3538:23"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Segmented control",
+            "id": "2106:583",
+            "children": [
+              {
+                "name": "Options=Default",
+                "id": "2106:584",
+                "children": [
+                  {
+                    "name": "Items",
+                    "id": "2106:585",
+                    "children": [
+                      {
+                        "name": ".Segmented control-item",
+                        "id": "2106:607",
+                        "children": [
+                          {
+                            "name": "Map",
+                            "id": "I2106:607;2106:597"
+                          }
+                        ]
+                      },
+                      {
+                        "name": ".Segmented control-item",
+                        "id": "2106:610",
+                        "children": [
+                          {
+                            "name": "Map",
+                            "id": "I2106:610;2106:593"
+                          }
+                        ]
+                      },
+                      {
+                        "name": ".Segmented control-item",
+                        "id": "2106:613",
+                        "children": [
+                          {
+                            "name": "Map",
+                            "id": "I2106:613;2106:593"
+                          }
+                        ]
+                      },
+                      {
+                        "name": ".Segmented control-item",
+                        "id": "2155:25",
+                        "children": [
+                          {
+                            "name": "Map",
+                            "id": "I2155:25;2106:593"
+                          }
+                        ]
+                      },
+                      {
+                        "name": ".Segmented control-item",
+                        "id": "2155:27",
+                        "children": [
+                          {
+                            "name": "Map",
+                            "id": "I2155:27;2106:593"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Ellipse",
+        "id": "3538:4"
+      }
+    ]
+  }
+]

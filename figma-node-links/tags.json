@@ -1,0 +1,1477 @@
+[
+  {
+    "name": "Tag",
+    "id": "3651:2",
+    "children": [
+      {
+        "name": "Ellipse",
+        "id": "3651:3"
+      },
+      {
+        "name": "Hero",
+        "id": "3651:4",
+        "children": [
+          {
+            "name": "Tag",
+            "id": "3651:5"
+          },
+          {
+            "name": "See documentation →",
+            "id": "3651:6"
+          },
+          {
+            "name": "A compact label for categorization and filtering. 32 variants: 3 Variants (Primary, Outline, Ghost) × 4 Tones × 2 Sizes (S, M) + Selected state. Wrapper with 5 states (Default, Hover, Pressed, Focused, Disabled). 17 tokens.",
+            "id": "3651:7"
+          },
+          {
+            "name": "Divider",
+            "id": "3651:8"
+          }
+        ]
+      },
+      {
+        "name": "Info",
+        "id": "3651:9",
+        "children": [
+          {
+            "name": "Tag",
+            "id": "3651:10"
+          },
+          {
+            "name": "32 option variants: 3 Variants (Primary, Outline, Ghost) × 4 Tones × 2 Sizes + Selected state (Primary only). Wrapper: 5 states (Default, Hover, Pressed, Focused, Disabled) with .Focus-ring on Focused. Structure: Container (auto-layout) + Left Icon + Label + Right Icon (close X). 17 tokens: Global Radius (sm), Global Border Weight (thin), Global Icon Size (16px), per-size Padding X/Y, Gap, Radius, Border Weight, Icon Size, Min Height. Properties: Label, Show Left Icon, Show Label, Show Right Icon, Left Icon (swap), Right Icon (swap).",
+            "id": "3651:11"
+          }
+        ]
+      },
+      {
+        "name": ".Tag-option",
+        "id": "54:34",
+        "children": [
+          {
+            "name": "Size=S, Variant=Primary, Tone=Default, Selected=On",
+            "id": "54:35",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "121:845"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2027:2525",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2027:2525;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "54:36"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:6759",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:6759;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=S, Variant=Primary, Tone=Default, Selected=Off",
+            "id": "2183:7041",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "2183:7042"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2183:7043",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:7043;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "2183:7044"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:7045",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:7045;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=S, Variant=Primary, Tone=Danger, Selected=Off",
+            "id": "54:37",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "121:995"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2027:2522",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2027:2522;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "54:38"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:6749",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:6749;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=S, Variant=Primary, Tone=Danger, Selected=On",
+            "id": "2183:7069",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "2183:7070"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2183:7071",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:7071;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "2183:7072"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:7073",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:7073;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=S, Variant=Primary, Tone=Success, Selected=Off",
+            "id": "54:39",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "121:992"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2027:2516",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2027:2516;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "54:40"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:6761",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:6761;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=S, Variant=Primary, Tone=Success, Selected=On",
+            "id": "2183:7097",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "2183:7098"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2183:7099",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:7099;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "2183:7100"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:7101",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:7101;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=S, Variant=Primary, Tone=Warning, Selected=Off",
+            "id": "54:41",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "121:986"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2027:2504",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2027:2504;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "54:42"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:6741",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:6741;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=S, Variant=Primary, Tone=Warning, Selected=On",
+            "id": "2183:7125",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "2183:7126"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2183:7127",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:7127;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "2183:7128"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:7129",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:7129;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=S, Variant=Outline, Tone=Default, Selected=Off",
+            "id": "54:43",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "121:907"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2027:2526",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2027:2526;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "54:44"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:6753",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:6753;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=S, Variant=Outline, Tone=Danger, Selected=Off",
+            "id": "54:45",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "121:988"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2027:2523",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2027:2523;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "54:46"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:6757",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:6757;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=S, Variant=Outline, Tone=Success, Selected=Off",
+            "id": "54:47",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "121:884"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2027:2517",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2027:2517;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "54:48"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:6767",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:6767;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=S, Variant=Outline, Tone=Warning, Selected=Off",
+            "id": "54:49",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "121:970"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2027:2505",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2027:2505;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "54:50"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:6779",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:6779;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=S, Variant=Ghost, Tone=Default, Selected=Off",
+            "id": "54:51",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "121:973"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2027:2527",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2027:2527;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "54:52"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:6783",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:6783;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=S, Variant=Ghost, Tone=Danger, Selected=Off",
+            "id": "54:53",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "121:994"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2027:2524",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2027:2524;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "54:54"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:6773",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:6773;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=S, Variant=Ghost, Tone=Success, Selected=Off",
+            "id": "54:55",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "121:946"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2027:2518",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2027:2518;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "54:56"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:6755",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:6755;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=S, Variant=Ghost, Tone=Warning, Selected=Off",
+            "id": "54:57",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "121:901"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2027:2506",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2027:2506;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "54:58"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:6775",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:6775;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=M, Variant=Primary, Tone=Default, Selected=On",
+            "id": "54:59",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "121:934"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2027:2519",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2027:2519;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "54:60"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:6787",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:6787;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=M, Variant=Primary, Tone=Default, Selected=Off",
+            "id": "2183:7046",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "2183:7047"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2183:7048",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:7048;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "2183:7049"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:7050",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:7050;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=M, Variant=Primary, Tone=Danger, Selected=Off",
+            "id": "54:61",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "121:932"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2027:2513",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2027:2513;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "54:62"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:6771",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:6771;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=M, Variant=Primary, Tone=Danger, Selected=On",
+            "id": "2183:7074",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "2183:7075"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2183:7076",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:7076;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "2183:7077"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:7078",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:7078;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=M, Variant=Primary, Tone=Success, Selected=Off",
+            "id": "54:63",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "121:923"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2027:2510",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2027:2510;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "54:64"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:6743",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:6743;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=M, Variant=Primary, Tone=Success, Selected=On",
+            "id": "2183:7102",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "2183:7103"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2183:7104",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:7104;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "2183:7105"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:7106",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:7106;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=M, Variant=Primary, Tone=Warning, Selected=Off",
+            "id": "54:65",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "121:924"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2027:2495",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2027:2495;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "54:66"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:6763",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:6763;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=M, Variant=Primary, Tone=Warning, Selected=On",
+            "id": "2183:7130",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "2183:7131"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2183:7132",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:7132;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "2183:7133"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:7134",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:7134;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=M, Variant=Outline, Tone=Default, Selected=Off",
+            "id": "54:67",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "121:920"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2027:2520",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2027:2520;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "54:68"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:6765",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:6765;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=M, Variant=Outline, Tone=Danger, Selected=Off",
+            "id": "54:69",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "121:906"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2027:2514",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2027:2514;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "54:70"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:6751",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:6751;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=M, Variant=Outline, Tone=Success, Selected=Off",
+            "id": "54:71",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "121:998"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2027:2511",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2027:2511;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "54:72"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:6785",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:6785;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=M, Variant=Outline, Tone=Warning, Selected=Off",
+            "id": "54:73",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "121:891"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2027:2496",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2027:2496;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "54:74"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:6769",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:6769;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=M, Variant=Ghost, Tone=Default, Selected=Off",
+            "id": "54:75",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "121:910"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2027:2521",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2027:2521;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "54:76"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:6777",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:6777;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=M, Variant=Ghost, Tone=Danger, Selected=Off",
+            "id": "54:77",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "121:885"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2027:2515",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2027:2515;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "54:78"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:6745",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:6745;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=M, Variant=Ghost, Tone=Success, Selected=Off",
+            "id": "54:79",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "121:982"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2027:2512",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2027:2512;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "54:80"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:6747",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:6747;118:4884"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=M, Variant=Ghost, Tone=Warning, Selected=Off",
+            "id": "54:81",
+            "children": [
+              {
+                "name": "_StateOverlay",
+                "id": "121:879"
+              },
+              {
+                "name": "li:triangle",
+                "id": "2027:2497",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2027:2497;118:4789"
+                  }
+                ]
+              },
+              {
+                "name": "Tag label",
+                "id": "54:82"
+              },
+              {
+                "name": "li:x",
+                "id": "2183:6781",
+                "children": [
+                  {
+                    "name": "Icon",
+                    "id": "I2183:6781;118:4884"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": ".Tag-option",
+        "id": "3652:3"
+      },
+      {
+        "name": "S Off",
+        "id": "3652:4"
+      },
+      {
+        "name": "S Selected",
+        "id": "3652:5"
+      },
+      {
+        "name": "M Off",
+        "id": "3652:6"
+      },
+      {
+        "name": "M selected",
+        "id": "3652:7"
+      },
+      {
+        "name": "Primary",
+        "id": "3652:8"
+      },
+      {
+        "name": "Default",
+        "id": "3652:9"
+      },
+      {
+        "name": "Danger",
+        "id": "3652:10"
+      },
+      {
+        "name": "Success",
+        "id": "3652:11"
+      },
+      {
+        "name": "Warning",
+        "id": "3652:12"
+      },
+      {
+        "name": "Outline",
+        "id": "3652:13"
+      },
+      {
+        "name": "Default",
+        "id": "3652:14"
+      },
+      {
+        "name": "Danger",
+        "id": "3652:15"
+      },
+      {
+        "name": "Success",
+        "id": "3652:16"
+      },
+      {
+        "name": "Warning",
+        "id": "3652:17"
+      },
+      {
+        "name": "Ghost",
+        "id": "3652:18"
+      },
+      {
+        "name": "Default",
+        "id": "3652:19"
+      },
+      {
+        "name": "Danger",
+        "id": "3652:20"
+      },
+      {
+        "name": "Success",
+        "id": "3652:21"
+      },
+      {
+        "name": "Warning",
+        "id": "3652:22"
+      },
+      {
+        "name": "Warning",
+        "id": "3636:17642",
+        "children": [
+          {
+            "name": "li:triangle-alert",
+            "id": "3636:17643",
+            "children": [
+              {
+                "name": "Icon",
+                "id": "I3636:17643;118:4787"
+              }
+            ]
+          },
+          {
+            "name": "Internal component — do not use in layouts. Use Tag instead.",
+            "id": "3636:17644"
+          }
+        ]
+      },
+      {
+        "name": "Tag",
+        "id": "121:2323",
+        "children": [
+          {
+            "name": "State=Default, Disabled=Off",
+            "id": "121:2322",
+            "children": [
+              {
+                "name": ".Tag-option",
+                "id": "121:1541",
+                "children": [
+                  {
+                    "name": "_StateOverlay",
+                    "id": "I121:1541;2183:7042"
+                  },
+                  {
+                    "name": "li:triangle",
+                    "id": "I121:1541;2183:7043",
+                    "children": [
+                      {
+                        "name": "Icon",
+                        "id": "I121:1541;2183:7043;118:4789"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Tag label",
+                    "id": "I121:1541;2183:7044"
+                  },
+                  {
+                    "name": "li:x",
+                    "id": "I121:1541;2183:7045",
+                    "children": [
+                      {
+                        "name": "Icon",
+                        "id": "I121:1541;2183:7045;118:4884"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "State=Hover, Disabled=Off",
+            "id": "121:2324",
+            "children": [
+              {
+                "name": ".Tag-option",
+                "id": "121:2325",
+                "children": [
+                  {
+                    "name": "_StateOverlay",
+                    "id": "I121:2325;2183:7042"
+                  },
+                  {
+                    "name": "li:triangle",
+                    "id": "I121:2325;2183:7043",
+                    "children": [
+                      {
+                        "name": "Icon",
+                        "id": "I121:2325;2183:7043;118:4789"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Tag label",
+                    "id": "I121:2325;2183:7044"
+                  },
+                  {
+                    "name": "li:x",
+                    "id": "I121:2325;2183:7045",
+                    "children": [
+                      {
+                        "name": "Icon",
+                        "id": "I121:2325;2183:7045;118:4884"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "State=Pressed, Disabled=Off",
+            "id": "121:2331",
+            "children": [
+              {
+                "name": ".Tag-option",
+                "id": "121:2332",
+                "children": [
+                  {
+                    "name": "_StateOverlay",
+                    "id": "I121:2332;2183:7042"
+                  },
+                  {
+                    "name": "li:triangle",
+                    "id": "I121:2332;2183:7043",
+                    "children": [
+                      {
+                        "name": "Icon",
+                        "id": "I121:2332;2183:7043;118:4789"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Tag label",
+                    "id": "I121:2332;2183:7044"
+                  },
+                  {
+                    "name": "li:x",
+                    "id": "I121:2332;2183:7045",
+                    "children": [
+                      {
+                        "name": "Icon",
+                        "id": "I121:2332;2183:7045;118:4884"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "State=Focused, Disabled=Off",
+            "id": "121:2338",
+            "children": [
+              {
+                "name": ".Tag-option",
+                "id": "121:2339",
+                "children": [
+                  {
+                    "name": "_StateOverlay",
+                    "id": "I121:2339;2183:7042"
+                  },
+                  {
+                    "name": "li:triangle",
+                    "id": "I121:2339;2183:7043",
+                    "children": [
+                      {
+                        "name": "Icon",
+                        "id": "I121:2339;2183:7043;118:4789"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Tag label",
+                    "id": "I121:2339;2183:7044"
+                  },
+                  {
+                    "name": "li:x",
+                    "id": "I121:2339;2183:7045",
+                    "children": [
+                      {
+                        "name": "Icon",
+                        "id": "I121:2339;2183:7045;118:4884"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": ".Focus-ring",
+                "id": "121:2352",
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "State=Default, Disabled=On",
+            "id": "121:2345",
+            "children": [
+              {
+                "name": ".Tag-option",
+                "id": "121:2346",
+                "children": [
+                  {
+                    "name": "_StateOverlay",
+                    "id": "I121:2346;2183:7042"
+                  },
+                  {
+                    "name": "li:triangle",
+                    "id": "I121:2346;2183:7043",
+                    "children": [
+                      {
+                        "name": "Icon",
+                        "id": "I121:2346;2183:7043;118:4789"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Tag label",
+                    "id": "I121:2346;2183:7044"
+                  },
+                  {
+                    "name": "li:x",
+                    "id": "I121:2346;2183:7045",
+                    "children": [
+                      {
+                        "name": "Icon",
+                        "id": "I121:2346;2183:7045;118:4884"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Tag (Wrapper)",
+        "id": "3652:2"
+      },
+      {
+        "name": "Warning",
+        "id": "3636:17645",
+        "children": [
+          {
+            "name": "li:check",
+            "id": "3636:17646",
+            "children": [
+              {
+                "name": "Icon",
+                "id": "I3636:17646;118:3659"
+              }
+            ]
+          },
+          {
+            "name": "This is the component to use in layouts.",
+            "id": "3636:17647"
+          }
+        ]
+      }
+    ]
+  }
+]

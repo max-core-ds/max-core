@@ -35,10 +35,16 @@ export const Default: Story = {
 export const Positions: Story = {
   parameters: { layout: 'padded' },
   render: () => (
-    <div className="flex flex-wrap items-center gap-[var(--spacing-48)] p-[var(--spacing-48)]">
+    <div className="flex flex-wrap justify-around items-center gap-[var(--spacing-48)] p-[var(--spacing-48)]">
       {(['top', 'bottom', 'left', 'right'] as const).map((side) => (
-        <Tooltip key={side} content={`Side: ${side}`} side={side} rootProps={{ defaultOpen: true }}>
-          <Button variant="secondary">{side}</Button>
+        <Tooltip
+          key={side}
+          content={`Side: ${side}`}
+          side={side}
+          rootProps={{ defaultOpen: true }}
+          delay={200}
+        >
+          <Button variant="secondary">Hover me</Button>
         </Tooltip>
       ))}
     </div>

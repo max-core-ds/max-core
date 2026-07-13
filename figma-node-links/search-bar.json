@@ -1,0 +1,448 @@
+[
+  {
+    "name": "Search Bar",
+    "id": "3724:82",
+    "children": [
+      {
+        "name": "Ellipse",
+        "id": "3724:83"
+      },
+      {
+        "name": "Hero",
+        "id": "3724:84",
+        "children": [
+          {
+            "name": "Search Bar",
+            "id": "3724:85"
+          },
+          {
+            "name": "See documentation →",
+            "id": "3724:86"
+          },
+          {
+            "name": "A text input with search icon, clear button, and optional action button. 6 variants: 3 Sizes (S, M, L) × 2 Button modes (Off, On). Full radius pill shape. 10 tokens.",
+            "id": "3724:87"
+          },
+          {
+            "name": "Divider",
+            "id": "3724:88"
+          }
+        ]
+      },
+      {
+        "name": "Info",
+        "id": "3724:89",
+        "children": [
+          {
+            "name": "Search Bar",
+            "id": "3724:90"
+          },
+          {
+            "name": "6 variants: 3 Sizes (S, M, L) × 2 Button modes (Off, On). Structure: Search Icon + Text Input + Clear (X) icon. Button=On adds a Standard Button (Atom). 10 tokens: Global Radius (full/9999), Global Border Weight (thin/1), Global Min Width (180), per-size Padding X/Y, Gap, Icon Size (S only). Properties: Left icon (instance swap), placeholder text.",
+            "id": "3724:91"
+          }
+        ]
+      },
+      {
+        "name": "Searchbar",
+        "id": "2106:546",
+        "children": [
+          {
+            "name": "Size=S, Button=Off",
+            "id": "2106:545",
+            "children": [
+              {
+                "name": "Search bar s",
+                "id": "2622:8351",
+                "children": [
+                  {
+                    "name": "Left Icon",
+                    "id": "2106:534",
+                    "children": [
+                      {
+                        "name": "Icon",
+                        "id": "I2106:534;118:4543"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Search...",
+                    "id": "2106:535"
+                  },
+                  {
+                    "name": "li:x",
+                    "id": "2344:4340",
+                    "children": [
+                      {
+                        "name": "Icon",
+                        "id": "I2344:4340;118:4884"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=S, Button=On",
+            "id": "2625:8549",
+            "children": [
+              {
+                "name": "Search bar s",
+                "id": "2625:8550",
+                "children": [
+                  {
+                    "name": "Left Icon",
+                    "id": "2625:8551",
+                    "children": [
+                      {
+                        "name": "Icon",
+                        "id": "I2625:8551;118:4543"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Search...",
+                    "id": "2625:8552"
+                  },
+                  {
+                    "name": "Button",
+                    "id": "2625:8578",
+                    "children": [
+                      {
+                        "name": ".Button-options",
+                        "id": "I2625:8578;119:5285",
+                        "children": [
+                          {
+                            "name": "State Layer",
+                            "id": "I2625:8578;119:5285;2117:14203"
+                          },
+                          {
+                            "name": "li:triangle",
+                            "id": "I2625:8578;119:5285;124:2436",
+                            "children": [
+                              {
+                                "name": "Icon",
+                                "id": "I2625:8578;119:5285;124:2436;118:4789"
+                              }
+                            ]
+                          },
+                          {
+                            "name": "Label",
+                            "id": "I2625:8578;119:5285;11:138"
+                          },
+                          {
+                            "name": "li:triangle",
+                            "id": "I2625:8578;119:5285;124:2612",
+                            "children": [
+                              {
+                                "name": "Icon",
+                                "id": "I2625:8578;119:5285;124:2612;118:4789"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=M, Button=Off",
+            "id": "2622:8407",
+            "children": [
+              {
+                "name": "Search bar s",
+                "id": "2622:8408",
+                "children": [
+                  {
+                    "name": "Left Icon",
+                    "id": "2622:8409",
+                    "children": [
+                      {
+                        "name": "Icon",
+                        "id": "I2622:8409;118:4543"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Search...",
+                    "id": "2622:8410"
+                  },
+                  {
+                    "name": "li:x",
+                    "id": "2622:8411",
+                    "children": [
+                      {
+                        "name": "Icon",
+                        "id": "I2622:8411;118:4884"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=M, Button=On",
+            "id": "2625:8554",
+            "children": [
+              {
+                "name": "Search bar s",
+                "id": "2625:8555",
+                "children": [
+                  {
+                    "name": "Left Icon",
+                    "id": "2625:8556",
+                    "children": [
+                      {
+                        "name": "Icon",
+                        "id": "I2625:8556;118:4543"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Search...",
+                    "id": "2625:8557"
+                  },
+                  {
+                    "name": "Button",
+                    "id": "2625:8587",
+                    "children": [
+                      {
+                        "name": ".Button-options",
+                        "id": "I2625:8587;119:5285",
+                        "children": [
+                          {
+                            "name": "State Layer",
+                            "id": "I2625:8587;119:5285;2117:14203"
+                          },
+                          {
+                            "name": "li:triangle",
+                            "id": "I2625:8587;119:5285;124:2436",
+                            "children": [
+                              {
+                                "name": "Icon",
+                                "id": "I2625:8587;119:5285;124:2436;118:4789"
+                              }
+                            ]
+                          },
+                          {
+                            "name": "Label",
+                            "id": "I2625:8587;119:5285;11:138"
+                          },
+                          {
+                            "name": "li:triangle",
+                            "id": "I2625:8587;119:5285;124:2612",
+                            "children": [
+                              {
+                                "name": "Icon",
+                                "id": "I2625:8587;119:5285;124:2612;118:4789"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=L, Button=Off",
+            "id": "2622:8421",
+            "children": [
+              {
+                "name": "Search bar s",
+                "id": "2622:8422",
+                "children": [
+                  {
+                    "name": "Left Icon",
+                    "id": "2622:8423",
+                    "children": [
+                      {
+                        "name": "Icon",
+                        "id": "I2622:8423;118:4543"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Search...",
+                    "id": "2622:8424"
+                  },
+                  {
+                    "name": "li:x",
+                    "id": "2622:8425",
+                    "children": [
+                      {
+                        "name": "Icon",
+                        "id": "I2622:8425;118:4884"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Size=L, Button=On",
+            "id": "2625:8559",
+            "children": [
+              {
+                "name": "Search bar s",
+                "id": "2625:8560",
+                "children": [
+                  {
+                    "name": "Left Icon",
+                    "id": "2625:8561",
+                    "children": [
+                      {
+                        "name": "Icon",
+                        "id": "I2625:8561;118:4543"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Search...",
+                    "id": "2625:8562"
+                  },
+                  {
+                    "name": "Button",
+                    "id": "2625:8594",
+                    "children": [
+                      {
+                        "name": ".Button-options",
+                        "id": "I2625:8594;119:5285",
+                        "children": [
+                          {
+                            "name": "State Layer",
+                            "id": "I2625:8594;119:5285;2117:14203"
+                          },
+                          {
+                            "name": "li:triangle",
+                            "id": "I2625:8594;119:5285;124:2436",
+                            "children": [
+                              {
+                                "name": "Icon",
+                                "id": "I2625:8594;119:5285;124:2436;118:4789"
+                              }
+                            ]
+                          },
+                          {
+                            "name": "Label",
+                            "id": "I2625:8594;119:5285;11:138"
+                          },
+                          {
+                            "name": "li:triangle",
+                            "id": "I2625:8594;119:5285;124:2612",
+                            "children": [
+                              {
+                                "name": "Icon",
+                                "id": "I2625:8594;119:5285;124:2612;118:4789"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Searchbar",
+        "id": "3724:92"
+      },
+      {
+        "name": "Button=Off",
+        "id": "3724:93"
+      },
+      {
+        "name": "Button=On",
+        "id": "3724:94"
+      },
+      {
+        "name": "S",
+        "id": "3724:95"
+      },
+      {
+        "name": "M",
+        "id": "3724:96"
+      },
+      {
+        "name": "L",
+        "id": "3724:97"
+      },
+      {
+        "name": "Atoms used in this Molecule",
+        "id": "3725:84"
+      },
+      {
+        "name": "Atom Card — Standard Button",
+        "id": "3725:85",
+        "children": [
+          {
+            "name": "Button",
+            "id": "3725:86",
+            "children": [
+              {
+                "name": ".Button-options",
+                "id": "I3725:86;119:5285",
+                "children": [
+                  {
+                    "name": "State Layer",
+                    "id": "I3725:86;119:5285;2117:14203"
+                  },
+                  {
+                    "name": "li:triangle",
+                    "id": "I3725:86;119:5285;124:2436",
+                    "children": [
+                      {
+                        "name": "Icon",
+                        "id": "I3725:86;119:5285;124:2436;118:4789"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Label",
+                    "id": "I3725:86;119:5285;11:138"
+                  },
+                  {
+                    "name": "li:triangle",
+                    "id": "I3725:86;119:5285;124:2612",
+                    "children": [
+                      {
+                        "name": "Icon",
+                        "id": "I3725:86;119:5285;124:2612;118:4789"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Atom Info",
+            "id": "3725:94",
+            "children": [
+              {
+                "name": "Standard Button",
+                "id": "3725:95"
+              },
+              {
+                "name": "Atom — used in Button=On variants as action trigger",
+                "id": "3725:96"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

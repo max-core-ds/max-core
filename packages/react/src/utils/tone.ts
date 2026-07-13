@@ -34,6 +34,16 @@ export const statusBg: Record<StatusTone, string> = {
   warning: 'bg-[var(--status-warning-default)]',
 };
 
+/** Subtle tinted fill: tone subtle bg + tone border + tone text (Badge `default`). */
+export const statusSubtle: Record<StatusTone, string> = {
+  danger:
+    'bg-[var(--status-danger-subtle)] border-[var(--status-danger-border)] text-[var(--status-danger-default)]',
+  success:
+    'bg-[var(--status-success-subtle)] border-[var(--status-success-border)] text-[var(--status-success-default)]',
+  warning:
+    'bg-[var(--status-warning-subtle)] border-[var(--status-warning-border)] text-[var(--status-warning-default)]',
+};
+
 /** Tone-colored border + text — outline/secondary treatment. */
 export const statusOutline: Record<StatusTone, string> = {
   danger: 'border-[var(--status-danger-default)] text-[var(--status-danger-default)]',
