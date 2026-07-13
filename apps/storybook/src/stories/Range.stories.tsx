@@ -6,8 +6,11 @@ const meta = {
   component: Range,
   parameters: { layout: 'padded' },
   decorators: [(Story) => <div className="w-96 pt-8">{Story()}</div>],
-  args: { defaultValue: 40, min: 0, max: 100 },
-  argTypes: { showTooltip: { control: 'boolean' } },
+  args: { defaultValue: 40, min: 0, max: 100, showLabels: true },
+  argTypes: {
+    showTooltip: { control: 'boolean' },
+    showLabels: { control: 'boolean' },
+  },
 } satisfies Meta<typeof Range>;
 
 export default meta;

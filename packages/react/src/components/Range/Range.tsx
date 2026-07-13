@@ -13,9 +13,20 @@ export interface RangeProps
   className?: string;
   /** Show a value tooltip above each thumb. */
   showTooltip?: boolean;
+  /** Show the min/max bound labels beneath the track. */
+  showLabels?: boolean;
 }
 
-export function Range({ className, showTooltip, value, defaultValue, ...rest }: RangeProps) {
+export function Range({
+  className,
+  showTooltip,
+  showLabels,
+  value,
+  defaultValue,
+  min = 0,
+  max = 100,
+  ...rest
+}: RangeProps) {
   const values = Array.isArray(value)
     ? value
     : Array.isArray(defaultValue)
@@ -27,6 +38,8 @@ export function Range({ className, showTooltip, value, defaultValue, ...rest }: 
     <Slider.Root
       value={value}
       defaultValue={defaultValue}
+      min={min}
+      max={max}
       className={cn('w-full', className)}
       {...rest}
     >
@@ -50,6 +63,12 @@ export function Range({ className, showTooltip, value, defaultValue, ...rest }: 
           ))}
         </Slider.Track>
       </Slider.Control>
+      {showLabels ? (
+        <div className="flex justify-between text-xs text-[var(--text-muted)]">
+          <span>{min}</span>
+          <span>{max}</span>
+        </div>
+      ) : null}
     </Slider.Root>
   );
 }
