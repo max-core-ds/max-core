@@ -1,13 +1,13 @@
+import { Tag } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Hash, Star, X } from 'lucide-react';
-import { Tag } from '@max-core/react';
 
 const meta = {
   title: 'Atoms/Data Display/Tag',
   component: Tag,
   parameters: { layout: 'centered' },
   argTypes: {
-    variant: { control: 'select', options: ['filled', 'outline', 'ghost'] },
+    variant: { control: 'select', options: ['primary', 'outline', 'ghost'] },
     tone: { control: 'select', options: ['default', 'danger', 'success', 'warning'] },
     size: { control: 'select', options: ['s', 'm'] },
     selected: { control: 'boolean' },
@@ -42,7 +42,7 @@ export const AllVariants: Story = {
   parameters: { layout: 'padded' },
   render: () => (
     <div className="flex flex-col gap-[var(--spacing-24)]">
-      {(['filled', 'outline', 'ghost'] as const).map((variant) => (
+      {(['primary', 'outline', 'ghost'] as const).map((variant) => (
         <section key={variant} className="flex flex-col gap-[var(--spacing-08)]">
           <h3 className="text-sm font-bold uppercase tracking-wide text-[var(--text-muted)]">
             {variant}
@@ -55,6 +55,25 @@ export const AllVariants: Story = {
             ))}
           </div>
         </section>
+      ))}
+    </div>
+  ),
+};
+
+// Selected only applies to the Primary variant: Off = subtle fill, On = solid.
+export const Selected: Story = {
+  parameters: { layout: 'padded' },
+  render: () => (
+    <div className="flex flex-col gap-[var(--spacing-08)]">
+      {(['default', 'danger', 'success', 'warning'] as const).map((tone) => (
+        <div key={tone} className="flex items-center gap-[var(--spacing-08)]">
+          <Tag variant="primary" tone={tone} selected={false}>
+            {tone} off
+          </Tag>
+          <Tag variant="primary" tone={tone} selected>
+            {tone} on
+          </Tag>
+        </div>
       ))}
     </div>
   ),
