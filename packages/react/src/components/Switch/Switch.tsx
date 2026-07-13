@@ -2,17 +2,19 @@
 
 import { Switch as BaseSwitch } from '@base-ui/react/switch';
 import { type VariantProps, cva } from 'class-variance-authority';
-import type { ComponentPropsWithoutRef } from 'react';
+import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
 import { focusRing } from '../../utils/focus-ring.js';
+import { type Validation, switchValidation } from '../../utils/validation.js';
 
 // Track width from Switch/Width (32/40); Knob Padding (2) insets the thumb;
 // radius full. Track height and thumb size follow the Tailwind scale (Figma
-// does not tokenize them). Thumb travel = width − 2·padding − thumb.
+// does not tokenize them). Track color comes from the Validation axis (neutral
+// when off, validation color when on). Thumb travel = width − 2·padding − thumb.
 const trackStyles = cva(
   [
     'relative inline-flex shrink-0 items-center rounded-[var(--radius-full)] p-[var(--spacing-02)]',
-    'bg-[var(--neutral-default)] transition-colors data-[checked]:bg-[var(--accent-default)]',
+    'transition-colors',
     focusRing,
     'data-[disabled]:opacity-[var(--opacity-disabled)]',
   ],
@@ -22,8 +24,9 @@ const trackStyles = cva(
         s: 'h-5 w-[var(--size-32)]',
         m: 'h-6 w-[var(--size-40)]',
       },
+      validation: switchValidation,
     },
-    defaultVariants: { size: 'm' },
+    defaultVariants: { size: 'm', validation: 'default' },
   },
 );
 
@@ -46,13 +49,37 @@ const thumbStyles = cva(
 export interface SwitchProps
   extends Omit<ComponentPropsWithoutRef<typeof BaseSwitch.Root>, 'className'>,
     VariantProps<typeof trackStyles> {
+  label?: ReactNode;
+  helperText?: ReactNode;
+  validation?: Validation;
   className?: string;
 }
 
-export function Switch({ size = 'm', className, ...rest }: SwitchProps) {
-  return (
-    <BaseSwitch.Root className={cn(trackStyles({ size }), className)} {...rest}>
+export function Switch({
+  size = 'm',
+  validation = 'default',
+  label,
+  helperText,
+  className,
+  ...rest
+}: SwitchProps) {
+  const track = (
+    <BaseSwitch.Root
+      className={cn(trackStyles({ size, validation }), !label && !helperText && className)}
+      {...rest}
+    >
       <BaseSwitch.Thumb className={thumbStyles({ size })} />
     </BaseSwitch.Root>
+  );
+  if (!label && !helperText) return track;
+  return (
+    // biome-ignore lint/a11y/noLabelWithoutControl: wraps the Base UI switch button (a labelable control)
+    <label className="inline-flex cursor-pointer items-start gap-[var(--spacing-08)] p-[var(--spacing-04)]">
+      {track}
+      <span className="flex flex-col gap-[var(--spacing-06)]">
+        {label ? <span className="text-[var(--text-primary)]">{label}</span> : null}
+        {helperText ? <span className="text-sm text-[var(--text-muted)]">{helperText}</span> : null}
+      </span>
+    </label>
   );
 }

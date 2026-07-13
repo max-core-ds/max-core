@@ -31,3 +31,23 @@ export const Sizes: Story = {
     </RadioGroup>
   ),
 };
+
+export const WithHelper: Story = {
+  render: () => (
+    <RadioGroup defaultValue="standard">
+      <Radio value="standard" label="Standard" helperText="Arrives in 5–7 days" />
+      <Radio value="express" label="Express" helperText="Arrives next day" />
+    </RadioGroup>
+  ),
+};
+
+// Validation recolors the box border and the selected dot.
+export const Validations: Story = {
+  render: () => (
+    <RadioGroup defaultValue="default">
+      {(['default', 'error', 'warning', 'success'] as const).map((validation) => (
+        <Radio key={validation} value={validation} validation={validation} label={validation} />
+      ))}
+    </RadioGroup>
+  ),
+};
