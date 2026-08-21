@@ -7,8 +7,8 @@ import { statusOutline, statusSubtle, statusText, statusToneCompounds } from '..
 //   Default → subtle tinted fill + tone border + tone text
 //   Outline → transparent fill + tone border + tone text
 //   Ghost   → text only
-// The `default` (accent) tone is bespoke: the Default variant fills accent/subtle
-// with white text/on-accent (the status tones keep their own tone-colored text).
+// The `default` (accent) tone is bespoke but follows the same subtle pattern as the
+// status tones: accent/subtle fill + border/accent border + accent/default text.
 const badgeStyles = cva(['inline-flex items-center justify-center font-bold whitespace-nowrap'], {
   variants: {
     // Radius + border weight match -- Atoms/Badge/Global/* (sm / thin).
@@ -33,12 +33,12 @@ const badgeStyles = cva(['inline-flex items-center justify-center font-bold whit
     },
   },
   compoundVariants: [
-    // Default — subtle tinted fill.
+    // Default — subtle tinted fill (accent parallel of statusSubtle).
     {
       variant: 'default',
       tone: 'default',
       class:
-        'bg-[var(--accent-subtle)] border-[var(--accent-default)] text-[var(--text-on-accent)]',
+        'bg-[var(--accent-subtle)] border-[var(--border-accent)] text-[var(--accent-default)]',
     },
     ...statusToneCompounds('default', statusSubtle),
     // Outline — transparent fill, tone border + text.
