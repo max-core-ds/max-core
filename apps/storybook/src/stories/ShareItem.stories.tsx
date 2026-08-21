@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Copy, Link, Mail, Trash2 } from 'lucide-react';
 
 const meta = {
-  title: 'Organisms/Data Display/Share Item',
+  title: 'Organisms/Share Item',
   component: ShareItem,
   parameters: { layout: 'centered' },
   args: { label: 'Copy link', icon: <Copy /> },

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Bell, Menu, Search } from 'lucide-react';
 
 const meta = {
-  title: 'Organisms/Navigation/Top Bar',
+  title: 'Organisms/Top Bar',
   component: TopBar,
   parameters: { layout: 'padded' },
   argTypes: {

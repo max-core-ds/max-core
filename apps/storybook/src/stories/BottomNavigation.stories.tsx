@@ -11,7 +11,7 @@ const items = [
 ];
 
 const meta = {
-  title: 'Organisms/Navigation/Bottom Navigation',
+  title: 'Organisms/Bottom Navigation',
   component: BottomNavigation,
   parameters: { layout: 'padded' },
   decorators: [(Story) => <div className="w-96">{Story()}</div>],

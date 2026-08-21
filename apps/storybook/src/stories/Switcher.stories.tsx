@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Grid, List } from 'lucide-react';
 
 const meta = {
-  title: 'Molecules/Navigation/Switcher',
+  title: 'Molecules/Switcher',
   component: Switcher,
   parameters: { layout: 'centered' },
   args: {

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Avatar } from '@max-core/react';
 
 const meta = {
-  title: 'Atoms/Data Display/Avatar',
+  title: 'Atoms/Avatar',
   component: Avatar,
   parameters: { layout: 'centered' },
   argTypes: {

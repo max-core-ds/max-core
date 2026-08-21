@@ -2,7 +2,7 @@ import { Range } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
-  title: 'Molecules/Inputs/Range',
+  title: 'Molecules/Range',
   component: Range,
   parameters: { layout: 'padded' },
   decorators: [(Story) => <div className="w-96 pt-8">{Story()}</div>],

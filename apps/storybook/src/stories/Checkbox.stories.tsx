@@ -2,7 +2,7 @@ import { Checkbox } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
-  title: 'Atoms/Selection/Checkbox',
+  title: 'Atoms/Checkbox',
   component: Checkbox,
   parameters: { layout: 'centered' },
   args: { label: 'Accept terms', size: 'm' },

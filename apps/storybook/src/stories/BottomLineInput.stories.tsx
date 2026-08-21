@@ -2,7 +2,7 @@ import { BottomLineInput } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
-  title: 'Atoms/Forms/Bottom Line Input',
+  title: 'Atoms/Bottom Line Input',
   component: BottomLineInput,
   parameters: { layout: 'padded' },
   decorators: [(Story) => <div className="w-80">{Story()}</div>],

@@ -2,7 +2,7 @@ import { Badge, StatsCard } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
-  title: 'Organisms/Data Display/Stats Card',
+  title: 'Organisms/Stats Card',
   component: StatsCard,
   parameters: { layout: 'padded' },
   decorators: [(Story) => <div className="w-72">{Story()}</div>],

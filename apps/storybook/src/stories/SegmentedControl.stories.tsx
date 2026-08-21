@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { List, Map as MapIcon } from 'lucide-react';
 
 const meta = {
-  title: 'Atoms/Selection/Segmented Control',
+  title: 'Atoms/Segmented Control',
   component: SegmentedControl,
   parameters: { layout: 'centered' },
   args: {

@@ -2,7 +2,7 @@ import { Button, FormGroup, Input } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
-  title: 'Molecules/Inputs/Form Group',
+  title: 'Molecules/Form Group',
   component: FormGroup,
   parameters: { layout: 'padded' },
   decorators: [(Story) => <div className="w-96">{Story()}</div>],

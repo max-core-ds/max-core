@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Copy, Pencil, Share2, Trash2 } from 'lucide-react';
 
 const meta = {
-  title: 'Molecules/Overlays/Dropdown',
+  title: 'Molecules/Dropdown',
   component: Dropdown,
   parameters: { layout: 'centered' },
   argTypes: { trigger: { control: false }, items: { control: false } },

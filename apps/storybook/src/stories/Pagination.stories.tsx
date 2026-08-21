@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 
 const meta = {
-  title: 'Molecules/Navigation/Pagination',
+  title: 'Molecules/Pagination',
   component: Pagination,
   parameters: { layout: 'centered' },
   // page/count are required; the render-only stories below manage their own state.

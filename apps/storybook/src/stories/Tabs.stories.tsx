@@ -2,7 +2,7 @@ import { Tabs } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
-  title: 'Molecules/Navigation/Tabs',
+  title: 'Molecules/Tabs',
   component: Tabs,
   parameters: { layout: 'padded' },
   decorators: [(Story) => <div className="w-[32rem]">{Story()}</div>],

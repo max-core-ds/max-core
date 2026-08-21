@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Home, PieChart, Settings, Users } from 'lucide-react';
 
 const meta = {
-  title: 'Organisms/Navigation/Side Bar',
+  title: 'Organisms/Side Bar',
   component: SideBar,
   parameters: { layout: 'padded' },
   decorators: [(Story) => <div className="h-[28rem]">{Story()}</div>],

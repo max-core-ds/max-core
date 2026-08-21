@@ -2,7 +2,7 @@ import { Button, ToastProvider, useToast } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta = {
-  title: 'Molecules/Overlays/Toast',
+  title: 'Molecules/Toast',
   parameters: { layout: 'centered' },
 };
 

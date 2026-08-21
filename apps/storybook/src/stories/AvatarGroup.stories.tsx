@@ -11,7 +11,7 @@ const avatars = [
 ];
 
 const meta = {
-  title: 'Molecules/Data Display/Avatar Group',
+  title: 'Molecules/Avatar Group',
   component: AvatarGroup,
   parameters: { layout: 'centered' },
   args: { avatars, size: 'm' },

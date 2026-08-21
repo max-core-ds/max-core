@@ -2,7 +2,7 @@ import { Knob } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
-  title: 'Atoms/Display/Knob',
+  title: 'Atoms/Knob',
   component: Knob,
   parameters: { layout: 'centered' },
   argTypes: {

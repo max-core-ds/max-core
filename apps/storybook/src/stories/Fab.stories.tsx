@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Image, Plus, Share2, UserPlus } from 'lucide-react';
 
 const meta = {
-  title: 'Atoms/Buttons/FAB',
+  title: 'Atoms/FAB',
   component: Fab,
   parameters: { layout: 'centered' },
   args: { icon: <Plus />, 'aria-label': 'Create' },

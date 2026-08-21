@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ChevronRight } from 'lucide-react';
 
 const meta = {
-  title: 'Molecules/Data Display/Entity Item',
+  title: 'Molecules/Entity Item',
   component: EntityItem,
   parameters: { layout: 'padded' },
   decorators: [(Story) => <div className="w-80">{Story()}</div>],

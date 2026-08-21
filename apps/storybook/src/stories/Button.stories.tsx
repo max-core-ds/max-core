@@ -3,7 +3,7 @@ import { ArrowRight, Check, Download, Plus } from 'lucide-react';
 import { Button } from '@max-core/react';
 
 const meta = {
-  title: 'Atoms/Buttons/Standard',
+  title: 'Atoms/Standard Button',
   component: Button,
   parameters: { layout: 'centered' },
   argTypes: {

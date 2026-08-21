@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 
 const meta = {
-  title: 'Atoms/Forms/Search Bar',
+  title: 'Atoms/Search Bar',
   component: SearchBar,
   parameters: { layout: 'padded' },
   decorators: [(Story) => <div className="w-96">{Story()}</div>],

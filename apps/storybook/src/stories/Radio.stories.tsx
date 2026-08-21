@@ -2,7 +2,7 @@ import { Radio, RadioGroup } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
-  title: 'Atoms/Selection/Radio',
+  title: 'Atoms/Radio',
   component: Radio,
   parameters: { layout: 'centered' },
   // A Radio requires a `value`; the render-only stories below ignore it.

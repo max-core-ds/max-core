@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ChevronRight, Settings, Trash2, User } from 'lucide-react';
 
 const meta = {
-  title: 'Atoms/Selection/List Item',
+  title: 'Atoms/List Item',
   component: ListItem,
   parameters: { layout: 'padded' },
   decorators: [(Story) => <div className="w-80">{Story()}</div>],

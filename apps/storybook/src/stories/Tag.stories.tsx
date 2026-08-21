@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Hash, Star, X } from 'lucide-react';
 
 const meta = {
-  title: 'Atoms/Data Display/Tag',
+  title: 'Atoms/Tag',
   component: Tag,
   parameters: { layout: 'centered' },
   argTypes: {

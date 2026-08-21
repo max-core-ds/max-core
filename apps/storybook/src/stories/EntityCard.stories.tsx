@@ -2,7 +2,7 @@ import { Avatar, EntityCard, EntityItem } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
-  title: 'Molecules/Data Display/Entity Card',
+  title: 'Molecules/Entity Card',
   component: EntityCard,
   parameters: { layout: 'padded' },
   decorators: [(Story) => <div className="w-80">{Story()}</div>],

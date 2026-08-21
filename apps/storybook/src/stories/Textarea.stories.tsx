@@ -2,7 +2,7 @@ import { Textarea } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
-  title: 'Atoms/Forms/Textarea',
+  title: 'Atoms/Textarea',
   component: Textarea,
   parameters: { layout: 'padded' },
   decorators: [(Story) => <div className="w-96">{Story()}</div>],

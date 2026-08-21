@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ChevronRight, CreditCard, Settings, User } from 'lucide-react';
 
 const meta = {
-  title: 'Molecules/Overlays/Item List',
+  title: 'Molecules/Item List',
   component: ItemList,
   parameters: { layout: 'padded' },
   decorators: [(Story) => <div className="w-72">{Story()}</div>],

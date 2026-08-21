@@ -2,7 +2,7 @@ import { Switch } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
-  title: 'Atoms/Selection/Switch',
+  title: 'Atoms/Switch',
   component: Switch,
   parameters: { layout: 'centered' },
   args: { size: 'm' },

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Input } from '@max-core/react';
 
 const meta = {
-  title: 'Atoms/Forms/Input',
+  title: 'Atoms/Input',
   component: Input,
   parameters: { layout: 'padded' },
   argTypes: {

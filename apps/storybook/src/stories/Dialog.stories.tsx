@@ -2,7 +2,7 @@ import { Button, Dialog } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
-  title: 'Molecules/Overlays/Dialog',
+  title: 'Molecules/Dialog',
   component: Dialog,
   parameters: { layout: 'centered' },
   argTypes: { trigger: { control: false }, actions: { control: false } },

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { MapPin } from 'lucide-react';
 
 const meta = {
-  title: 'Molecules/Data Display/Pin',
+  title: 'Molecules/Pin',
   component: Pin,
   parameters: { layout: 'centered' },
 } satisfies Meta<typeof Pin>;

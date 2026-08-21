@@ -5,7 +5,7 @@ import { ImageIcon } from 'lucide-react';
 const SAMPLE = 'https://picsum.photos/200';
 
 const meta = {
-  title: 'Atoms/Display/Thumbnail',
+  title: 'Atoms/Thumbnail',
   component: Thumbnail,
   parameters: { layout: 'centered' },
   args: { src: SAMPLE, shape: 'rounded', size: 'm' },
