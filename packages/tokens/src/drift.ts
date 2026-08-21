@@ -93,11 +93,6 @@ const SPECS: ComponentSpec[] = [
     prefixes: ['Atoms/Buttons/Link Button'],
   },
   {
-    name: 'Pay Button',
-    source: 'components/PayButton/PayButton.tsx',
-    prefixes: ['Atoms/Buttons/Pay Button'],
-  },
-  {
     name: 'Split Button',
     source: 'components/SplitButton/SplitButton.tsx',
     prefixes: ['Atoms/Buttons/Split Button'],
