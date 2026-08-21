@@ -119,23 +119,24 @@ without needing Figma access.
 
 ### `@max-core/react`
 
-**What it is.** The React component library. Atoms today; molecules and
-organisms in future phases.
+**What it is.** The React component library — 45 components across atoms,
+molecules, and organisms. All are typed, built (tsup), and drift-green against
+their Figma token spec.
 
-**What's inside.**
+**What's inside.** A representative slice:
 
 - `src/components/Button` — 3 variants × 4 tones × 4 sizes, with optional
   left/right icons. Built on Base UI's `Button` primitive.
-- `src/components/Avatar` — 5 sizes, image with initials fallback. Base UI
-  `Avatar.{Root, Image, Fallback}`.
-- `src/components/Badge` — 5 tones × 3 sizes. Pure visual atom (no Base UI
-  dependency).
-- `src/components/Tag` — 3 variants × 4 tones × 2 sizes, with `selected`
-  state and optional icons.
+- `src/components/Badge` — Default/Outline/Ghost variants × tones × 3 sizes.
 - `src/components/Input` — 3 sizes, with label / helper / error states. Base
   UI `Field` + `Input`.
-- `src/utils/cn.ts` — `clsx` + `tailwind-merge` helper used by every
-  component.
+- …plus selection controls, navigation (Tabs, Pagination, Top/Side/Bottom
+  bars), overlays (Dialog, Dropdown, Toast), and more.
+- `src/utils/` — shared helpers (`cn`, `focus-ring`, `tone`, `state-layer`,
+  `validation`, …) that keep Tailwind literals in one place.
+
+> **The full, live inventory lives in [`PROGRESS.md`](PROGRESS.md)** — it lists
+> every component, its Storybook title, and its Figma cross-check status.
 
 **How consumers use it.**
 
@@ -177,6 +178,26 @@ import { Plus } from 'lucide-react';
 **Variants are CVA-driven.** Each component uses `class-variance-authority`
 for variant matrices. Adding a new variant is a few lines in the `cva()`
 call.
+
+**Adopting it before it's finished.** The library is usable for real work
+today — you don't have to wait for every component. Once the Tailwind + token
+wiring above is in place, import what you need. How much to trust a given
+component depends on where it sits in the Phase 3.5 visual cross-check
+(tracked in [`PROGRESS.md`](PROGRESS.md)):
+
+- 🟢 **Cross-checked (safe to build on).** Verified pixel-for-pixel against the
+  Figma showcase: Button family (Standard, Icon Only, Link, Split, FAB), Badge,
+  Tag, and the selection controls (Checkbox, Radio, Switch). Stable API + visuals.
+- 🟡 **Token-only (fine for internal/preview work).** The other ~35 components
+  are structurally sound and drift-green, but not yet pixel-confirmed — visuals
+  or minor API (e.g. an added axis) **may still shift** during cross-check. Pin
+  the version and expect tweaks before shipping these to production.
+- 🔴 **Not built yet.** Stacked List (Batch 8) and all of Phase 4 (Data Table,
+  Date Picker, Bottom Sheet + premades). Don't plan around these yet.
+
+Because it's a workspace package at `0.0.0` (not published to npm), "consume"
+today means inside this monorepo, via `pnpm link`, or from a tarball — not a
+public `npm install`.
 
 **Build.**
 
@@ -334,25 +355,30 @@ Pages, Netlify, etc.
 
 ## Status
 
-Phases 1 and 2 of `PLAN.md` are complete:
+Phases 1–3 of `PLAN.md` are complete:
 
 - ✅ Repo skeleton, workspace tooling, configs
 - ✅ Token pipeline (transform CLI + sync CLI + `tokens.json` from Figma)
-- ✅ 5 atoms (Button, Avatar, Badge, Tag, Input) with CVA variants
-- ✅ Storybook with dark-mode toggle, per-atom stories, token reference
+- ✅ **45 components** (atoms, molecules, organisms) with CVA variants — all
+  typed, built, and drift-green
+- ✅ Storybook with dark-mode toggle, per-component stories, token reference
 - ✅ Figma plugin building and verified end-to-end
+- 🔄 **Phase 3.5 — visual cross-check against Figma** in progress (5 files
+  done, 7 pending). See [`PROGRESS.md`](PROGRESS.md).
 
 Gaps to "production-ready":
 
 - ❌ No tests (Vitest + axe deferred)
-- ❌ ~45 more components (atoms 6-20, molecules, organisms, data table)
-- ❌ Atoms are approximations — not yet pixel-matched to Figma showcases
+- ❌ ~35 components not yet pixel-matched to Figma showcases (token-only)
+- ❌ Batch 8 (Stacked List) + Phase 4 (Data Table, Date Picker, Bottom Sheet)
+  not built
 - ❌ Components-level tokens (Layer 3 cascade) not yet bridged
 - ❌ Not published to npm
 - ❌ No CI/CD
 - ❌ Figma plugin not on the public Community marketplace
 
-See `PLAN.md` for what each phase contained and what's next.
+See `PLAN.md` for what each phase contained and what's next, and `PROGRESS.md`
+for the live component + cross-check status.
 
 ---
 
