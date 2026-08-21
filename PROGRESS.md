@@ -12,7 +12,7 @@
 
 ## Where we are
 
-- **Phase 3 buildout: complete** — 46 components shipped across Batches 0–7 (Batch 8 = Stacked List still pending, see below). All are drift-green (`pnpm -F @max-core/tokens drift`), typed, built (tsup), and have a Storybook story in a tiered folder (`<Tier>/<Theme>/<Component>`).
+- **Phase 3 buildout: complete** — 45 components shipped across Batches 0–7 (Batch 8 = Stacked List still pending, see below). All are drift-green (`pnpm -F @max-core/tokens drift`), typed, built (tsup), and have a Storybook story in a flat tiered folder (`<Tier>/<Component>`).
 - **Phase 3.5 visual cross-check: in progress** — going component-by-component against the Figma showcase node trees the designer exported into `figma-node-links/*.json`, fixing anything the raw tokens didn't capture (states, colors, missing axes). See the process in `PLAN.md → Phase 3.5`. Files move to `figma-node-links/checked/` once done.
 
 ---
@@ -21,17 +21,20 @@
 
 | File | Component(s) | Status | Fix applied |
 |------|-------------|--------|-------------|
-| badges.json | Badge | ✅ checked | Added missing **Variant** axis (Default/Outline/Ghost) |
+| badges.json | Badge | ✅ checked | Added missing **Variant** axis (Default/Outline/Ghost); Default tone recolored to the subtle pattern (accent border + text) |
 | buttons.json | Button, IconOnlyButton, LinkButton, SplitButton, Fab | ✅ checked | **LinkButton**: Light label + Pressed state + per-tone hover. Others verified faithful. |
-| payment-buttons.json | PayButton | ✅ checked | Added independent **Color (Light/Dark)** axis (theme-aware tokens) |
 | tags.json | Tag | ✅ checked | Filter-chip **Selected** model, `filled`→`primary`, Light label, transparent Ghost |
 | selection-controls.json | Checkbox, Radio, Switch | ✅ checked | Added **Validation** axis (Default/Error/Warning/Success) + **helper text**; indeterminate dash; new `utils/validation.ts` |
 | segmented-control.json | SegmentedControl | 🔄 in progress | — |
 | list-item.json | ListItem | ⬜ pending | — |
 | search-bar.json | SearchBar | ⬜ pending | — |
+| dialog.json | Dialog | ⬜ pending | — |
 | top-bar.json | TopBar | ⬜ pending | — |
 | bottom-bar.json | BottomNavigation | ⬜ pending | — |
 | sidebar.json | SideBar | ⬜ pending | — |
+
+> **PayButton was removed from the library** (intentional product decision) — its
+> `payment-buttons.json` cross-check no longer applies.
 
 > Only components with an exported node-link file get cross-checked. The
 > designer adds more files over time; components not listed above are **not yet
@@ -39,7 +42,7 @@
 
 ---
 
-## Component inventory (46 shipped + stories)
+## Component inventory (45 shipped + stories)
 
 Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — no node file yet.
 
@@ -47,62 +50,61 @@ Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — 
 
 | Component | Storybook title | Cross-check |
 |-----------|-----------------|-------------|
-| Button | Atoms/Buttons/Standard | ✅ |
-| IconOnlyButton | Atoms/Buttons/Icon Only | ✅ |
-| LinkButton | Atoms/Buttons/Link | ✅ |
-| PayButton | Atoms/Buttons/Pay | ✅ |
-| SplitButton | Atoms/Buttons/Split | ✅ |
-| Fab | Atoms/Buttons/FAB | ✅ |
-| Avatar | Atoms/Data Display/Avatar | — |
-| Badge | Atoms/Data Display/Badge | ✅ |
-| Tag | Atoms/Data Display/Tag | ✅ |
-| Divider | Atoms/Display/Divider | — |
-| ProgressBar | Atoms/Display/Progress Bar | — |
-| Tooltip | Atoms/Display/Tooltip | — |
-| Knob | Atoms/Display/Knob | — |
-| Spinner | Atoms/Display/Spinner | — |
-| Thumbnail | Atoms/Display/Thumbnail | — |
-| ContentBlocks | Atoms/Display/Content Blocks | — |
-| Input | Atoms/Forms/Input | — |
-| BottomLineInput | Atoms/Forms/Bottom Line Input | — |
-| SelectInput | Atoms/Forms/Select Input | — |
-| Multiselect | Atoms/Forms/Multiselect | — |
-| Stepper | Atoms/Forms/Stepper | — |
-| Textarea | Atoms/Forms/Textarea | — |
-| SearchBar | Atoms/Forms/Search Bar | ⬜ |
-| Checkbox | Atoms/Selection/Checkbox | ✅ |
-| Radio | Atoms/Selection/Radio | ✅ |
-| Switch | Atoms/Selection/Switch | ✅ |
-| SegmentedControl | Atoms/Selection/Segmented Control | 🔄 |
-| ListItem | Atoms/Selection/List Item | ⬜ |
+| Button | Atoms/Standard | ✅ |
+| IconOnlyButton | Atoms/Icon Only | ✅ |
+| LinkButton | Atoms/Link | ✅ |
+| SplitButton | Atoms/Split | ✅ |
+| Fab | Atoms/FAB | ✅ |
+| Avatar | Atoms/Avatar | — |
+| Badge | Atoms/Badge | ✅ |
+| Tag | Atoms/Tag | ✅ |
+| Divider | Atoms/Divider | — |
+| ProgressBar | Atoms/Progress Bar | — |
+| Tooltip | Atoms/Tooltip | — |
+| Knob | Atoms/Knob | — |
+| Spinner | Atoms/Spinner | — |
+| Thumbnail | Atoms/Thumbnail | — |
+| ContentBlocks | Atoms/Content Blocks | — |
+| Input | Atoms/Input | — |
+| BottomLineInput | Atoms/Bottom Line Input | — |
+| SelectInput | Atoms/Select Input | — |
+| Multiselect | Atoms/Multiselect | — |
+| Stepper | Atoms/Stepper | — |
+| Textarea | Atoms/Textarea | — |
+| SearchBar | Atoms/Search Bar | ⬜ |
+| Checkbox | Atoms/Checkbox | ✅ |
+| Radio | Atoms/Radio | ✅ |
+| Switch | Atoms/Switch | ✅ |
+| SegmentedControl | Atoms/Segmented Control | 🔄 |
+| ListItem | Atoms/List Item | ⬜ |
 
 ### Molecules
 
 | Component | Storybook title | Cross-check |
 |-----------|-----------------|-------------|
-| AvatarGroup | Molecules/Data Display/Avatar Group | — |
-| EntityItem | Molecules/Data Display/Entity Item | — |
-| EntityCard | Molecules/Data Display/Entity Card | — |
-| Pin | Molecules/Data Display/Pin | — |
-| FormGroup | Molecules/Inputs/Form Group | — |
-| Range | Molecules/Inputs/Range | — |
-| Pagination | Molecules/Navigation/Pagination | — |
-| Switcher | Molecules/Navigation/Switcher | — |
-| Tabs | Molecules/Navigation/Tabs | — |
-| Dialog | Molecules/Overlays/Dialog | — |
-| Dropdown | Molecules/Overlays/Dropdown | — |
-| ItemList | Molecules/Overlays/Item List | — |
-| Toast | Molecules/Overlays/Toast | — |
+| AvatarGroup | Molecules/Avatar Group | — |
+| EntityItem | Molecules/Entity Item | — |
+| EntityCard | Molecules/Entity Card | — |
+| Pin | Molecules/Pin | — |
+| FormGroup | Molecules/Form Group | — |
+| Range | Molecules/Range | — |
+| Pagination | Molecules/Pagination | — |
+| Switcher | Molecules/Switcher | — |
+| Tabs | Molecules/Tabs | — |
+| Dialog | Molecules/Dialog | ⬜ |
+| Dropdown | Molecules/Dropdown | — |
+| ItemList | Molecules/Item List | — |
+| Toast | Molecules/Toast | — |
 
 ### Organisms
 
 | Component | Storybook title | Cross-check |
 |-----------|-----------------|-------------|
-| ShareItem | Organisms/Data Display/Share Item | — |
-| StatsCard | Organisms/Data Display/Stats Card | — |
-| BottomNavigation | Organisms/Navigation/Bottom Navigation | ⬜ |
-| SideBar | Organisms/Navigation/Side Bar | ⬜ |
-| TopBar | Organisms/Navigation/Top Bar | ⬜ |
+| ShareItem | Organisms/Share Item | — |
+| StatsCard | Organisms/Stats Card | — |
+| BottomNavigation | Organisms/Bottom Navigation | ⬜ |
+| SideBar | Organisms/Side Bar | ⬜ |
+| TopBar | Organisms/Top Bar | ⬜ |
 
 ### Foundations
 - `Foundations/Tokens` — token reference story (not a component).
@@ -126,7 +128,7 @@ Reuse these before writing inline classes — they keep Tailwind literals in one
 
 ## Remaining work
 
-1. **Finish Phase 3.5 cross-check** — the 6 pending files (segmented-control → list-item → search-bar → top-bar → bottom-bar → sidebar), then any new files the designer drops into `figma-node-links/`.
+1. **Finish Phase 3.5 cross-check** — the 7 pending files (segmented-control → list-item → search-bar → dialog → top-bar → bottom-bar → sidebar), then any new files the designer drops into `figma-node-links/`.
 2. **Batch 8 — Stacked List** — 9 row types (Default, Social, Ride Row, Delivery Row, Media Row, Product, Booking, Items Grid, Transport), ~22 tokens. Compose from ListItem + EntityItem + Selection controls.
 3. **Phase 4 (out of scope here)** — Data Table system, Date Picker, Bottom Sheet + 18 premades; automated test infra (vitest/axe).
 
