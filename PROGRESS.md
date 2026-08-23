@@ -13,7 +13,7 @@
 ## Where we are
 
 - **Phase 3 buildout: complete** — 45 components shipped across Batches 0–7 (Batch 8 = Stacked List still pending, see below). All are drift-green (`pnpm -F @max-core/tokens drift`), typed, built (tsup), and have a Storybook story in a flat tiered folder (`<Tier>/<Component>`).
-- **Phase 3.5 visual cross-check: in progress** — going component-by-component against the Figma showcase node trees the designer exported into `figma-node-links/*.json`, fixing anything the raw tokens didn't capture (states, colors, missing axes). See the process in `PLAN.md → Phase 3.5`. Files move to `figma-node-links/checked/` once done.
+- **Phase 3.5 visual cross-check: all exported files done** — every `figma-node-links/*.json` the designer has provided is cross-checked and moved to `figma-node-links/checked/`. Each was drift-green yet had appearance/axis gaps the raw tokens didn't capture (states, colors, missing axes/slots), now fixed. Further cross-checks resume when the designer drops new files into `figma-node-links/`. See the process in `PLAN.md → Phase 3.5`.
 
 ---
 
@@ -31,7 +31,7 @@
 | dialog.json | Dialog | ✅ checked | Added **Tone** (danger/success/warning) icon + **Type** (horizontal/vertical) layouts + Show Icon; confirmation centering |
 | top-bar.json | TopBar | ✅ checked | Added **Elevated** axis (shadow/down/md) + mobile **Type** (Standard/Mobile floating w/ frosted-glass buttons) |
 | bottom-bar.json | BottomNavigation | ✅ checked | 5-state _Nav Item fills (Hover/Pressed/Active → subtle/accent-subtle/accent-surface) + Dot + disabled; dropped focus ring |
-| sidebar.json | SideBar | 🔄 in progress | — |
+| sidebar.json | SideBar | ✅ checked | Added **Top Bar** + **Sub Header** slots (now a full 5-slot wrapper) |
 
 > **PayButton was removed from the library** (intentional product decision) — its
 > `payment-buttons.json` cross-check no longer applies.
@@ -103,7 +103,7 @@ Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — 
 | ShareItem | Organisms/Share Item | — |
 | StatsCard | Organisms/Stats Card | — |
 | BottomNavigation | Organisms/Bottom Navigation | ✅ |
-| SideBar | Organisms/Side Bar | 🔄 |
+| SideBar | Organisms/Side Bar | ✅ |
 | TopBar | Organisms/Top Bar | ✅ |
 
 ### Foundations
@@ -128,7 +128,7 @@ Reuse these before writing inline classes — they keep Tailwind literals in one
 
 ## Remaining work
 
-1. **Finish Phase 3.5 cross-check** — the 7 pending files (segmented-control → list-item → search-bar → dialog → top-bar → bottom-bar → sidebar), then any new files the designer drops into `figma-node-links/`.
+1. **Phase 3.5 cross-check** — ✅ all exported files done (segmented-control, list-item, search-bar, dialog, top-bar, bottom-bar, sidebar). Resume when the designer drops new files into `figma-node-links/`.
 2. **Batch 8 — Stacked List** — 9 row types (Default, Social, Ride Row, Delivery Row, Media Row, Product, Booking, Items Grid, Transport), ~22 tokens. Compose from ListItem + EntityItem + Selection controls.
 3. **Phase 4 (out of scope here)** — Data Table system, Date Picker, Bottom Sheet + 18 premades; automated test infra (vitest/axe).
 
