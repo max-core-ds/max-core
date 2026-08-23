@@ -27,8 +27,8 @@
 | selection-controls.json | Checkbox, Radio, Switch | ✅ checked | Added **Validation** axis (Default/Error/Warning/Success) + **helper text**; indeterminate dash; new `utils/validation.ts` |
 | segmented-control.json | SegmentedControl | ✅ checked | Active item recolored to **accent/default fill + text/on-accent** (was a bg/surface pill with shadow) |
 | list-item.json | ListItem | ✅ checked | Accent state fills (Hover/Pressed/Active → subtle/active/default) + new **Active** + **Collapsed** axes |
-| search-bar.json | SearchBar | 🔄 in progress | — |
-| dialog.json | Dialog | ⬜ pending | — |
+| search-bar.json | SearchBar | ✅ checked | Added **Button=On** action slot (trailing Standard Button); pill fill bg/surface → **bg/default** |
+| dialog.json | Dialog | 🔄 in progress | — |
 | top-bar.json | TopBar | ⬜ pending | — |
 | bottom-bar.json | BottomNavigation | ⬜ pending | — |
 | sidebar.json | SideBar | ⬜ pending | — |
@@ -71,7 +71,7 @@ Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — 
 | Multiselect | Atoms/Multiselect | — |
 | Stepper | Atoms/Stepper | — |
 | Textarea | Atoms/Textarea | — |
-| SearchBar | Atoms/Search Bar | ⬜ |
+| SearchBar | Atoms/Search Bar | ✅ |
 | Checkbox | Atoms/Checkbox | ✅ |
 | Radio | Atoms/Radio | ✅ |
 | Switch | Atoms/Switch | ✅ |
@@ -91,7 +91,7 @@ Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — 
 | Pagination | Molecules/Pagination | — |
 | Switcher | Molecules/Switcher | — |
 | Tabs | Molecules/Tabs | — |
-| Dialog | Molecules/Dialog | ⬜ |
+| Dialog | Molecules/Dialog | 🔄 |
 | Dropdown | Molecules/Dropdown | — |
 | ItemList | Molecules/Item List | — |
 | Toast | Molecules/Toast | — |
