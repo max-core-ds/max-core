@@ -23,15 +23,33 @@ const sideBarStyles = cva(
 export interface SideBarProps
   extends ComponentPropsWithoutRef<'aside'>,
     VariantProps<typeof sideBarStyles> {
+  /** Slot 1 — logo + collapse toggle row. */
+  topBar?: ReactNode;
+  /** Slot 2 — workspace switcher / primary header. */
   header?: ReactNode;
+  /** Slot 3 — secondary header row (e.g. a label or context switcher). */
+  subHeader?: ReactNode;
+  /** Slot 5 — footer (e.g. the user profile). */
   footer?: ReactNode;
+  /** Slot 4 — free Body container (nav items). */
   children?: ReactNode;
 }
 
-export function SideBar({ collapsed, header, footer, children, className, ...rest }: SideBarProps) {
+export function SideBar({
+  collapsed,
+  topBar,
+  header,
+  subHeader,
+  footer,
+  children,
+  className,
+  ...rest
+}: SideBarProps) {
   return (
     <aside className={cn(sideBarStyles({ collapsed }), className)} {...rest}>
+      {topBar}
       {header}
+      {subHeader}
       <nav className="flex flex-1 flex-col gap-[var(--spacing-24)]">{children}</nav>
       {footer}
     </aside>
