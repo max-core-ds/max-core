@@ -25,8 +25,8 @@
 | buttons.json | Button, IconOnlyButton, LinkButton, SplitButton, Fab | ✅ checked | **LinkButton**: Light label + Pressed state + per-tone hover. Others verified faithful. |
 | tags.json | Tag | ✅ checked | Filter-chip **Selected** model, `filled`→`primary`, Light label, transparent Ghost |
 | selection-controls.json | Checkbox, Radio, Switch | ✅ checked | Added **Validation** axis (Default/Error/Warning/Success) + **helper text**; indeterminate dash; new `utils/validation.ts` |
-| segmented-control.json | SegmentedControl | 🔄 in progress | — |
-| list-item.json | ListItem | ⬜ pending | — |
+| segmented-control.json | SegmentedControl | ✅ checked | Active item recolored to **accent/default fill + text/on-accent** (was a bg/surface pill with shadow) |
+| list-item.json | ListItem | 🔄 in progress | — |
 | search-bar.json | SearchBar | ⬜ pending | — |
 | dialog.json | Dialog | ⬜ pending | — |
 | top-bar.json | TopBar | ⬜ pending | — |
@@ -75,8 +75,8 @@ Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — 
 | Checkbox | Atoms/Checkbox | ✅ |
 | Radio | Atoms/Radio | ✅ |
 | Switch | Atoms/Switch | ✅ |
-| SegmentedControl | Atoms/Segmented Control | 🔄 |
-| ListItem | Atoms/List Item | ⬜ |
+| SegmentedControl | Atoms/Segmented Control | ✅ |
+| ListItem | Atoms/List Item | 🔄 |
 
 ### Molecules
 

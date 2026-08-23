@@ -23,7 +23,10 @@ THE INPUT:
 figma-node-links/*.json holds one exported showcase node tree per component group
 (variant names + description text nodes that carry the real spec). Finished files are
 moved to figma-node-links/checked/. Pending files are the ones still in the top folder.
-Figma cross-check file key: sX5tikviuBEhNbu2iPVya5  (NOT the CLAUDE.md production key).
+Figma file key: the showcase nodes live in the PRODUCTION file ouyi08XxN4l4VCsao1nNQu.
+(The cross-check file sX5tikviuBEhNbu2iPVya5 only holds a subset of pages; when a node
+ID isn't found there, fall back to the production key.) Verify with get_metadata (no
+nodeId) to list pages if a lookup fails.
 Node IDs use colons (51:656); Figma URLs use dashes (node-id=51-656).
 
 THE LOOP (one file at a time, in the order I give you — don't jump ahead):
