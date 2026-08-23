@@ -2,7 +2,7 @@
 
 import { Input as BaseInput } from '@base-ui/react/input';
 import { type VariantProps, cva } from 'class-variance-authority';
-import type { ComponentPropsWithoutRef } from 'react';
+import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
 
 // Pill search field. Gap/radius/min-width and per-size padding/icon size match
@@ -11,7 +11,7 @@ const rootStyles = cva(
   [
     'inline-flex w-full items-center gap-[var(--spacing-06)]',
     'min-w-[var(--size-180)] rounded-[var(--radius-full)]',
-    'border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--text-primary)]',
+    'border border-[var(--border-default)] bg-[var(--bg-default)] text-[var(--text-primary)]',
     'transition-colors focus-within:border-[var(--border-focus)]',
   ],
   {
@@ -31,6 +31,11 @@ export interface SearchBarProps
     VariantProps<typeof rootStyles> {
   /** Called when the clear (✕) button is pressed. Shown when `value` is non-empty. */
   onClear?: () => void;
+  /**
+   * Trailing action button (Button=On mode) — pass a Standard Button, e.g.
+   * `action={<Button size="s">Search</Button>}`. Replaces the clear (✕) button.
+   */
+  action?: ReactNode;
   wrapperClassName?: string;
 }
 
@@ -40,6 +45,7 @@ export function SearchBar({
   wrapperClassName,
   value,
   onClear,
+  action,
   placeholder = 'Search',
   ...rest
 }: SearchBarProps) {
@@ -55,7 +61,9 @@ export function SearchBar({
         value={value}
         {...rest}
       />
-      {onClear && value ? (
+      {action ? (
+        <span className="shrink-0">{action}</span>
+      ) : onClear && value ? (
         <button
           type="button"
           onClick={onClear}

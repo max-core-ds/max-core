@@ -1,4 +1,4 @@
-import { SearchBar } from '@max-core/react';
+import { Button, SearchBar } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 
@@ -36,6 +36,17 @@ export const Sizes: Story = {
       <Controlled size="s" />
       <Controlled size="m" />
       <Controlled size="l" />
+    </div>
+  ),
+};
+
+// Button=On mode — a Standard Button as the trailing action trigger.
+export const WithButton: Story = {
+  render: () => (
+    <div className="flex flex-col gap-[var(--spacing-12)]">
+      <SearchBar size="s" placeholder="Search…" action={<Button size="s">Search</Button>} />
+      <SearchBar size="m" placeholder="Search…" action={<Button size="s">Search</Button>} />
+      <SearchBar size="l" placeholder="Search…" action={<Button size="m">Search</Button>} />
     </div>
   ),
 };
