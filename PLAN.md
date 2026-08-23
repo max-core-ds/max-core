@@ -508,3 +508,71 @@ colons (`51:656`); Figma URLs use dashes (`node-id=51-656`).
 
 **Lesson:** the recurring failure is *missing axes/states*, not wrong numbers — the drift gate
 guarantees dimensions, never appearance. Treat description nodes as the spec of record.
+
+---
+
+# Phase 4 — Mega-systems + test infra — ⬜ NOT STARTED
+
+> The large composite systems deferred out of Phase 3, plus the first automated
+> test layer beyond the drift gate. Component specs already exist on the Figma
+> side in **`docs/MAX-CORE-SUMMARY.md`** (Data Table System, Card System, Bottom
+> Sheet System) — this phase builds their React counterparts. Live status will be
+> tracked in **`PROGRESS.md`** as batches land.
+
+## Scope
+
+Everything here is composite or infrastructural — it depends on the atoms and
+molecules shipped in Phase 3, so it was held back until those stabilized.
+
+### Batch 8 — Stacked List *(carried over from Phase 3)*
+9 row types — Default, Social, Ride Row, Delivery Row, Media Row, Product,
+Booking, Items Grid, Transport. ~22 tokens across distinct row layouts. Compose
+from `ListItem` + `EntityItem` + selection controls. (Already scoped as its own
+batch; it's the smallest item here and the natural first step.)
+
+### Batch 9 — Data Table system
+The largest system. Build bottom-up from cells to the full builder:
+- **Internals** — Header Label, `_Header Cell` (40px fix), `_Table Cell` (56px
+  fix), `_Header Row`, `_Table Row` (Default/Hover/Active), `_Table Row Expanded`,
+  `_Table Footer` (Desktop/Mobile).
+- **Table (Header)** area — 5 slots (Title, Actions, Middle, Navigation, Filter).
+- **Table Builder** — Desktop + Mobile (scrollable content + scrollbar).
+- **5 prebuilders** — Invoice, Users, Tickets, Products, Transactions.
+- Design rules already fixed: background on row (not cell) for full-row states;
+  height fixed per density; row has no own tokens (dimensions come from cells).
+
+### Batch 10 — Card system
+- **`_Card` (Base)** — 3 elevations (None/Low/High), Show Header/Footer booleans,
+  Body slot. Tokens `--Organism/Card/Base/*`.
+- **`_Media Card`** — 3 elevations, Show Tag/Date booleans, Media + Content slots,
+  right-aligned link button. Tokens `--Organism/Card/Media/*`.
+
+### Batch 11 — Bottom Sheet system
+- **`_Bottom Sheet` (Builder)** — 375px, Show Handle/Header/Footer booleans, Body
+  + Footer slots (body has no padding; sub-components own their padding). Shadow
+  up/md, radius 2xl top-only.
+- **18 premades** — Share (3), Transport, Ride (2), General (3), Payment (2),
+  Media, Auth, Commerce (2), Info, Booking (2). Each composes DS components into
+  the builder's slots.
+
+### Batch 12 — Date Picker
+React counterpart of the Figma Date Picker (Calendar + Header + Footer; Date /
+Dual / Input variants). Not yet built in React (Figma-side only).
+
+### Batch 13 — Test infrastructure
+The honest gap from Phase 3. Add:
+- **Vitest** + React Testing Library — render/interaction tests per component.
+- **axe** (jest-axe / vitest-axe) — automated a11y assertions on every story.
+- Wire into CI once CI exists (also currently missing — see README "Status").
+
+## Sequencing
+
+Stacked List → Card → Bottom Sheet (needs Card + many atoms as slot content) →
+Data Table (largest, most self-contained) → Date Picker. Test infra can start in
+parallel once the first composite batch lands, so patterns are exercised early.
+
+## Out of scope for Phase 4
+Layer 3 component-level token bridge (the `components` collection is still read
+for drift but not yet re-wirable per slot); publishing to npm; CI/CD; Figma
+plugin Community listing. These are productionization concerns tracked in the
+README "Status" gaps, not component work.
