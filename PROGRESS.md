@@ -29,8 +29,8 @@
 | list-item.json | ListItem | ✅ checked | Accent state fills (Hover/Pressed/Active → subtle/active/default) + new **Active** + **Collapsed** axes |
 | search-bar.json | SearchBar | ✅ checked | Added **Button=On** action slot (trailing Standard Button); pill fill bg/surface → **bg/default** |
 | dialog.json | Dialog | ✅ checked | Added **Tone** (danger/success/warning) icon + **Type** (horizontal/vertical) layouts + Show Icon; confirmation centering |
-| top-bar.json | TopBar | 🔄 in progress | — |
-| bottom-bar.json | BottomNavigation | ⬜ pending | — |
+| top-bar.json | TopBar | ✅ checked | Added **Elevated** axis (shadow/down/md) + mobile **Type** (Standard/Mobile floating w/ frosted-glass buttons) |
+| bottom-bar.json | BottomNavigation | 🔄 in progress | — |
 | sidebar.json | SideBar | ⬜ pending | — |
 
 > **PayButton was removed from the library** (intentional product decision) — its
@@ -102,9 +102,9 @@ Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — 
 |-----------|-----------------|-------------|
 | ShareItem | Organisms/Share Item | — |
 | StatsCard | Organisms/Stats Card | — |
-| BottomNavigation | Organisms/Bottom Navigation | ⬜ |
+| BottomNavigation | Organisms/Bottom Navigation | 🔄 |
 | SideBar | Organisms/Side Bar | ⬜ |
-| TopBar | Organisms/Top Bar | 🔄 |
+| TopBar | Organisms/Top Bar | ✅ |
 
 ### Foundations
 - `Foundations/Tokens` — token reference story (not a component).
