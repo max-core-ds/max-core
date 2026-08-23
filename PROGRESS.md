@@ -2,7 +2,7 @@
 
 > Living status doc for the `@max-core/react` buildout. Update it whenever a
 > component is added or a `figma-node-links/*.json` file is cross-checked.
-> Last updated: **2026-07-13** · Branch: **`feat/phase3-buildout`**
+> Last updated: **2026-08-23** · Branch: **`feat/phase3-buildout`**
 >
 > **To pick up the work**, paste one of the guides in `prompts/` into a new conversation:
 > [`figma-cross-check.md`](prompts/figma-cross-check.md) (continue the cross-check) or
@@ -129,8 +129,10 @@ Reuse these before writing inline classes — they keep Tailwind literals in one
 ## Remaining work
 
 1. **Phase 3.5 cross-check** — ✅ all exported files done (segmented-control, list-item, search-bar, dialog, top-bar, bottom-bar, sidebar). Resume when the designer drops new files into `figma-node-links/`.
-2. **Batch 8 — Stacked List** — 9 row types (Default, Social, Ride Row, Delivery Row, Media Row, Product, Booking, Items Grid, Transport), ~22 tokens. Compose from ListItem + EntityItem + Selection controls.
-3. **Phase 4 (out of scope here)** — Data Table system, Date Picker, Bottom Sheet + 18 premades; automated test infra (vitest/axe).
+2. **Phase 4 — mega-systems + test infra** — the next build phase, now planned out in **`PLAN.md → Phase 4`**. Batches: **8 Stacked List** (9 row types, ~22 tokens — compose from ListItem + EntityItem + selection controls) → **9 Data Table** → **10 Card** → **11 Bottom Sheet** (+18 premades) → **12 Date Picker** → **13 test infra** (vitest + RTL + axe).
+
+> Not yet visually cross-checked (built from tokens only): every component in
+> the inventory below without a ✅ in the Cross-check column.
 
 ---
 

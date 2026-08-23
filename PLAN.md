@@ -463,20 +463,27 @@ Data Table system, Date Picker, Bottom Sheet + 18 premades. Automated test infra
 
 ---
 
-# Phase 3.5 — Visual cross-check against Figma showcases
+# Phase 3.5 — Visual cross-check against Figma showcases — ✅ EXPORTED QUEUE DONE
 
 > **Why:** components were built from the exported `tokens.json` `components` block,
 > which only carries **dimensions** (spacing/size/radius). It does **not** carry states,
 > colors, per-variant fills, or whole axes. So a component can be drift-green yet still be
 > visually wrong or missing a variant. This pass reconciles each component against its
-> Figma showcase before Phase 4. Live status: **`PROGRESS.md`**.
+> Figma showcase. Live status: **`PROGRESS.md`**.
+>
+> **Status:** every `figma-node-links/*.json` the designer has provided (12 files) is
+> cross-checked and moved to `figma-node-links/checked/`. The pass resumes when new files
+> are dropped in. Components without a node-link file are **not yet visually verified**
+> (built from tokens only).
 
 ## Input: `figma-node-links/*.json`
 The designer exports one JSON per component group — the showcase node tree, including the
 component set's **variant names** (`Size=…, Variant=…, Tone=…`) and, crucially, **description
-text nodes** that spell out states/structure/tokens the variables omit. Cross-check file key:
-**`sX5tikviuBEhNbu2iPVya5`** (note: differs from the CLAUDE.md production key). Node IDs use
-colons (`51:656`); Figma URLs use dashes (`node-id=51-656`).
+text nodes** that spell out states/structure/tokens the variables omit. **The showcase nodes
+live in the PRODUCTION file `ouyi08XxN4l4VCsao1nNQu`** — the cross-check file
+`sX5tikviuBEhNbu2iPVya5` only holds a subset of pages, so when a node ID isn't found there,
+fall back to the production key (verify with `get_metadata` with no nodeId to list pages).
+Node IDs use colons (`51:656`); Figma URLs use dashes (`node-id=51-656`).
 
 ## Process (one file at a time, in the order the designer provides)
 1. **Summarize the JSON** — extract variant names + description nodes (helper script:
@@ -499,15 +506,29 @@ colons (`51:656`); Figma URLs use dashes (`node-id=51-656`).
 7. **Commit** (one per file; message names the Figma finding) and **`git mv` the file into
    `figma-node-links/checked/`**, then tick it in `PROGRESS.md`.
 
-## Findings so far (drift-green components that were still wrong)
-- **Badge** collapsed a whole axis (no Default/Outline/Ghost).
-- **PayButton** conflated Color with Provider (hardcoded black/white instead of theme-aware token pairs).
+## Findings (all were drift-green yet still wrong)
+
+First batch (5 files):
+- **Badge** collapsed a whole axis (no Default/Outline/Ghost). Later also: Default tone recolored to the subtle pattern (accent border + text).
+- **PayButton** conflated Color with Provider (hardcoded black/white instead of theme-aware token pairs). *(Component later removed from the library.)*
 - **Tag** treated the Selected state as a focus ring; the "filled" look was actually Selected.
 - **LinkButton** was bold with no Pressed state (Figma: Light label, 4 states).
 - **Checkbox/Radio/Switch** were missing the entire Validation axis + helper text.
 
+Second batch (7 files):
+- **SegmentedControl** active item was an iOS-style white surface pill; Figma is an `accent/default` fill (no shadow).
+- **ListItem** had a grey `bg/subtle` hover and no Pressed/Active/Collapsed; Figma uses accent state fills (subtle/active/default) + Active + Collapsed axes.
+- **SearchBar** was missing the Button=On mode (trailing Standard Button) and filled `bg/surface` instead of `bg/default`.
+- **Dialog** was a plain left-aligned modal; Figma is a confirmation dialog with Tone (danger/success/warning) icon + Type (horizontal/vertical) layouts + Show Icon.
+- **TopBar** lacked the Elevated axis and the mobile Type (Standard vs floating Mobile with frosted-glass buttons).
+- **BottomNavigation** only recolored the active label; the `_Nav Item` has 5 accent state fills + a Dot indicator + disabled (and is mobile-only → no focus ring).
+- **SideBar** had 3 slots; Figma is a 5-slot wrapper (added Top Bar + Sub Header).
+
+Two of the second batch also revealed **the description text can disagree with the bound token** (ListItem Padding Y, SearchBar tokens) — trust `get_variable_defs` on the master over the prose.
+
 **Lesson:** the recurring failure is *missing axes/states*, not wrong numbers — the drift gate
-guarantees dimensions, never appearance. Treat description nodes as the spec of record.
+guarantees dimensions, never appearance. Treat description nodes as the spec of record, but
+confirm exact values against the master's bound variables.
 
 ---
 
