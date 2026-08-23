@@ -30,8 +30,8 @@
 | search-bar.json | SearchBar | ✅ checked | Added **Button=On** action slot (trailing Standard Button); pill fill bg/surface → **bg/default** |
 | dialog.json | Dialog | ✅ checked | Added **Tone** (danger/success/warning) icon + **Type** (horizontal/vertical) layouts + Show Icon; confirmation centering |
 | top-bar.json | TopBar | ✅ checked | Added **Elevated** axis (shadow/down/md) + mobile **Type** (Standard/Mobile floating w/ frosted-glass buttons) |
-| bottom-bar.json | BottomNavigation | 🔄 in progress | — |
-| sidebar.json | SideBar | ⬜ pending | — |
+| bottom-bar.json | BottomNavigation | ✅ checked | 5-state _Nav Item fills (Hover/Pressed/Active → subtle/accent-subtle/accent-surface) + Dot + disabled; dropped focus ring |
+| sidebar.json | SideBar | 🔄 in progress | — |
 
 > **PayButton was removed from the library** (intentional product decision) — its
 > `payment-buttons.json` cross-check no longer applies.
@@ -102,8 +102,8 @@ Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — 
 |-----------|-----------------|-------------|
 | ShareItem | Organisms/Share Item | — |
 | StatsCard | Organisms/Stats Card | — |
-| BottomNavigation | Organisms/Bottom Navigation | 🔄 |
-| SideBar | Organisms/Side Bar | ⬜ |
+| BottomNavigation | Organisms/Bottom Navigation | ✅ |
+| SideBar | Organisms/Side Bar | 🔄 |
 | TopBar | Organisms/Top Bar | ✅ |
 
 ### Foundations
