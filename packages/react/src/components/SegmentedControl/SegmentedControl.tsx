@@ -11,12 +11,14 @@ const groupStyles =
   'inline-flex items-center gap-[var(--spacing-16)] rounded-[var(--radius-full)] ' +
   'border border-[var(--border-default)] bg-[var(--bg-subtle)] p-[var(--spacing-08)]';
 
+// Active item = accent/default fill + text/on-accent label (no shadow), matching
+// the Figma showcase — not the iOS-style white surface pill.
 const itemStyles =
   'inline-flex items-center gap-[var(--spacing-08)] rounded-[var(--radius-full)] border-0 ' +
   'p-[var(--spacing-08)] text-sm font-bold text-[var(--text-secondary)] transition-colors ' +
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--border-focus)] ' +
-  'data-[pressed]:bg-[var(--bg-surface)] data-[pressed]:text-[var(--text-primary)] ' +
-  'data-[pressed]:shadow-[var(--effect-shadow-down-sm)] [&_svg]:size-[var(--size-20)] ' +
+  'data-[pressed]:bg-[var(--accent-default)] data-[pressed]:text-[var(--text-on-accent)] ' +
+  '[&_svg]:size-[var(--size-20)] ' +
   'disabled:pointer-events-none disabled:opacity-[var(--opacity-disabled)]';
 
 export interface SegmentedItem {
