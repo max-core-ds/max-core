@@ -8,6 +8,8 @@ const meta = {
   parameters: { layout: 'padded' },
   argTypes: {
     variant: { control: 'inline-radio', options: ['desktop', 'mobile'] },
+    type: { control: 'inline-radio', options: ['standard', 'mobile'] },
+    elevated: { control: 'boolean' },
     leading: { control: false },
     center: { control: false },
     trailing: { control: false },
@@ -31,12 +33,32 @@ export const Desktop: Story = {
   },
 };
 
-export const Mobile: Story = {
+export const DesktopElevated: Story = {
+  args: { ...Desktop.args, elevated: true },
+};
+
+// Type=Standard — compact bar: leading + center title + trailing.
+export const MobileStandard: Story = {
   parameters: { layout: 'centered' },
   args: {
     variant: 'mobile',
+    type: 'standard',
     leading: <IconOnlyButton variant="ghost" icon={<Menu />} aria-label="Menu" />,
-    center: <span className="font-bold text-[var(--text-primary)]">Home</span>,
-    trailing: <IconOnlyButton variant="ghost" icon={<Bell />} aria-label="Notifications" />,
+    center: <span className="font-bold text-[var(--text-primary)]">Page title</span>,
+    trailing: <IconOnlyButton variant="ghost" icon={<Search />} aria-label="Search" />,
+  },
+};
+
+// Type=Mobile — floating: frosted circular buttons on top, page title below.
+export const MobileFloating: Story = {
+  parameters: { layout: 'padded' },
+  decorators: [(Story) => <div className="w-80">{Story()}</div>],
+  args: {
+    variant: 'mobile',
+    type: 'mobile',
+    elevated: true,
+    leading: <IconOnlyButton variant="ghost" icon={<Menu />} aria-label="Menu" />,
+    center: 'Page title',
+    trailing: <IconOnlyButton variant="ghost" icon={<Search />} aria-label="Search" />,
   },
 };
