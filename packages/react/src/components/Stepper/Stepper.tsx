@@ -4,18 +4,24 @@ import { NumberField } from '@base-ui/react/number-field';
 import { type VariantProps, cva } from 'class-variance-authority';
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
+import { stateLayer } from '../../utils/state-layer.js';
 
+// One uniform surface (bg/surface) across the whole control — the ± buttons have
+// no fill of their own; they share the group's surface and only paint a state
+// layer on hover/press. Border reacts on hover (border/hover) and focus.
 const groupStyles =
   'inline-flex items-stretch overflow-hidden rounded-[var(--radius-md)] ' +
   'border border-[var(--border-default)] bg-[var(--bg-surface)] ' +
-  'focus-within:border-[var(--border-focus)] transition-colors';
+  'hover:border-[var(--border-hover)] focus-within:border-[var(--border-focus)] transition-colors';
 
-// Hit Area Padding X per size (4/6/8) on the ± buttons.
+// Hit Area Padding X per size (4/6/8) on the ± buttons. Fill is inherited from
+// the group; hover/press are the mode-aware overlay/state-layer (see stateLayer).
 const buttonStyles = cva(
   [
-    'inline-flex select-none items-center justify-center',
-    'bg-[var(--bg-subtle)] text-[var(--text-primary)] transition-colors',
-    'hover:bg-[var(--neutral-subtle)] disabled:opacity-[var(--opacity-disabled)]',
+    'relative isolate inline-flex select-none items-center justify-center',
+    'text-[var(--text-primary)]',
+    stateLayer,
+    'disabled:opacity-[var(--opacity-disabled)]',
   ],
   {
     variants: {
