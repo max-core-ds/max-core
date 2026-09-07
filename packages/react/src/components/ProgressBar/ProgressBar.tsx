@@ -38,7 +38,7 @@ export function ProgressBar({
         <Progress.Indicator className={progressFill} />
       </Progress.Track>
       {showRangeLabels ? (
-        <div className="flex justify-between text-xs text-[var(--text-muted)]">
+        <div className="flex justify-between text-xs font-light text-[var(--text-primary)]">
           <span>{min}%</span>
           <span>{max}%</span>
         </div>
