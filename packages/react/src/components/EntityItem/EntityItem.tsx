@@ -24,7 +24,7 @@ export function EntityItem({
     <div className={cn('flex items-center gap-[var(--spacing-08)]', className)} {...rest}>
       {leading}
       <div className="flex flex-1 flex-col gap-[var(--spacing-08)]">
-        <span className="font-bold text-[var(--text-primary)]">{title}</span>
+        <span className="text-base font-bold text-[var(--text-primary)]">{title}</span>
         {subtitle ? <span className="text-sm text-[var(--text-secondary)]">{subtitle}</span> : null}
       </div>
       {trailing}

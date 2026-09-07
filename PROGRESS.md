@@ -86,7 +86,7 @@ Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — 
 | Textarea | Molecules/Textarea | — |
 | SearchBar | Molecules/Search Bar | ✅ |
 | AvatarGroup | Molecules/Avatar Group | ✅ |
-| EntityItem | Molecules/Entity Item | — |
+| EntityItem | Molecules/Entity Item | ✅ |
 | EntityCard | Molecules/Entity Card | — |
 | Pin | Molecules/Pin | ✅ |
 | FormGroup | Molecules/Form Group | — |
