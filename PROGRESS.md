@@ -63,7 +63,7 @@ Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — 
 | Tooltip | Atoms/Tooltip | ✅ |
 | Knob | Atoms/Knob | ✅ |
 | Spinner | Atoms/Spinner | ✅ |
-| Thumbnail | Atoms/Thumbnail | — |
+| Thumbnail | Atoms/Thumbnail | ✅ |
 | ScrollBar | Atoms/ScrollBar | ✅ |
 | TimePicker | Atoms/TimePicker | ✅ |
 | StatusDot | Atoms/StatusDot | ✅ |
