@@ -5,18 +5,27 @@ import type { ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
 
 // Padding X/Y, Gap, Icon Size and Radius match -- Molecule/Toast Snackbar/*.
+// No border (Border Weight none); the surface is the tone's subtle fill.
 const toastStyles = cn(
   'pointer-events-auto flex items-start gap-[var(--spacing-16)]',
-  'rounded-[var(--radius-l)] border border-[var(--border-muted)] bg-[var(--bg-surface)]',
-  'px-[var(--spacing-16)] py-[var(--spacing-12)] text-[var(--text-primary)]',
-  'shadow-[var(--effect-shadow-down-lg)]',
+  'rounded-[var(--radius-l)] text-[var(--text-primary)]',
+  'px-[var(--spacing-16)] py-[var(--spacing-12)]',
+  'shadow-[var(--effect-shadow-down-md)]',
 );
 
+// Icon + title take the tone's default color; the surface is its subtle fill.
+// Info/Loading (and anything unmapped) sit on the neutral bg/surface.
 const toneColor: Record<string, string> = {
   success: 'text-[var(--status-success-default)]',
   danger: 'text-[var(--status-danger-default)]',
   warning: 'text-[var(--status-warning-default)]',
-  info: 'text-[var(--status-info-default)]',
+  info: 'text-[var(--text-primary)]',
+};
+
+const toneBg: Record<string, string> = {
+  success: 'bg-[var(--status-success-subtle)]',
+  danger: 'bg-[var(--status-danger-subtle)]',
+  warning: 'bg-[var(--status-warning-subtle)]',
 };
 
 /**
@@ -40,14 +49,20 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 function ToastList() {
   const { toasts } = BaseToast.useToastManager();
   return toasts.map((toast) => (
-    <BaseToast.Root key={toast.id} toast={toast} className={toastStyles}>
+    <BaseToast.Root
+      key={toast.id}
+      toast={toast}
+      className={cn(toastStyles, (toast.type && toneBg[toast.type]) || 'bg-[var(--bg-surface)]')}
+    >
       {toast.type && toneColor[toast.type] ? (
         <span className={cn('shrink-0 [&_svg]:size-[var(--size-32)]', toneColor[toast.type])}>
           <ToneIcon type={toast.type} />
         </span>
       ) : null}
       <div className="flex flex-1 flex-col gap-[var(--spacing-04)]">
-        <BaseToast.Title className="font-bold" />
+        <BaseToast.Title
+          className={cn('text-2xl font-bold', toast.type ? toneColor[toast.type] : undefined)}
+        />
         <BaseToast.Description className="text-sm text-[var(--text-secondary)]" />
       </div>
       <BaseToast.Close

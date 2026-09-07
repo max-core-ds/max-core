@@ -97,7 +97,7 @@ Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — 
 | Dialog | Molecules/Dialog | ✅ |
 | Dropdown | Molecules/Dropdown | ✅ |
 | ItemList | Molecules/Item List | ✅ |
-| Toast | Molecules/Toast | — |
+| Toast | Molecules/Toast | ✅ |
 | ActionBar | Molecules/ActionBar | ✅ |
 
 ### Organisms
