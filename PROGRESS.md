@@ -91,7 +91,7 @@ Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — 
 | Pin | Molecules/Pin | ✅ |
 | FormGroup | Molecules/Form Group | — |
 | Range | Molecules/Range | — |
-| Pagination | Molecules/Pagination | — |
+| Pagination | Molecules/Pagination | ✅ |
 | Switcher | Molecules/Switcher | ✅ |
 | Tabs | Molecules/Tabs | ✅ |
 | Dialog | Molecules/Dialog | ✅ |
