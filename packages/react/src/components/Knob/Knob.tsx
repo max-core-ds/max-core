@@ -4,7 +4,8 @@ import { cn } from '../../utils/cn.js';
 // The circular draggable handle reused by Range / Slider. Size/padding/radius
 // match -- Atoms/Knob/*; a surface container (`group`) holds an inner handle
 // whose fill is state-specific (Figma: State=Default/Hover/Pressed × Disabled):
-//   Default → neutral/subtle · Hover → accent · Pressed → hollow border ring.
+//   Default → neutral/subtle · Hover → accent/hover · Pressed → hollow ring
+//   (overlay/pressed border).
 // By default the handle reacts to real hover/press (also while dragging inside a
 // slider thumb); pass `state` to force a specific look for showcases.
 const containerStyles =
@@ -16,14 +17,14 @@ const handleBase = 'size-full rounded-[var(--radius-full)] transition-colors';
 // Fully-written literals (Tailwind must see them verbatim).
 const staticHandle = {
   default: 'bg-[var(--neutral-subtle)]',
-  hover: 'bg-[var(--accent-default)]',
-  pressed: 'border-2 border-[var(--border-default)] bg-transparent',
+  hover: 'bg-[var(--accent-hover)]',
+  pressed: 'border-2 border-[var(--overlay-pressed)] bg-transparent',
 } as const;
 
 const interactiveHandle =
   'bg-[var(--neutral-subtle)] ' +
-  'group-hover:bg-[var(--accent-default)] ' +
-  'group-active:border-2 group-active:border-[var(--border-default)] group-active:bg-transparent';
+  'group-hover:bg-[var(--accent-hover)] ' +
+  'group-active:border-2 group-active:border-[var(--overlay-pressed)] group-active:bg-transparent';
 
 export interface KnobProps extends ComponentPropsWithoutRef<'span'> {
   /** Force a specific state; omit for interactive (hover/press) behavior. */

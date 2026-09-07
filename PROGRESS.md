@@ -61,7 +61,7 @@ Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — 
 | Divider | Atoms/Divider | ✅ |
 | ProgressBar | Atoms/Progress Bar | ✅ |
 | Tooltip | Atoms/Tooltip | ✅ |
-| Knob | Atoms/Knob | — |
+| Knob | Atoms/Knob | ✅ |
 | Spinner | Atoms/Spinner | — |
 | Thumbnail | Atoms/Thumbnail | — |
 | ScrollBar | Atoms/ScrollBar | ✅ |
