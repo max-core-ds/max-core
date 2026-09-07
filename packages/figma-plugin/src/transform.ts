@@ -131,6 +131,14 @@ function aliasReference(targetVar: Variable, targetValue?: number): string | nul
 
 interface BuildContext {
   varsById: Map<string, Variable>;
+  /**
+   * Production ("Max core") mode id per collection. Figma mode ids are
+   * collection-scoped, and alias chains cross collections (a component token →
+   * a semantic → a primitive), so resolveLeaf must read each variable in ITS
+   * OWN collection's mode, not the caller's. Colors is intentionally omitted —
+   * its callers pass the light/dark mode explicitly.
+   */
+  modeByCollection: Map<string, string>;
   resolvedHex: Map<string, string>; // for cross-color alias fallback
 }
 
@@ -146,7 +154,12 @@ function resolveLeaf(
 ): unknown {
   if (trail.has(v.id)) throw new Error(`Circular alias chain at ${v.name}`);
   trail.add(v.id);
-  const raw = v.valuesByMode[modeId];
+  // Read this variable in its own collection's production mode. When the chain
+  // stays within one collection (or the collection isn't mapped, e.g. Colors)
+  // this is just `modeId`; when it has crossed a boundary, this picks the right
+  // mode so `valuesByMode` doesn't miss and silently return undefined.
+  const useMode = ctx.modeByCollection.get(v.variableCollectionId) ?? modeId;
+  const raw = v.valuesByMode[useMode];
   if (isAlias(raw)) {
     const target = ctx.varsById.get(raw.id);
     if (!target) return null;
@@ -394,8 +407,6 @@ export async function buildTokensFile(): Promise<TokensFile> {
     }
   }
 
-  const ctx: BuildContext = { varsById, resolvedHex: new Map() };
-
   const primCol = collections.find((c) => c.name === PRIM_COLLECTION);
   const semCol = collections.find((c) => c.name === SEM_COLLECTION);
   const colCol = collections.find((c) => c.name === COL_COLLECTION);
@@ -417,6 +428,19 @@ export async function buildTokensFile(): Promise<TokensFile> {
   const compMode = findMode(compCol, COMP_MODE);
   const lightMode = findMode(colCol, LIGHT_MODE);
   const darkMode = findMode(colCol, DARK_MODE);
+
+  // Map each single-production collection to its "Max core" mode so resolveLeaf
+  // can follow alias chains across collection boundaries. Colors is omitted on
+  // purpose — buildColors/buildSemantics pass the light/dark mode directly.
+  const ctx: BuildContext = {
+    varsById,
+    modeByCollection: new Map([
+      [primCol.id, primMode],
+      [semCol.id, semMode],
+      [compCol.id, compMode],
+    ]),
+    resolvedHex: new Map(),
+  };
 
   return {
     $version: '0.3.0',
