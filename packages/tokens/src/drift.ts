@@ -192,16 +192,28 @@ const SPECS: ComponentSpec[] = [
     name: 'Textarea',
     source: 'components/Textarea/Textarea.tsx',
     prefixes: ['Molecule/Input/Textarea'],
+    exempt: ['--spacing-08'], // Inner Gap is an icon-to-text gap — textarea has no icon slot
   },
   {
     name: 'Bottom Line Input',
     source: 'components/BottomLineInput/BottomLineInput.tsx',
     prefixes: ['Molecule/Input/Bottom Line'],
+    exempt: [
+      '--size-16', // icon size S — underline input renders no icons
+      '--size-20', // icon size M — underline input renders no icons
+      '--size-24', // icon size L — underline input renders no icons
+      '--spacing-08', // Inner Gap — no icon slot, so no internal items to space
+    ],
   },
   {
     name: 'Stepper',
     source: 'components/Stepper/Stepper.tsx',
     prefixes: ['Molecule/Input/Stepper'],
+    exempt: [
+      '--size-16', // icon size S — ± are typographic glyphs, not sized icons
+      '--size-20', // icon size M — ± are typographic glyphs, not sized icons
+      '--size-24', // icon size L — ± are typographic glyphs, not sized icons
+    ],
   },
   {
     name: 'Select Input',
@@ -248,6 +260,7 @@ const SPECS: ComponentSpec[] = [
     name: 'Avatar Group',
     source: 'components/AvatarGroup/AvatarGroup.tsx',
     prefixes: ['Molecule/Avatar Group'], // Gap is a raw negative overlap — nothing dimensional to check
+    exempt: ['--size-24'], // avatar/counter dimensions come from the composed Avatar (see Avatar spec)
   },
   {
     name: 'Range',
@@ -269,6 +282,7 @@ const SPECS: ComponentSpec[] = [
     name: 'Entity Item',
     source: 'components/EntityItem/EntityItem.tsx',
     prefixes: ['Molecule/Entity Item'],
+    exempt: ['--radius-full'], // avatar radius is applied by the composed Avatar (leading slot)
   },
   {
     name: 'Entity Card',
