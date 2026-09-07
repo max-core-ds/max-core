@@ -88,7 +88,7 @@ Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — 
 | AvatarGroup | Molecules/Avatar Group | — |
 | EntityItem | Molecules/Entity Item | — |
 | EntityCard | Molecules/Entity Card | — |
-| Pin | Molecules/Pin | — |
+| Pin | Molecules/Pin | ✅ |
 | FormGroup | Molecules/Form Group | — |
 | Range | Molecules/Range | — |
 | Pagination | Molecules/Pagination | — |
