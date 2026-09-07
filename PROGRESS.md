@@ -67,7 +67,7 @@ Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — 
 | ScrollBar | Atoms/ScrollBar | ✅ |
 | TimePicker | Atoms/TimePicker | ✅ |
 | StatusDot | Atoms/StatusDot | ✅ |
-| ContentBlocks | Atoms/Content Blocks | — |
+| ContentBlocks | Atoms/Content Blocks | ✅ |
 | Checkbox | Atoms/Checkbox | ✅ |
 | Radio | Atoms/Radio | ✅ |
 | Switch | Atoms/Switch | ✅ |

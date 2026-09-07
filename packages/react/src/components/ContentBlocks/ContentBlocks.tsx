@@ -12,7 +12,7 @@ export function HeadingBlock({ children = 'Heading', className, ...rest }: Headi
   return (
     <div
       className={cn(
-        'px-[var(--spacing-02)] text-2xl font-black text-[var(--text-primary)]',
+        'px-[var(--spacing-02)] text-xl font-bold text-[var(--text-primary)]',
         className,
       )}
       {...rest}
@@ -34,7 +34,7 @@ export function TextBlock({
   return (
     <p
       className={cn(
-        'px-[var(--spacing-02)] text-base font-light text-[var(--text-secondary)]',
+        'px-[var(--spacing-02)] text-sm font-light text-[var(--text-secondary)]',
         className,
       )}
       {...rest}
@@ -50,13 +50,14 @@ export function ImagePlaceholder({ className, ...rest }: ImagePlaceholderProps) 
   return (
     <div
       className={cn(
-        'flex aspect-video w-full items-center justify-center',
+        'flex aspect-video w-full flex-col items-center justify-center gap-[var(--spacing-04)]',
         'rounded-[var(--radius-md)] bg-[var(--bg-subtle)] text-[var(--text-muted)]',
         className,
       )}
       {...rest}
     >
       <ImageIcon />
+      <span className="text-xs font-light">Image</span>
     </div>
   );
 }
