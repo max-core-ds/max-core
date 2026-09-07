@@ -224,6 +224,10 @@ const SPECS: ComponentSpec[] = [
     name: 'Multiselect',
     source: 'components/Multiselect/Multiselect.tsx',
     prefixes: ['Molecule/Input/Multiselect'],
+    exempt: [
+      '--size-24', // Icon Size L — single-size combobox; no L-size 24px icon
+      '--spacing-16', // Size L Padding Y — single-size component uses the M padding
+    ],
   },
   {
     name: 'Search Bar',

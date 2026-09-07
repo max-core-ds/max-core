@@ -1,7 +1,6 @@
 'use client';
 
 import { Combobox } from '@base-ui/react/combobox';
-import type { ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
 import { fieldSurface } from '../../utils/field.js';
 
@@ -17,9 +16,11 @@ const chipsStyles = cn(
   'focus-within:border-[var(--border-focus)]',
 );
 
+// Chip = the selected-value Badge: leading padding is Badge Padding X (spacing-10);
+// the trailing edge is tightened to sit against the remove ×.
 const chipStyles =
   'inline-flex items-center gap-[var(--spacing-04)] rounded-[var(--radius-sm)] ' +
-  'bg-[var(--bg-subtle)] py-[var(--spacing-02)] pl-[var(--spacing-08)] pr-[var(--spacing-04)] ' +
+  'bg-[var(--bg-subtle)] py-[var(--spacing-02)] pl-[var(--spacing-10)] pr-[var(--spacing-04)] ' +
   'text-sm text-[var(--text-primary)]';
 
 const popupStyles =
