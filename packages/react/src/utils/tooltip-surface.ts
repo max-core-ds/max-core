@@ -9,7 +9,7 @@
 // `relative` so an absolutely-positioned arrow anchors to the bubble.
 export const tooltipBubble =
   'relative rounded-[var(--radius-md)] bg-[var(--neutral-default)] p-[var(--spacing-16)] ' +
-  'text-sm text-[var(--text-on-accent-muted)] shadow-[var(--effect-shadow-down-md)] outline-none';
+  'text-xs font-light text-[var(--text-on-accent-muted)] shadow-[var(--effect-shadow-down-md)] outline-none';
 
 // The arrow's visual only. Base UI sets its along-edge coordinate (top OR left);
 // the consumer adds the perpendicular offset (see the Tooltip component's

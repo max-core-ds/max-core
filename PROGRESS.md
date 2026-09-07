@@ -60,7 +60,7 @@ Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — 
 | Tag | Atoms/Tag | ✅ |
 | Divider | Atoms/Divider | ✅ |
 | ProgressBar | Atoms/Progress Bar | ✅ |
-| Tooltip | Atoms/Tooltip | — |
+| Tooltip | Atoms/Tooltip | ✅ |
 | Knob | Atoms/Knob | — |
 | Spinner | Atoms/Spinner | — |
 | Thumbnail | Atoms/Thumbnail | — |
