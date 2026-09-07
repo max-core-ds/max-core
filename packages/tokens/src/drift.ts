@@ -136,6 +136,15 @@ const SPECS: ComponentSpec[] = [
     prefixes: ['Atoms/Scroll Bar'],
   },
   {
+    name: 'Time Picker',
+    source: 'components/TimePicker/TimePicker.tsx',
+    prefixes: ['Atoms/Time Picker'],
+    exempt: [
+      // Period column centers AM/PM with spacer rows instead of a bottom padding.
+      '--spacing-28',
+    ],
+  },
+  {
     name: 'Content Blocks',
     source: 'components/ContentBlocks/ContentBlocks.tsx',
     prefixes: ['Atoms/Content Blocks'],
