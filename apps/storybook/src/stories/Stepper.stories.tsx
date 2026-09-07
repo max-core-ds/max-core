@@ -2,7 +2,7 @@ import { Stepper } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
-  title: 'Atoms/Stepper',
+  title: 'Molecules/Stepper',
   component: Stepper,
   parameters: { layout: 'centered' },
   args: { label: 'Quantity', defaultValue: 1, min: 0, size: 'm' },

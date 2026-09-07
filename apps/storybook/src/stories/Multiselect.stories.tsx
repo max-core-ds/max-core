@@ -10,7 +10,7 @@ const items = [
 ];
 
 const meta = {
-  title: 'Atoms/Multiselect',
+  title: 'Molecules/Multiselect',
   component: Multiselect,
   parameters: { layout: 'padded' },
   decorators: [(Story) => <div className="w-80">{Story()}</div>],

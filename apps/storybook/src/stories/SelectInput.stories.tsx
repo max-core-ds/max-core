@@ -9,7 +9,7 @@ const items = [
 ];
 
 const meta = {
-  title: 'Atoms/Select Input',
+  title: 'Molecules/Select Input',
   component: SelectInput,
   parameters: { layout: 'padded' },
   decorators: [(Story) => <div className="w-72">{Story()}</div>],

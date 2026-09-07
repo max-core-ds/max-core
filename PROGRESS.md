@@ -68,13 +68,6 @@ Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — 
 | TimePicker | Atoms/TimePicker | ✅ |
 | StatusDot | Atoms/StatusDot | ✅ |
 | ContentBlocks | Atoms/Content Blocks | — |
-| Input | Atoms/Input | — |
-| BottomLineInput | Atoms/Bottom Line Input | — |
-| SelectInput | Atoms/Select Input | — |
-| Multiselect | Atoms/Multiselect | — |
-| Stepper | Atoms/Stepper | — |
-| Textarea | Atoms/Textarea | — |
-| SearchBar | Atoms/Search Bar | ✅ |
 | Checkbox | Atoms/Checkbox | ✅ |
 | Radio | Atoms/Radio | ✅ |
 | Switch | Atoms/Switch | ✅ |
@@ -85,6 +78,13 @@ Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — 
 
 | Component | Storybook title | Cross-check |
 |-----------|-----------------|-------------|
+| Input | Molecules/Input | — |
+| BottomLineInput | Molecules/Bottom Line Input | — |
+| SelectInput | Molecules/Select Input | — |
+| Multiselect | Molecules/Multiselect | — |
+| Stepper | Molecules/Stepper | — |
+| Textarea | Molecules/Textarea | — |
+| SearchBar | Molecules/Search Bar | ✅ |
 | AvatarGroup | Molecules/Avatar Group | — |
 | EntityItem | Molecules/Entity Item | — |
 | EntityCard | Molecules/Entity Card | — |

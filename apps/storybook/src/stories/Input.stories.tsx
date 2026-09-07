@@ -1,8 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Input } from '@max-core/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
-  title: 'Atoms/Input',
+  title: 'Molecules/Input',
   component: Input,
   parameters: { layout: 'padded' },
   argTypes: {
