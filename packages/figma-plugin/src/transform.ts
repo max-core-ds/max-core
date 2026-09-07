@@ -168,6 +168,36 @@ function resolveLeaf(
   return raw;
 }
 
+/**
+ * Walk an alias chain and return the reference for the first target that maps to
+ * a semantic/primitive (`{semantics.spacing.12}`). Used when a component token
+ * aliases ANOTHER component token (level 4 → level 3, e.g. Stepper/Padding X →
+ * Input/Global/General/Padding X → `- Spacing -/12`): rather than flattening to
+ * a raw number, we skip the intermediate component tokens and reference the
+ * semantic the chain lands on — preserving the cascade and keeping the token
+ * visible to the drift/conformance check, which only recognises `{semantics.*}`
+ * references (a raw number is silently ignored). Returns null if the chain never
+ * reaches a name-mappable token.
+ */
+function firstMappableRef(
+  v: Variable,
+  modeId: string,
+  ctx: BuildContext,
+  trail: Set<string> = new Set(),
+): string | null {
+  if (trail.has(v.id)) return null;
+  trail.add(v.id);
+  const useMode = ctx.modeByCollection.get(v.variableCollectionId) ?? modeId;
+  const raw = v.valuesByMode[useMode];
+  if (!isAlias(raw)) return null;
+  const target = ctx.varsById.get(raw.id);
+  if (!target) return null;
+  const targetMode = ctx.modeByCollection.get(target.variableCollectionId) ?? modeId;
+  const targetRaw = target.valuesByMode[targetMode];
+  const hint = typeof targetRaw === 'number' ? targetRaw : undefined;
+  return aliasReference(target, hint) ?? firstMappableRef(target, modeId, ctx, trail);
+}
+
 function buildPrimitives(
   primCol: VariableCollection,
   primMode: string,
@@ -317,8 +347,9 @@ function buildColors(
  * Most component tokens alias a semantic (e.g. `-- Atoms/Buttons/Global/Radius`
  * → `- Radius -/sm`); those emit a `{semantics.radius.sm}` reference so the
  * cascade is preserved. Where the alias target is itself a component token
- * (level 4 → level 3) or otherwise unmappable, we resolve to the final leaf
- * value so the export still carries the concrete number/hex.
+ * (level 4 → level 3) we follow the chain to the semantic it lands on and emit
+ * that reference (firstMappableRef); only chains that never reach a mappable
+ * token fall back to the resolved leaf value (concrete number/hex).
  */
 function buildComponents(
   col: VariableCollection,
@@ -341,11 +372,19 @@ function buildComponents(
       if (alias) {
         out[v.name] = alias;
       } else {
-        const resolved = resolveLeaf(v, modeId, ctx);
-        if (typeof resolved === 'number' || typeof resolved === 'string') {
-          out[v.name] = resolved;
-        } else if (typeof resolved === 'object' && resolved !== null && 'r' in resolved) {
-          out[v.name] = rgbToHex(resolved as RGB);
+        // Target is a component token (level 4 → level 3). Prefer the semantic
+        // reference the chain ultimately lands on so the cascade + drift check
+        // survive; only flatten to a concrete value if no such reference exists.
+        const ref = firstMappableRef(v, modeId, ctx);
+        if (ref) {
+          out[v.name] = ref;
+        } else {
+          const resolved = resolveLeaf(v, modeId, ctx);
+          if (typeof resolved === 'number' || typeof resolved === 'string') {
+            out[v.name] = resolved;
+          } else if (typeof resolved === 'object' && resolved !== null && 'r' in resolved) {
+            out[v.name] = rgbToHex(resolved as RGB);
+          }
         }
       }
     } else if (typeof raw === 'number' || typeof raw === 'string') {
