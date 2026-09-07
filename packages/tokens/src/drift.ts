@@ -145,6 +145,11 @@ const SPECS: ComponentSpec[] = [
     ],
   },
   {
+    name: 'Status Dot',
+    source: 'components/StatusDot/StatusDot.tsx',
+    prefixes: ['Atoms/Status Dot'], // within-avatar sizes live under Atoms/Avatar
+  },
+  {
     name: 'Content Blocks',
     source: 'components/ContentBlocks/ContentBlocks.tsx',
     prefixes: ['Atoms/Content Blocks'],
@@ -212,6 +217,11 @@ const SPECS: ComponentSpec[] = [
     name: 'Search Bar',
     source: 'components/SearchBar/SearchBar.tsx',
     prefixes: ['Molecule/Search Bar'],
+  },
+  {
+    name: 'Action Bar',
+    source: 'components/ActionBar/ActionBar.tsx',
+    prefixes: ['Molecule/Action Bar'],
   },
   // --- Batch 5: Composition I ---
   {
