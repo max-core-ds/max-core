@@ -92,7 +92,7 @@ Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — 
 | FormGroup | Molecules/Form Group | — |
 | Range | Molecules/Range | — |
 | Pagination | Molecules/Pagination | — |
-| Switcher | Molecules/Switcher | — |
+| Switcher | Molecules/Switcher | ✅ |
 | Tabs | Molecules/Tabs | — |
 | Dialog | Molecules/Dialog | ✅ |
 | Dropdown | Molecules/Dropdown | — |

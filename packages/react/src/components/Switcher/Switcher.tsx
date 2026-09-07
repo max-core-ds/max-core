@@ -13,10 +13,10 @@ const groupStyles =
 
 const itemStyles =
   'inline-flex items-center gap-[var(--spacing-08)] rounded-[var(--radius-full)] ' +
-  'px-[var(--spacing-16)] py-[var(--spacing-08)] text-sm font-bold text-[var(--text-secondary)] ' +
+  'px-[var(--spacing-16)] py-[var(--spacing-08)] text-sm font-light text-[var(--text-secondary)] ' +
   'transition-colors [&_svg]:size-[var(--size-16)] ' +
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--border-focus)] ' +
-  'data-[pressed]:bg-[var(--bg-surface)] data-[pressed]:text-[var(--text-primary)] ' +
+  'data-[pressed]:bg-[var(--bg-surface)] data-[pressed]:font-bold data-[pressed]:text-[var(--text-primary)] ' +
   'data-[pressed]:shadow-[var(--effect-shadow-down-sm)] ' +
   'disabled:pointer-events-none disabled:opacity-[var(--opacity-disabled)]';
 
