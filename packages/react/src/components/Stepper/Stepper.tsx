@@ -10,12 +10,12 @@ import { stateLayer } from '../../utils/state-layer.js';
 // no fill of their own; they share the group's surface and only paint a state
 // layer on hover/press. Border reacts on hover (border/hover) and focus.
 //
-// Padding X (12) insets the ± buttons from the surface edge and Items Gap (8)
-// separates the three segments; the buttons then add their own Hit Area Padding X
-// internally (glyph-to-edge = Padding X + Hit Area Padding X). NB: Figma also
-// scopes Padding X / Items Gap per size, but the token export currently only
-// ships Hit Area Padding X + Number Min Width per size — these use the Size S
-// values (12 / 8) until the export carries the rest.
+// -- Molecule/Input/Stepper/Size {S,M,L}: Padding X (12) and Items Gap (8) are
+// uniform across sizes, so they bind here on the group; Radius = md. Padding X
+// insets the ± buttons from the surface edge and Items Gap separates the three
+// segments; the buttons add their own Hit Area Padding X internally
+// (glyph-to-edge = Padding X + Hit Area Padding X). Per-size tokens live on the
+// buttons (Hit Area Padding X) and the field (Number Min Width, Padding Y).
 const groupStyles =
   'inline-flex items-stretch overflow-hidden rounded-[var(--radius-md)] ' +
   'gap-[var(--spacing-08)] px-[var(--spacing-12)] ' +
@@ -43,7 +43,8 @@ const buttonStyles = cva(
   },
 );
 
-// Number Min Width per size (40/48/56).
+// Number Min Width (40/48/56) and Padding Y (12/12/16) per size — the group's
+// vertical extent follows the field (the ± buttons stretch to match).
 const inputStyles = cva(
   ['bg-transparent text-center tabular-nums text-[var(--text-primary)] outline-none'],
   {
