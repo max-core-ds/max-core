@@ -75,7 +75,7 @@ export function Range({
         </Slider.Track>
       </Slider.Control>
       {showLabels ? (
-        <div className="flex justify-between text-xs text-[var(--text-muted)]">
+        <div className="flex justify-between text-xs font-light text-[var(--text-primary)]">
           <span>{formatLabel(min)}</span>
           <span>{formatLabel(max)}</span>
         </div>
