@@ -21,9 +21,11 @@ export function ItemList({ label, helper, children, className, ...rest }: ItemLi
       {label || helper ? (
         <div className="flex flex-col gap-[var(--spacing-04)] px-[var(--spacing-12)]">
           {label ? (
-            <span className="text-sm font-bold text-[var(--text-primary)]">{label}</span>
+            <span className="text-xs font-bold text-[var(--text-primary)]">{label}</span>
           ) : null}
-          {helper ? <span className="text-xs text-[var(--text-muted)]">{helper}</span> : null}
+          {helper ? (
+            <span className="text-xs font-light text-[var(--text-muted)]">{helper}</span>
+          ) : null}
         </div>
       ) : null}
       {children}
