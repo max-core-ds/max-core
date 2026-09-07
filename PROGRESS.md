@@ -104,7 +104,7 @@ Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — 
 
 | Component | Storybook title | Cross-check |
 |-----------|-----------------|-------------|
-| ShareItem | Organisms/Share Item | — |
+| ShareItem | Organisms/Share Item | ✅ |
 | StatsCard | Organisms/Stats Card | — |
 | BottomNavigation | Organisms/Bottom Navigation | ✅ |
 | SideBar | Organisms/Side Bar | ✅ |
