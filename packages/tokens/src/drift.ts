@@ -131,6 +131,11 @@ const SPECS: ComponentSpec[] = [
     prefixes: ['Atoms/Thumbnail'],
   },
   {
+    name: 'ScrollBar',
+    source: 'components/ScrollBar/ScrollBar.tsx',
+    prefixes: ['Atoms/Scroll Bar'],
+  },
+  {
     name: 'Content Blocks',
     source: 'components/ContentBlocks/ContentBlocks.tsx',
     prefixes: ['Atoms/Content Blocks'],

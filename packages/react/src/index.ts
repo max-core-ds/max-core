@@ -17,6 +17,7 @@ export { ProgressBar, type ProgressBarProps } from './components/ProgressBar/ind
 export { Tooltip, type TooltipProps } from './components/Tooltip/index.js';
 export { Knob, type KnobProps } from './components/Knob/index.js';
 export { Thumbnail, type ThumbnailProps } from './components/Thumbnail/index.js';
+export { ScrollBar, type ScrollBarProps } from './components/ScrollBar/index.js';
 export {
   HeadingBlock,
   type HeadingBlockProps,

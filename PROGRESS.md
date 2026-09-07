@@ -42,7 +42,7 @@
 
 ---
 
-## Component inventory (45 shipped + stories)
+## Component inventory (46 shipped + stories)
 
 Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — no node file yet.
 
@@ -64,6 +64,7 @@ Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — 
 | Knob | Atoms/Knob | — |
 | Spinner | Atoms/Spinner | — |
 | Thumbnail | Atoms/Thumbnail | — |
+| ScrollBar | Atoms/ScrollBar | ✅ |
 | ContentBlocks | Atoms/Content Blocks | — |
 | Input | Atoms/Input | — |
 | BottomLineInput | Atoms/Bottom Line Input | — |
