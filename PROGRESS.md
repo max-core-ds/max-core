@@ -89,7 +89,7 @@ Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — 
 | EntityItem | Molecules/Entity Item | ✅ |
 | EntityCard | Molecules/Entity Card | ✅ |
 | Pin | Molecules/Pin | ✅ |
-| FormGroup | Molecules/Form Group | — |
+| FormGroup | Molecules/Form Group | ✅ |
 | Range | Molecules/Range | ✅ |
 | Pagination | Molecules/Pagination | ✅ |
 | Switcher | Molecules/Switcher | ✅ |

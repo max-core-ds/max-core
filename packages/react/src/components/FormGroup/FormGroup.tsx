@@ -64,12 +64,12 @@ export function FormGroup({
       {headline || description ? (
         <div className="flex flex-col gap-[var(--spacing-12)]">
           {headline ? (
-            <Fieldset.Legend className="text-lg font-bold text-[var(--text-primary)]">
+            <Fieldset.Legend className="text-2xl font-bold text-[var(--text-primary)]">
               {headline}
             </Fieldset.Legend>
           ) : null}
           {description ? (
-            <p className="text-sm text-[var(--text-secondary)]">{description}</p>
+            <p className="text-sm font-light text-[var(--text-secondary)]">{description}</p>
           ) : null}
         </div>
       ) : null}
