@@ -8,7 +8,7 @@ import { cn } from '../../utils/cn.js';
 // underline is Base UI's Indicator positioned via its --active-tab-* vars.
 const tabStyles =
   'relative inline-flex items-center gap-[var(--spacing-08)] rounded-[var(--radius-sm)] ' +
-  'px-[var(--spacing-16)] py-[var(--spacing-12)] text-sm font-bold text-[var(--text-secondary)] ' +
+  'px-[var(--spacing-16)] py-[var(--spacing-12)] text-sm font-light text-[var(--text-secondary)] ' +
   'transition-colors hover:text-[var(--text-primary)] data-[active]:text-[var(--accent-default)] ' +
   'disabled:opacity-[var(--opacity-disabled)] [&_svg]:size-[var(--size-20)] ' +
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--border-focus)]';
@@ -37,7 +37,7 @@ export function Tabs({ items, value, defaultValue, onValueChange, className }: T
       onValueChange={(v) => onValueChange?.(v as string)}
       className={cn('w-full', className)}
     >
-      <BaseTabs.List className="relative flex border-b border-[var(--border-default)]">
+      <BaseTabs.List className="relative flex border-b border-[var(--border-muted)]">
         {items.map((item) => (
           <BaseTabs.Tab
             key={item.value}
@@ -49,7 +49,7 @@ export function Tabs({ items, value, defaultValue, onValueChange, className }: T
             {item.label}
           </BaseTabs.Tab>
         ))}
-        <BaseTabs.Indicator className="absolute bottom-0 left-[var(--active-tab-left)] h-[2px] w-[var(--active-tab-width)] rounded-full bg-[var(--accent-default)] transition-all" />
+        <BaseTabs.Indicator className="absolute bottom-0 left-[var(--active-tab-left)] h-px w-[var(--active-tab-width)] rounded-full bg-[var(--accent-default)] transition-all" />
       </BaseTabs.List>
       {items.map((item) =>
         item.content != null ? (
