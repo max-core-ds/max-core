@@ -9,39 +9,50 @@
 
 ```
 I'm continuing the Max Core design-system work: cross-checking the React component
-library (packages/react) against the Figma showcase pages and fixing whatever the raw
-tokens didn't capture (missing states, colors, or whole variant axes).
+library (packages/react) against the authoritative Figma masters and fixing whatever
+the raw tokens didn't capture (missing states, colors, whole variant axes, wrong tier).
 
 READ FIRST (in this order):
 - PROGRESS.md          — live status: every shipped component, its Storybook title, and
                          its cross-check status. Source of truth for done vs. pending.
-- PLAN.md → "Phase 3.5 — Visual cross-check against Figma showcases" — the process,
-                         step by step, plus findings/lessons so far.
+- PLAN.md → "Phase 3.5 — Visual cross-check against Figma" — the process, step by step,
+                         plus findings/lessons so far.
+- figma-node-links/INDEX.md — the component → tier → node-id → link map, generated from
+                         the full Figma tree. This is the always-readable map; never
+                         open the multi-MB pages/*.json directly.
 - CLAUDE.md + docs/MAX-CORE-SUMMARY.md — design-system rules and token conventions.
 
 THE INPUT:
-figma-node-links/*.json holds one exported showcase node tree per component group
-(variant names + description text nodes that carry the real spec). Finished files are
-moved to figma-node-links/checked/. Pending files are the ones still in the top folder.
-Figma file key: the showcase nodes live in the PRODUCTION file ouyi08XxN4l4VCsao1nNQu.
-(The cross-check file sX5tikviuBEhNbu2iPVya5 only holds a subset of pages; when a node
-ID isn't found there, fall back to the production key.) Verify with get_metadata (no
-nodeId) to list pages if a lookup fails.
-Node IDs use colons (51:656); Figma URLs use dashes (node-id=51-656).
+figma-node-links/INDEX.md lists every COMPONENT / COMPONENT_SET master grouped under its
+Figma tier (## Foundations / ## Atoms / ## Molecules / ## Organisms — these headers are
+authoritative for our Storybook tier), each with its node id + an open link. For a single
+subtree without loading a whole page: `node figma-node-links/query-tree.mjs "<name|id>" [depth]`
+(depth ~3 default) — this also surfaces the designer's per-page docs (Token Architecture /
+How to Customize / Live Examples) carried as TEXT nodes, no MCP needed.
+Figma file key: sX5tikviuBEhNbu2iPVya5 (pt-razvan-max-core) — the tree was exported from
+this file, so INDEX.md node IDs resolve ONLY here. Point every MCP call at this key.
+(ouyi08XxN4l4VCsao1nNQu is the older production file; its node IDs differ — don't use it
+for tree lookups.) Node IDs use colons (51:656); Figma URLs use dashes (node-id=51-656).
 
-THE LOOP (one file at a time, in the order I give you — don't jump ahead):
-1. node figma-node-links/summarize.js figma-node-links/<file>.json   → axes + descriptions
-2. Read the matching React component(s) and list gaps vs. the Figma spec.
-3. Confirm intent with the Figma MCP: get_screenshot (curl the URL → PNG → Read),
-   get_variable_defs, and get_design_context for exact bound tokens. Map by TOKEN NAME,
-   not hex (hex depends on the file's light/dark mode).
-4. Fix — shared color literals go in packages/react/src/utils/* (Tailwind can't see
+THE LOOP (one component at a time, in the order I give you — don't jump ahead):
+1. Look up the component's master in INDEX.md → node id + tier. Optionally
+   `node figma-node-links/query-tree.mjs "<node id>" 3` for its structure + spec text.
+2. TIER CHECK: the ## section the master sits under in INDEX.md is the source of truth for
+   the Storybook `title:` prefix. If the story's tier prefix disagrees, fix the title
+   (tier prefix only; flat <Tier>/<Component> convention and the React source dir stay put)
+   and relocate its row in the PROGRESS.md inventory table.
+3. Read the matching React component(s) and list gaps vs. the Figma master.
+4. Confirm intent with the Figma MCP on file sX5tikviuBEhNbu2iPVya5:
+   get_screenshot(nodeId) (curl the URL → PNG → Read), get_variable_defs(nodeId), and
+   get_design_context(nodeId) for exact bound tokens. Map by TOKEN NAME, not hex (hex
+   depends on the file's light/dark mode).
+5. Fix — shared color literals go in packages/react/src/utils/* (Tailwind can't see
    interpolated classes; every class must be a full literal). Match Figma variant names.
-5. Verify (the gate below). Rebuild @max-core/react before the Storybook tsc + drift —
+6. Verify (the gate below). Rebuild @max-core/react before the Storybook tsc + drift —
    both read the built dist.
-6. Update the story to expose any new axis (add an AllVariants/matrix story).
-7. One commit per file (message names the Figma finding), git mv the file into
-   figma-node-links/checked/, and update PROGRESS.md.
+7. Update the story to expose any new axis (add an AllVariants/matrix story).
+8. One commit per component (message names the Figma finding); update PROGRESS.md
+   (flip the cross-check row to ✅ with the fix noted).
 
 VERIFY GATE:
   pnpm -F @max-core/react typecheck
@@ -50,13 +61,12 @@ VERIFY GATE:
   pnpm -F @max-core/tokens drift
   npx biome check --write <changed files>
 
-RECURRING LESSON: the failures are MISSING axes/states, not wrong numbers — the drift
-gate guarantees dimensions, never appearance. Treat the description nodes as the spec.
+RECURRING LESSON: the failures are MISSING axes/states/tier, not wrong numbers — the drift
+gate guarantees dimensions, never appearance. Treat the master + its spec text as the truth.
 
-Branch: feat/phase3-buildout. Pending files, in order:
-segmented-control → list-item → search-bar → top-bar → bottom-bar → sidebar
-(plus any new files I add later). Start with the first one still in figma-node-links/.
-I'll paste the Figma page if you need it. Use a scratch dir for screenshots (not /tmp).
+Branch: feat/phase3-buildout. Work tier by tier from the PROGRESS.md cross-check table /
+PLAN.md Part D batches; ~28 components still unverified. I'll tell you which to start with.
+Use a scratch dir for screenshots (not /tmp).
 ```
 
 ---
