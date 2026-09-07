@@ -58,7 +58,7 @@ Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — 
 | Avatar | Atoms/Avatar | ✅ |
 | Badge | Atoms/Badge | ✅ |
 | Tag | Atoms/Tag | ✅ |
-| Divider | Atoms/Divider | — |
+| Divider | Atoms/Divider | ✅ |
 | ProgressBar | Atoms/Progress Bar | — |
 | Tooltip | Atoms/Tooltip | — |
 | Knob | Atoms/Knob | — |
