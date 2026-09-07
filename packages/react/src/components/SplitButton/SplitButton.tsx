@@ -55,18 +55,16 @@ const partStyles = cva(
   ],
   {
     variants: {
+      // Height, Icon Size and Padding X per -- Atoms/Buttons/Split Button/{S,M,L,XL}.
+      // Padding X (06/10/12/14) is a single per-size token shared by both parts.
       size: {
-        s: 'h-[var(--size-32)] gap-[var(--spacing-08)] text-xs [&_svg]:size-[var(--size-20)]',
-        m: 'h-[var(--size-40)] gap-[var(--spacing-08)] text-sm [&_svg]:size-[var(--size-20)]',
-        l: 'h-[var(--size-48)] gap-[var(--spacing-08)] text-base [&_svg]:size-[var(--size-24)]',
-        xl: 'h-[var(--size-56)] gap-[var(--spacing-16)] text-lg [&_svg]:size-[var(--size-28)]',
-      },
-      part: {
-        main: 'px-[var(--spacing-12)]',
-        trigger: 'px-[var(--spacing-08)]',
+        s: 'h-[var(--size-32)] gap-[var(--spacing-08)] px-[var(--spacing-06)] text-xs [&_svg]:size-[var(--size-20)]',
+        m: 'h-[var(--size-40)] gap-[var(--spacing-08)] px-[var(--spacing-10)] text-sm [&_svg]:size-[var(--size-20)]',
+        l: 'h-[var(--size-48)] gap-[var(--spacing-08)] px-[var(--spacing-12)] text-base [&_svg]:size-[var(--size-24)]',
+        xl: 'h-[var(--size-56)] gap-[var(--spacing-16)] px-[var(--spacing-14)] text-lg [&_svg]:size-[var(--size-28)]',
       },
     },
-    defaultVariants: { size: 'm', part: 'main' },
+    defaultVariants: { size: 'm' },
   },
 );
 
@@ -130,18 +128,14 @@ export function SplitButton({
 }: SplitButtonProps) {
   return (
     <div className={cn(containerStyles({ variant, tone }), className)} {...rest}>
-      <BaseButton
-        className={cn(partStyles({ size, part: 'main' }))}
-        onClick={onClick}
-        disabled={disabled}
-      >
+      <BaseButton className={cn(partStyles({ size }))} onClick={onClick} disabled={disabled}>
         {leftIcon}
         {children}
       </BaseButton>
       <span className={dividerStyles({ size })} aria-hidden />
       <Menu.Root>
         <Menu.Trigger
-          className={cn(partStyles({ size, part: 'trigger' }))}
+          className={cn(partStyles({ size }))}
           aria-label={triggerLabel}
           disabled={disabled}
           render={<BaseButton />}
