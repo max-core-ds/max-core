@@ -1,0 +1,12 @@
+# Large, regenerable Figma export (recreate with ./fetch-tree.sh)
+figma-tree.json
+
+# Per-page split (regenerable with node split-tree.mjs)
+pages/
+
+# Generated maps — regenerable and they embed the Figma file key/slug in links
+catalog.json
+INDEX.md
+
+# Hand-exported node-link JSON (project-bound; local working data)
+checked/
