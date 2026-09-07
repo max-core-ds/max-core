@@ -1,7 +1,7 @@
 'use client';
 
 import { Avatar as BaseAvatar } from '@base-ui/react/avatar';
-import { cva, type VariantProps } from 'class-variance-authority';
+import { type VariantProps, cva } from 'class-variance-authority';
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
 
@@ -14,13 +14,15 @@ const avatarStyles = cva(
   ],
   {
     variants: {
-      // Sizes match -- Atoms/Avatar/Size */Size (24/32/40/48/64).
+      // Sizes match -- Atoms/Avatar/Size */Size (24/32/40/48/64). Initials font
+      // per the Text variants: XS Caption/700 (12), S+M Body/MD/700 (16),
+      // L Heading/H6 (20), XL Heading/H5 (24).
       size: {
-        xs: 'size-[var(--size-24)] text-[10px]',
-        s: 'size-[var(--size-32)] text-xs',
-        m: 'size-[var(--size-40)] text-sm',
-        l: 'size-[var(--size-48)] text-base',
-        xl: 'size-[var(--size-64)] text-xl',
+        xs: 'size-[var(--size-24)] text-xs',
+        s: 'size-[var(--size-32)] text-base',
+        m: 'size-[var(--size-40)] text-base',
+        l: 'size-[var(--size-48)] text-xl',
+        xl: 'size-[var(--size-64)] text-2xl',
       },
     },
     defaultVariants: {
@@ -43,7 +45,9 @@ export function Avatar({ size, src, alt, fallback, className, ...rest }: AvatarP
       {src ? (
         <BaseAvatar.Image src={src} alt={alt ?? ''} className="size-full object-cover" />
       ) : null}
-      <BaseAvatar.Fallback>{fallback}</BaseAvatar.Fallback>
+      <BaseAvatar.Fallback className="flex size-full items-center justify-center bg-[var(--accent-default)] text-[var(--text-on-accent)]">
+        {fallback}
+      </BaseAvatar.Fallback>
     </BaseAvatar.Root>
   );
 }

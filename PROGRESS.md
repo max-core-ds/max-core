@@ -55,7 +55,7 @@ Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — 
 | LinkButton | Atoms/Link | ✅ |
 | SplitButton | Atoms/Split | ✅ |
 | Fab | Atoms/FAB | ✅ |
-| Avatar | Atoms/Avatar | — |
+| Avatar | Atoms/Avatar | ✅ |
 | Badge | Atoms/Badge | ✅ |
 | Tag | Atoms/Tag | ✅ |
 | Divider | Atoms/Divider | — |

@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Avatar } from '@max-core/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
   title: 'Atoms/Avatar',
@@ -26,6 +26,21 @@ export const AllSizes: Story = {
       {(['xs', 's', 'm', 'l', 'xl'] as const).map((size) => (
         <div key={size} className="flex flex-col items-center gap-[var(--spacing-08)]">
           <Avatar size={size} fallback="MX" src={sampleSrc} alt="Max" />
+          <span className="text-xs uppercase text-[var(--text-muted)]">{size}</span>
+        </div>
+      ))}
+    </div>
+  ),
+};
+
+// Text variant — initials on an accent/default fill with on-accent text.
+export const Initials: Story = {
+  parameters: { layout: 'padded' },
+  render: () => (
+    <div className="flex items-end gap-[var(--spacing-16)]">
+      {(['xs', 's', 'm', 'l', 'xl'] as const).map((size) => (
+        <div key={size} className="flex flex-col items-center gap-[var(--spacing-08)]">
+          <Avatar size={size} fallback="MC" />
           <span className="text-xs uppercase text-[var(--text-muted)]">{size}</span>
         </div>
       ))}
