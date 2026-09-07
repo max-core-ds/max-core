@@ -28,7 +28,7 @@ export function AvatarGroup({ avatars, max, size = 'm', className, ...rest }: Av
           // biome-ignore lint/suspicious/noArrayIndexKey: avatars are a static, ordered list
           key={i}
           className={cn(
-            'rounded-[var(--radius-full)] ring-2 ring-[var(--bg-default)]',
+            'rounded-[var(--radius-full)] ring-1 ring-[var(--border-surface)]',
             i > 0 && 'ml-[-12px]',
           )}
         >
@@ -36,7 +36,7 @@ export function AvatarGroup({ avatars, max, size = 'm', className, ...rest }: Av
         </div>
       ))}
       {overflow > 0 ? (
-        <div className="ml-[-12px] rounded-[var(--radius-full)] ring-2 ring-[var(--bg-default)]">
+        <div className="ml-[-12px] rounded-[var(--radius-full)] ring-1 ring-[var(--border-surface)]">
           <Avatar size={size} fallback={`+${overflow}`} />
         </div>
       ) : null}

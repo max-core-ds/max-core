@@ -85,7 +85,7 @@ Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — 
 | Stepper | Molecules/Stepper | — |
 | Textarea | Molecules/Textarea | — |
 | SearchBar | Molecules/Search Bar | ✅ |
-| AvatarGroup | Molecules/Avatar Group | — |
+| AvatarGroup | Molecules/Avatar Group | ✅ |
 | EntityItem | Molecules/Entity Item | — |
 | EntityCard | Molecules/Entity Card | — |
 | Pin | Molecules/Pin | ✅ |
