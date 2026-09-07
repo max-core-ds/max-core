@@ -78,12 +78,12 @@ Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — 
 
 | Component | Storybook title | Cross-check |
 |-----------|-----------------|-------------|
-| Input | Molecules/Input | — |
+| Input | Molecules/Input | ✅ |
 | BottomLineInput | Molecules/Bottom Line Input | — |
-| SelectInput | Molecules/Select Input | — |
-| Multiselect | Molecules/Multiselect | — |
+| SelectInput | Molecules/Select Input | ✅ |
+| Multiselect | Molecules/Multiselect | ✅ |
 | Stepper | Molecules/Stepper | — |
-| Textarea | Molecules/Textarea | — |
+| Textarea | Molecules/Textarea | ✅ |
 | SearchBar | Molecules/Search Bar | ✅ |
 | AvatarGroup | Molecules/Avatar Group | ✅ |
 | EntityItem | Molecules/Entity Item | ✅ |

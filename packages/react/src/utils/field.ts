@@ -7,7 +7,7 @@
  * Literal classes only — Tailwind must see them verbatim (see utils/tone.ts).
  */
 export const fieldSurface =
-  'bg-[var(--bg-surface)] text-[var(--text-primary)] ' +
+  'bg-[var(--bg-default)] text-[var(--text-primary)] ' +
   'border border-[var(--border-default)] ' +
   'placeholder:text-[var(--text-muted)] transition-colors ' +
   'focus:outline-none focus:border-[var(--border-focus)] ' +
