@@ -95,7 +95,7 @@ Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — 
 | Switcher | Molecules/Switcher | ✅ |
 | Tabs | Molecules/Tabs | ✅ |
 | Dialog | Molecules/Dialog | ✅ |
-| Dropdown | Molecules/Dropdown | — |
+| Dropdown | Molecules/Dropdown | ✅ |
 | ItemList | Molecules/Item List | — |
 | Toast | Molecules/Toast | — |
 | ActionBar | Molecules/ActionBar | ✅ |
