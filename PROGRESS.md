@@ -105,13 +105,22 @@ Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — 
 | Component | Storybook title | Cross-check |
 |-----------|-----------------|-------------|
 | ShareItem | Organisms/Share Item | ✅ |
-| StatsCard | Organisms/Stats Card | — |
+| StatsCard | Organisms/Stats Card | 🔄 deferred |
 | BottomNavigation | Organisms/Bottom Navigation | ✅ |
 | SideBar | Organisms/Side Bar | ✅ |
 | TopBar | Organisms/Top Bar | ✅ |
 
+> **StatsCard cross-check deferred.** The Figma masters (Stats card big/small/compact,
+> 2440 nodes) are a full organism — header icon + overflow menu, info icon, series
+> legend, line chart, and an Action Bar footer — across three size families. Our
+> component is a simplified abstraction and is flagged in CLAUDE.md as paused pending a
+> refactor. A faithful cross-check belongs with that refactor (Phase 4 scale), not this
+> pass; everything else in the inventory is ✅.
+
 ### Foundations
 - `Foundations/Tokens` — token reference story (not a component).
+- `Foundations/Focus Ring` — documents utils/focus-ring.ts.
+- `Foundations/Effects` — previews the shipped effect tokens.
 
 ---
 
