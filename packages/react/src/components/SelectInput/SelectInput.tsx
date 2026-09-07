@@ -16,10 +16,12 @@ const triggerStyles = cva(
   ],
   {
     variants: {
+      // Padding Y + Icon Size per -- Molecule/Input/Select Input/Size {S,M,L}
+      // (Icon Size 16/20/24 targets the trigger chevron).
       size: {
-        s: 'py-[var(--spacing-12)] text-xs',
-        m: 'py-[var(--spacing-12)] text-sm',
-        l: 'py-[var(--spacing-16)] text-base',
+        s: 'py-[var(--spacing-12)] text-xs [&_svg]:size-[var(--size-16)]',
+        m: 'py-[var(--spacing-12)] text-sm [&_svg]:size-[var(--size-20)]',
+        l: 'py-[var(--spacing-16)] text-base [&_svg]:size-[var(--size-24)]',
       },
     },
     defaultVariants: { size: 'm' },
@@ -101,7 +103,7 @@ function ChevronDown() {
       fill="none"
       stroke="currentColor"
       strokeWidth={2}
-      className="size-[var(--size-20)] shrink-0"
+      className="shrink-0"
       aria-hidden="true"
       focusable="false"
     >
