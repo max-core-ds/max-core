@@ -131,4 +131,21 @@ export function generateTokensCss(tokens: TokensFile): string {
   ].join('\n');
 }
 
+/**
+ * Resolve every colour token for one mode to its literal hex, keyed by the CSS
+ * custom-property name it is emitted as (e.g. `--accent-subtle` → `#E0E7FF`).
+ *
+ * Same resolution the CSS transform performs, exposed for the contrast audit so
+ * it can read the exact value a component's `var(--…)` binding resolves to in
+ * light vs. dark mode. Additive — `generateTokensCss` is unchanged.
+ */
+export function resolveColorVars(tokens: TokensFile, mode: 'light' | 'dark'): Map<string, string> {
+  const root = tokens as unknown as Tree;
+  const out = new Map<string, string>();
+  for (const [key, val] of Object.entries(tokens.colors[mode])) {
+    out.set(cssVarName(key), String(resolve(val, root)));
+  }
+  return out;
+}
+
 export type { TokensFile } from './types.js';

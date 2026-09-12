@@ -15,6 +15,9 @@
     "drift": {
       "inputs": ["src/**", "../react/src/**"]
     },
+    "contrast": {
+      "inputs": ["src/**", "../react/src/**"]
+    },
     "test": {
       "dependsOn": ["^build"]
     }

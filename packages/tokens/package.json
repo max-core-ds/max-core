@@ -17,6 +17,7 @@
     "build": "tsx src/cli.ts",
     "sync": "tsx src/sync.ts",
     "drift": "tsx src/drift.ts",
+    "contrast": "tsx src/contrast-audit.ts",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
