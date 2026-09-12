@@ -186,6 +186,8 @@ export interface DataTableProps<Row> extends Omit<ComponentPropsWithoutRef<'div'
   defaultSort?: SortState | null;
   selectedRowId?: string | number;
   onRowClick?: (row: Row, index: number) => void;
+  /** Header area (e.g. a title, stats, tabs, or a filter), rendered above the table. */
+  header?: ReactNode;
   /** Footer area (e.g. a <Pagination/>), rendered below the table. */
   footer?: ReactNode;
   /** Accessible table caption (visually hidden). */
@@ -207,6 +209,7 @@ export function DataTable<Row>({
   defaultSort = null,
   selectedRowId,
   onRowClick,
+  header,
   footer,
   caption,
   className,
@@ -249,6 +252,11 @@ export function DataTable<Row>({
       )}
       {...rest}
     >
+      {header != null ? (
+        <div className="border-b border-[var(--border-muted)] px-[var(--spacing-16)] py-[var(--spacing-16)]">
+          {header}
+        </div>
+      ) : null}
       <div className="overflow-x-auto">
         <Table>
           {caption ? <caption className="sr-only">{caption}</caption> : null}

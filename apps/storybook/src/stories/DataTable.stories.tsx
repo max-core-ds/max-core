@@ -104,6 +104,12 @@ export const Default: StoryObj = {
           defaultSort={{ key: 'name', direction: 'asc' }}
           selectedRowId={selected}
           onRowClick={(r) => setSelected(r.id)}
+          header={
+            <div className="flex items-baseline gap-[var(--spacing-08)]">
+              <span className="text-lg font-bold text-[var(--text-primary)]">All products</span>
+              <span className="text-sm text-[var(--text-secondary)]">{rows.length} results</span>
+            </div>
+          }
           footer={<Pagination page={page} count={5} onPageChange={setPage} />}
         />
       );
