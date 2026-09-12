@@ -2,7 +2,7 @@
 
 > Living status doc for the `@max-core/react` buildout. Update it whenever a
 > component is added or a `figma-node-links/*.json` file is cross-checked.
-> Last updated: **2026-08-23** · Branch: **`feat/phase3-buildout`**
+> Last updated: **2026-09-12** · Branch: **`feat/phase3-buildout`**
 >
 > **To pick up the work**, paste one of the guides in `prompts/` into a new conversation:
 > [`figma-cross-check.md`](prompts/figma-cross-check.md) (continue the cross-check) or
@@ -143,6 +143,7 @@ Reuse these before writing inline classes — they keep Tailwind literals in one
 
 1. **Phase 3.5 cross-check** — ✅ all exported files done (segmented-control, list-item, search-bar, dialog, top-bar, bottom-bar, sidebar). Resume when the designer drops new files into `figma-node-links/`.
 2. **Phase 4 — mega-systems + test infra** — the next build phase, now planned out in **`PLAN.md → Phase 4`**. Batches: **8 Stacked List** (9 row types, ~22 tokens — compose from ListItem + EntityItem + selection controls) → **9 Data Table** → **10 Card** → **11 Bottom Sheet** (+18 premades) → **12 Date Picker** → **13 test infra** (vitest + RTL + axe).
+3. **Colour-contrast guardrail — shipped** (`pnpm -F @max-core/tokens contrast`): resolves every component's text/background pairing to hex in light + dark and flags any below WCAG AA (4.5 normal / 3 large). Reads source, never touches tokens.json; turbo `contrast` task reports non-blocking. Fixed the light-mode white-on-pale defects it caught (ListItem hover, EntityCard hover/selected). **11 dark-mode findings deferred** — the dark accent ramp is too light for white on-accent text, plus mid-tone text on subtle fills at 3.3–4.0; root-cause fix is Figma-side (adjust `accent/*` dark values + re-export), folded into the dark-mode visual pass. Extractor only sees within-className pairings; child-text-over-parent-surface needs `OVERRIDES[...].extra` in `contrast-audit.ts` if fuller coverage is wanted.
 
 > Not yet visually cross-checked (built from tokens only): every component in
 > the inventory below without a ✅ in the Cross-check column.
@@ -156,6 +157,7 @@ pnpm -F @max-core/react typecheck        # tsc --noEmit
 pnpm -F @max-core/react build            # tsup (rebuild dist so Storybook + drift see it)
 cd apps/storybook && npx tsc --noEmit -p tsconfig.json   # Storybook consumes built dist
 pnpm -F @max-core/tokens drift           # spacing/size/radius conformance
+pnpm -F @max-core/tokens contrast        # WCAG AA text/bg contrast, light + dark (reports; 11 dark-mode findings known/deferred)
 npx biome check --write <changed files>
 ```
 

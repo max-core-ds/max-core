@@ -305,7 +305,7 @@ ROOT FRAME (~2100-2228px wide, layoutMode NONE, clipsContent: true, bg/surface, 
 - [ ] Focus ring pe alte componente interactive (buttons, tags etc — daca aplica)
 - [ ] Font audit: verifica Inter pe toate componentele
 - [ ] Dark mode visual verification
-- [ ] Accessibility contrast checks
+- [ ] Accessibility contrast checks (partial) — guardrail cod livrat: `pnpm -F @max-core/tokens contrast` verifica fiecare pereche text/bg pe tokeni rezolvati in hex, light + dark, prag WCAG AA (4.5 normal / 3 large). Ruleaza pe sursa (nu modifica tokens.json), turbo task `contrast` (raporteaza, non-blocking). Fix light-mode: ListItem hover + EntityCard hover/selected (text alb pe fill accent/subtle pal → text/primary care flipuieste per mod). **Ramase 11 findings dark-mode** (rampa accent dark prea deschisa pt text alb on-accent + text mid-tone pe fill subtle la 3.3–4.0) → se rezolva Figma-side (ajusteaza accent/* dark + re-export), fold in "Dark mode visual verification"
 - [ ] "Used in" pe token descriptions
 
 ---
