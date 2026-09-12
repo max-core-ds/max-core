@@ -6,9 +6,11 @@ import { focusRing } from '../../utils/focus-ring.js';
 
 // The interactive row primitive for Item List / Dropdown / Stacked List menus.
 // Padding/gap/icon size/radius match -- Atoms/List Item/*. Interactive states
-// follow the Figma showcase: Hover=accent/subtle, Pressed=accent/active,
-// Active (selected)=accent/default — all with text/on-accent. Collapsed hides
-// the label + trailing indicator for icon-only rails.
+// follow the Figma showcase: Hover=accent/subtle (a wash — text stays
+// text/primary; accent/subtle is a pale fill in light mode, so white on-accent
+// text would be unreadable), Pressed=accent/active and Active (selected)=
+// accent/default carry text/on-accent. Collapsed hides the label + trailing
+// indicator for icon-only rails.
 const base = cn(
   'relative flex w-full items-center gap-[var(--spacing-08)] rounded-[var(--radius-l)]',
   'px-[var(--spacing-12)] py-[var(--spacing-12)] text-left font-bold text-[var(--text-primary)]',
@@ -20,7 +22,7 @@ const base = cn(
 // Hover + pressed feedback (pseudo-states). Applied unless the row is selected,
 // which owns the fill via `activeStyles`.
 const interactive = cn(
-  'hover:bg-[var(--accent-subtle)] hover:text-[var(--text-on-accent)]',
+  'hover:bg-[var(--accent-subtle)]',
   'active:bg-[var(--accent-active)] active:text-[var(--text-on-accent)]',
 );
 
