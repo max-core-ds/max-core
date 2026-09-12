@@ -90,3 +90,27 @@ export {
 } from './components/BottomNavigation/index.js';
 export { StatsCard, type StatsCardProps } from './components/StatsCard/index.js';
 export { ShareItem, type ShareItemProps } from './components/ShareItem/index.js';
+export {
+  StackedList,
+  type StackedListProps,
+  StackedListRow,
+  type StackedListRowProps,
+  type StackedListVariant,
+} from './components/StackedList/index.js';
+export {
+  DataTable,
+  type DataTableProps,
+  type DataTableColumn,
+  type SortState,
+  type SortDirection,
+  Table,
+  type TableProps,
+  HeaderCell,
+  type HeaderCellProps,
+  TableRow,
+  type TableRowProps,
+  TableCell,
+  type TableCellProps,
+  RatingStars,
+  type RatingStarsProps,
+} from './components/DataTable/index.js';

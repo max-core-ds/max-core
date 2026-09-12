@@ -12,7 +12,8 @@
 
 ## Where we are
 
-- **Phase 3 buildout: complete** — 45 components shipped across Batches 0–7 (Batch 8 = Stacked List still pending, see below). All are drift-green (`pnpm -F @max-core/tokens drift`), typed, built (tsup), and have a Storybook story in a flat tiered folder (`<Tier>/<Component>`).
+- **Phase 3 buildout: complete** — 45 components shipped across Batches 0–7. All are drift-green (`pnpm -F @max-core/tokens drift`), typed, built (tsup), and have a Storybook story in a flat tiered folder (`<Tier>/<Component>`).
+- **Phase 4 Batch 8/9 — lean v1 landed** — **Stacked List** (`StackedList` + variant-driven `StackedListRow`: default/social/media/product) and **Data Table** (`DataTable` column-config + exported `Table`/`HeaderCell`/`TableRow`/`TableCell` primitives + `RatingStars`, with sort, hover/selected rows, pagination footer). Both drift-green and contrast-green (light+dark). Not yet Figma-visually cross-checked (Figma MCP offline this session; built from tokens). Deferred: remaining stacked row types (ride/delivery/booking/item-grid/transport), and the table's mobile scroll variant + expandable rows + slot-heavy Table Header.
 - **Phase 3.5 visual cross-check: all exported files done** — every `figma-node-links/*.json` the designer has provided is cross-checked and moved to `figma-node-links/checked/`. Each was drift-green yet had appearance/axis gaps the raw tokens didn't capture (states, colors, missing axes/slots), now fixed. Further cross-checks resume when the designer drops new files into `figma-node-links/`. See the process in `PLAN.md → Phase 3.5`.
 
 ---
@@ -42,7 +43,7 @@
 
 ---
 
-## Component inventory (49 shipped + stories)
+## Component inventory (51 shipped + stories)
 
 Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — no node file yet.
 
@@ -105,6 +106,8 @@ Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — 
 | Component | Storybook title | Cross-check |
 |-----------|-----------------|-------------|
 | ShareItem | Organisms/Share Item | ✅ |
+| StackedList | Organisms/Stacked List | — (lean v1, tokens only) |
+| DataTable | Organisms/Data Table | — (lean v1, tokens only) |
 | StatsCard | Organisms/Stats Card | 🔄 deferred |
 | BottomNavigation | Organisms/Bottom Navigation | ✅ |
 | SideBar | Organisms/Side Bar | ✅ |
@@ -142,7 +145,7 @@ Reuse these before writing inline classes — they keep Tailwind literals in one
 ## Remaining work
 
 1. **Phase 3.5 cross-check** — ✅ all exported files done (segmented-control, list-item, search-bar, dialog, top-bar, bottom-bar, sidebar). Resume when the designer drops new files into `figma-node-links/`.
-2. **Phase 4 — mega-systems + test infra** — the next build phase, now planned out in **`PLAN.md → Phase 4`**. Batches: **8 Stacked List** (9 row types, ~22 tokens — compose from ListItem + EntityItem + selection controls) → **9 Data Table** → **10 Card** → **11 Bottom Sheet** (+18 premades) → **12 Date Picker** → **13 test infra** (vitest + RTL + axe).
+2. **Phase 4 — mega-systems + test infra** — planned in **`PLAN.md → Phase 4`**. Batches: **8 Stacked List** ✅ lean v1 (default/social/media/product; remaining row types on demand) → **9 Data Table** ✅ lean v1 (column-config + primitives; mobile/expandable/Table-Header deferred) → **10 Card** → **11 Bottom Sheet** (+18 premades) → **12 Date Picker** → **13 test infra** (vitest + RTL + axe).
 3. **Colour-contrast guardrail — shipped** (`pnpm -F @max-core/tokens contrast`): resolves every component's text/background pairing to hex in light + dark and flags any below WCAG AA (4.5 normal / 3 large). Reads source, never touches tokens.json; turbo `contrast` task reports non-blocking. Fixed the light-mode white-on-pale defects it caught (ListItem hover, EntityCard hover/selected). **11 dark-mode findings deferred** — the dark accent ramp is too light for white on-accent text, plus mid-tone text on subtle fills at 3.3–4.0; root-cause fix is Figma-side (adjust `accent/*` dark values + re-export), folded into the dark-mode visual pass. Extractor only sees within-className pairings; child-text-over-parent-surface needs `OVERRIDES[...].extra` in `contrast-audit.ts` if fuller coverage is wanted.
 
 > Not yet visually cross-checked (built from tokens only): every component in

@@ -329,6 +329,36 @@ const SPECS: ComponentSpec[] = [
     source: 'components/StatsCard/StatsCard.tsx',
     prefixes: ['Organism/Stats card'],
   },
+  // --- Batch 8: mega-systems (lean v1) ---
+  {
+    name: 'Stacked List',
+    source: 'components/StackedList/StackedList.tsx',
+    // Only the row variants built in the lean v1; the rest (Ride/Delivery/
+    // Booking/Item Grid/Transport) land when their variants do.
+    prefixes: [
+      'Organism/Stacked List/Global',
+      'Organism/Stacked List/Default',
+      'Organism/Stacked List/Social',
+      'Organism/Stacked List/Media Row',
+      'Organism/Stacked List/Product',
+    ],
+  },
+  {
+    name: 'Data Table',
+    source: 'components/DataTable/DataTable.tsx',
+    // Table Header (slot-heavy) and Table Builder (mobile) are out of the v1;
+    // their prefixes are simply not listed. Cell-item content is caller-composed.
+    prefixes: [
+      'Organism/Data Table/Global',
+      'Organism/Data Table/Header Cell',
+      'Organism/Data Table/Table Cell',
+      'Organism/Data Table/Table Row',
+      'Organism/Data Table/Footer',
+    ],
+    exempt: [
+      '--spacing-06', // Table Cell/Cell Item/Simple Text Gap — no Simple Text cell-item in v1; text cells render plain content
+    ],
+  },
 ];
 
 const tokens = JSON.parse(readFileSync(tokensPath, 'utf8')) as TokensFile;

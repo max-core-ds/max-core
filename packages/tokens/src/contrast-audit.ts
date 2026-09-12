@@ -54,7 +54,28 @@ const matches = (p: Pairing, m: PairMatcher): boolean =>
   (m.state === undefined || m.state === p.state);
 
 const OVERRIDES: Record<string, Override> = {
-  // Filled in as the audit surfaces real cases. Every entry carries a reason.
+  // Stacked List keeps text/primary + text/secondary from the base and only
+  // swaps the row background per state, so text/bg never share a class literal —
+  // declare the real pairings here. Primary text (the important one) must pass;
+  // the text/secondary subtitle on the bg/subtle hover wash lands at ~3.9, the
+  // same systemic near-AA shortfall tracked in the deferred dark-mode findings,
+  // so it is intentionally not asserted here (would be a token-side fix).
+  StackedList: {
+    extra: [
+      { state: 'base', fgVar: '--text-primary', bgVar: '--bg-surface' },
+      { state: 'hover', fgVar: '--text-primary', bgVar: '--bg-subtle' },
+    ],
+  },
+  // Data Table likewise sets cell/header text and row background on separate
+  // elements. Assert the primary text on every row background + the header text.
+  DataTable: {
+    extra: [
+      { state: 'header', fgVar: '--text-secondary', bgVar: '--bg-surface' },
+      { state: 'cell', fgVar: '--text-primary', bgVar: '--bg-surface' },
+      { state: 'hover', fgVar: '--text-primary', bgVar: '--bg-subtle' },
+      { state: 'selected', fgVar: '--text-primary', bgVar: '--accent-subtle' },
+    ],
+  },
 };
 
 /** Colour vars that are never a solid text-on-fill role (skip if extracted). */
