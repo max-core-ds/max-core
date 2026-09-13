@@ -5,16 +5,19 @@ import { cn } from '../../utils/cn.js';
 import { focusRing } from '../../utils/focus-ring.js';
 
 // Button min-width/icon size/padding/gap/radius match -- Molecule/Pagination/*.
+// Figma wraps a fixed 24x24 content box (Min Width = Icon Size = 24) in 4px padding,
+// so every button — number or icon — is a 32x32 square that grows only for multi-digit
+// pages. Fix h + min-w to size-32 (= content 24 + padding 8) so numbers and arrows match.
 const buttonStyles = cn(
-  'inline-flex min-w-[var(--size-24)] items-center justify-center rounded-[var(--radius-sm)]',
+  'inline-flex h-[var(--size-32)] min-w-[var(--size-32)] items-center justify-center rounded-[var(--radius-sm)]',
   'border border-[var(--border-default)] bg-[var(--bg-default)] p-[var(--spacing-04)] text-sm font-bold',
   'text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-subtle)]',
   '[&_svg]:size-[var(--size-24)] disabled:pointer-events-none disabled:opacity-[var(--opacity-disabled)]',
   focusRing,
 );
 
-const activeStyles =
-  'border-[var(--accent-subtle)] bg-[var(--accent-subtle)] text-[var(--text-accent)]';
+// Active keeps border/default (like every Figma state) — only fill + text change.
+const activeStyles = 'bg-[var(--accent-subtle)] text-[var(--text-accent)]';
 
 export interface PaginationProps extends Omit<ComponentPropsWithoutRef<'nav'>, 'onChange'> {
   /** Current 1-based page. */
