@@ -10,7 +10,10 @@ import { focusRingInset } from '../../utils/focus-ring.js';
 // Radius/padding follow the Input Global tokens; per-size Min Height is a raw
 // px value in Figma (96/120/160).
 const textareaStyles = cva(
-  ['w-full resize-y rounded-[var(--radius-md)] px-[var(--spacing-12)]', fieldSurface],
+  // `block` removes the inline-block baseline descender gap that otherwise leaves
+  // a few px between the textarea's bottom and the wrapper frame (which the inset
+  // focus ring hugs), pushing the ring low at the bottom edge.
+  ['block w-full resize-y rounded-[var(--radius-md)] px-[var(--spacing-12)]', fieldSurface],
   {
     variants: {
       size: {
