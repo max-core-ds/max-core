@@ -2,6 +2,7 @@
 
 import { type ComponentPropsWithoutRef, type ReactNode, useState } from 'react';
 import { cn } from '../../utils/cn.js';
+import { Checkbox } from '../Checkbox/index.js';
 
 // Data Table — a column-config driven table plus the low-level primitives it is
 // built from (Table / HeaderCell / TableRow / TableCell), exported for fully
@@ -186,6 +187,13 @@ export interface DataTableProps<Row> extends Omit<ComponentPropsWithoutRef<'div'
   defaultSort?: SortState | null;
   selectedRowId?: string | number;
   onRowClick?: (row: Row, index: number) => void;
+  /** Adds a leading checkbox column with a select-all header. */
+  selectable?: boolean;
+  /** Controlled multi-row selection (row ids). Omit for built-in state. */
+  selectedRowIds?: (string | number)[];
+  onSelectionChange?: (ids: (string | number)[]) => void;
+  /** Initial selection for the uncontrolled case. */
+  defaultSelectedRowIds?: (string | number)[];
   /** Header area (e.g. a title, stats, tabs, or a filter), rendered above the table. */
   header?: ReactNode;
   /** Footer area (e.g. a <Pagination/>), rendered below the table. */
@@ -209,6 +217,10 @@ export function DataTable<Row>({
   defaultSort = null,
   selectedRowId,
   onRowClick,
+  selectable = false,
+  selectedRowIds,
+  onSelectionChange,
+  defaultSelectedRowIds = [],
   header,
   footer,
   caption,
@@ -218,6 +230,22 @@ export function DataTable<Row>({
   const isControlled = sort !== undefined;
   const [internalSort, setInternalSort] = useState<SortState | null>(defaultSort);
   const activeSort = isControlled ? sort : internalSort;
+
+  const selectionControlled = selectedRowIds !== undefined;
+  const [internalSelected, setInternalSelected] =
+    useState<(string | number)[]>(defaultSelectedRowIds);
+  const selectedIds = selectionControlled ? selectedRowIds : internalSelected;
+  const selectedSet = new Set(selectedIds);
+  const commitSelection = (ids: (string | number)[]) => {
+    if (!selectionControlled) setInternalSelected(ids);
+    onSelectionChange?.(ids);
+  };
+  const toggleRow = (id: string | number) => {
+    const next = new Set(selectedSet);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    commitSelection([...next]);
+  };
 
   const toggleSort = (key: string) => {
     const next: SortState =
@@ -244,6 +272,11 @@ export function DataTable<Row>({
     }
   }
 
+  const rowIds = rows.map((row, index) => getRowId(row, index));
+  const allSelected = rowIds.length > 0 && rowIds.every((id) => selectedSet.has(id));
+  const someSelected = !allSelected && rowIds.some((id) => selectedSet.has(id));
+  const toggleAll = () => commitSelection(allSelected ? [] : rowIds);
+
   return (
     <div
       className={cn(
@@ -262,6 +295,18 @@ export function DataTable<Row>({
           {caption ? <caption className="sr-only">{caption}</caption> : null}
           <thead>
             <tr>
+              {selectable ? (
+                <HeaderCell align="center" className="w-px min-w-0">
+                  <span className="flex items-center justify-center">
+                    <Checkbox
+                      checked={allSelected}
+                      indeterminate={someSelected}
+                      onCheckedChange={toggleAll}
+                      aria-label="Select all rows"
+                    />
+                  </span>
+                </HeaderCell>
+              ) : null}
               {columns.map((col) => (
                 <HeaderCell
                   key={col.key}
@@ -282,10 +327,26 @@ export function DataTable<Row>({
               return (
                 <TableRow
                   key={id}
-                  selected={selectedRowId != null && selectedRowId === id}
+                  selected={
+                    (selectedRowId != null && selectedRowId === id) ||
+                    (selectable && selectedSet.has(id))
+                  }
                   interactive={onRowClick != null}
                   onClick={onRowClick ? () => onRowClick(row, index) : undefined}
                 >
+                  {selectable ? (
+                    <TableCell
+                      align="center"
+                      className="w-px min-w-0"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Checkbox
+                        checked={selectedSet.has(id)}
+                        onCheckedChange={() => toggleRow(id)}
+                        aria-label="Select row"
+                      />
+                    </TableCell>
+                  ) : null}
                   {columns.map((col) => (
                     <TableCell key={col.key} align={col.align}>
                       {col.cell

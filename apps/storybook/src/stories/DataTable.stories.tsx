@@ -95,19 +95,22 @@ export const Default: StoryObj = {
   render: () => {
     const Demo = () => {
       const [page, setPage] = useState(1);
-      const [selected, setSelected] = useState<number | undefined>(undefined);
+      const [checked, setChecked] = useState<(string | number)[]>([]);
       return (
         <DataTable<Product>
           columns={columns}
           data={rows}
           getRowId={(r) => r.id}
           defaultSort={{ key: 'name', direction: 'asc' }}
-          selectedRowId={selected}
-          onRowClick={(r) => setSelected(r.id)}
+          selectable
+          selectedRowIds={checked}
+          onSelectionChange={setChecked}
           header={
             <div className="flex items-baseline gap-[var(--spacing-08)]">
               <span className="text-lg font-bold text-[var(--text-primary)]">All products</span>
-              <span className="text-sm text-[var(--text-secondary)]">{rows.length} results</span>
+              <span className="text-sm text-[var(--text-secondary)]">
+                {checked.length > 0 ? `${checked.length} selected` : `${rows.length} results`}
+              </span>
             </div>
           }
           footer={<Pagination page={page} count={5} onPageChange={setPage} />}
