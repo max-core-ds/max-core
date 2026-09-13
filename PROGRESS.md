@@ -13,7 +13,7 @@
 ## Where we are
 
 - **Phase 3 buildout: complete** — 45 components shipped across Batches 0–7. All are drift-green (`pnpm -F @max-core/tokens drift`), typed, built (tsup), and have a Storybook story in a flat tiered folder (`<Tier>/<Component>`).
-- **Phase 4 Batch 8/9 — lean v1 landed** — **Stacked List** (`StackedList` + variant-driven `StackedListRow`: default/social/media/product) and **Data Table** (`DataTable` column-config + exported `Table`/`HeaderCell`/`TableRow`/`TableCell` primitives + `RatingStars`, with sort, hover/selected rows, pagination footer). Both drift-green and contrast-green (light+dark). Not yet Figma-visually cross-checked (Figma MCP offline this session; built from tokens). Deferred: remaining stacked row types (ride/delivery/booking/item-grid/transport), and the table's mobile scroll variant + expandable rows + slot-heavy Table Header.
+- **Phase 4 Batch 8/9 — lean v1 landed + cross-checked** — **Stacked List** (`StackedList` + variant-driven `StackedListRow`: default/social/media/product — 4 of the 9 master row types) and **Data Table** (`DataTable` column-config + exported `Table`/`HeaderCell`/`TableRow`/`TableCell` primitives + `RatingStars`, with sort, hover/selected rows, **optional `header` slot**, pagination `footer`, and **`selectable` row selection + select-all**). Both drift-green and contrast-green (light+dark) and visually cross-checked against the Figma masters (Stacked List set `2080:23144`, Table Builder `2768:2`) — core layouts faithful; the sort chevrons + selection column match. Deferred: remaining stacked row types (ride/delivery/booking/item-grid/transport), and the table's mobile scroll variant + expandable rows + the stats/tabs Table Header (a caller now composes that into the `header` slot).
 - **Phase 3.5 visual cross-check: all exported files done** — every `figma-node-links/*.json` the designer has provided is cross-checked and moved to `figma-node-links/checked/`. Each was drift-green yet had appearance/axis gaps the raw tokens didn't capture (states, colors, missing axes/slots), now fixed. Further cross-checks resume when the designer drops new files into `figma-node-links/`. See the process in `PLAN.md → Phase 3.5`.
 
 ---
@@ -106,8 +106,8 @@ Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — 
 | Component | Storybook title | Cross-check |
 |-----------|-----------------|-------------|
 | ShareItem | Organisms/Share Item | ✅ |
-| StackedList | Organisms/Stacked List | — (lean v1, tokens only) |
-| DataTable | Organisms/Data Table | — (lean v1, tokens only) |
+| StackedList | Organisms/Stacked List | ✅ lean v1 (4/9 row types) |
+| DataTable | Organisms/Data Table | ✅ lean v1 (+header/selection) |
 | StatsCard | Organisms/Stats Card | 🔄 deferred |
 | BottomNavigation | Organisms/Bottom Navigation | ✅ |
 | SideBar | Organisms/Side Bar | ✅ |
