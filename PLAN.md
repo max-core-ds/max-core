@@ -532,33 +532,46 @@ confirm exact values against the master's bound variables.
 
 ---
 
-# Phase 4 — Mega-systems + test infra — ⬜ NOT STARTED
+# Phase 4 — Mega-systems + test infra — 🔄 IN PROGRESS
 
 > The large composite systems deferred out of Phase 3, plus the first automated
 > test layer beyond the drift gate. Component specs already exist on the Figma
 > side in **`docs/MAX-CORE-SUMMARY.md`** (Data Table System, Card System, Bottom
-> Sheet System) — this phase builds their React counterparts. Live status will be
+> Sheet System) — this phase builds their React counterparts. Live status is
 > tracked in **`PROGRESS.md`** as batches land.
+>
+> **Status (2026-09-13):** Batches **8 (Stacked List)** and **9 (Data Table)**
+> shipped as **lean v1s** and visually cross-checked against the Figma masters —
+> see the per-batch notes below and `PROGRESS.md`. Batches 10–13 not started.
+> Also landed this session: the **contrast guardrail** (`pnpm -F @max-core/tokens
+> contrast`, WCAG AA text/bg pairings, light+dark) which pre-empts part of Batch 13's
+> a11y goal.
 
 ## Scope
 
 Everything here is composite or infrastructural — it depends on the atoms and
 molecules shipped in Phase 3, so it was held back until those stabilized.
 
-### Batch 8 — Stacked List *(carried over from Phase 3)*
+### Batch 8 — Stacked List *(carried over from Phase 3)* — ✅ lean v1
 9 row types — Default, Social, Ride Row, Delivery Row, Media Row, Product,
-Booking, Items Grid, Transport. ~22 tokens across distinct row layouts. Compose
-from `ListItem` + `EntityItem` + selection controls. (Already scoped as its own
-batch; it's the smallest item here and the natural first step.)
+Booking, Items Grid, Transport. Compose from `ListItem` + `EntityItem` + atoms.
+**Shipped:** `StackedList` (bordered/divided container) + one variant-driven
+`StackedListRow` covering **default / social / media / product** (4 of 9). Files:
+`packages/react/src/components/StackedList/`. **Deferred:** ride/delivery/booking/
+item-grid/transport row types (add variants on demand).
 
-### Batch 9 — Data Table system
-The largest system. Build bottom-up from cells to the full builder:
-- **Internals** — Header Label, `_Header Cell` (40px fix), `_Table Cell` (56px
-  fix), `_Header Row`, `_Table Row` (Default/Hover/Active), `_Table Row Expanded`,
-  `_Table Footer` (Desktop/Mobile).
-- **Table (Header)** area — 5 slots (Title, Actions, Middle, Navigation, Filter).
-- **Table Builder** — Desktop + Mobile (scrollable content + scrollbar).
-- **5 prebuilders** — Invoice, Users, Tickets, Products, Transactions.
+### Batch 9 — Data Table system — ✅ lean v1 (core)
+**Shipped** (`packages/react/src/components/DataTable/`): a column-config
+`DataTable<Row>` (`columns` + `data`, client-side or controlled `sort`,
+hover/`selectedRowId` highlight, `onRowClick`) with **`selectable` row selection
++ select-all**, an optional **`header`** slot and **`footer`** slot (drop in
+`<Pagination/>`), plus exported primitives **`Table` / `HeaderCell` / `TableRow`
+/ `TableCell`** and a **`RatingStars`** cell helper. Sort chevrons + selection
+column cross-checked against the Table Builder master. Contrast-verified via
+`OVERRIDES` in `contrast-audit.ts`.
+**Deferred:** mobile scroll variant + "Load more"; `_Table Row Expanded`; the
+stats/tabs **Table Header** content (callers compose it into the `header` slot);
+the 5 prebuilders (Invoice, Users, Tickets, Products, Transactions).
 - Design rules already fixed: background on row (not cell) for full-row states;
   height fixed per density; row has no own tokens (dimensions come from cells).
 
@@ -588,9 +601,11 @@ The honest gap from Phase 3. Add:
 
 ## Sequencing
 
-Stacked List → Card → Bottom Sheet (needs Card + many atoms as slot content) →
-Data Table (largest, most self-contained) → Date Picker. Test infra can start in
-parallel once the first composite batch lands, so patterns are exercised early.
+Stacked List ✅ → Data Table ✅ (both lean v1) → **next: Card** → Bottom Sheet
+(needs Card + many atoms as slot content) → Date Picker. Test infra (Batch 13)
+can start in parallel — the contrast guardrail already covers part of the a11y
+goal. Return to the deferred Stacked List row types / Data Table mobile+expandable
++ prebuilders when the real project needs them.
 
 ## Out of scope for Phase 4
 Layer 3 component-level token bridge (the `components` collection is still read
