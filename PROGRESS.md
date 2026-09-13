@@ -2,7 +2,7 @@
 
 > Living status doc for the `@max-core/react` buildout. Update it whenever a
 > component is added or a `figma-node-links/*.json` file is cross-checked.
-> Last updated: **2026-09-12** · Branch: **`feat/phase3-buildout`**
+> Last updated: **2026-09-13** · Branch: **`main`** (feat/phase3-buildout merged in)
 >
 > **To pick up the work**, paste one of the guides in `prompts/` into a new conversation:
 > [`figma-cross-check.md`](prompts/figma-cross-check.md) (continue the cross-check) or
@@ -15,6 +15,7 @@
 - **Phase 3 buildout: complete** — 45 components shipped across Batches 0–7. All are drift-green (`pnpm -F @max-core/tokens drift`), typed, built (tsup), and have a Storybook story in a flat tiered folder (`<Tier>/<Component>`).
 - **Phase 4 Batch 8/9 — lean v1 landed + cross-checked** — **Stacked List** (`StackedList` + variant-driven `StackedListRow`: default/social/media/product — 4 of the 9 master row types) and **Data Table** (`DataTable` column-config + exported `Table`/`HeaderCell`/`TableRow`/`TableCell` primitives + `RatingStars`, with sort, hover/selected rows, **optional `header` slot**, pagination `footer`, and **`selectable` row selection + select-all**). Both drift-green and contrast-green (light+dark) and visually cross-checked against the Figma masters (Stacked List set `2080:23144`, Table Builder `2768:2`) — core layouts faithful; the sort chevrons + selection column match. Deferred: remaining stacked row types (ride/delivery/booking/item-grid/transport), and the table's mobile scroll variant + expandable rows + the stats/tabs Table Header (a caller now composes that into the `header` slot).
 - **Phase 3.5 visual cross-check: all exported files done** — every `figma-node-links/*.json` the designer has provided is cross-checked and moved to `figma-node-links/checked/`. Each was drift-green yet had appearance/axis gaps the raw tokens didn't capture (states, colors, missing axes/slots), now fixed. Further cross-checks resume when the designer drops new files into `figma-node-links/`. See the process in `PLAN.md → Phase 3.5`.
+- **Polish + scrollbar work landed on `main` (2026-09-13)** — small fixes: **Pagination** (all buttons uniform 32×32 = 24px content + 4px padding; active-page border kept `border/default` so it's visible in dark) `cc3bd4b`; **Textarea** focus ring (`block` on the textarea removes the inline-block descender gap that pushed the inset ring low at the bottom) `ef39b85`; **Switcher** no longer deselects the active item (drives the Base UI ToggleGroup as controlled, ignores empty selections) `89d2d2b`. New **scrollbar** capability `3c6e351`: `.styled-scrollbar` + `.scrollbar-none` utilities shipped from `@max-core/tokens/scrollbar.css`, the **ScrollBar** atom gained a driven mode (`thumbSize`/`thumbOffset`/`orientation`), and a new **ScrollArea** wrapper hides the native bar and renders ScrollBar as an *external* rail (vertical=right, horizontal=below) driven by scroll metrics with click/drag. See memory `reference-scrollbar-utilities`.
 
 ---
 
@@ -43,7 +44,7 @@
 
 ---
 
-## Component inventory (51 shipped + stories)
+## Component inventory (52 shipped + stories)
 
 Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — no node file yet.
 
@@ -65,7 +66,9 @@ Legend — Cross-check: ✅ done · 🔄 in progress · ⬜ file pending · — 
 | Knob | Atoms/Knob | ✅ |
 | Spinner | Atoms/Spinner | ✅ |
 | Thumbnail | Atoms/Thumbnail | ✅ |
-| ScrollBar | Atoms/ScrollBar | ✅ |
+| ScrollBar | Atoms/ScrollBar | ✅ | <!-- + driven mode: thumbSize/thumbOffset/orientation -->
+| ScrollArea | Atoms/ScrollBar (ExternalRail stories) | — | <!-- wraps ScrollBar as an external rail -->
+
 | TimePicker | Atoms/TimePicker | ✅ |
 | StatusDot | Atoms/StatusDot | ✅ |
 | ContentBlocks | Atoms/Content Blocks | ✅ |
