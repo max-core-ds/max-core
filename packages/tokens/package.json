@@ -6,6 +6,7 @@
   "exports": {
     "./tokens.css": "./dist/tokens.css",
     "./scrollbar.css": "./dist/scrollbar.css",
+    "./baseui.css": "./dist/baseui.css",
     "./tokens.json": "./src/tokens.json",
     "./types": "./src/types.ts",
     "./package.json": "./package.json"

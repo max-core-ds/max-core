@@ -23,6 +23,10 @@ writeFileSync(outPath, css, 'utf8');
 // the generated variables.
 copyFileSync(resolve(here, 'scrollbar.css'), resolve(outDir, 'scrollbar.css'));
 
+// Ship the baseui-cn theme bridge (shadcn tokens → Max Core) plus vendored
+// component styles (Time Picker, …). Consumers import it after tokens.css.
+copyFileSync(resolve(here, 'baseui.css'), resolve(outDir, 'baseui.css'));
+
 const variableCount = (css.match(/^\s*--/gm) ?? []).length;
 const lightCount = Object.keys(tokens.colors.light).length;
 const darkCount = Object.keys(tokens.colors.dark).length;

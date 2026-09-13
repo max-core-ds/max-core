@@ -15,6 +15,19 @@
       "recommended": true
     }
   },
+  "overrides": [
+    {
+      "include": ["packages/react/src/baseui/**"],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "useFocusableInteractive": "off",
+            "useSemanticElements": "off"
+          }
+        }
+      }
+    }
+  ],
   "formatter": {
     "enabled": true,
     "indentStyle": "space",

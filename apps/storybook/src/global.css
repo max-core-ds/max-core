@@ -17,6 +17,10 @@
 /* Opt-in .styled-scrollbar utility (skins the native browser scrollbar). */
 @import '@max-core/tokens/scrollbar.css';
 
+/* baseui-cn theme bridge (shadcn tokens → Max Core) + vendored component
+ * styles (Time Picker). Required by TimePicker/TimePickerInput/TimePickerDialog. */
+@import '@max-core/tokens/baseui.css';
+
 html,
 body {
   background-color: var(--bg-default);
