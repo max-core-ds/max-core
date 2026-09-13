@@ -14,6 +14,9 @@
  */
 @import '@max-core/tokens/tokens.css';
 
+/* Opt-in .styled-scrollbar utility (skins the native browser scrollbar). */
+@import '@max-core/tokens/scrollbar.css';
+
 html,
 body {
   background-color: var(--bg-default);

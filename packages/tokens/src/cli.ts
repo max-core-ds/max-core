@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { generateTokensCss } from './transform.js';
@@ -18,6 +18,10 @@ const css = generateTokensCss(tokens);
 
 mkdirSync(outDir, { recursive: true });
 writeFileSync(outPath, css, 'utf8');
+
+// Ship the hand-authored static utilities (e.g. .styled-scrollbar) alongside
+// the generated variables.
+copyFileSync(resolve(here, 'scrollbar.css'), resolve(outDir, 'scrollbar.css'));
 
 const variableCount = (css.match(/^\s*--/gm) ?? []).length;
 const lightCount = Object.keys(tokens.colors.light).length;

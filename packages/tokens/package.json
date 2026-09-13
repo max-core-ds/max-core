@@ -5,6 +5,7 @@
   "type": "module",
   "exports": {
     "./tokens.css": "./dist/tokens.css",
+    "./scrollbar.css": "./dist/scrollbar.css",
     "./tokens.json": "./src/tokens.json",
     "./types": "./src/types.ts",
     "./package.json": "./package.json"

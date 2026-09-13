@@ -18,6 +18,7 @@ export { Tooltip, type TooltipProps } from './components/Tooltip/index.js';
 export { Knob, type KnobProps } from './components/Knob/index.js';
 export { Thumbnail, type ThumbnailProps } from './components/Thumbnail/index.js';
 export { ScrollBar, type ScrollBarProps } from './components/ScrollBar/index.js';
+export { ScrollArea, type ScrollAreaProps } from './components/ScrollArea/index.js';
 export { TimePicker, type TimePickerProps } from './components/TimePicker/index.js';
 export { StatusDot, type StatusDotProps } from './components/StatusDot/index.js';
 export { ActionBar, type ActionBarProps } from './components/ActionBar/index.js';
