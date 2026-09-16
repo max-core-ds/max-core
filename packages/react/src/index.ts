@@ -21,28 +21,17 @@ export { ScrollBar, type ScrollBarProps } from './components/ScrollBar/index.js'
 export { ScrollArea, type ScrollAreaProps } from './components/ScrollArea/index.js';
 export {
   TimePicker,
-  TimePickerInput,
-  TimePickerDialog,
+  type TimePickerProps,
   parseTimeValue,
   formatTimeValue,
   isValidTimeValue,
   clampTimeToStep,
   compareTimeValues,
-  type TimePickerProps,
-  type TimePickerInputProps,
-  type TimePickerDialogProps,
   type TimeValue,
   type TimeFormat,
-  type TimePickerMode,
-  type TimePickerVariant,
-  type TimePickerOrientation,
-  type TimePickerSize,
-  type TimePickerView,
+  type TimeStep,
   type TimeValueParts,
   type TimeMatcher,
-  type TimeFormatPreset,
-  type TimePickerActionConfig,
-  type TimePickerClassNames,
 } from './components/TimePicker/index.js';
 export { StatusDot, type StatusDotProps } from './components/StatusDot/index.js';
 export { ActionBar, type ActionBarProps } from './components/ActionBar/index.js';

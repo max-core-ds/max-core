@@ -17,11 +17,10 @@
   },
   "overrides": [
     {
-      "include": ["packages/react/src/baseui/**"],
+      "include": ["packages/react/src/components/TimePicker/**"],
       "linter": {
         "rules": {
           "a11y": {
-            "useFocusableInteractive": "off",
             "useSemanticElements": "off"
           }
         }

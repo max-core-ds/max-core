@@ -1,27 +1,22 @@
-import { TimePicker, TimePickerDialog, TimePickerInput } from '@max-core/react';
+import { TimePicker } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useState } from 'react';
 
 /**
- * Functional Time Picker (vendored from baseui-cn, built on Base UI, styled with
- * Max Core tokens). Three entry points share one engine:
- *  - `TimePicker`        — inline/static surface (clock or list)
- *  - `TimePickerInput`   — read-only field that opens the picker in a popover
- *  - `TimePickerDialog`  — read-only field that opens the picker in a modal dialog
- *
- * Values are canonical 24-hour strings ("HH:mm" or "HH:mm:ss").
+ * Native Max Core Time Picker — a scroll-wheel (Hour · Minute · AM/PM) matching the
+ * Figma master. Pick by click, arrow keys, or mouse wheel over a column (±1 per
+ * notch). Two display modes: `popover` (default, a field that opens the wheel) and
+ * `inline`. Values are canonical 24-hour strings ("HH:mm" / "HH:mm:ss").
  */
 const meta = {
   title: 'Atoms/TimePicker',
   component: TimePicker,
   parameters: { layout: 'centered' },
   argTypes: {
+    mode: { control: 'inline-radio', options: ['popover', 'inline'] },
     format: { control: 'inline-radio', options: ['12h', '24h'] },
-    pickerMode: { control: 'inline-radio', options: ['clock', 'list'] },
-    orientation: { control: 'inline-radio', options: ['portrait', 'landscape'] },
     minuteStep: { control: 'inline-radio', options: [1, 5, 10, 15, 30] },
     showSeconds: { control: 'boolean' },
-    size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },
+    clearable: { control: 'boolean' },
     disabled: { control: 'boolean' },
   },
 } satisfies Meta<typeof TimePicker>;
@@ -29,47 +24,27 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Inline clock face — the default surface. */
-export const Clock: Story = {
-  args: { defaultValue: '09:30', format: '12h', pickerMode: 'clock' },
+/** Popover field (default). Commit-on-select; closes on click-away / Escape. */
+export const Popover: Story = {
+  args: { defaultValue: '16:10', format: '12h', label: 'Meeting time' },
 };
 
-/** Inline list columns (Hour / Minute / AM·PM) — matches the Figma master. */
-export const List: Story = {
-  args: { defaultValue: '16:10', format: '12h', pickerMode: 'list' },
+/** Inline wheel — no trigger, rendered directly. */
+export const Inline: Story = {
+  args: { mode: 'inline', defaultValue: '16:10', format: '12h' },
 };
 
-/** 24-hour clock with seconds. */
-export const TwentyFourHourWithSeconds: Story = {
-  args: { defaultValue: '14:45:20', format: '24h', pickerMode: 'clock', showSeconds: true },
+/** 24-hour with seconds — columns become Hour · Minute · Second (no AM/PM). */
+export const WithSeconds: Story = {
+  args: { mode: 'inline', defaultValue: '14:45:20', format: '24h', showSeconds: true },
 };
 
-/** Field + popover (desktop). Defaults to list mode. */
-export const InputPopover: StoryObj<typeof TimePickerInput> = {
-  render: (args) => {
-    const [value, setValue] = useState<string | null>('08:15');
-    return (
-      <TimePickerInput {...args} label="Meeting time" value={value} onValueChange={setValue} />
-    );
-  },
-};
-
-/** Field + modal dialog (mobile). Defaults to clock mode. */
-export const InputDialog: StoryObj<typeof TimePickerDialog> = {
-  render: (args) => {
-    const [value, setValue] = useState<string | null>('19:00');
-    return (
-      <TimePickerDialog {...args} label="Reservation" value={value} onValueChange={setValue} />
-    );
-  },
-};
-
-/** Constrained + stepped: 09:00–17:00 business hours, 15-minute steps. */
+/** Constrained + stepped: 09:00–17:00, 15-minute steps (blocked values greyed). */
 export const Constrained: Story = {
   args: {
+    mode: 'inline',
     defaultValue: '09:00',
     format: '24h',
-    pickerMode: 'list',
     minuteStep: 15,
     minTime: '09:00',
     maxTime: '17:00',
