@@ -14,7 +14,7 @@ tmux split-window -v -t $SESSION:0
 
 # Pane 0: Claude Code
 tmux select-pane -t 0
-tmux send-keys -t $SESSION:0 'clear' C-m 'claude' C-m
+tmux send-keys -t $SESSION:0 'clear' C-m 'claude --model claude-opus-4-8' C-m
 
 # Pane 1: nvim
 tmux select-pane -t 1
