@@ -53,7 +53,7 @@ export function BottomLineInput({
       ) : null}
       <BaseInput className={cn(inputStyles({ size }), className)} {...rest} />
       {errorMessage ? (
-        <Field.Error className="text-xs text-[var(--status-danger-default)]">
+        <Field.Error match={true} className="text-xs text-[var(--status-danger-default)]">
           {errorMessage}
         </Field.Error>
       ) : helper ? (

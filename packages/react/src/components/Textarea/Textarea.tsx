@@ -48,7 +48,7 @@ export function Textarea({ label, helper, errorMessage, size, className, ...rest
         />
       </div>
       {errorMessage ? (
-        <Field.Error className="text-xs text-[var(--status-danger-default)]">
+        <Field.Error match={true} className="text-xs text-[var(--status-danger-default)]">
           {errorMessage}
         </Field.Error>
       ) : helper ? (
