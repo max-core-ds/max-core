@@ -201,7 +201,7 @@ Reused conventions from existing docs:
 
 - Figma plugin source (Layer 2). Plan defines the JSON contract only; plugin built next phase.
 - Remaining ~45 components (~15 atoms, ~15 molecules, ~10 organisms + Data Table system).
-- Date Picker — needs a separate decision (build on `react-day-picker` vs. Base UI Calendar+Popover composition).
+- Date Picker — ✅ decided & built (Phase 4 Batch 12): `react-day-picker@9` restyled onto tokens (chosen over baseui-cn copy-in and react-aria). See PROGRESS.md.
 - shadcn-style copy-in CLI — deferred until npm package is stable.
 - Visual regression (Chromatic) — wire in once 10+ components exist.
 - Docs site — Storybook is enough for now.
@@ -589,9 +589,15 @@ the 5 prebuilders (Invoice, Users, Tickets, Products, Transactions).
   Media, Auth, Commerce (2), Info, Booking (2). Each composes DS components into
   the builder's slots.
 
-### Batch 12 — Date Picker
+### Batch 12 — Date Picker — ✅ landed (2026-09-17, commit `d17a0b7`)
 React counterpart of the Figma Date Picker (Calendar + Header + Footer; Date /
-Dual / Input variants). Not yet built in React (Figma-side only).
+Dual / Input variants). Shipped `DatePicker` / `DualDatePicker` / `DateInput` on
+**`react-day-picker@9`** restyled onto tokens via `classNames`/`components` (no CSS
+import, kept `external`); ISO-string public API via a `date.ts` `Date↔ISO` adapter;
+custom `MonthCaption` header with month/year **drill-down**; drift-green. Day picker
+cross-checked against the Figma master; **month/year render as grids — Figma
+scroll-wheels deferred** by decision. See PROGRESS.md + memory
+`project-datepicker-react-build`.
 
 ### Batch 13 — Test infrastructure
 The honest gap from Phase 3. Add:
@@ -601,8 +607,8 @@ The honest gap from Phase 3. Add:
 
 ## Sequencing
 
-Stacked List ✅ → Data Table ✅ (both lean v1) → **next: Card** → Bottom Sheet
-(needs Card + many atoms as slot content) → Date Picker. Test infra (Batch 13)
+Stacked List ✅ → Data Table ✅ (both lean v1) → Date Picker ✅ (Batch 12) →
+**next: Card** → Bottom Sheet (needs Card + many atoms as slot content). Test infra (Batch 13)
 can start in parallel — the contrast guardrail already covers part of the a11y
 goal. Return to the deferred Stacked List row types / Data Table mobile+expandable
 + prebuilders when the real project needs them.
