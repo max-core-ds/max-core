@@ -359,6 +359,13 @@ const SPECS: ComponentSpec[] = [
       '--spacing-06', // Table Cell/Cell Item/Simple Text Gap — no Simple Text cell-item in v1; text cells render plain content
     ],
   },
+  {
+    name: 'Date Picker',
+    source: 'components/DatePicker/DatePicker.tsx',
+    // One class of tokens under one prefix; the day-grid is rendered by
+    // react-day-picker but restyled entirely via our token-bound `classNames`.
+    prefixes: ['Molecule/Date Picker'],
+  },
 ];
 
 const tokens = JSON.parse(readFileSync(tokensPath, 'utf8')) as TokensFile;

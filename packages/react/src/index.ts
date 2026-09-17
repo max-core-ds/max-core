@@ -34,6 +34,22 @@ export {
   type TimeMatcher,
 } from './components/TimePicker/index.js';
 export { StatusDot, type StatusDotProps } from './components/StatusDot/index.js';
+export {
+  DatePicker,
+  type DatePickerProps,
+  DualDatePicker,
+  type DualDatePickerProps,
+  DateInput,
+  type DateInputProps,
+  type DateValue,
+  type DateRange,
+  type DateGranularity,
+  type DateMatcher,
+  isValidDateValue,
+  compareDateValues,
+  formatDateValue,
+  todayValue,
+} from './components/DatePicker/index.js';
 export { ActionBar, type ActionBarProps } from './components/ActionBar/index.js';
 export {
   HeadingBlock,

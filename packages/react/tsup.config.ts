@@ -7,6 +7,6 @@ export default defineConfig({
   splitting: false,
   sourcemap: true,
   clean: true,
-  external: ['react', 'react-dom', '@base-ui/react'],
+  external: ['react', 'react-dom', '@base-ui/react', 'react-day-picker'],
   target: 'es2022',
 });
