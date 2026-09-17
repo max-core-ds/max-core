@@ -41,6 +41,17 @@ export const WithHelper: Story = {
   ),
 };
 
+// Group-level error message renders once, below the radios.
+export const WithError: Story = {
+  render: () => (
+    <RadioGroup label="Shipping method" errorMessage="Please choose a shipping method.">
+      <Radio value="standard" label="Standard shipping" />
+      <Radio value="express" label="Express shipping" />
+      <Radio value="pickup" label="Store pickup" />
+    </RadioGroup>
+  ),
+};
+
 // Validation recolors the box border and the selected dot.
 export const Validations: Story = {
   render: () => (

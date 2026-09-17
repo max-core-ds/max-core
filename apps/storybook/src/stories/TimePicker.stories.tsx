@@ -34,6 +34,11 @@ export const Inline: Story = {
   args: { mode: 'inline', defaultValue: '16:10', format: '12h' },
 };
 
+/** Popover field in its error state — message renders below the trigger. */
+export const WithError: Story = {
+  args: { label: 'Meeting time', format: '12h', errorMessage: 'Please pick a time.' },
+};
+
 /** 24-hour with seconds — columns become Hour · Minute · Second (no AM/PM). */
 export const WithSeconds: Story = {
   args: { mode: 'inline', defaultValue: '14:45:20', format: '24h', showSeconds: true },

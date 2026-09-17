@@ -51,6 +51,7 @@ export interface SwitchProps
     VariantProps<typeof trackStyles> {
   label?: ReactNode;
   helperText?: ReactNode;
+  errorMessage?: ReactNode;
   validation?: Validation;
   className?: string;
 }
@@ -60,25 +61,33 @@ export function Switch({
   validation = 'default',
   label,
   helperText,
+  errorMessage,
   className,
   ...rest
 }: SwitchProps) {
+  // An error message forces the error color and takes precedence over helperText.
+  const effectiveValidation: Validation = errorMessage ? 'error' : validation;
+  const hasText = Boolean(label || helperText || errorMessage);
   const track = (
     <BaseSwitch.Root
-      className={cn(trackStyles({ size, validation }), !label && !helperText && className)}
+      className={cn(trackStyles({ size, validation: effectiveValidation }), !hasText && className)}
       {...rest}
     >
       <BaseSwitch.Thumb className={thumbStyles({ size })} />
     </BaseSwitch.Root>
   );
-  if (!label && !helperText) return track;
+  if (!hasText) return track;
   return (
     // biome-ignore lint/a11y/noLabelWithoutControl: wraps the Base UI switch button (a labelable control)
     <label className="inline-flex cursor-pointer items-start gap-[var(--spacing-08)] p-[var(--spacing-04)]">
       {track}
       <span className="flex flex-col gap-[var(--spacing-06)]">
         {label ? <span className="text-[var(--text-primary)]">{label}</span> : null}
-        {helperText ? <span className="text-sm text-[var(--text-muted)]">{helperText}</span> : null}
+        {errorMessage ? (
+          <span className="text-sm text-[var(--status-danger-default)]">{errorMessage}</span>
+        ) : helperText ? (
+          <span className="text-sm text-[var(--text-muted)]">{helperText}</span>
+        ) : null}
       </span>
     </label>
   );

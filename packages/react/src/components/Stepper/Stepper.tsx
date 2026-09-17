@@ -63,14 +63,26 @@ export interface StepperProps
   extends Omit<ComponentPropsWithoutRef<typeof NumberField.Root>, 'className'>,
     VariantProps<typeof buttonStyles> {
   label?: ReactNode;
+  helper?: ReactNode;
+  errorMessage?: ReactNode;
   className?: string;
 }
 
-export function Stepper({ size = 'm', label, className, ...rest }: StepperProps) {
+export function Stepper({
+  size = 'm',
+  label,
+  helper,
+  errorMessage,
+  className,
+  ...rest
+}: StepperProps) {
+  const isInvalid = Boolean(errorMessage);
   return (
     <NumberField.Root className="inline-flex flex-col gap-[var(--spacing-04)]" {...rest}>
       {label ? <span className="text-sm font-bold text-[var(--text-primary)]">{label}</span> : null}
-      <NumberField.Group className={cn(groupStyles, className)}>
+      <NumberField.Group
+        className={cn(groupStyles, isInvalid && 'border-[var(--status-danger-default)]', className)}
+      >
         <NumberField.Decrement className={buttonStyles({ size })} aria-label="Decrease">
           −
         </NumberField.Decrement>
@@ -79,6 +91,11 @@ export function Stepper({ size = 'm', label, className, ...rest }: StepperProps)
           +
         </NumberField.Increment>
       </NumberField.Group>
+      {errorMessage ? (
+        <span className="text-xs text-[var(--status-danger-default)]">{errorMessage}</span>
+      ) : helper ? (
+        <span className="text-xs text-[var(--text-muted)]">{helper}</span>
+      ) : null}
     </NumberField.Root>
   );
 }

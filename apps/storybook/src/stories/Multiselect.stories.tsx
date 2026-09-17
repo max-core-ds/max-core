@@ -26,3 +26,7 @@ export const Default: Story = {};
 export const Preselected: Story = {
   args: { defaultValue: items.filter((i) => i.value === 'react' || i.value === 'svelte') },
 };
+
+export const WithError: Story = {
+  args: { label: 'Frameworks', errorMessage: 'Select at least one framework.' },
+};

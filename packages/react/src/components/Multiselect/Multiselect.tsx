@@ -1,6 +1,8 @@
 'use client';
 
 import { Combobox } from '@base-ui/react/combobox';
+import { Field } from '@base-ui/react/field';
+import type { ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
 import { fieldSurface } from '../../utils/field.js';
 
@@ -39,6 +41,9 @@ export interface MultiselectProps {
   defaultValue?: MultiselectOption[];
   onValueChange?: (value: MultiselectOption[]) => void;
   placeholder?: string;
+  label?: ReactNode;
+  helper?: ReactNode;
+  errorMessage?: ReactNode;
   className?: string;
   'aria-label'?: string;
 }
@@ -49,55 +54,78 @@ export function Multiselect({
   defaultValue,
   onValueChange,
   placeholder = 'Select…',
+  label,
+  helper,
+  errorMessage,
   className,
   ...rest
 }: MultiselectProps) {
+  const isInvalid = Boolean(errorMessage);
   return (
-    <Combobox.Root
-      multiple
-      items={items}
-      value={value}
-      defaultValue={defaultValue}
-      onValueChange={(v) => onValueChange?.(v as MultiselectOption[])}
-    >
-      <Combobox.Chips className={cn(chipsStyles, className)} {...rest}>
-        <Combobox.Value>
-          {(selected: MultiselectOption[]) =>
-            selected.map((item) => (
-              <Combobox.Chip key={item.value} className={chipStyles}>
-                {item.label}
-                <Combobox.ChipRemove
-                  className="text-[var(--text-muted)] hover:text-[var(--text-primary)]"
-                  aria-label={`Remove ${item.label}`}
-                >
-                  <XIcon />
-                </Combobox.ChipRemove>
-              </Combobox.Chip>
-            ))
-          }
-        </Combobox.Value>
-        <Combobox.Input
-          placeholder={placeholder}
-          className="min-w-16 flex-1 bg-transparent text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)]"
-        />
-      </Combobox.Chips>
-      <Combobox.Portal>
-        <Combobox.Positioner sideOffset={4}>
-          <Combobox.Popup className={popupStyles}>
-            <Combobox.List>
-              {(item: MultiselectOption) => (
-                <Combobox.Item key={item.value} value={item} className={itemStyles}>
+    <Field.Root className="flex flex-col gap-[var(--spacing-04)]" invalid={isInvalid}>
+      {label ? (
+        <Field.Label className="text-sm font-bold text-[var(--text-primary)]">{label}</Field.Label>
+      ) : null}
+      <Combobox.Root
+        multiple
+        items={items}
+        value={value}
+        defaultValue={defaultValue}
+        onValueChange={(v) => onValueChange?.(v as MultiselectOption[])}
+      >
+        <Combobox.Chips
+          className={cn(
+            chipsStyles,
+            isInvalid && 'border-[var(--status-danger-default)]',
+            className,
+          )}
+          {...rest}
+        >
+          <Combobox.Value>
+            {(selected: MultiselectOption[]) =>
+              selected.map((item) => (
+                <Combobox.Chip key={item.value} className={chipStyles}>
                   {item.label}
-                  <Combobox.ItemIndicator>
-                    <CheckIcon />
-                  </Combobox.ItemIndicator>
-                </Combobox.Item>
-              )}
-            </Combobox.List>
-          </Combobox.Popup>
-        </Combobox.Positioner>
-      </Combobox.Portal>
-    </Combobox.Root>
+                  <Combobox.ChipRemove
+                    className="text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                    aria-label={`Remove ${item.label}`}
+                  >
+                    <XIcon />
+                  </Combobox.ChipRemove>
+                </Combobox.Chip>
+              ))
+            }
+          </Combobox.Value>
+          <Combobox.Input
+            placeholder={placeholder}
+            className="min-w-16 flex-1 bg-transparent text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)]"
+          />
+        </Combobox.Chips>
+        <Combobox.Portal>
+          <Combobox.Positioner sideOffset={4}>
+            <Combobox.Popup className={popupStyles}>
+              <Combobox.List>
+                {(item: MultiselectOption) => (
+                  <Combobox.Item key={item.value} value={item} className={itemStyles}>
+                    {item.label}
+                    <Combobox.ItemIndicator>
+                      <CheckIcon />
+                    </Combobox.ItemIndicator>
+                  </Combobox.Item>
+                )}
+              </Combobox.List>
+            </Combobox.Popup>
+          </Combobox.Positioner>
+        </Combobox.Portal>
+      </Combobox.Root>
+      {errorMessage ? (
+        <Field.Error match={true} className="text-xs text-[var(--status-danger-default)]">
+          {errorMessage}
+        </Field.Error>
+      ) : helper ? (
+        <Field.Description className="text-xs text-[var(--text-muted)]">{helper}</Field.Description>
+      ) : null}
+    </Field.Root>
   );
 }
 

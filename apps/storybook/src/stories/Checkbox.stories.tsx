@@ -32,6 +32,10 @@ export const Indeterminate: Story = {
   args: { label: 'Select all', indeterminate: true },
 };
 
+export const WithError: Story = {
+  args: { label: 'Accept terms', errorMessage: 'You must accept the terms to continue.' },
+};
+
 export const Sizes: Story = {
   parameters: { layout: 'padded' },
   render: () => (

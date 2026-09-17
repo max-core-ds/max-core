@@ -29,6 +29,10 @@ export const WithLabel: Story = {
   },
 };
 
+export const WithError: Story = {
+  args: { label: 'Enable 2FA', errorMessage: 'Two-factor authentication is required.' },
+};
+
 export const Sizes: Story = {
   parameters: { layout: 'padded' },
   render: () => (

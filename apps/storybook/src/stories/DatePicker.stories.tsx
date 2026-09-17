@@ -93,3 +93,13 @@ export const Input: StoryObj<typeof DateInput> = {
   render: (args) => <DateInput {...args} />,
   args: { label: 'Start date', defaultValue: '2026-09-16', placeholder: 'Select date' },
 };
+
+/** DateInput in its error state — message renders below the trigger. */
+export const InputWithError: StoryObj<typeof DateInput> = {
+  render: (args) => <DateInput {...args} />,
+  args: {
+    label: 'Start date',
+    placeholder: 'Select date',
+    errorMessage: 'Start date is required.',
+  },
+};

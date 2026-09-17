@@ -1,5 +1,6 @@
 'use client';
 
+import { Field } from '@base-ui/react/field';
 import { Select } from '@base-ui/react/select';
 import { type VariantProps, cva } from 'class-variance-authority';
 import type { ReactNode } from 'react';
@@ -50,6 +51,9 @@ export interface SelectInputProps extends VariantProps<typeof triggerStyles> {
   defaultValue?: string;
   onValueChange?: (value: string) => void;
   disabled?: boolean;
+  label?: ReactNode;
+  helper?: ReactNode;
+  errorMessage?: ReactNode;
   className?: string;
   'aria-label'?: string;
 }
@@ -62,37 +66,64 @@ export function SelectInput({
   defaultValue,
   onValueChange,
   disabled,
+  label,
+  helper,
+  errorMessage,
   className,
   ...rest
 }: SelectInputProps) {
+  const isInvalid = Boolean(errorMessage);
   return (
-    <Select.Root
-      value={value}
-      defaultValue={defaultValue}
-      onValueChange={(v) => onValueChange?.(v as string)}
+    <Field.Root
+      className="flex flex-col gap-[var(--spacing-04)]"
+      invalid={isInvalid}
       disabled={disabled}
     >
-      <Select.Trigger className={cn(triggerStyles({ size }), className)} {...rest}>
-        <Select.Value placeholder={placeholder} />
-        <Select.Icon className="text-[var(--text-muted)]">
-          <ChevronDown />
-        </Select.Icon>
-      </Select.Trigger>
-      <Select.Portal>
-        <Select.Positioner sideOffset={4}>
-          <Select.Popup className={popupStyles}>
-            {items.map((item) => (
-              <Select.Item key={item.value} value={item.value} className={itemStyles}>
-                <Select.ItemText>{item.label}</Select.ItemText>
-                <Select.ItemIndicator>
-                  <CheckIcon />
-                </Select.ItemIndicator>
-              </Select.Item>
-            ))}
-          </Select.Popup>
-        </Select.Positioner>
-      </Select.Portal>
-    </Select.Root>
+      {label ? (
+        <Field.Label className="text-sm font-bold text-[var(--text-primary)]">{label}</Field.Label>
+      ) : null}
+      <Select.Root
+        value={value}
+        defaultValue={defaultValue}
+        onValueChange={(v) => onValueChange?.(v as string)}
+        disabled={disabled}
+      >
+        <Select.Trigger
+          className={cn(
+            triggerStyles({ size }),
+            isInvalid && 'border-[var(--status-danger-default)]',
+            className,
+          )}
+          {...rest}
+        >
+          <Select.Value placeholder={placeholder} />
+          <Select.Icon className="text-[var(--text-muted)]">
+            <ChevronDown />
+          </Select.Icon>
+        </Select.Trigger>
+        <Select.Portal>
+          <Select.Positioner sideOffset={4}>
+            <Select.Popup className={popupStyles}>
+              {items.map((item) => (
+                <Select.Item key={item.value} value={item.value} className={itemStyles}>
+                  <Select.ItemText>{item.label}</Select.ItemText>
+                  <Select.ItemIndicator>
+                    <CheckIcon />
+                  </Select.ItemIndicator>
+                </Select.Item>
+              ))}
+            </Select.Popup>
+          </Select.Positioner>
+        </Select.Portal>
+      </Select.Root>
+      {errorMessage ? (
+        <Field.Error match={true} className="text-xs text-[var(--status-danger-default)]">
+          {errorMessage}
+        </Field.Error>
+      ) : helper ? (
+        <Field.Description className="text-xs text-[var(--text-muted)]">{helper}</Field.Description>
+      ) : null}
+    </Field.Root>
   );
 }
 

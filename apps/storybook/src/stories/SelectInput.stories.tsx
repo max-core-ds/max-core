@@ -26,3 +26,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 export const Preselected: Story = { args: { defaultValue: 'ro' } };
+
+export const WithError: Story = {
+  args: { label: 'Country', errorMessage: 'Please select a country.' },
+};

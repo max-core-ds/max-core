@@ -1,5 +1,6 @@
 'use client';
 
+import { Field } from '@base-ui/react/field';
 import { Popover } from '@base-ui/react/popover';
 import { type ReactNode, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import {
@@ -73,6 +74,10 @@ export interface DualDatePickerProps extends CalendarBaseProps {
 export interface DateInputProps extends DatePickerProps {
   /** Label above the trigger field. */
   label?: string;
+  /** Helper text shown below the trigger when there is no error. */
+  helper?: ReactNode;
+  /** Error message shown below the trigger; also flags the field invalid. */
+  errorMessage?: ReactNode;
   placeholder?: string;
   /** Show a clear (×) button when a value is set. */
   clearable?: boolean;
@@ -561,6 +566,8 @@ export function DateInput({
   disabled = false,
   locale,
   label,
+  helper,
+  errorMessage,
   placeholder = 'Select date',
   clearable = true,
   format,
@@ -576,13 +583,18 @@ export function DateInput({
   const [open, setOpen] = useState(false);
   const triggerId = useId();
   const formatted = formatDateValue(value, format, locale);
+  const isInvalid = Boolean(errorMessage);
 
   return (
-    <div className={cn('inline-flex flex-col gap-[var(--spacing-06)]', className)}>
+    <Field.Root
+      className={cn('inline-flex flex-col gap-[var(--spacing-06)]', className)}
+      invalid={isInvalid}
+      disabled={disabled}
+    >
       {label ? (
-        <label htmlFor={triggerId} className="text-sm text-[var(--text-secondary)]">
+        <Field.Label htmlFor={triggerId} className="text-sm text-[var(--text-secondary)]">
           {label}
-        </label>
+        </Field.Label>
       ) : null}
       {/* Input Date Picker Gap (spacing.12) between the field icon and text. */}
       <div className="relative w-[var(--size-240)] max-w-full">
@@ -596,6 +608,7 @@ export function DateInput({
               'rounded-[var(--radius-md)] px-[var(--spacing-12)] py-[var(--spacing-12)] text-sm',
               fieldSurface,
               focusRing,
+              isInvalid && 'border-[var(--status-danger-default)]',
               '[&_svg]:size-[var(--size-20)] [&_svg]:text-[var(--text-muted)]',
             )}
           >
@@ -641,7 +654,14 @@ export function DateInput({
           </Popover.Portal>
         </Popover.Root>
       </div>
-    </div>
+      {errorMessage ? (
+        <Field.Error match={true} className="text-xs text-[var(--status-danger-default)]">
+          {errorMessage}
+        </Field.Error>
+      ) : helper ? (
+        <Field.Description className="text-xs text-[var(--text-muted)]">{helper}</Field.Description>
+      ) : null}
+    </Field.Root>
   );
 }
 

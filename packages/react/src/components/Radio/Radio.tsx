@@ -3,17 +3,53 @@
 import { Radio as BaseRadio } from '@base-ui/react/radio';
 import { RadioGroup as BaseRadioGroup } from '@base-ui/react/radio-group';
 import { type VariantProps, cva } from 'class-variance-authority';
-import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import { type ComponentPropsWithoutRef, type ReactNode, useId } from 'react';
 import { cn } from '../../utils/cn.js';
 import { focusRing } from '../../utils/focus-ring.js';
 import { type Validation, radioValidation } from '../../utils/validation.js';
 
-export interface RadioGroupProps extends ComponentPropsWithoutRef<typeof BaseRadioGroup> {}
+export interface RadioGroupProps extends ComponentPropsWithoutRef<typeof BaseRadioGroup> {
+  /** Group-level label rendered above the radios. */
+  label?: ReactNode;
+  /** Group-level helper text, shown when there is no error. */
+  helperText?: ReactNode;
+  /** Group-level error message; when set it renders below the radios in danger color. */
+  errorMessage?: ReactNode;
+}
 
 // Item Gap (8) between radios.
-export function RadioGroup({ className, ...rest }: RadioGroupProps) {
+export function RadioGroup({
+  className,
+  label,
+  helperText,
+  errorMessage,
+  'aria-labelledby': ariaLabelledBy,
+  ...rest
+}: RadioGroupProps) {
+  const labelId = useId();
+  const hasText = Boolean(label || helperText || errorMessage);
+  const group = (
+    <BaseRadioGroup
+      className={cn('flex flex-col gap-[var(--spacing-08)]', className)}
+      aria-labelledby={label ? (ariaLabelledBy ?? labelId) : ariaLabelledBy}
+      {...rest}
+    />
+  );
+  if (!hasText) return group;
   return (
-    <BaseRadioGroup className={cn('flex flex-col gap-[var(--spacing-08)]', className)} {...rest} />
+    <div className="flex flex-col gap-[var(--spacing-06)]">
+      {label ? (
+        <span id={labelId} className="text-sm font-bold text-[var(--text-primary)]">
+          {label}
+        </span>
+      ) : null}
+      {group}
+      {errorMessage ? (
+        <span className="text-sm text-[var(--status-danger-default)]">{errorMessage}</span>
+      ) : helperText ? (
+        <span className="text-sm text-[var(--text-muted)]">{helperText}</span>
+      ) : null}
+    </div>
   );
 }
 
@@ -45,6 +81,7 @@ export interface RadioProps
     VariantProps<typeof boxStyles> {
   label?: ReactNode;
   helperText?: ReactNode;
+  errorMessage?: ReactNode;
   validation?: Validation;
   className?: string;
 }
@@ -54,25 +91,33 @@ export function Radio({
   validation = 'default',
   label,
   helperText,
+  errorMessage,
   className,
   ...rest
 }: RadioProps) {
+  // An error message forces the error color and takes precedence over helperText.
+  const effectiveValidation: Validation = errorMessage ? 'error' : validation;
+  const hasText = Boolean(label || helperText || errorMessage);
   const box = (
     <BaseRadio.Root
-      className={cn(boxStyles({ size, validation }), !label && !helperText && className)}
+      className={cn(boxStyles({ size, validation: effectiveValidation }), !hasText && className)}
       {...rest}
     >
       <BaseRadio.Indicator className="size-full rounded-[var(--radius-full)] bg-current" />
     </BaseRadio.Root>
   );
-  if (!label && !helperText) return box;
+  if (!hasText) return box;
   return (
     // biome-ignore lint/a11y/noLabelWithoutControl: wraps the Base UI radio button (a labelable control)
     <label className="inline-flex cursor-pointer items-start gap-[var(--spacing-08)] p-[var(--spacing-04)]">
       {box}
       <span className="flex flex-col gap-[var(--spacing-06)]">
         {label ? <span className="text-[var(--text-primary)]">{label}</span> : null}
-        {helperText ? <span className="text-sm text-[var(--text-muted)]">{helperText}</span> : null}
+        {errorMessage ? (
+          <span className="text-sm text-[var(--status-danger-default)]">{errorMessage}</span>
+        ) : helperText ? (
+          <span className="text-sm text-[var(--text-muted)]">{helperText}</span>
+        ) : null}
       </span>
     </label>
   );

@@ -37,6 +37,7 @@ export interface CheckboxProps
     VariantProps<typeof boxStyles> {
   label?: ReactNode;
   helperText?: ReactNode;
+  errorMessage?: ReactNode;
   validation?: Validation;
   className?: string;
 }
@@ -46,12 +47,16 @@ export function Checkbox({
   validation = 'default',
   label,
   helperText,
+  errorMessage,
   className,
   ...rest
 }: CheckboxProps) {
+  // An error message forces the error color and takes precedence over helperText.
+  const effectiveValidation: Validation = errorMessage ? 'error' : validation;
+  const hasText = Boolean(label || helperText || errorMessage);
   const box = (
     <BaseCheckbox.Root
-      className={cn(boxStyles({ size, validation }), !label && !helperText && className)}
+      className={cn(boxStyles({ size, validation: effectiveValidation }), !hasText && className)}
       {...rest}
     >
       {/* Indicator mirrors the root state as data-* attrs; show a dash for
@@ -62,7 +67,7 @@ export function Checkbox({
       </BaseCheckbox.Indicator>
     </BaseCheckbox.Root>
   );
-  if (!label && !helperText) return box;
+  if (!hasText) return box;
   return (
     // biome-ignore lint/a11y/noLabelWithoutControl: wraps the Base UI checkbox button (a labelable control)
     <label
@@ -74,7 +79,11 @@ export function Checkbox({
       {box}
       <span className="flex flex-col gap-[var(--spacing-06)]">
         {label ? <span className="text-[var(--text-primary)]">{label}</span> : null}
-        {helperText ? <span className="text-sm text-[var(--text-muted)]">{helperText}</span> : null}
+        {errorMessage ? (
+          <span className="text-sm text-[var(--status-danger-default)]">{errorMessage}</span>
+        ) : helperText ? (
+          <span className="text-sm text-[var(--text-muted)]">{helperText}</span>
+        ) : null}
       </span>
     </label>
   );

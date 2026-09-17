@@ -16,6 +16,10 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
+export const WithError: Story = {
+  args: { label: 'Quantity', defaultValue: 0, errorMessage: 'Quantity must be at least 1.' },
+};
+
 export const Sizes: Story = {
   parameters: { layout: 'padded' },
   render: () => (

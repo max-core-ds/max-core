@@ -1,5 +1,6 @@
 'use client';
 
+import { Field } from '@base-ui/react/field';
 import { Popover } from '@base-ui/react/popover';
 import {
   type CSSProperties,
@@ -53,6 +54,10 @@ export interface TimePickerProps {
   disabled?: boolean;
   /** popover mode: label rendered above the trigger field. */
   label?: string;
+  /** popover mode: helper text shown below the trigger when there is no error. */
+  helper?: ReactNode;
+  /** popover mode: error message shown below the trigger; also flags the field invalid. */
+  errorMessage?: ReactNode;
   /** popover mode: text shown when there is no value. */
   placeholder?: string;
   /** popover mode: show a clear (×) button when a value is set. */
@@ -329,6 +334,8 @@ export function TimePicker({
   disabledTimes,
   disabled = false,
   label,
+  helper,
+  errorMessage,
   placeholder = 'Select time',
   clearable = true,
   className,
@@ -416,13 +423,18 @@ export function TimePicker({
   }
 
   const formatted = formatTimeValue(value, { format, showSeconds });
+  const isInvalid = Boolean(errorMessage);
 
   return (
-    <div className={cn('inline-flex flex-col gap-[var(--spacing-06)]', className)}>
+    <Field.Root
+      className={cn('inline-flex flex-col gap-[var(--spacing-06)]', className)}
+      invalid={isInvalid}
+      disabled={disabled}
+    >
       {label ? (
-        <label htmlFor={triggerId} className="text-sm text-[var(--text-secondary)]">
+        <Field.Label htmlFor={triggerId} className="text-sm text-[var(--text-secondary)]">
           {label}
-        </label>
+        </Field.Label>
       ) : null}
       <div className="relative w-[var(--size-240)] max-w-full">
         <Popover.Root open={open} onOpenChange={setOpen}>
@@ -435,6 +447,7 @@ export function TimePicker({
               'rounded-[var(--radius-md)] px-[var(--spacing-12)] py-[var(--spacing-12)] text-sm',
               fieldSurface,
               focusRing,
+              isInvalid && 'border-[var(--status-danger-default)]',
               '[&_svg]:size-[var(--size-20)] [&_svg]:text-[var(--text-muted)]',
             )}
           >
@@ -472,7 +485,14 @@ export function TimePicker({
           </Popover.Portal>
         </Popover.Root>
       </div>
-    </div>
+      {errorMessage ? (
+        <Field.Error match={true} className="text-xs text-[var(--status-danger-default)]">
+          {errorMessage}
+        </Field.Error>
+      ) : helper ? (
+        <Field.Description className="text-xs text-[var(--text-muted)]">{helper}</Field.Description>
+      ) : null}
+    </Field.Root>
   );
 }
 
