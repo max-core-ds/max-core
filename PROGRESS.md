@@ -2,7 +2,7 @@
 
 > Living status doc for the `@max-core/react` buildout. Update it whenever a
 > component is added or a `figma-node-links/*.json` file is cross-checked.
-> Last updated: **2026-09-17** · Branch: **`main`** (feat/date-picker merged in)
+> Last updated: **2026-09-18** · Branch: **`main`** — **9 commits ahead of `origin/main` (unpushed)**
 >
 > **To pick up the work**, paste one of the guides in `prompts/` into a new conversation:
 > [`figma-cross-check.md`](prompts/figma-cross-check.md) (continue the cross-check) or
@@ -12,6 +12,7 @@
 
 ## Where we are
 
+- **Form-field error messages — unified across all inputs (2026-09-18, on `main`, unpushed)** — every input-like component now takes an **`errorMessage`** prop as the canonical invalid signal: when truthy it flags the field invalid, red-borders the control, and renders the message below it (danger color), taking precedence over helper text — the same model as `Input`. Added to **SelectInput, Multiselect, Stepper, TimePicker (popover), DateInput, Checkbox, Switch, Radio, RadioGroup** (`feat` commit `db4e210`; `WithError` story on each). Also **fixed a latent bug** in `Input`/`Textarea`/`BottomLineInput`: `Field.Error` needs **`match={true}`** to render off an external `invalid` prop — without it Base UI reads `validityData.state.valid` (native constraint validation only), so the red border showed but the message never did (`fix` commit `49fbf0b`). Field-primitive controls (Select/Combobox/pickers) wrap in `Field.Root`; the invalid border is applied **explicitly** where the surface doesn't inherit `data-invalid` (Combobox chips, Popover triggers, Stepper's hand-rolled group). Checkbox/Switch/Radio drive the error color through their existing `validation` CVA. Inline calendar/wheel panes (`DatePicker`, `DualDatePicker`, `TimePicker mode="inline"`) are **out of scope** — no input to attach an error to. See memory `project-form-error-messages`.
 - **Phase 3 buildout: complete** — 45 components shipped across Batches 0–7. All are drift-green (`pnpm -F @max-core/tokens drift`), typed, built (tsup), and have a Storybook story in a flat tiered folder (`<Tier>/<Component>`).
 - **Phase 4 Batch 8/9 — lean v1 landed + cross-checked** — **Stacked List** (`StackedList` + variant-driven `StackedListRow`: default/social/media/product — 4 of the 9 master row types) and **Data Table** (`DataTable` column-config + exported `Table`/`HeaderCell`/`TableRow`/`TableCell` primitives + `RatingStars`, with sort, hover/selected rows, **optional `header` slot**, pagination `footer`, and **`selectable` row selection + select-all**). Both drift-green and contrast-green (light+dark) and visually cross-checked against the Figma masters (Stacked List set `2080:23144`, Table Builder `2768:2`) — core layouts faithful; the sort chevrons + selection column match. Deferred: remaining stacked row types (ride/delivery/booking/item-grid/transport), and the table's mobile scroll variant + expandable rows + the stats/tabs Table Header (a caller now composes that into the `header` slot).
 - **Phase 3.5 visual cross-check: all exported files done** — every `figma-node-links/*.json` the designer has provided is cross-checked and moved to `figma-node-links/checked/`. Each was drift-green yet had appearance/axis gaps the raw tokens didn't capture (states, colors, missing axes/slots), now fixed. Further cross-checks resume when the designer drops new files into `figma-node-links/`. See the process in `PLAN.md → Phase 3.5`.
@@ -143,7 +144,7 @@ Reuse these before writing inline classes — they keep Tailwind literals in one
 - `validation.ts` — `Validation` type + `checkboxValidation` / `radioValidation` / `switchValidation` tables (selection-control error/warning/success recolor).
 - `progress.ts` — `progressTrack(size)`, `progressFill` (shared by ProgressBar + Range).
 - `tooltip-surface.ts` — `tooltipBubble`, `tooltipArrow` (shared by Tooltip + Range value bubble).
-- `field.ts` — `fieldSurface` (input surfaces).
+- `field.ts` — `fieldSurface` (input surfaces; its `data-[invalid]:border-*` fires when a control inherits `data-invalid` from a Base UI `Field.Root invalid`). **Error-message convention:** every input takes `errorMessage?: ReactNode` — truthy = invalid; render it below the control (danger) with precedence over helper text, and remember `Field.Error match={true}` (see `project-form-error-messages`).
 
 ---
 
