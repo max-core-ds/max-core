@@ -19,10 +19,17 @@
 
 html,
 body {
+  height: 100%;
   background-color: var(--bg-default);
   color: var(--text-primary);
   font-family:
     'Inter',
     system-ui,
     sans-serif;
+}
+
+/* The Storybook mount node inherits the full document height so stories can
+   size against it (e.g. layout: 'fullscreen' with h-full wrappers). */
+#storybook-root {
+  height: 100%;
 }

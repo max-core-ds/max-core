@@ -1,7 +1,8 @@
 'use client';
 
-import { type ComponentPropsWithoutRef, type ReactNode, useState } from 'react';
+import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
+import { useControllableState } from '../../utils/use-controllable-state.js';
 import { Checkbox } from '../Checkbox/index.js';
 
 // Data Table — a column-config driven table plus the low-level primitives it is
@@ -227,19 +228,23 @@ export function DataTable<Row>({
   className,
   ...rest
 }: DataTableProps<Row>) {
+  // `isControlled` stays a separate flag — it also gates client-side sorting below.
   const isControlled = sort !== undefined;
-  const [internalSort, setInternalSort] = useState<SortState | null>(defaultSort);
-  const activeSort = isControlled ? sort : internalSort;
+  const [activeSort, setSort] = useControllableState<SortState | null>(
+    sort,
+    defaultSort,
+    // `setSort` is only ever called with a defined SortState; widening is safe.
+    onSortChange as ((value: SortState | null) => void) | undefined,
+    null,
+  );
 
-  const selectionControlled = selectedRowIds !== undefined;
-  const [internalSelected, setInternalSelected] =
-    useState<(string | number)[]>(defaultSelectedRowIds);
-  const selectedIds = selectionControlled ? selectedRowIds : internalSelected;
+  const [selectedIds, commitSelection] = useControllableState<(string | number)[]>(
+    selectedRowIds,
+    defaultSelectedRowIds,
+    onSelectionChange,
+    [],
+  );
   const selectedSet = new Set(selectedIds);
-  const commitSelection = (ids: (string | number)[]) => {
-    if (!selectionControlled) setInternalSelected(ids);
-    onSelectionChange?.(ids);
-  };
   const toggleRow = (id: string | number) => {
     const next = new Set(selectedSet);
     if (next.has(id)) next.delete(id);
@@ -252,8 +257,7 @@ export function DataTable<Row>({
       activeSort?.key === key
         ? { key, direction: activeSort.direction === 'asc' ? 'desc' : 'asc' }
         : { key, direction: 'asc' };
-    if (isControlled) onSortChange?.(next);
-    else setInternalSort(next);
+    setSort(next);
   };
 
   // Client-side sort only when uncontrolled (a controlled caller sorts its own data).

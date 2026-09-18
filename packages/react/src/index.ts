@@ -112,7 +112,12 @@ export { FormGroup, type FormGroupProps } from './components/FormGroup/index.js'
 export { Dialog, type DialogProps } from './components/Dialog/index.js';
 export { ToastProvider, useToast } from './components/Toast/index.js';
 export { TopBar, type TopBarProps } from './components/TopBar/index.js';
-export { SideBar, type SideBarProps } from './components/SideBar/index.js';
+export {
+  SideBar,
+  type SideBarProps,
+  SideBarTrigger,
+  type SideBarTriggerProps,
+} from './components/SideBar/index.js';
 export {
   BottomNavigation,
   type BottomNavigationProps,
@@ -144,3 +149,8 @@ export {
   RatingStars,
   type RatingStarsProps,
 } from './components/DataTable/index.js';
+
+// Shared state helper — the DS controlled/uncontrolled convention (see README).
+export { useControllableState } from './utils/use-controllable-state.js';
+// Rail (SideBar) context hooks — for composing collapse-aware topBar content.
+export { useRail, useRailCollapsed, type RailContextValue } from './utils/rail-context.js';

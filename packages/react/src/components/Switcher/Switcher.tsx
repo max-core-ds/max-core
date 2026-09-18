@@ -2,8 +2,9 @@
 
 import { Toggle } from '@base-ui/react/toggle';
 import { ToggleGroup } from '@base-ui/react/toggle-group';
-import { type ReactNode, useState } from 'react';
+import type { ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
+import { useControllableState } from '../../utils/use-controllable-state.js';
 
 // Single-select pill switcher on Base UI ToggleGroup. Container/item padding,
 // radius, gap and icon size match -- Molecule/Switcher/*.
@@ -44,9 +45,14 @@ export function Switcher({
   className,
   ...rest
 }: SwitcherProps) {
-  const isControlled = value !== undefined;
-  const [internalValue, setInternalValue] = useState<string | undefined>(defaultValue);
-  const current = isControlled ? value : internalValue;
+  // `setValue` is only ever called with a defined value (empty selections are
+  // guarded below), so widening the callback to accept `undefined` is safe.
+  const [current, setValue] = useControllableState<string | undefined>(
+    value,
+    defaultValue,
+    onValueChange as ((value: string | undefined) => void) | undefined,
+    undefined,
+  );
 
   return (
     <ToggleGroup
@@ -58,8 +64,7 @@ export function Switcher({
         // Clicking the active item emits an empty selection — ignore it so the
         // current item stays selected instead of being toggled off.
         if (next == null) return;
-        if (!isControlled) setInternalValue(next);
-        onValueChange?.(next);
+        setValue(next);
       }}
       className={cn(groupStyles, className)}
       {...rest}

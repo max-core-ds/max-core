@@ -3,6 +3,7 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
 import { focusRing } from '../../utils/focus-ring.js';
+import { useRailCollapsed } from '../../utils/rail-context.js';
 
 // The interactive row primitive for Item List / Dropdown / Stacked List menus.
 // Padding/gap/icon size/radius match -- Atoms/List Item/*. Interactive states
@@ -35,7 +36,10 @@ export interface ListItemProps extends ComponentPropsWithoutRef<'button'> {
   rightIcon?: ReactNode;
   /** Selected/current row — renders the persistent accent fill. */
   active?: boolean;
-  /** Icon-only rail mode: hides the label + trailing indicator. */
+  /**
+   * Icon-only rail mode: hides the label + trailing indicator. Defaults to the
+   * surrounding rail (e.g. a collapsed SideBar) when omitted.
+   */
   collapsed?: boolean;
   children?: ReactNode;
 }
@@ -44,26 +48,27 @@ export function ListItem({
   leftIcon,
   rightIcon,
   active = false,
-  collapsed = false,
+  collapsed,
   children,
   className,
   ...rest
 }: ListItemProps) {
+  const isCollapsed = useRailCollapsed(collapsed);
   return (
     <button
       type="button"
       aria-current={active || undefined}
       className={cn(
         base,
-        collapsed && 'justify-center',
+        isCollapsed && 'justify-center',
         active ? activeStyles : interactive,
         className,
       )}
       {...rest}
     >
       {leftIcon}
-      {!collapsed && <span className="flex-1">{children}</span>}
-      {!collapsed && rightIcon}
+      {!isCollapsed && <span className="flex-1">{children}</span>}
+      {!isCollapsed && rightIcon}
     </button>
   );
 }

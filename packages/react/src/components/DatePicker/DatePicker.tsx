@@ -14,6 +14,7 @@ import { cn } from '../../utils/cn.js';
 import { fieldSurface } from '../../utils/field.js';
 import { focusRing } from '../../utils/focus-ring.js';
 import { stateLayer } from '../../utils/state-layer.js';
+import { useControllableState } from '../../utils/use-controllable-state.js';
 import { ActionBar } from '../ActionBar/ActionBar.js';
 import { Button } from '../Button/Button.js';
 import {
@@ -83,27 +84,6 @@ export interface DateInputProps extends DatePickerProps {
   clearable?: boolean;
   /** Intl options for the formatted trigger text. */
   format?: Intl.DateTimeFormatOptions;
-}
-
-// ── controlled/uncontrolled state (generic port of TimePicker's hook) ───────
-
-function useControllable<T>(
-  controlled: T | undefined,
-  defaultValue: T | undefined,
-  onChange: ((value: T) => void) | undefined,
-  fallback: T,
-) {
-  const [uncontrolled, setUncontrolled] = useState<T>(defaultValue ?? fallback);
-  const isControlled = controlled !== undefined;
-  const value = isControlled ? (controlled as T) : uncontrolled;
-  const setValue = useCallback(
-    (next: T) => {
-      if (!isControlled) setUncontrolled(next);
-      onChange?.(next);
-    },
-    [isControlled, onChange],
-  );
-  return [value, setValue] as const;
 }
 
 // ── token-bound styling ─────────────────────────────────────────────────────
@@ -393,7 +373,7 @@ export function DatePicker({
   className,
   'aria-label': ariaLabel,
 }: DatePickerProps) {
-  const [value, setValue] = useControllable<DateValue | null>(
+  const [value, setValue] = useControllableState<DateValue | null>(
     controlledValue,
     defaultValue,
     onValueChange,
@@ -503,7 +483,7 @@ export function DualDatePicker({
   className,
   'aria-label': ariaLabel,
 }: DualDatePickerProps) {
-  const [range, setRange] = useControllable<DateRange>(
+  const [range, setRange] = useControllableState<DateRange>(
     controlledValue,
     defaultValue,
     onValueChange,
@@ -574,7 +554,7 @@ export function DateInput({
   className,
   'aria-label': ariaLabel,
 }: DateInputProps) {
-  const [value, setValue] = useControllable<DateValue | null>(
+  const [value, setValue] = useControllableState<DateValue | null>(
     controlledValue,
     defaultValue,
     onValueChange,

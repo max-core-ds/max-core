@@ -14,6 +14,7 @@ import {
 import { cn } from '../../utils/cn.js';
 import { fieldSurface } from '../../utils/field.js';
 import { focusRing } from '../../utils/focus-ring.js';
+import { useControllableState } from '../../utils/use-controllable-state.js';
 import {
   HOURS_12,
   HOURS_24,
@@ -83,24 +84,6 @@ const rowByDistance = [
 // Container Padding X.
 const surfaceStyles =
   'rounded-[var(--radius-l)] bg-[var(--bg-surface)] px-[var(--spacing-24)] py-[var(--spacing-16)]';
-
-function useControllable(
-  controlled: TimeValue | null | undefined,
-  defaultValue: TimeValue | null | undefined,
-  onChange: ((value: TimeValue | null) => void) | undefined,
-) {
-  const [uncontrolled, setUncontrolled] = useState<TimeValue | null>(defaultValue ?? null);
-  const isControlled = controlled !== undefined;
-  const value = isControlled ? (controlled ?? null) : uncontrolled;
-  const setValue = useCallback(
-    (next: TimeValue | null) => {
-      if (!isControlled) setUncontrolled(next);
-      onChange?.(next);
-    },
-    [isControlled, onChange],
-  );
-  return [value, setValue] as const;
-}
 
 // Next enabled option in `direction`, wrapping; undefined if none available.
 function nextWheelValue<T>(
@@ -341,7 +324,12 @@ export function TimePicker({
   className,
   'aria-label': ariaLabel,
 }: TimePickerProps) {
-  const [value, setValue] = useControllable(controlledValue, defaultValue, onValueChange);
+  const [value, setValue] = useControllableState<TimeValue | null>(
+    controlledValue,
+    defaultValue,
+    onValueChange,
+    null,
+  );
   const [open, setOpen] = useState(false);
   const triggerId = useId();
 
