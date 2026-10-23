@@ -90,7 +90,11 @@ export {
   type MultiselectOption,
 } from './components/Multiselect/index.js';
 export { SearchBar, type SearchBarProps } from './components/SearchBar/index.js';
-export { ItemList, type ItemListProps } from './components/ItemList/index.js';
+export {
+  ItemList,
+  type ItemListProps,
+  type ItemListSelectAllProps,
+} from './components/ItemList/index.js';
 export { Dropdown, type DropdownProps, type DropdownItem } from './components/Dropdown/index.js';
 export { Tabs, type TabsProps, type TabItem } from './components/Tabs/index.js';
 export { Pagination, type PaginationProps } from './components/Pagination/index.js';

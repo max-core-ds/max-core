@@ -244,6 +244,9 @@ const SPECS: ComponentSpec[] = [
     name: 'Item List',
     source: 'components/ItemList/ItemList.tsx',
     prefixes: ['Molecule/Item List'],
+    exempt: [
+      '--spacing-04', // Label Helper Gap — bound inside the List Item rows (label ↔ support text), lives in ListItem.tsx
+    ],
   },
   {
     name: 'Dropdown',
