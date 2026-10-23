@@ -540,10 +540,11 @@ confirm exact values against the master's bound variables.
 > Sheet System) — this phase builds their React counterparts. Live status is
 > tracked in **`PROGRESS.md`** as batches land.
 >
-> **Status (2026-09-13):** Batches **8 (Stacked List)** and **9 (Data Table)**
-> shipped as **lean v1s** and visually cross-checked against the Figma masters —
-> see the per-batch notes below and `PROGRESS.md`. Batches 10–13 not started.
-> Also landed this session: the **contrast guardrail** (`pnpm -F @max-core/tokens
+> **Status (2026-10-23):** Batches **8 (Stacked List)** and **9 (Data Table)**
+> shipped as **lean v1s** and visually cross-checked against the Figma masters;
+> **12 (Date Picker)** landed 2026-09-17 — see the per-batch notes below and
+> `PROGRESS.md`. Batches **10 (Card)**, **11 (Bottom Sheet)** and **13 (test infra)**
+> not started — next is Card. Also landed: the **contrast guardrail** (`pnpm -F @max-core/tokens
 > contrast`, WCAG AA text/bg pairings, light+dark) which pre-empts part of Batch 13's
 > a11y goal.
 

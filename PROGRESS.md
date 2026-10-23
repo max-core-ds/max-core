@@ -2,7 +2,7 @@
 
 > Living status doc for the `@max-core/react` buildout. Update it whenever a
 > component is added or a `figma-node-links/*.json` file is cross-checked.
-> Last updated: **2026-09-18** · Branch: **`main`** — **11 commits ahead of `origin/main` (unpushed)**
+> Last updated: **2026-10-23** · Branch: **`main`** — in sync with `origin/main` (all feature branches merged + deleted)
 >
 > **To pick up the work**, paste one of the guides in `prompts/` into a new conversation:
 > [`figma-cross-check.md`](prompts/figma-cross-check.md) (continue the cross-check) or
