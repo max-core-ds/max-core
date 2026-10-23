@@ -10,6 +10,8 @@ const meta = {
   argTypes: {
     leftIcon: { control: false },
     rightIcon: { control: false },
+    supportText: { control: 'text' },
+    level: { control: 'inline-radio', options: [0, 1, 2] },
     active: { control: 'boolean' },
     collapsed: { control: 'boolean' },
     disabled: { control: 'boolean' },
@@ -52,6 +54,23 @@ export const States: Story = {
       </ListItem>
       <ListItem leftIcon={<Settings />} rightIcon={<ChevronDown />} disabled>
         Disabled
+      </ListItem>
+    </div>
+  ),
+};
+
+// Nested rows — Level 1/2 indent before the leading icon, with support text.
+export const Nested: Story = {
+  render: () => (
+    <div className="flex flex-col">
+      <ListItem leftIcon={<Settings />} rightIcon={<ChevronDown />} supportText="3 sections">
+        Settings
+      </ListItem>
+      <ListItem level={1} leftIcon={<User />} rightIcon={<ChevronDown />}>
+        Account
+      </ListItem>
+      <ListItem level={2} leftIcon={<User />} supportText="Name, avatar, email" active>
+        Profile
       </ListItem>
     </div>
   ),
