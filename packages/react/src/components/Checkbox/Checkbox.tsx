@@ -2,7 +2,7 @@
 
 import { Checkbox as BaseCheckbox } from '@base-ui/react/checkbox';
 import { type VariantProps, cva } from 'class-variance-authority';
-import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import { type ComponentPropsWithoutRef, type ReactNode, useId } from 'react';
 import { cn } from '../../utils/cn.js';
 import { focusRing } from '../../utils/focus-ring.js';
 import { type Validation, checkboxValidation } from '../../utils/validation.js';
@@ -16,7 +16,7 @@ const boxStyles = cva(
     'rounded-[var(--radius-xs)] border',
     'text-[var(--text-on-accent)] transition-colors',
     focusRing,
-    'data-[disabled]:opacity-[var(--opacity-disabled)]',
+    'data-[disabled]:pointer-events-none data-[disabled]:opacity-[var(--opacity-disabled)]',
   ],
   {
     variants: {
@@ -54,9 +54,13 @@ export function Checkbox({
   // An error message forces the error color and takes precedence over helperText.
   const effectiveValidation: Validation = errorMessage ? 'error' : validation;
   const hasText = Boolean(label || helperText || errorMessage);
+  // Link the helper/error text to the control so it's announced with it.
+  const descId = useId();
+  const describedBy = errorMessage || helperText ? descId : undefined;
   const box = (
     <BaseCheckbox.Root
       className={cn(boxStyles({ size, validation: effectiveValidation }), !hasText && className)}
+      aria-describedby={describedBy}
       {...rest}
     >
       {/* Indicator mirrors the root state as data-* attrs; show a dash for
@@ -77,12 +81,20 @@ export function Checkbox({
       )}
     >
       {box}
+      {/* Label Body/SM/300; helper/error Caption/300 (helper in text/secondary).
+          The control is top-aligned with the label (Figma centres it — deliberate). */}
       <span className="flex flex-col gap-[var(--spacing-06)]">
-        {label ? <span className="text-[var(--text-primary)]">{label}</span> : null}
+        {label ? (
+          <span className="text-sm font-light text-[var(--text-primary)]">{label}</span>
+        ) : null}
         {errorMessage ? (
-          <span className="text-sm text-[var(--status-danger-default)]">{errorMessage}</span>
+          <span id={descId} className="text-xs font-light text-[var(--status-danger-default)]">
+            {errorMessage}
+          </span>
         ) : helperText ? (
-          <span className="text-sm text-[var(--text-muted)]">{helperText}</span>
+          <span id={descId} className="text-xs font-light text-[var(--text-secondary)]">
+            {helperText}
+          </span>
         ) : null}
       </span>
     </label>

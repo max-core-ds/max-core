@@ -26,6 +26,7 @@
 - **List Item master colors** (React deviates deliberately): hover support text `text/on-accent-muted` (1.1:1 on `accent/subtle`); Pressed label `text/primary` (2.3:1 on `accent/active`); Active+Collapsed icon `text/primary` (expanded Active uses `text/on-accent`); Disabled support text `text/on-accent-muted`.
 - **Dark accent ramp** too light for white `text/on-accent` (see Remaining work → contrast).
 - **Buttons page** (full list in `docs/audit/buttons.md`): unify focus on `.Focus-ring` + a Focused BOOLEAN (Button/Split use ad-hoc `Focus` rects in `border/accent` 1px INSIDE; Button/FAB/Link use State=Focused); bind the `.Focus-ring` master stroke to `/thick` (it's 1px unbound, the description says 2px); Icon Only disabled = opacity only (drop the `bg/subtle` swap and the second icon dim); Icon Only Secondary stroke → `border/accent`; FAB: add Hover, Pressed/Disabled → state layer and opacity, item label `Palette/neutral/500` → `text/secondary`; Link disabled keeps the tone colour; Split L Icon button height is bound to the stale `Atoms/Buttons/IconOnly/LG/Height`; Split doc focus text is stale.
+- **Selection Controls page** (full list in `docs/audit/selection-controls.md`): solid unchecked Hover/Pressed fills (shipped as-is by decision; Pressed and Error Hover are darker than checked); Checkbox has two `.Focus-ring`s (keep one around the box, at 2px); Radio and Switch have no Disabled; Checkbox Disabled swaps its stroke; Checkbox Success unchecked stroke `/default` → `/border`; Checkbox M icon bound to an orphan `---` token; label type SM (Checkbox/Radio) vs MD (Switch); React top-aligns the control.
 
 ---
 
@@ -171,7 +172,8 @@ Reuse these before writing inline classes — they keep Tailwind literals in one
 | Page | Components | Status |
 |------|-----------|--------|
 | Buttons | Button, IconOnlyButton, SplitButton, Fab, LinkButton | ✅ 2026-10-24 — [audit](docs/audit/buttons.md) |
-| Selection Controls | Checkbox, Radio, Switch | ⏳ next |
+| Selection Controls | Checkbox, Radio, Switch | ✅ 2026-10-24 — [audit](docs/audit/selection-controls.md) |
+| Segmented controls | SegmentedControl | ⏳ next |
 
 _Rows are added as each page is audited (order in `PLAN.md → Phase 4.5`)._
 
