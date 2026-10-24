@@ -3,6 +3,7 @@
 import { Slider } from '@base-ui/react/slider';
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
+import { focusRingWithin } from '../../utils/focus-ring.js';
 import { progressFill, progressTrack } from '../../utils/progress.js';
 import { tooltipArrow, tooltipBubble } from '../../utils/tooltip-surface.js';
 import { Knob } from '../Knob/Knob.js';
@@ -57,7 +58,7 @@ export function Range({
               // biome-ignore lint/suspicious/noArrayIndexKey: thumbs are a fixed, ordered set
               key={i}
               index={i}
-              className="relative flex rounded-[var(--radius-full)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--border-focus)]"
+              className={cn('relative flex rounded-[var(--radius-full)]', focusRingWithin)}
             >
               <Knob />
               {showTooltip ? (
