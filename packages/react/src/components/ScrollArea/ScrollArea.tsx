@@ -22,6 +22,12 @@ import { ScrollBar } from '../ScrollBar/ScrollBar.js';
 
 /** Shortest the thumb is allowed to get, so it stays grabbable. Matches the atom's 24px. */
 const MIN_THUMB = 24;
+/** The rail's padding (-- Atoms/Scroll Bar/Padding, 4px) at each end of the lane. */
+const RAIL_PADDING = 4;
+
+/** Thumb length for a lane of `track` px showing `client` of `scrollSize`. */
+const thumbLength = (track: number, client: number, scrollSize: number) =>
+  Math.max(MIN_THUMB, (client / scrollSize) * track);
 
 export interface ScrollAreaProps extends Omit<ComponentPropsWithoutRef<'div'>, 'children'> {
   children: ReactNode;
@@ -60,8 +66,10 @@ export function ScrollArea({
       setThumb((t) => (t.visible ? { ...t, visible: false } : t));
       return;
     }
-    const size = Math.max(MIN_THUMB, (client / scrollSize) * client);
-    const maxOffset = client - size;
+    // The rail spans the viewport; the thumb travels the lane inside its padding.
+    const track = client - 2 * RAIL_PADDING;
+    const size = thumbLength(track, client, scrollSize);
+    const maxOffset = Math.max(0, track - size);
     const offset = maxOffset * (pos / (scrollSize - client));
     setThumb({ size, offset, visible: true });
   }, [axis]);
@@ -88,8 +96,8 @@ export function ScrollArea({
       rail.setPointerCapture(event.pointerId);
       const start = horizontal ? event.clientX : event.clientY;
       const { pos: startPos, size: scrollSize, client } = axis(el);
-      const size = Math.max(MIN_THUMB, (client / scrollSize) * client);
-      const usable = client - size;
+      const track = client - 2 * RAIL_PADDING;
+      const usable = track - thumbLength(track, client, scrollSize);
 
       const onMove = (e: PointerEvent) => {
         if (usable <= 0) return;
@@ -102,9 +110,11 @@ export function ScrollArea({
         rail.releasePointerCapture(e.pointerId);
         rail.removeEventListener('pointermove', onMove);
         rail.removeEventListener('pointerup', onUp);
+        rail.removeEventListener('pointercancel', onUp);
       };
       rail.addEventListener('pointermove', onMove);
       rail.addEventListener('pointerup', onUp);
+      rail.addEventListener('pointercancel', onUp);
     },
     [axis, horizontal],
   );

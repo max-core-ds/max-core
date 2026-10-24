@@ -15,24 +15,25 @@ const trackClass = 'inline-flex shrink-0 p-[var(--spacing-04)]';
 const thumbClass =
   'block w-[var(--spacing-04)] h-[var(--size-24)] rounded-[var(--radius-full)] bg-[var(--accent-subtle)]';
 
-// Driven rail: 12px transparent track (thick on the cross axis), thumb centered
-// on the cross axis and positioned/sized along the scroll axis via inline style
-// from the parent. Vertical grows full height; horizontal grows full width.
-const railBaseClass = 'relative shrink-0';
-const railCrossClass = {
-  vertical: 'w-[calc(var(--spacing-04)*3)]',
-  horizontal: 'h-[calc(var(--spacing-04)*3)]',
+// Driven rail: the same 4px padding on every side as the standalone track (so
+// the cross axis is 4 + 4 + 4 = 12px and the thumb stops 4px short of either
+// end), around an inner lane the thumb is positioned in via inline style from
+// the parent. Vertical grows full height; horizontal grows full width.
+const railClass = 'relative shrink-0 p-[var(--spacing-04)]';
+const laneClass = {
+  vertical: 'relative block h-full w-[var(--spacing-04)]',
+  horizontal: 'relative block w-full h-[var(--spacing-04)]',
 } as const;
 const railThumbBaseClass = 'absolute rounded-[var(--radius-full)] bg-[var(--accent-subtle)]';
 const railThumbCrossClass = {
-  vertical: 'left-1/2 top-0 w-[var(--spacing-04)]',
-  horizontal: 'top-1/2 left-0 h-[var(--spacing-04)]',
+  vertical: 'inset-x-0 top-0',
+  horizontal: 'inset-y-0 left-0',
 } as const;
 
 export interface ScrollBarProps extends ComponentPropsWithoutRef<'div'> {
   /** Thumb length in px along the scroll axis. Omit for the standalone 24px pill. */
   thumbSize?: number;
-  /** Thumb offset in px from the track start. Only used with `thumbSize`. */
+  /** Thumb offset in px from the start of the lane (inside the 4px padding). Only used with `thumbSize`. */
   thumbOffset?: number;
   /** Rail axis when driven. Defaults to vertical. */
   orientation?: 'vertical' | 'horizontal';
@@ -49,20 +50,17 @@ export function ScrollBar({
   if (thumbSize != null) {
     const horizontal = orientation === 'horizontal';
     return (
-      <div
-        aria-hidden
-        className={cn(railBaseClass, railCrossClass[orientation], className)}
-        style={style}
-        {...rest}
-      >
-        <span
-          className={cn(railThumbBaseClass, railThumbCrossClass[orientation])}
-          style={
-            horizontal
-              ? { width: thumbSize, transform: `translateY(-50%) translateX(${thumbOffset}px)` }
-              : { height: thumbSize, transform: `translateX(-50%) translateY(${thumbOffset}px)` }
-          }
-        />
+      <div aria-hidden className={cn(railClass, className)} style={style} {...rest}>
+        <span className={laneClass[orientation]}>
+          <span
+            className={cn(railThumbBaseClass, railThumbCrossClass[orientation])}
+            style={
+              horizontal
+                ? { width: thumbSize, transform: `translateX(${thumbOffset}px)` }
+                : { height: thumbSize, transform: `translateY(${thumbOffset}px)` }
+            }
+          />
+        </span>
       </div>
     );
   }
