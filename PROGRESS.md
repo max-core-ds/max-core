@@ -226,6 +226,7 @@ _Rows are added as each page is audited (order in `PLAN.md → Phase 4.5`)._
 **Carry-overs to later pages:**
 - ~~**Item List page → Multiselect "list" version.**~~ Done on the Item List page (`mode="list"`), with the Select popup rows.
 - **Entity Item page:** the subtitle is weight 400; the master uses Body/SM/300.
+- **TimePicker popover trigger** still uses the legacy field (fixed 240 wide, `text-sm` label, shadow md, 8px offset). DateInput moved to the shared field model on the Date picker page; align TimePicker the same way (small follow-up, any time).
 
 ---
 
