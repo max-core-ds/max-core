@@ -33,7 +33,7 @@ export interface MultiselectOption {
 // -- Molecule/Input/Multiselect/Size */*.
 const chipsStyles = cva(
   [
-    'flex min-w-[240px] flex-wrap items-center gap-[var(--spacing-08)]',
+    'flex min-w-[240px] items-center gap-[var(--spacing-08)]',
     'rounded-[var(--radius-md)] px-[calc(var(--spacing-12)-var(--border-weight-thin))]',
     fieldBorder,
     'has-[[data-popup-open]]:border-[var(--border-accent)]',
@@ -51,6 +51,10 @@ const chipsStyles = cva(
     defaultVariants: { size: 'm' },
   },
 );
+
+// Only the chips (+ the typeahead input) wrap; the chevron stays pinned at the
+// right edge, centred on the field.
+const chipRowStyles = 'flex min-w-0 flex-1 flex-wrap items-center gap-[var(--spacing-08)]';
 
 // Chip = the master's Badge (Size S, Variant Default, Tone Default) per
 // -- Molecule/Input/Multiselect/Badge/*: Padding X 10 / Y 6, Radius sm, thin
@@ -176,29 +180,33 @@ export function Multiselect({
             )}
             {...rest}
           >
-            <Combobox.Value>
-              {(chosen: MultiselectOption[]) =>
-                chosen.length ? (
-                  chosen.map((item) => (
-                    <span key={item.value} className={cn(chipStyles, 'pr-[var(--spacing-10)]')}>
-                      {item.label}
+            <span className={chipRowStyles}>
+              <Combobox.Value>
+                {(chosen: MultiselectOption[]) =>
+                  chosen.length ? (
+                    chosen.map((item) => (
+                      <span key={item.value} className={cn(chipStyles, 'pr-[var(--spacing-10)]')}>
+                        {item.label}
+                      </span>
+                    ))
+                  ) : (
+                    <span
+                      className={
+                        isInvalid
+                          ? 'text-[var(--status-danger-default)]'
+                          : 'text-[var(--text-muted)]'
+                      }
+                    >
+                      {placeholder}
                     </span>
-                  ))
-                ) : (
-                  <span
-                    className={
-                      isInvalid ? 'text-[var(--status-danger-default)]' : 'text-[var(--text-muted)]'
-                    }
-                  >
-                    {placeholder}
-                  </span>
-                )
-              }
-            </Combobox.Value>
+                  )
+                }
+              </Combobox.Value>
+            </span>
             <span
               aria-hidden="true"
               className={cn(
-                'ml-auto inline-flex shrink-0 text-[var(--text-muted)] in-data-[popup-open]:rotate-180',
+                'inline-flex shrink-0 text-[var(--text-muted)] in-data-[popup-open]:rotate-180',
                 chevronSize[size ?? 'm'],
               )}
             >
@@ -207,35 +215,37 @@ export function Multiselect({
           </Combobox.Trigger>
         ) : (
           <Combobox.Chips ref={chipsRef} className={cn(chipsStyles({ size }), fill)} {...rest}>
-            <Combobox.Value>
-              {(selected: MultiselectOption[]) =>
-                selected.map((item) => (
-                  <Combobox.Chip key={item.value} className={chipStyles}>
-                    {item.label}
-                    <Combobox.ChipRemove
-                      className="inline-flex text-[var(--text-accent)] opacity-[var(--opacity-dim)] hover:opacity-100"
-                      aria-label={`Remove ${item.label}`}
-                    >
-                      <XIcon />
-                    </Combobox.ChipRemove>
-                  </Combobox.Chip>
-                ))
-              }
-            </Combobox.Value>
-            <Combobox.Input
-              placeholder={placeholder}
-              className={cn(
-                'min-w-16 flex-1 bg-transparent text-[var(--text-primary)] outline-none disabled:cursor-not-allowed',
-                isInvalid
-                  ? 'placeholder:text-[var(--status-danger-default)]'
-                  : 'placeholder:text-[var(--text-muted)]',
-              )}
-            />
+            <span className={chipRowStyles}>
+              <Combobox.Value>
+                {(selected: MultiselectOption[]) =>
+                  selected.map((item) => (
+                    <Combobox.Chip key={item.value} className={chipStyles}>
+                      {item.label}
+                      <Combobox.ChipRemove
+                        className="inline-flex text-[var(--text-accent)] opacity-[var(--opacity-dim)] hover:opacity-100"
+                        aria-label={`Remove ${item.label}`}
+                      >
+                        <XIcon />
+                      </Combobox.ChipRemove>
+                    </Combobox.Chip>
+                  ))
+                }
+              </Combobox.Value>
+              <Combobox.Input
+                placeholder={placeholder}
+                className={cn(
+                  'min-w-16 flex-1 bg-transparent text-[var(--text-primary)] outline-none disabled:cursor-not-allowed',
+                  isInvalid
+                    ? 'placeholder:text-[var(--status-danger-default)]'
+                    : 'placeholder:text-[var(--text-muted)]',
+                )}
+              />
+            </span>
             {/* Chevron (Figma: Show Trailing / Right Icon) — opens the list; flips while open. */}
             <Combobox.Trigger
               aria-label="Show options"
               className={cn(
-                'ml-auto inline-flex shrink-0 text-[var(--text-muted)] data-[popup-open]:rotate-180',
+                'inline-flex shrink-0 text-[var(--text-muted)] data-[popup-open]:rotate-180',
                 chevronSize[size ?? 'm'],
               )}
             >
