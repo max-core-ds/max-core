@@ -22,6 +22,14 @@ Legend: ✅ match · ❌ finding · n/a. Class: **[code]** · **[designer]** · 
 | 9 | Doc page | Stale colours; "Sellect all". |
 | 10 | Story | ✅ Default (all features, filtering + select all), ItemsOnly. |
 
+### Follow-up: requested deviations (user, 2026-10-24)
+Even though ItemList matched the master, three usability fixes were requested:
+- **Row gap:** rows are 4px apart (`spacing-04`); the master stacks them flush. `-- Molecule/Item List/Gap` (8) is unbound in Figma; bind it if the designer wants a gap there.
+- **Side inset:** the scroll content (and the Select all row, to keep the checkbox aligned with the row icons) sits 4px in from the container sides, so selected/hover fills no longer touch the left border.
+- **Clipping:** the bottom Container Padding Y moved inside the scroll content, so rows scroll right down to the border instead of being cut on a hard line 12px above it. At the end of the scroll the 12px padding still shows. While more rows sit below, the viewport fades its last 24px (`mask-image`). `ScrollArea` gained `viewportClassName` + `data-overflow-start` / `data-overflow-end` on the viewport to drive it.
+
+These apply to the Select / Multiselect popups too (they render ItemList). Verified: rows 218 wide at x+5 (border + 4), the fade at the top of the scroll, gone at the end with the 12px padding visible.
+
 ## Select / Multiselect popups (carry-over)
 
 The masters' `State=Active` open an **Item List** 8px below the field (`-- Molecule/Input/Global/General/Items Gap`), as wide as it, **no shadow**:
@@ -41,6 +49,7 @@ The masters' `State=Active` open an **Item List** 8px below the field (`-- Molec
 **Contrast:** ListItem now enters the audit (28 components): its selected (`text/on-accent` on `accent/default`, dark 2.85) and pressed (`accent/active`, dark 1.91) rows fail in dark. These are the existing dark accent-ramp findings (Figma-side), newly detected rather than new. **17 / 28 components, 27 findings.**
 
 ## For the designer (→ PROGRESS.md)
+- React deviates on purpose: 4px row gap, 4px side inset, bottom padding inside the scroll + fade while more rows remain. Consider adopting these in the master (bind the unused `Item List/Gap`).
 - "Sellect all" typo in the master's Select all row.
 - `-- Molecule/Item List/Gap` (8) is bound nowhere; `Divider Stroke` isn't bound on the Divider instance.
 - Select / Multiselect Active: the floating Item List has no shadow (React follows). Decide whether a floating list should lift.

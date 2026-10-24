@@ -35,6 +35,12 @@ export interface ScrollAreaProps extends Omit<ComponentPropsWithoutRef<'div'>, '
   orientation?: 'vertical' | 'horizontal';
   /** Gap in px between the content and the external rail. Defaults to 8. */
   railGap?: number;
+  /**
+   * Classes for the scrolling viewport. It carries `data-overflow-start` /
+   * `data-overflow-end` while content is hidden before / after it (e.g. for a
+   * fade mask).
+   */
+  viewportClassName?: string;
 }
 
 export function ScrollArea({
@@ -42,12 +48,14 @@ export function ScrollArea({
   className,
   orientation = 'vertical',
   railGap = 8,
+  viewportClassName,
   style,
   ...rest
 }: ScrollAreaProps) {
   const horizontal = orientation === 'horizontal';
   const viewportRef = useRef<HTMLDivElement>(null);
   const [thumb, setThumb] = useState({ size: 0, offset: 0, visible: false });
+  const [overflow, setOverflow] = useState({ start: false, end: false });
 
   // Read scroll metrics for the active axis.
   const axis = useCallback(
@@ -62,6 +70,10 @@ export function ScrollArea({
     const el = viewportRef.current;
     if (!el) return;
     const { pos, size: scrollSize, client } = axis(el);
+    // 1px slack for fractional scroll positions.
+    const start = pos > 1;
+    const end = pos < scrollSize - client - 1;
+    setOverflow((o) => (o.start === start && o.end === end ? o : { start, end }));
     if (scrollSize <= client) {
       setThumb((t) => (t.visible ? { ...t, visible: false } : t));
       return;
@@ -128,9 +140,12 @@ export function ScrollArea({
       <div
         ref={viewportRef}
         onScroll={measure}
+        data-overflow-start={overflow.start || undefined}
+        data-overflow-end={overflow.end || undefined}
         className={cn(
           'min-h-0 min-w-0 flex-1 scrollbar-none',
           horizontal ? 'overflow-x-auto' : 'overflow-y-auto',
+          viewportClassName,
         )}
       >
         {children}

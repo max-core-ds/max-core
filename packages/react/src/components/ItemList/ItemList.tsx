@@ -12,20 +12,32 @@ import { SearchBar, type SearchBarProps } from '../SearchBar/SearchBar.js';
 // Divider, then the content slot (List Item rows) with an optional ScrollBar
 // rail. Container Padding Y/Radius/Border Weight/Min Width and Search Padding X
 // match -- Molecule/Item List/*; the surface is bg/surface + border/default.
-// Rows stack flush (the master's item spacing is 0), and the rail sits flush
-// at the right edge like the master's absolute ScrollBar.
+// The rail sits flush at the right edge like the master's absolute ScrollBar.
+//
+// Deliberate deviations from the master (user request, 2026-10-24): rows are
+// 4px apart (the master stacks them flush) and inset 4px from the sides, and
+// the bottom Container Padding Y lives inside the scroll content, so rows
+// scroll down to the border instead of being cut 12px above it; a fade marks
+// more rows below.
 const containerStyles = cn(
   'flex min-w-[var(--size-120)] flex-col overflow-hidden',
   'rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--bg-surface)]',
-  'py-[var(--spacing-12)]',
+  'pt-[var(--spacing-12)]',
 );
+
+const contentStyles =
+  'flex flex-col gap-[var(--spacing-04)] px-[var(--spacing-04)] pb-[var(--spacing-12)]';
+
+// Fade the last 24px while more rows sit below the fold.
+const fadeEnd =
+  'data-[overflow-end]:[mask-image:linear-gradient(to_bottom,black_calc(100%-var(--spacing-24)),transparent)]';
 
 // The "Select all" row is a List Item in Figma with a size-S Checkbox in the
 // leading slot. It's a <label> here (not a ListItem <button>) so the checkbox
 // isn't nested inside another interactive element; the padding, gap, radius
-// and hover fill mirror ListItem.
+// and hover fill mirror ListItem; it shares the rows' 4px side inset.
 const selectAllStyles = cn(
-  'flex w-full cursor-pointer items-center gap-[var(--spacing-08)] rounded-[var(--radius-l)]',
+  'mx-[var(--spacing-04)] flex cursor-pointer items-center gap-[var(--spacing-08)] rounded-[var(--radius-l)]',
   'px-[var(--spacing-12)] py-[var(--spacing-12)] text-xs font-bold text-[var(--text-primary)]',
   'transition-colors hover:bg-[var(--accent-subtle)]',
 );
@@ -76,11 +88,11 @@ export function ItemList({
       {selectAll ? <SelectAllRow {...selectAll} /> : null}
       {hasHeader && showDivider ? <Divider /> : null}
       {showScrollBar ? (
-        <ScrollArea railGap={0} className="min-h-0 flex-1">
-          <div className="flex flex-col">{children}</div>
+        <ScrollArea railGap={0} className="min-h-0 flex-1" viewportClassName={fadeEnd}>
+          <div className={contentStyles}>{children}</div>
         </ScrollArea>
       ) : (
-        <div className="scrollbar-none flex min-h-0 flex-1 flex-col overflow-y-auto">
+        <div className={cn('scrollbar-none min-h-0 flex-1 overflow-y-auto', contentStyles)}>
           {children}
         </div>
       )}
