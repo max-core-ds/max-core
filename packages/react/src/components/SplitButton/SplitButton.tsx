@@ -3,10 +3,11 @@
 import { Button as BaseButton } from '@base-ui/react/button';
 import { Menu } from '@base-ui/react/menu';
 import { type VariantProps, cva } from 'class-variance-authority';
-import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import { type ComponentPropsWithoutRef, type ReactNode, useRef } from 'react';
 import { cn } from '../../utils/cn.js';
 import { focusRing } from '../../utils/focus-ring.js';
 import { statusBg, statusOutline, statusText, statusToneCompounds } from '../../utils/tone.js';
+import { type DropdownItem, DropdownMenu } from '../Dropdown/Dropdown.js';
 
 // The container carries the variant/tone fill (mirroring Button); the two parts
 // inside are transparent and share it. Divider heights match
@@ -103,22 +104,8 @@ const dividerStyles = cva(['w-px shrink-0'], {
   defaultVariants: { variant: 'primary', size: 'm' },
 });
 
-const popupStyles =
-  'min-w-[var(--size-160)] rounded-[var(--radius-md)] border border-[var(--border-muted)] ' +
-  'bg-[var(--bg-surface)] p-[var(--spacing-04)] shadow-[var(--effect-shadow-down-md)] ' +
-  'text-[var(--text-primary)] outline-none';
-
-const itemStyles =
-  'flex cursor-default items-center gap-[var(--spacing-08)] rounded-[var(--radius-sm)] ' +
-  'px-[var(--spacing-08)] py-[var(--spacing-06)] text-sm outline-none ' +
-  'data-[highlighted]:bg-[var(--bg-subtle)] [&_svg]:size-[var(--size-20)]';
-
-export interface SplitMenuItem {
-  label: ReactNode;
-  onClick?: () => void;
-  icon?: ReactNode;
-  disabled?: boolean;
-}
+/** A SplitButton menu row — the same shape as a Dropdown item. */
+export type SplitMenuItem = DropdownItem;
 
 export interface SplitButtonProps
   extends Omit<ComponentPropsWithoutRef<'div'>, 'onClick'>,
@@ -149,8 +136,10 @@ export function SplitButton({
   disabled,
   ...rest
 }: SplitButtonProps) {
+  // The menu lines up with the whole split button (end-aligned), not just the chevron.
+  const containerRef = useRef<HTMLDivElement>(null);
   return (
-    <div className={cn(containerStyles({ variant, tone }), className)} {...rest}>
+    <div ref={containerRef} className={cn(containerStyles({ variant, tone }), className)} {...rest}>
       <BaseButton
         className={cn(partStyles({ part: 'main', size }))}
         onClick={onClick}
@@ -169,24 +158,7 @@ export function SplitButton({
         >
           <ChevronDown />
         </Menu.Trigger>
-        <Menu.Portal>
-          <Menu.Positioner sideOffset={4} align="end">
-            <Menu.Popup className={popupStyles}>
-              {items.map((item, i) => (
-                <Menu.Item
-                  // biome-ignore lint/suspicious/noArrayIndexKey: menu is a static, ordered list
-                  key={i}
-                  className={itemStyles}
-                  disabled={item.disabled}
-                  onClick={item.onClick}
-                >
-                  {item.icon}
-                  {item.label}
-                </Menu.Item>
-              ))}
-            </Menu.Popup>
-          </Menu.Positioner>
-        </Menu.Portal>
+        <DropdownMenu items={items} align="end" anchor={containerRef} />
       </Menu.Root>
     </div>
   );

@@ -252,6 +252,11 @@ const SPECS: ComponentSpec[] = [
     name: 'Dropdown',
     source: 'components/Dropdown/Dropdown.tsx',
     prefixes: ['Molecule/Dropdown'],
+    exempt: [
+      // Gap (trigger ↔ list) is the positioner's numeric sideOffset; Item List
+      // Padding (left-only in the master) isn't applied — the list matches the trigger width.
+      '--spacing-04',
+    ],
   },
   {
     name: 'Tabs',

@@ -1,20 +1,22 @@
 'use client';
 
 import { Menu } from '@base-ui/react/menu';
-import type { ReactElement, ReactNode } from 'react';
+import type { ReactElement, ReactNode, RefObject } from 'react';
 import { cn } from '../../utils/cn.js';
+import { ItemList } from '../ItemList/ItemList.js';
+import { listItemOption } from '../ListItem/ListItem.js';
 
-// Menu popup styled like an Item List. Gap + Item List Padding both = 4.
-const popupStyles =
-  'flex min-w-[var(--size-120)] flex-col gap-[var(--spacing-04)] rounded-[var(--radius-md)] ' +
-  'border border-[var(--border-muted)] bg-[var(--bg-surface)] p-[var(--spacing-04)] ' +
-  'text-[var(--text-primary)] shadow-[var(--effect-shadow-down-md)] outline-none';
+// Figma Dropdown master (2380:9128): a Trigger (instance swap, Entity Card by
+// default) with an Item List 4px below it (-- Molecule/Dropdown/Gap), shown
+// while Active. The list is the Item List master (no search / Select all /
+// divider, ScrollBar on) holding List Item rows with a leading icon, so the
+// popup renders ItemList + the List Item row look (`listItemOption`); like the
+// Select popup it has no shadow. The list is at least as wide as the trigger:
+// the master's left-only Item List Padding (4) reads as a slip, not an offset.
+const listStyles =
+  'min-w-[var(--anchor-width)] max-h-[var(--available-height)] text-[var(--text-primary)]';
 
-const itemStyles =
-  'flex cursor-default items-center gap-[var(--spacing-08)] rounded-[var(--radius-sm)] ' +
-  'px-[var(--spacing-08)] py-[var(--spacing-06)] text-sm outline-none ' +
-  'data-[highlighted]:bg-[var(--bg-subtle)] data-[disabled]:opacity-[var(--opacity-disabled)] ' +
-  '[&_svg]:size-[var(--size-20)]';
+const itemStyles = cn(listItemOption, '[&_svg]:size-[var(--size-20)]');
 
 export interface DropdownItem {
   label: ReactNode;
@@ -23,21 +25,21 @@ export interface DropdownItem {
   disabled?: boolean;
 }
 
-export interface DropdownProps {
-  /** The element that opens the menu. */
-  trigger: ReactElement;
+export interface DropdownMenuProps {
   items: DropdownItem[];
   align?: 'start' | 'center' | 'end';
+  /** Element the list lines up with (and is at least as wide as). Defaults to the trigger. */
+  anchor?: RefObject<Element | null>;
   className?: string;
 }
 
-export function Dropdown({ trigger, items, align = 'start', className }: DropdownProps) {
+/** The Dropdown popup, shared with SplitButton's menu. Render inside a `Menu.Root`. */
+export function DropdownMenu({ items, align = 'start', anchor, className }: DropdownMenuProps) {
   return (
-    <Menu.Root>
-      <Menu.Trigger render={trigger} />
-      <Menu.Portal>
-        <Menu.Positioner sideOffset={4} align={align}>
-          <Menu.Popup className={cn(popupStyles, className)}>
+    <Menu.Portal>
+      <Menu.Positioner sideOffset={4} align={align} anchor={anchor}>
+        <Menu.Popup className="outline-none">
+          <ItemList className={cn(listStyles, className)}>
             {items.map((item, i) => (
               <Menu.Item
                 // biome-ignore lint/suspicious/noArrayIndexKey: menu is a static, ordered list
@@ -50,9 +52,32 @@ export function Dropdown({ trigger, items, align = 'start', className }: Dropdow
                 {item.label}
               </Menu.Item>
             ))}
-          </Menu.Popup>
-        </Menu.Positioner>
-      </Menu.Portal>
+          </ItemList>
+        </Menu.Popup>
+      </Menu.Positioner>
+    </Menu.Portal>
+  );
+}
+
+export interface DropdownProps extends Omit<DropdownMenuProps, 'anchor'> {
+  /** The element that opens the menu (the master's Trigger swap). */
+  trigger: ReactElement;
+  /** Controlled open state (the master's Active). */
+  open?: boolean;
+  /** Initial open state when uncontrolled. */
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
+export function Dropdown({ trigger, open, defaultOpen, onOpenChange, ...menu }: DropdownProps) {
+  return (
+    <Menu.Root
+      open={open}
+      defaultOpen={defaultOpen}
+      onOpenChange={onOpenChange ? (next) => onOpenChange(next) : undefined}
+    >
+      <Menu.Trigger render={trigger} />
+      <DropdownMenu {...menu} />
     </Menu.Root>
   );
 }
