@@ -2,18 +2,10 @@
 
 import { Field } from '@base-ui/react/field';
 import { Popover } from '@base-ui/react/popover';
-import {
-  type CSSProperties,
-  type ReactNode,
-  useCallback,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-} from 'react';
+import { type ReactNode, useCallback, useEffect, useId, useRef, useState } from 'react';
 import { cn } from '../../utils/cn.js';
 import { fieldSurface } from '../../utils/field.js';
-import { focusRing } from '../../utils/focus-ring.js';
+import { focusBorder, focusRing } from '../../utils/focus-ring.js';
 import { useControllableState } from '../../utils/use-controllable-state.js';
 import {
   HOURS_12,
@@ -70,18 +62,23 @@ export interface TimePickerProps {
 const WHEEL_OFFSETS = [-2, -1, 0, 1, 2] as const;
 const WHEEL_STEP_THRESHOLD = 40;
 
-// Row treatment by distance from the centre (selected) row — centre sits on the
-// accent bar (white/bold), neighbours fade.
+// Row treatment by distance from the centre (selected) row, per the master: the
+// centre is Body/MD/700 in accent/default on the accent/subtle bar; ±1 rows are
+// Body/SM/300 text/secondary @ opacity/dim; ±2 rows Caption/300 @ opacity/disabled.
+// Row heights are the text line heights (16 / 20 / 24), stacked with Items Gap
+// (16). The AM/PM column uses the same ramp — Figma binds its unselected period
+// to accent/subtle (~1.2:1, invisible), so it follows the ±1 neighbours instead.
 const rowByDistance = [
-  'font-bold text-lg text-[var(--text-on-accent)]',
-  'text-[0.9375rem] text-[var(--text-secondary)] opacity-[var(--opacity-dim)]',
-  'text-sm text-[var(--text-secondary)] opacity-[var(--opacity-disabled)]',
+  'h-[var(--size-24)] text-base font-bold text-[var(--accent-default)]',
+  'h-[var(--size-20)] text-sm font-light text-[var(--text-secondary)] opacity-[var(--opacity-dim)]',
+  'h-[var(--size-16)] text-xs font-light text-[var(--text-secondary)] opacity-[var(--opacity-disabled)]',
 ];
+const spacerByDistance = ['h-[var(--size-24)]', 'h-[var(--size-20)]', 'h-[var(--size-16)]'];
 
 // -- Atoms/Time Picker component tokens (referenced via the semantics they alias):
 // Radius = radius.l, Border Weight = none, Container Padding X/Y = spacing 24/16,
-// Gap = spacing.16. The accent bar is full-bleed via a negative inset matching
-// Container Padding X.
+// Gap = spacing.16, Items Gap = spacing.16. The selector bar is full-bleed via a
+// negative inset matching Container Padding X.
 const surfaceStyles =
   'rounded-[var(--radius-l)] bg-[var(--bg-surface)] px-[var(--spacing-24)] py-[var(--spacing-16)]';
 
@@ -185,9 +182,11 @@ function WheelColumn<T>({
       aria-disabled={disabled || undefined}
       onKeyDown={handleKeyDown}
       className={cn(
-        'relative z-[1] flex w-[var(--size-64)] flex-col outline-none',
-        'focus-visible:rounded-[var(--radius-md)] focus-visible:outline-2',
-        'focus-visible:outline-[var(--border-focus)] focus-visible:[outline-offset:-2px]',
+        // Columns hug their values like the master; min 2ch keeps a 12h hour
+        // column from narrowing when every visible hour is one digit.
+        'relative z-[1] flex min-w-[2ch] flex-col items-center gap-[var(--spacing-16)]',
+        'rounded-[var(--radius-sm)]',
+        focusRing,
       )}
     >
       {WHEEL_OFFSETS.map((offset) => {
@@ -203,7 +202,7 @@ function WheelColumn<T>({
         }
         const distance = Math.abs(offset);
         if (value === undefined) {
-          return <span key={offset} aria-hidden="true" className="h-[var(--tp-row)]" />;
+          return <span key={offset} aria-hidden="true" className={spacerByDistance[distance]} />;
         }
         const isCentre = offset === 0;
         return (
@@ -216,7 +215,7 @@ function WheelColumn<T>({
             disabled={disabled || (isDisabled?.(value) ?? false)}
             onClick={() => onSelect(value)}
             className={cn(
-              'grid h-[var(--tp-row)] place-items-center bg-transparent tabular-nums outline-none',
+              'grid place-items-center bg-transparent tabular-nums outline-none',
               'disabled:cursor-not-allowed disabled:opacity-30',
               rowByDistance[distance],
             )}
@@ -250,14 +249,15 @@ function Wheel({ model, className }: { model: WheelModel; className?: string }) 
     <div
       data-time-wheel
       className={cn('relative flex justify-center gap-[var(--spacing-16)]', className)}
-      style={{ '--tp-row': '2.75rem' } as CSSProperties}
     >
-      {/* Full-bleed accent bar behind the centre row (bleeds past Container Padding X). */}
+      {/* Full-bleed selector bar behind the centre row (bleeds past Container
+          Padding X); it sits below the ±2 (16) and ±1 (20) rows and two Items Gaps. */}
       <span
         aria-hidden="true"
         className={cn(
-          'pointer-events-none absolute z-0 h-[var(--tp-row)] bg-[var(--accent-default)]',
-          'left-[calc(-1*var(--spacing-24))] right-[calc(-1*var(--spacing-24))] top-[calc(var(--tp-row)*2)]',
+          'pointer-events-none absolute z-0 h-[var(--size-24)] bg-[var(--accent-subtle)]',
+          'left-[calc(-1*var(--spacing-24))] right-[calc(-1*var(--spacing-24))]',
+          'top-[calc(var(--size-16)+var(--size-20)+2*var(--spacing-16))]',
         )}
       />
       <WheelColumn
@@ -434,7 +434,7 @@ export function TimePicker({
               'inline-flex w-full items-center gap-[var(--spacing-08)]',
               'rounded-[var(--radius-md)] px-[var(--spacing-12)] py-[var(--spacing-12)] text-sm',
               fieldSurface,
-              focusRing,
+              focusBorder,
               isInvalid && 'border-[var(--status-danger-default)]',
               '[&_svg]:size-[var(--size-20)] [&_svg]:text-[var(--text-muted)]',
             )}

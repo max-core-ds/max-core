@@ -70,6 +70,13 @@ const OVERRIDES: Record<string, Override> = {
   SegmentedControl: {
     extra: [{ state: 'inactive', fgVar: '--text-secondary', bgVar: '--bg-subtle' }],
   },
+  // The selected wheel row (accent/default) sits on the separate full-bleed
+  // accent/subtle selector bar. Fails dark AA (3.33); kept to match Figma by
+  // decision, on the designer list. Faded ±1/±2 rows are a deliberate distance
+  // fade (non-selected context), not asserted.
+  TimePicker: {
+    extra: [{ state: 'selected', fgVar: '--accent-default', bgVar: '--accent-subtle' }],
+  },
   Button: buttonFamily,
   IconOnlyButton: buttonFamily,
   SplitButton: buttonFamily,
