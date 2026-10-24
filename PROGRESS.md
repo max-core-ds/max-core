@@ -199,7 +199,7 @@ Reuse these before writing inline classes — they keep Tailwind literals in one
 | Spinner | Spinner | ✅ 2026-10-24 — [audit](docs/audit/spinner.md) |
 | Progress Bar | ProgressBar | ✅ 2026-10-24 — [audit](docs/audit/progress-bar.md) |
 | Status Dot | StatusDot | ✅ 2026-10-24 — [audit](docs/audit/status-dot.md) |
-| Avatar | Avatar, AvatarGroup | ⏳ next |
+| Avatar | Avatar | ⏳ next |
 
 _Rows are added as each page is audited (order in `PLAN.md → Phase 4.5`)._
 
