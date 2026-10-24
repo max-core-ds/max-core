@@ -84,3 +84,19 @@ Run them as separate commands (or echo each exit code): a chained `&& … | tail
   before hover shots.
 - Playwright: `~/.npm/_npx/*/node_modules/playwright`, `deviceScaleFactor: 2`,
   `&globals=theme:light|dark`. Screenshots go in the session scratchpad, not the repo.
+- **Base UI Select needs `items` on `Select.Root`**, or `Select.Value` shows the raw value (`ro`)
+  instead of the label once chosen.
+- **Hover vs open:** a field's `hover:` border beats `data-[popup-open]` unless the hover rule
+  excludes it (`fieldHover` has `not-data-[popup-open]`). Check the open state with the pointer
+  still over the trigger.
+- **Option rows can't nest controls:** a Select/Combobox item is `role=option`, so a real Checkbox
+  or Radio inside it is invalid. Use the visual-only `CheckboxMark` / `RadioMark` (they follow the
+  row's `data-selected` through `group/option`) with `listItemOption`.
+- **Search inside a Combobox popup:** pass `render: <Combobox.Input />` to the SearchBar (its
+  Base UI Input forwards `render`); the field itself becomes a `Combobox.Trigger`.
+- **Popups:** Base UI Select defaults to `alignItemWithTrigger` (list over the trigger); turn it
+  off. Size lists with `--anchor-width` / `--available-height`, and anchor Combobox positioners to
+  the field frame, not the inner input. In Playwright give the viewport enough height, or
+  `--available-height` clips the list and clicks hit the header instead of the rows.
+- **Figma "rendered" sizes can be hand resizes:** check `layoutSizingHorizontal` before copying a
+  width (the Search bar button was FIXED 72/74, not a token).
