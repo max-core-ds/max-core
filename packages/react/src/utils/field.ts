@@ -17,9 +17,10 @@ import { focusBorder } from './focus-ring.js';
 /** Border + text + placeholder + focus. Pair with a fill (`fieldFill`). */
 export const fieldBorder = `text-[var(--text-primary)] border border-[var(--border-default)] placeholder:text-[var(--text-muted)] transition-colors outline-none ${focusBorder} disabled:cursor-not-allowed has-[:disabled]:cursor-not-allowed`;
 
-/** Hover border — apply only while the field isn't invalid. */
+/** Hover border — apply only while the field isn't invalid. Skipped while focused,
+ * disabled or open (a trigger's `data-popup-open` keeps `border/accent`). */
 export const fieldHover =
-  'hover:not-focus-within:not-disabled:not-has-[:disabled]:border-[var(--border-hover)]';
+  'hover:not-focus-within:not-disabled:not-has-[:disabled]:not-data-[popup-open]:border-[var(--border-hover)]';
 
 /** Error look (Validation=Error): `status/danger/border` stroke, danger placeholder. */
 export const fieldInvalid =

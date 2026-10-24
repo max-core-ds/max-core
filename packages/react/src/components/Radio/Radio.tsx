@@ -134,3 +134,22 @@ export function Radio({
     </label>
   );
 }
+
+/**
+ * Visual-only Radio (Size S, Default) for option rows whose row is the
+ * interactive element (Select list). The dot shows on the row's `data-selected`;
+ * the row must carry `group/option` (see `listItemOption`).
+ */
+export function RadioMark() {
+  return (
+    <span
+      aria-hidden="true"
+      className={cn(
+        'inline-flex size-[var(--size-16)] shrink-0 items-center justify-center p-[var(--spacing-02)]',
+        'rounded-[var(--radius-full)] border border-[var(--border-default)] bg-[var(--bg-surface)] text-[var(--accent-default)]',
+      )}
+    >
+      <span className="hidden size-full rounded-[var(--radius-full)] bg-current group-data-[selected]/option:block" />
+    </span>
+  );
+}

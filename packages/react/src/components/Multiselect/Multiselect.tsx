@@ -3,7 +3,7 @@
 import { Combobox } from '@base-ui/react/combobox';
 import { Field } from '@base-ui/react/field';
 import { type VariantProps, cva } from 'class-variance-authority';
-import { type ReactNode, useRef } from 'react';
+import { type ReactNode, useRef, useState } from 'react';
 import { cn } from '../../utils/cn.js';
 import {
   type FieldVariant,
@@ -16,6 +16,10 @@ import {
   fieldLabel,
   fieldRoot,
 } from '../../utils/field.js';
+import { useControllableState } from '../../utils/use-controllable-state.js';
+import { CheckboxMark } from '../Checkbox/Checkbox.js';
+import { ItemList } from '../ItemList/ItemList.js';
+import { listItemOption } from '../ListItem/ListItem.js';
 
 export interface MultiselectOption {
   value: string;
@@ -76,6 +80,12 @@ const itemStyles =
   'rounded-[var(--radius-sm)] px-[var(--spacing-08)] py-[var(--spacing-06)] text-sm outline-none ' +
   'data-[highlighted]:bg-[var(--bg-subtle)] [&_svg]:size-[var(--size-20)]';
 
+// mode="list" (the master's State=Active): an Item List with Searchbar, Select
+// all, Divider and ScrollBar, 8px below the field (Items Gap), as wide as it, no
+// shadow. Rows are List Items with a leading Checkbox S.
+const listStyles =
+  'w-[var(--anchor-width)] max-h-[min(var(--available-height),calc(var(--size-40)*8+var(--spacing-12)*2))]';
+
 export interface MultiselectProps extends VariantProps<typeof chipsStyles> {
   items: MultiselectOption[];
   value?: MultiselectOption[];
@@ -88,6 +98,14 @@ export interface MultiselectProps extends VariantProps<typeof chipsStyles> {
   label?: ReactNode;
   helper?: ReactNode;
   errorMessage?: ReactNode;
+  /**
+   * `typeahead` (default): type in the field to filter a plain list. `list` (the
+   * Figma master): the field only shows the chips and opens an Item List with its
+   * own search, a Select all row and checkbox rows.
+   */
+  mode?: 'typeahead' | 'list';
+  /** Placeholder of the search field inside the list (`mode="list"`). */
+  searchPlaceholder?: string;
   /** Applied to the field wrapper (label + field + helper). */
   className?: string;
   'aria-label'?: string;
@@ -105,13 +123,34 @@ export function Multiselect({
   label,
   helper,
   errorMessage,
+  mode = 'typeahead',
+  searchPlaceholder = 'Search...',
   className,
   ...rest
 }: MultiselectProps) {
   const isInvalid = Boolean(errorMessage);
-  // Anchor the list to the whole field frame (not the inner text input) so it
-  // opens below the frame, as wide as it.
-  const frameRef = useRef<HTMLDivElement>(null);
+  const isList = mode === 'list';
+  const [selected, setSelected] = useControllableState(value, defaultValue, onValueChange, []);
+  // List mode filters itself so "Select all" can act on the visible rows.
+  const [query, setQuery] = useState('');
+  const needle = query.trim().toLowerCase();
+  const visible = needle ? items.filter((i) => i.label.toLowerCase().includes(needle)) : items;
+  const isSelected = (item: MultiselectOption) => selected.some((s) => s.value === item.value);
+  const selectedVisible = visible.filter(isSelected);
+  const allVisibleSelected = visible.length > 0 && selectedVisible.length === visible.length;
+  const toggleVisible = (checked: boolean) =>
+    setSelected(
+      checked
+        ? [...selected, ...visible.filter((i) => !isSelected(i))]
+        : selected.filter((s) => !visible.some((i) => i.value === s.value)),
+    );
+  const fill = isInvalid
+    ? ['border-[var(--status-danger-border)]', fieldInvalidFill[variant]]
+    : [fieldFill[variant], fieldHover];
+  // Anchor the list to the whole field frame (the chips row, or the trigger in
+  // list mode), not the inner text input, so it opens below it, as wide as it.
+  const chipsRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   return (
     <Field.Root className={cn(fieldRoot, className)} invalid={isInvalid} disabled={disabled}>
       {label ? <Field.Label className={fieldLabel(isInvalid)}>{label}</Field.Label> : null}
@@ -119,70 +158,134 @@ export function Multiselect({
         multiple
         disabled={disabled}
         items={items}
-        value={value}
-        defaultValue={defaultValue}
-        onValueChange={(v) => onValueChange?.(v as MultiselectOption[])}
+        value={selected}
+        onValueChange={(v) => setSelected(v as MultiselectOption[])}
+        {...(isList
+          ? { inputValue: query, onInputValueChange: setQuery, filteredItems: visible }
+          : {})}
       >
-        <Combobox.Chips
-          ref={frameRef}
-          className={cn(
-            chipsStyles({ size }),
-            isInvalid
-              ? ['border-[var(--status-danger-border)]', fieldInvalidFill[variant]]
-              : [fieldFill[variant], fieldHover],
-          )}
-          {...rest}
-        >
-          <Combobox.Value>
-            {(selected: MultiselectOption[]) =>
-              selected.map((item) => (
-                <Combobox.Chip key={item.value} className={chipStyles}>
-                  {item.label}
-                  <Combobox.ChipRemove
-                    className="inline-flex text-[var(--text-accent)] opacity-[var(--opacity-dim)] hover:opacity-100"
-                    aria-label={`Remove ${item.label}`}
-                  >
-                    <XIcon />
-                  </Combobox.ChipRemove>
-                </Combobox.Chip>
-              ))
-            }
-          </Combobox.Value>
-          <Combobox.Input
-            placeholder={placeholder}
-            className={cn(
-              'min-w-16 flex-1 bg-transparent text-[var(--text-primary)] outline-none disabled:cursor-not-allowed',
-              isInvalid
-                ? 'placeholder:text-[var(--status-danger-default)]'
-                : 'placeholder:text-[var(--text-muted)]',
-            )}
-          />
-          {/* Chevron (Figma: Show Trailing / Right Icon) — opens the list; flips while open. */}
+        {isList ? (
+          // The field is the trigger: chips (no remove ×, the checkboxes deselect),
+          // the placeholder when empty, and the chevron.
           <Combobox.Trigger
-            aria-label="Show options"
+            ref={triggerRef}
             className={cn(
-              'ml-auto inline-flex shrink-0 text-[var(--text-muted)] data-[popup-open]:rotate-180',
-              chevronSize[size ?? 'm'],
+              chipsStyles({ size }),
+              'text-left data-[popup-open]:border-[var(--border-accent)]',
+              fill,
             )}
+            {...rest}
           >
-            <ChevronDown />
+            <Combobox.Value>
+              {(chosen: MultiselectOption[]) =>
+                chosen.length ? (
+                  chosen.map((item) => (
+                    <span key={item.value} className={cn(chipStyles, 'pr-[var(--spacing-10)]')}>
+                      {item.label}
+                    </span>
+                  ))
+                ) : (
+                  <span
+                    className={
+                      isInvalid ? 'text-[var(--status-danger-default)]' : 'text-[var(--text-muted)]'
+                    }
+                  >
+                    {placeholder}
+                  </span>
+                )
+              }
+            </Combobox.Value>
+            <span
+              aria-hidden="true"
+              className={cn(
+                'ml-auto inline-flex shrink-0 text-[var(--text-muted)] in-data-[popup-open]:rotate-180',
+                chevronSize[size ?? 'm'],
+              )}
+            >
+              <ChevronDown />
+            </span>
           </Combobox.Trigger>
-        </Combobox.Chips>
-        <Combobox.Portal>
-          <Combobox.Positioner anchor={frameRef} sideOffset={4}>
-            <Combobox.Popup className={popupStyles}>
-              <Combobox.List>
-                {(item: MultiselectOption) => (
-                  <Combobox.Item key={item.value} value={item} className={itemStyles}>
+        ) : (
+          <Combobox.Chips ref={chipsRef} className={cn(chipsStyles({ size }), fill)} {...rest}>
+            <Combobox.Value>
+              {(selected: MultiselectOption[]) =>
+                selected.map((item) => (
+                  <Combobox.Chip key={item.value} className={chipStyles}>
                     {item.label}
-                    <Combobox.ItemIndicator>
-                      <CheckIcon />
-                    </Combobox.ItemIndicator>
-                  </Combobox.Item>
-                )}
-              </Combobox.List>
-            </Combobox.Popup>
-          </Combobox.Positioner>
+                    <Combobox.ChipRemove
+                      className="inline-flex text-[var(--text-accent)] opacity-[var(--opacity-dim)] hover:opacity-100"
+                      aria-label={`Remove ${item.label}`}
+                    >
+                      <XIcon />
+                    </Combobox.ChipRemove>
+                  </Combobox.Chip>
+                ))
+              }
+            </Combobox.Value>
+            <Combobox.Input
+              placeholder={placeholder}
+              className={cn(
+                'min-w-16 flex-1 bg-transparent text-[var(--text-primary)] outline-none disabled:cursor-not-allowed',
+                isInvalid
+                  ? 'placeholder:text-[var(--status-danger-default)]'
+                  : 'placeholder:text-[var(--text-muted)]',
+              )}
+            />
+            {/* Chevron (Figma: Show Trailing / Right Icon) — opens the list; flips while open. */}
+            <Combobox.Trigger
+              aria-label="Show options"
+              className={cn(
+                'ml-auto inline-flex shrink-0 text-[var(--text-muted)] data-[popup-open]:rotate-180',
+                chevronSize[size ?? 'm'],
+              )}
+            >
+              <ChevronDown />
+            </Combobox.Trigger>
+          </Combobox.Chips>
+        )}
+        <Combobox.Portal>
+          {isList ? (
+            <Combobox.Positioner anchor={triggerRef} sideOffset={8}>
+              <Combobox.Popup className="outline-none">
+                <ItemList
+                  className={listStyles}
+                  search={{ placeholder: searchPlaceholder, render: <Combobox.Input /> }}
+                  selectAll={{
+                    checked: allVisibleSelected,
+                    indeterminate: selectedVisible.length > 0 && !allVisibleSelected,
+                    onCheckedChange: toggleVisible,
+                  }}
+                >
+                  <Combobox.Empty className="px-[var(--spacing-12)] py-[var(--spacing-12)] text-xs font-light text-[var(--text-muted)] empty:hidden">
+                    No matches
+                  </Combobox.Empty>
+                  <Combobox.List>
+                    {(item: MultiselectOption) => (
+                      <Combobox.Item key={item.value} value={item} className={listItemOption}>
+                        <CheckboxMark />
+                        <span className="flex-1">{item.label}</span>
+                      </Combobox.Item>
+                    )}
+                  </Combobox.List>
+                </ItemList>
+              </Combobox.Popup>
+            </Combobox.Positioner>
+          ) : (
+            <Combobox.Positioner anchor={chipsRef} sideOffset={4}>
+              <Combobox.Popup className={popupStyles}>
+                <Combobox.List>
+                  {(item: MultiselectOption) => (
+                    <Combobox.Item key={item.value} value={item} className={itemStyles}>
+                      {item.label}
+                      <Combobox.ItemIndicator>
+                        <CheckIcon />
+                      </Combobox.ItemIndicator>
+                    </Combobox.Item>
+                  )}
+                </Combobox.List>
+              </Combobox.Popup>
+            </Combobox.Positioner>
+          )}
         </Combobox.Portal>
       </Combobox.Root>
       {errorMessage ? (

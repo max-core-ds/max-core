@@ -18,6 +18,7 @@ const meta = {
   argTypes: {
     size: { control: 'select', options: ['s', 'm', 'l'] },
     variant: { control: 'inline-radio', options: ['primary', 'secondary'] },
+    mode: { control: 'inline-radio', options: ['typeahead', 'list'] },
     disabled: { control: 'boolean' },
     items: { control: false },
   },
@@ -34,4 +35,9 @@ export const Preselected: Story = {
 
 export const WithError: Story = {
   args: { label: 'Frameworks', errorMessage: 'Select at least one framework.' },
+};
+
+// The Figma master: chips-only field; the list has its own search + Select all.
+export const ListMode: Story = {
+  args: { mode: 'list', placeholder: 'Select frameworks' },
 };

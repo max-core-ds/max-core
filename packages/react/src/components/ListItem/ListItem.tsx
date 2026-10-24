@@ -49,6 +49,22 @@ const supportTextStyles = cn(
 );
 const supportTextActiveStyles = 'font-light text-[var(--text-on-accent-muted)]';
 
+/**
+ * List Item look for listbox options (Select / Combobox items inside an Item
+ * List popup): the row geometry + Caption/700 label, highlighted (keyboard or
+ * pointer) = the hover wash, pressed = accent/active. Options have no focus ring
+ * — the listbox moves `data-highlighted`. `group/option` lets a leading
+ * CheckboxMark / RadioMark follow the row's `data-selected`.
+ */
+export const listItemOption = cn(
+  'group/option flex w-full cursor-default select-none items-center gap-[var(--spacing-08)]',
+  'rounded-[var(--radius-l)] px-[var(--spacing-12)] py-[var(--spacing-12)]',
+  'text-xs font-bold text-[var(--text-primary)] outline-none transition-colors',
+  'data-[highlighted]:bg-[var(--accent-subtle)]',
+  'active:bg-[var(--accent-active)] active:text-[var(--text-on-accent)]',
+  'data-[disabled]:pointer-events-none data-[disabled]:opacity-[var(--opacity-disabled)]',
+);
+
 // Nested-row indent spacers (Level 1 / Level 2 on the master).
 const levelSpacer = {
   1: 'w-[var(--spacing-12)]',

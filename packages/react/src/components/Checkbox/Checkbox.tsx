@@ -101,6 +101,26 @@ export function Checkbox({
   );
 }
 
+/**
+ * Visual-only Checkbox (Size S, Default) for option rows whose row is the
+ * interactive element (Multiselect list). Follows the row's `data-selected`;
+ * the row must carry `group/option` (see `listItemOption`).
+ */
+export function CheckboxMark() {
+  return (
+    <span
+      aria-hidden="true"
+      className={cn(
+        'inline-flex size-[var(--spacing-16)] shrink-0 items-center justify-center',
+        'rounded-[var(--radius-xs)] border border-[var(--border-default)] bg-[var(--bg-default)] text-[var(--text-on-accent)]',
+        'group-data-[selected]/option:border-[var(--border-accent)] group-data-[selected]/option:bg-[var(--accent-default)]',
+      )}
+    >
+      <CheckIcon className="hidden group-data-[selected]/option:block" />
+    </span>
+  );
+}
+
 function CheckIcon({ className }: { className?: string }) {
   return (
     <svg
