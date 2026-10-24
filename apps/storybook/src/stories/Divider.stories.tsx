@@ -13,22 +13,22 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Horizontal: Story = {
-  render: () => (
-    <div className="w-80">
-      <p className="text-[var(--text-secondary)]">Above</p>
-      <Divider className="my-[var(--spacing-12)]" />
-      <p className="text-[var(--text-secondary)]">Below</p>
-    </div>
-  ),
-};
-
-export const Vertical: Story = {
-  render: () => (
-    <div className="flex h-12 items-center gap-[var(--spacing-12)] text-[var(--text-secondary)]">
-      <span>Left</span>
-      <Divider orientation="vertical" />
-      <span>Right</span>
-    </div>
-  ),
+// Switch `orientation` in Controls: horizontal splits stacked content, vertical
+// splits an inline row (it stretches to the row's height).
+export const Default: Story = {
+  args: { orientation: 'horizontal' },
+  render: (args) =>
+    args.orientation === 'vertical' ? (
+      <div className="flex h-12 items-center gap-[var(--spacing-12)] text-[var(--text-secondary)]">
+        <span>Left</span>
+        <Divider {...args} />
+        <span>Right</span>
+      </div>
+    ) : (
+      <div className="w-80 text-[var(--text-secondary)]">
+        <p>Above</p>
+        <Divider {...args} className="my-[var(--spacing-12)]" />
+        <p>Below</p>
+      </div>
+    ),
 };
