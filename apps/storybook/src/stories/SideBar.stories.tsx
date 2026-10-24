@@ -5,6 +5,7 @@ import {
   SideBar,
   type SideBarProps,
   SideBarTrigger,
+  Thumbnail,
   useRailCollapsed,
 } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
@@ -64,8 +65,9 @@ const slots = {
   topBar: <Brand />,
   header: (
     <EntityItem
+      type="workspace"
       title="Max core v0.9"
-      leading={<Avatar size="s" src="https://i.pravatar.cc/64?img=12" />}
+      leading={<Thumbnail shape="circle" size="s" src="https://picsum.photos/seed/max/64" />}
       trailing={<ChevronDown className="size-4 text-[var(--text-muted)]" />}
     />
   ),

@@ -6,11 +6,17 @@ import { useRailCollapsed } from '../../utils/rail-context.js';
 
 // Avatar/Thumbnail + stacked title/subtitle + optional trailing content. Gap
 // (leading ↔ text) and Label Gap (title ↔ subtitle) match -- Molecule/Entity Item/*.
+// Figma Type: User = Avatar S + Body/MD/700 title; Workspace = circular Thumbnail S
+// + Body/LG/700 title. The subtitle is Caption/300 text/secondary in both.
+const titleSize = { user: 'text-base', workspace: 'text-lg' } as const;
+
 export interface EntityItemProps extends Omit<ComponentPropsWithoutRef<'div'>, 'title'> {
   /** Leading visual — an Avatar, Thumbnail, or icon. */
   leading?: ReactNode;
   title: ReactNode;
   subtitle?: ReactNode;
+  /** Figma Type: `workspace` uses the larger Body/LG title (default `user`). */
+  type?: keyof typeof titleSize;
   /** Trailing content — an action, chevron, or badge. */
   trailing?: ReactNode;
   /**
@@ -25,6 +31,7 @@ export function EntityItem({
   leading,
   title,
   subtitle,
+  type = 'user',
   trailing,
   collapsed,
   className,
@@ -43,9 +50,11 @@ export function EntityItem({
       {leading}
       {!isCollapsed && (
         <div className="flex flex-1 flex-col gap-[var(--spacing-08)]">
-          <span className="text-base font-bold text-[var(--text-primary)]">{title}</span>
+          <span className={cn(titleSize[type], 'font-bold text-[var(--text-primary)]')}>
+            {title}
+          </span>
           {subtitle ? (
-            <span className="text-sm text-[var(--text-secondary)]">{subtitle}</span>
+            <span className="text-xs font-light text-[var(--text-secondary)]">{subtitle}</span>
           ) : null}
         </div>
       )}

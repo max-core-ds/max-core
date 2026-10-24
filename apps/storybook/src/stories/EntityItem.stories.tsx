@@ -1,4 +1,4 @@
-import { Avatar, Badge, EntityItem } from '@max-core/react';
+import { Avatar, Badge, EntityItem, Thumbnail } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ChevronRight } from 'lucide-react';
 
@@ -16,16 +16,25 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    leading: <Avatar size="m" src="https://i.pravatar.cc/80?img=12" fallback="JD" />,
+    leading: <Avatar size="s" src="https://i.pravatar.cc/64?img=12" fallback="JD" />,
     trailing: <ChevronRight className="text-[var(--text-muted)]" />,
   },
 };
 
 export const WithBadge: Story = {
   args: {
-    leading: <Avatar size="m" fallback="AT" />,
+    leading: <Avatar size="s" fallback="AT" />,
     title: 'Alex Turner',
     subtitle: 'Product designer',
     trailing: <Badge tone="success">Active</Badge>,
+  },
+};
+
+export const Workspace: Story = {
+  args: {
+    type: 'workspace',
+    leading: <Thumbnail shape="circle" size="s" src="https://picsum.photos/seed/max/64" />,
+    title: 'Max core v0.9',
+    subtitle: 'First Max core model',
   },
 };
