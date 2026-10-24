@@ -25,13 +25,13 @@ const buttonStyles = cva(
   ],
   {
     variants: {
-      // Only Secondary has a border (Figma: Secondary Border Width = thin).
-      // Primary and Ghost are borderless (Primary Border Width = none / ghost
+      // Only Secondary has a border (Figma: Secondary Border Width = thin) and,
+      // like Ghost, no fill (Figma: "Fill: —"). Primary and Ghost are borderless (Primary Border Width = none / ghost
       // has no stroke) — a transparent border would leave a 1px gap between the
       // hover state-layer overlay (inset to the padding box) and the box-shadow.
       variant: {
         primary: 'text-[var(--text-on-accent)]',
-        secondary: 'border bg-[var(--bg-surface)] text-[var(--text-primary)]',
+        secondary: 'border bg-transparent text-[var(--text-primary)]',
         ghost: 'bg-transparent text-[var(--text-primary)]',
       },
       tone: {
@@ -42,11 +42,12 @@ const buttonStyles = cva(
       },
       // Padding, gap and icon size per size mirror the Figma button tokens
       // (-- Atoms/Buttons/Global/Size *) from the exported tokens.json components block.
+      // Label type: S/M Caption/700 (12), L Body/SM/700 (14), XL Body/MD/700 (16).
       size: {
         s: 'h-[var(--size-32)] gap-[var(--spacing-08)] px-[var(--spacing-06)] text-xs [&_svg]:size-[var(--size-20)]',
-        m: 'h-[var(--size-40)] gap-[var(--spacing-08)] px-[var(--spacing-10)] text-sm [&_svg]:size-[var(--size-20)]',
-        l: 'h-[var(--size-48)] gap-[var(--spacing-08)] px-[var(--spacing-12)] text-base [&_svg]:size-[var(--size-24)]',
-        xl: 'h-[var(--size-56)] gap-[var(--spacing-16)] px-[var(--spacing-14)] text-lg [&_svg]:size-[var(--size-28)]',
+        m: 'h-[var(--size-40)] gap-[var(--spacing-08)] px-[var(--spacing-10)] text-xs [&_svg]:size-[var(--size-20)]',
+        l: 'h-[var(--size-48)] gap-[var(--spacing-08)] px-[var(--spacing-12)] text-sm [&_svg]:size-[var(--size-24)]',
+        xl: 'h-[var(--size-56)] gap-[var(--spacing-16)] px-[var(--spacing-14)] text-base [&_svg]:size-[var(--size-28)]',
       },
     },
     // Tone sets only the resting fill/border/text. Hover & press are handled

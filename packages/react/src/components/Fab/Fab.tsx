@@ -2,7 +2,14 @@
 
 import { Button as BaseButton } from '@base-ui/react/button';
 import { type VariantProps, cva } from 'class-variance-authority';
-import { type ComponentPropsWithoutRef, type ReactNode, useState } from 'react';
+import {
+  type ComponentPropsWithoutRef,
+  type ReactNode,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from 'react';
 import { cn } from '../../utils/cn.js';
 import { focusRing } from '../../utils/focus-ring.js';
 import { elevatePress, stateLayer } from '../../utils/state-layer.js';
@@ -33,19 +40,22 @@ const mainStyles = cva(
   },
 );
 
-// Speed-dial action button — fixed Item Size / Item Icon Size.
+// Speed-dial action button — fixed Item Size / Item Icon Size. Figma: an accent
+// circle with an on-accent icon and shadow/down/md, like the main button.
 const itemStyles = cn(
   'relative isolate inline-flex size-[var(--size-40)] items-center justify-center',
-  'rounded-[var(--radius-full)] bg-[var(--bg-surface)] text-[var(--text-primary)]',
-  'shadow-[var(--effect-shadow-down-sm)] [&_svg]:size-[var(--size-20)]',
+  'rounded-[var(--radius-full)] bg-[var(--accent-default)] text-[var(--text-on-accent)]',
+  'shadow-[var(--effect-shadow-down-md)] [&_svg]:size-[var(--size-20)]',
   'transition',
   stateLayer,
   focusRing,
 );
 
+// Item label: Caption/700 on bg/surface, no shadow. Figma binds the primitive
+// Palette/neutral/500; text/secondary is its mode-aware equivalent.
 const labelStyles =
   'rounded-[var(--radius-md)] bg-[var(--bg-surface)] px-[var(--spacing-08)] py-[var(--spacing-04)] ' +
-  'text-sm font-bold text-[var(--text-primary)] shadow-[var(--effect-shadow-down-sm)]';
+  'text-xs font-bold text-[var(--text-secondary)]';
 
 export interface FabAction {
   label: ReactNode;
@@ -68,27 +78,55 @@ export interface FabProps
 export function Fab({ size = 'm', className, icon, onClick, actions, ...rest }: FabProps) {
   const [open, setOpen] = useState(false);
   const hasMenu = Boolean(actions && actions.length > 0);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const id = useId();
+  const menuId = `${id}-menu`;
+
+  // Close the speed dial on Escape or a click outside it.
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false);
+    };
+    const onPointerDown = (event: PointerEvent) => {
+      if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
+    };
+    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('pointerdown', onPointerDown);
+    };
+  }, [open]);
 
   return (
     // Expandable Gap (main ↔ list) and List Gap (between items) are both 16.
-    <div className="relative inline-flex flex-col-reverse items-end gap-[var(--spacing-16)]">
+    <div
+      ref={rootRef}
+      className="relative inline-flex flex-col-reverse items-end gap-[var(--spacing-16)]"
+    >
       <BaseButton
         className={cn(mainStyles({ size }), className)}
         onClick={hasMenu ? () => setOpen((v) => !v) : onClick}
         aria-expanded={hasMenu ? open : undefined}
+        aria-controls={hasMenu && open ? menuId : undefined}
         {...rest}
       >
         {icon}
       </BaseButton>
       {hasMenu && open ? (
-        <ul className="flex flex-col-reverse gap-[var(--spacing-16)]">
+        <ul id={menuId} className="flex flex-col-reverse gap-[var(--spacing-16)]">
           {actions?.map((action, i) => (
             // Item Gap (label ↔ button) = 8.
             // biome-ignore lint/suspicious/noArrayIndexKey: actions are a static, ordered list
             <li key={i} className="flex items-center justify-end gap-[var(--spacing-08)]">
-              <span className={labelStyles}>{action.label}</span>
+              {/* The label names the icon-only item button. */}
+              <span id={`${id}-item-${i}`} className={labelStyles}>
+                {action.label}
+              </span>
               <BaseButton
                 className={itemStyles}
+                aria-labelledby={`${id}-item-${i}`}
                 onClick={() => {
                   action.onClick?.();
                   setOpen(false);

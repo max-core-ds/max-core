@@ -11,17 +11,17 @@ import { statusBg, statusOutline, statusText, statusToneCompounds } from '../../
 // The container carries the variant/tone fill (mirroring Button); the two parts
 // inside are transparent and share it. Divider heights match
 // -- Atoms/Buttons/Split Button/{S,M,L,XL}/Divider Height.
+// Deliberate superset: Figma's Split Button only has Type = Primary/Secondary;
+// `ghost` and the status tones reuse Button's mapping.
+// No overflow-hidden: it would clip each part's outset focus ring — the parts
+// round their own outer corners instead.
 const containerStyles = cva(
-  [
-    'relative isolate inline-flex items-stretch overflow-hidden',
-    'rounded-[var(--radius-l)]',
-    'transition',
-  ],
+  ['relative isolate inline-flex items-stretch', 'rounded-[var(--radius-l)]', 'transition'],
   {
     variants: {
       variant: {
         primary: 'text-[var(--text-on-accent)]',
-        secondary: 'border bg-[var(--bg-surface)] text-[var(--text-primary)]',
+        secondary: 'border bg-transparent text-[var(--text-primary)]',
         ghost: 'bg-transparent text-[var(--text-primary)]',
       },
       tone: { default: '', danger: '', success: '', warning: '' },
@@ -48,36 +48,59 @@ const partStyles = cva(
     'relative inline-flex items-center justify-center',
     'font-bold whitespace-nowrap',
     'transition',
-    "before:pointer-events-none before:absolute before:inset-0 before:bg-[var(--overlay-state-layer)] before:opacity-0 before:transition-opacity before:content-['']",
+    "before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:bg-[var(--overlay-state-layer)] before:opacity-0 before:transition-opacity before:content-['']",
     'hover:before:opacity-[var(--opacity-hover)] active:before:opacity-[var(--opacity-pressed)]',
     focusRing,
+    // Lift the focused part so its ring paints over the sibling part.
+    'focus-visible:z-10',
     'disabled:pointer-events-none disabled:opacity-[var(--opacity-disabled)]',
   ],
   {
     variants: {
+      // Main button rounds its left corners, the trigger its right ones.
+      part: {
+        main: 'rounded-l-[var(--radius-l)]',
+        trigger: 'rounded-r-[var(--radius-l)]',
+      },
       // Height, Icon Size and Padding X per -- Atoms/Buttons/Split Button/{S,M,L,XL}.
       // Padding X (06/10/12/14) is a single per-size token shared by both parts.
+      // Label type: S/M Caption/700, L Body/SM/700, XL Body/MD/700.
       size: {
         s: 'h-[var(--size-32)] gap-[var(--spacing-08)] px-[var(--spacing-06)] text-xs [&_svg]:size-[var(--size-20)]',
-        m: 'h-[var(--size-40)] gap-[var(--spacing-08)] px-[var(--spacing-10)] text-sm [&_svg]:size-[var(--size-20)]',
-        l: 'h-[var(--size-48)] gap-[var(--spacing-08)] px-[var(--spacing-12)] text-base [&_svg]:size-[var(--size-24)]',
-        xl: 'h-[var(--size-56)] gap-[var(--spacing-16)] px-[var(--spacing-14)] text-lg [&_svg]:size-[var(--size-28)]',
+        m: 'h-[var(--size-40)] gap-[var(--spacing-08)] px-[var(--spacing-10)] text-xs [&_svg]:size-[var(--size-20)]',
+        l: 'h-[var(--size-48)] gap-[var(--spacing-08)] px-[var(--spacing-12)] text-sm [&_svg]:size-[var(--size-24)]',
+        xl: 'h-[var(--size-56)] gap-[var(--spacing-16)] px-[var(--spacing-14)] text-base [&_svg]:size-[var(--size-28)]',
       },
     },
     defaultVariants: { size: 'm' },
   },
 );
 
-const dividerStyles = cva(['w-px shrink-0 self-center bg-current opacity-30'], {
+// Figma: Primary has a `border/default` divider at the per-size Divider Height.
+// Secondary has no divider — the halves' own tone border forms a full-height
+// seam, so it inherits the container's border colour. Ghost (React-only) keeps
+// a faint current-colour line.
+const dividerStyles = cva(['w-px shrink-0'], {
   variants: {
+    variant: {
+      primary: 'self-center bg-[var(--border-default)]',
+      secondary: 'self-stretch border-l [border-color:inherit]',
+      ghost: 'self-center bg-current opacity-30',
+    },
     size: {
-      s: 'h-[var(--size-24)]',
-      m: 'h-[var(--size-32)]',
-      l: 'h-[var(--size-40)]',
-      xl: 'h-[var(--size-48)]',
+      s: '',
+      m: '',
+      l: '',
+      xl: '',
     },
   },
-  defaultVariants: { size: 'm' },
+  compoundVariants: [
+    { variant: ['primary', 'ghost'], size: 's', class: 'h-[var(--size-24)]' },
+    { variant: ['primary', 'ghost'], size: 'm', class: 'h-[var(--size-32)]' },
+    { variant: ['primary', 'ghost'], size: 'l', class: 'h-[var(--size-40)]' },
+    { variant: ['primary', 'ghost'], size: 'xl', class: 'h-[var(--size-48)]' },
+  ],
+  defaultVariants: { variant: 'primary', size: 'm' },
 });
 
 const popupStyles =
@@ -128,14 +151,18 @@ export function SplitButton({
 }: SplitButtonProps) {
   return (
     <div className={cn(containerStyles({ variant, tone }), className)} {...rest}>
-      <BaseButton className={cn(partStyles({ size }))} onClick={onClick} disabled={disabled}>
+      <BaseButton
+        className={cn(partStyles({ part: 'main', size }))}
+        onClick={onClick}
+        disabled={disabled}
+      >
         {leftIcon}
         {children}
       </BaseButton>
-      <span className={dividerStyles({ size })} aria-hidden />
+      <span className={dividerStyles({ variant, size })} aria-hidden />
       <Menu.Root>
         <Menu.Trigger
-          className={cn(partStyles({ size }))}
+          className={cn(partStyles({ part: 'trigger', size }))}
           aria-label={triggerLabel}
           disabled={disabled}
           render={<BaseButton />}

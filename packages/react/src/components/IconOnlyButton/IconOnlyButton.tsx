@@ -18,6 +18,8 @@ const iconOnlyButtonStyles = cva(
     'rounded-[var(--radius-l)]',
     'transition',
     stateLayer,
+    // Deliberate deviation: Figma's Icon Only Hover/Pressed are state-layer only
+    // (no shadow / press-down); we keep Button's elevation for family consistency.
     elevatePress,
     focusRing,
     'disabled:pointer-events-none disabled:opacity-[var(--opacity-disabled)]',
@@ -26,7 +28,7 @@ const iconOnlyButtonStyles = cva(
     variants: {
       variant: {
         primary: 'text-[var(--text-on-accent)]',
-        secondary: 'border bg-[var(--bg-surface)] text-[var(--text-primary)]',
+        secondary: 'border bg-transparent text-[var(--text-primary)]',
         ghost: 'bg-transparent text-[var(--text-primary)]',
       },
       tone: {
