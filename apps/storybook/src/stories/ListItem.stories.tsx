@@ -8,8 +8,17 @@ const meta = {
   parameters: { layout: 'padded' },
   decorators: [(Story) => <div className="w-80">{Story()}</div>],
   argTypes: {
-    leftIcon: { control: false },
-    rightIcon: { control: false },
+    // Show Leading / Show Trailing + the instance swaps on the master.
+    leftIcon: {
+      control: 'select',
+      options: ['None', 'Settings', 'User'],
+      mapping: { None: undefined, Settings: <Settings />, User: <User /> },
+    },
+    rightIcon: {
+      control: 'select',
+      options: ['None', 'ChevronRight', 'ChevronDown'],
+      mapping: { None: undefined, ChevronRight: <ChevronRight />, ChevronDown: <ChevronDown /> },
+    },
     supportText: { control: 'text' },
     level: { control: 'inline-radio', options: [0, 1, 2] },
     active: { control: 'boolean' },
@@ -22,7 +31,8 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: { children: 'Account settings', leftIcon: <Settings />, rightIcon: <ChevronRight /> },
+  // Icon args are mapping keys (see argTypes), resolved to elements by Storybook.
+  args: { children: 'Account settings', leftIcon: 'Settings', rightIcon: 'ChevronRight' },
 };
 
 export const List: Story = {
