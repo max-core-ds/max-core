@@ -16,7 +16,7 @@ Legend: ✅ match · ❌ finding · n/a. Class: **[code]** · **[designer]** · 
 | Typography | ❌ **Label:** Checkbox/Radio `Body/SM/300`, Switch `Body/MD/300` (React inherited 16px Regular). **Helper:** `Caption/300` `text/secondary` (React `text-sm` `text/muted`). → **[code]** fixed. Checkbox and Radio use SM while Switch uses MD, which is inconsistent → [designer] | code / designer |
 | Layout | ✅ Item Gap 8, Text Gap 6. ❌ The Figma wrapper centres the control against the text block; React top-aligns it with the label → **[deviation]** (user decision: top-align is the industry norm when helper text wraps) | deviation |
 | A11y | ❌ The helper and error text weren't linked to the control → **[code]** `aria-describedby`. Disabled now also sets `pointer-events-none`, so hover/pressed fills can't fire on it. | code |
-| Focus | React ✅ (`focusRing` on the control only, a pressable). Figma ❌: the Checkbox has **two** `.Focus-ring` instances (wrapper + inner options set, the inner one overridden to 1px). Radio and Switch carry one on the wrapper. Focused is a BOOLEAN ✅. → [designer]: keep one ring around the control only, at 2px. | designer |
+| Focus | React ✅ (`focusRing` on the control only, a pressable). Figma ❌: the Checkbox has **two Focused booleans and two ring mechanisms**. The wrapper has its own `.Focus-ring` (`2145:4987`) and `Focused`. The inner `.Checkbox-options` has a second `Focused` + `.Focus-ring` in 40/48 variants (1px), and it is exposed through the nested instance, so both toggles show in the panel. They aren't visible together by default. **The wrapper's ring is malformed:** 14×4 at (-3, 17), a sliver below the 16×16 box, so turning on `Focused` doesn't draw a ring around the control. Radio and Switch carry only the wrapper ring. Focused is a BOOLEAN ✅. → [designer]: one `Focused` + one ring sized around the control, at 2px. | designer |
 | Disabled | ❌ Figma: Checkbox Disabled swaps the stroke to `border/accent` (opacity is fine). Radio and Switch have **no Disabled variant**. React = opacity only ✅ → [designer] | designer |
 | Hover/Pressed | **Decision: match Figma exactly** (user, 2026-10-24). The unchecked or off control takes **solid** fills. I raised the concern that hover/pressed on an unchecked control reads as checked (Pressed `accent/active` is darker than checked `accent/default`; Error hover `danger-700` is darker than checked `danger-600`; dark mode `accent/hover` sits next to `accent/default`). The user chose Figma. Checked/on has no interaction variants in Figma, so none in React. | code |
 
@@ -60,7 +60,7 @@ Legend: ✅ match · ❌ finding · n/a. Class: **[code]** · **[designer]** · 
 
 ## For the designer (→ PROGRESS.md)
 - Reconsider the solid unchecked Hover/Pressed fills (shipped as-is by decision). Pressed and Error Hover are darker than the checked fill, so unchecked reads as checked.
-- One `.Focus-ring` per control around the box only (the Checkbox has two), at 2px.
+- Checkbox focus: the wrapper ring is malformed (14×4 sliver below the box), and the inner options set duplicates `Focused` + ring (40/48 variants, exposed). Keep one, sized around the control, at 2px.
 - Add Disabled to Radio and Switch. Checkbox Disabled: keep the stroke, opacity only.
 - Checkbox Success unchecked stroke `status/success/default` → `/border`.
 - Checkbox M icon width bound to the orphan `---` token.
