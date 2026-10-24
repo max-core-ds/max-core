@@ -53,6 +53,9 @@ npx biome check --write <changed files>
 Run them as separate commands (or echo each exit code): a chained `&& … | tail` hides which step failed.
 
 ## Gotchas found so far
+- **Click through, don't only screenshot.** Static stories hid two Date picker bugs (a collapsing
+  range grid, a range that kept stretching) that showed up after paging months + clicking. For
+  stateful widgets, script the real flow in Playwright and assert the resulting state.
 - **A container's Size can size its children.** Read the nested instances' variant names per size
   (walk `children` recursively; `findAllWithCriteria` doesn't reach into slot content). Form Group
   S/M/L sets its Base Inputs + Buttons to S/M/L; missed in the first pass, fixed with a size context.
