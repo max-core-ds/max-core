@@ -16,7 +16,10 @@ import { Knob } from '../Knob/Knob.js';
 // Composed from the Progress Bar (track + fill), Knob (thumb) and Tooltip (value
 // bubble) atoms, per the Figma Range page. A thumb is rendered per value, so a
 // range (array value) shows two knobs. Tooltip Knob Gap (16) spaces each bubble
-// above its thumb.
+// above its thumb. The control is knob-tall (track centred, 10px knob overhang each
+// side); the bound labels sit Progress Bar Item Gaps (8) below the *track*, as in
+// the master, so they pull up by that overhang. Disabled dims the whole slider
+// once (the knob keeps its default handle, no second opacity).
 export interface RangeProps
   extends Omit<ComponentPropsWithoutRef<typeof Slider.Root>, 'className'> {
   className?: string;
@@ -37,6 +40,7 @@ export function Range({
   defaultValue,
   min = 0,
   max = 100,
+  disabled,
   ...rest
 }: RangeProps) {
   const values = Array.isArray(value)
@@ -52,12 +56,18 @@ export function Range({
       defaultValue={defaultValue}
       min={min}
       max={max}
-      className={cn('flex w-full flex-col gap-[var(--spacing-08)]', className)}
+      disabled={disabled}
+      className={cn(
+        // select-none: dragging must not select the tooltip / label text.
+        'flex w-full select-none flex-col data-[disabled]:opacity-[var(--opacity-disabled)]',
+        className,
+      )}
       {...rest}
     >
-      <Slider.Control className="flex w-full items-center py-[var(--spacing-08)]">
+      <Slider.Control className="flex h-[var(--size-24)] w-full items-center data-[disabled]:pointer-events-none">
         <Slider.Track className={progressTrack('s')}>
-          <Slider.Indicator className={progressFill} />
+          {/* No width transition: the fill must track the thumb while dragging. */}
+          <Slider.Indicator className={cn(progressFill, 'transition-none')} />
           {Array.from({ length: thumbCount }, (_, i) => (
             <Slider.Thumb
               // biome-ignore lint/suspicious/noArrayIndexKey: thumbs are a fixed, ordered set
@@ -65,7 +75,7 @@ export function Range({
               index={i}
               className={cn('relative flex rounded-[var(--radius-full)]', focusRingWithin)}
             >
-              <Knob />
+              <Knob state={disabled ? 'default' : undefined} />
               {showTooltip ? (
                 <div className="pointer-events-none absolute bottom-full left-1/2 mb-[var(--spacing-16)] -translate-x-1/2">
                   <div className={cn('relative', tooltipBubble)}>
@@ -88,7 +98,7 @@ export function Range({
         </Slider.Track>
       </Slider.Control>
       {showLabels ? (
-        <div className="flex justify-between text-xs font-light text-[var(--text-primary)]">
+        <div className="mt-[calc(var(--spacing-08)-(var(--size-24)-var(--size-4))/2)] flex justify-between text-xs font-light text-[var(--text-primary)]">
           <span>{formatLabel(min)}</span>
           <span>{formatLabel(max)}</span>
         </div>

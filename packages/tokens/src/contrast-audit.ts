@@ -117,8 +117,6 @@ const OVERRIDES: Record<string, Override> = {
     extra: [
       { state: 'base', fgVar: '--text-secondary', bgVar: '--bg-default' },
       { state: 'active', fgVar: '--text-secondary', bgVar: '--accent-surface' },
-      // Pressed = the List Item state; the cva literal hides it from the extractor.
-      { state: 'pressed', fgVar: '--text-on-accent', bgVar: '--accent-active' },
     ],
   },
   // Title + description are separate elements on the premade bg/surface.

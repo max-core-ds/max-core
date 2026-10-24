@@ -95,7 +95,12 @@ export function extractPairings(source: string): Pairing[] {
   const seen = new Set<string>();
   const pairings: Pairing[] = [];
   // Each quoted / backtick-quasi chunk is treated as one element's class list.
-  const literals = source.match(/(['"`])(?:\\.|(?!\1)[\s\S])*?\1/g) ?? [];
+  // Strip comments first: an apostrophe in a comment ("doesn't") would open a
+  // fake literal and shift every class list after it out of alignment. Line
+  // comments go first, so a token path like `Molecule/Pin/*` in one isn't read
+  // as the start of a block comment.
+  const code = source.replace(/(^|[^:])\/\/.*$/gm, '$1').replace(/\/\*[\s\S]*?\*\//g, '');
+  const literals = code.match(/(['"`])(?:\\.|(?!\1)[\s\S])*?\1/g) ?? [];
   for (const literal of literals) {
     if (!literal.includes('-[var(--')) continue;
     pairFromLiteral(literal, seen, pairings);

@@ -26,9 +26,9 @@ Legend: ✅ match · ❌ finding · n/a. Class: **[code]** · **[designer]** · 
 1. Hover `bg/subtle` + `text/accent` (not on the current page, not while pressed); pressed `overlay/pressed` + `text/on-accent`.
 2. Inside-stroke padding → every button 32 × 32; ellipsis in a 32px slot.
 3. `paginationRange` rewritten (duplicate-key bug; constant length).
-4. `contrast-audit.ts`: Tabs pressed pairing declared (missed on the Tabs page; the cva literal hides it).
+4. `contrast-audit.ts`: Tabs pressed pairing declared (missed on the Tabs page). _Range page follow-up:_ the real cause was an apostrophe in a comment misaligning the extractor; fixed there, and the manual entry removed.
 
-**Verified:** typecheck, build, Storybook tsc, showcase tsc, drift ✓, biome, contrast **30 findings / 19 of 30** (Pagination: hover 3.86 gone, pressed dark 1.91 in; Tabs pressed dark 1.91 declared). Playwright light + dark, clicked through: hover `bg/subtle` + `text/accent`, none on the current page; pressed `overlay/pressed` + white; next ×5 → `1 … 6 7 8 … 42`; last → `1 … 38 39 40 41 42` with next disabled; paging 4 → 5 → 6 keeps the bar at 320px; keyboard focus ring visible.
+**Verified:** typecheck, build, Storybook tsc, showcase tsc, drift ✓, biome, contrast 30 findings / 19 of 30 (but see the Range page: the final comment edit hid Pagination from the audit until the extractor fix) (Pagination: hover 3.86 gone, pressed dark 1.91 in; Tabs pressed dark 1.91 declared). Playwright light + dark, clicked through: hover `bg/subtle` + `text/accent`, none on the current page; pressed `overlay/pressed` + white; next ×5 → `1 … 6 7 8 … 42`; last → `1 … 38 39 40 41 42` with next disabled; paging 4 → 5 → 6 keeps the bar at 320px; keyboard focus ring visible.
 
 ## For the designer (→ PROGRESS.md)
 - Hover `overlay/hover` + `text/accent` fails AA (3.15 light / 3.96 dark); React uses `bg/subtle` + `text/accent`.
