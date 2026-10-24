@@ -3,7 +3,7 @@
 import { Combobox } from '@base-ui/react/combobox';
 import { Field } from '@base-ui/react/field';
 import { type VariantProps, cva } from 'class-variance-authority';
-import type { ReactNode } from 'react';
+import { type ReactNode, useRef } from 'react';
 import { cn } from '../../utils/cn.js';
 import {
   type FieldVariant,
@@ -67,7 +67,7 @@ const chevronSize = {
 } as const;
 
 const popupStyles =
-  'min-w-[240px] rounded-[var(--radius-md)] border border-[var(--border-default)] ' +
+  'w-[var(--anchor-width)] min-w-[240px] rounded-[var(--radius-md)] border border-[var(--border-default)] ' +
   'bg-[var(--bg-surface)] p-[var(--spacing-04)] text-[var(--text-primary)] ' +
   'shadow-[var(--effect-shadow-down-md)] outline-none';
 
@@ -109,6 +109,9 @@ export function Multiselect({
   ...rest
 }: MultiselectProps) {
   const isInvalid = Boolean(errorMessage);
+  // Anchor the list to the whole field frame (not the inner text input) so it
+  // opens below the frame, as wide as it.
+  const frameRef = useRef<HTMLDivElement>(null);
   return (
     <Field.Root className={cn(fieldRoot, className)} invalid={isInvalid} disabled={disabled}>
       {label ? <Field.Label className={fieldLabel(isInvalid)}>{label}</Field.Label> : null}
@@ -121,6 +124,7 @@ export function Multiselect({
         onValueChange={(v) => onValueChange?.(v as MultiselectOption[])}
       >
         <Combobox.Chips
+          ref={frameRef}
           className={cn(
             chipsStyles({ size }),
             isInvalid
@@ -165,7 +169,7 @@ export function Multiselect({
           </Combobox.Trigger>
         </Combobox.Chips>
         <Combobox.Portal>
-          <Combobox.Positioner sideOffset={4}>
+          <Combobox.Positioner anchor={frameRef} sideOffset={4}>
             <Combobox.Popup className={popupStyles}>
               <Combobox.List>
                 {(item: MultiselectOption) => (

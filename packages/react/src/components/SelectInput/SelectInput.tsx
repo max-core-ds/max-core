@@ -43,10 +43,10 @@ const triggerStyles = cva(
   },
 );
 
-// Popup: the master opens an Item List (bg/surface + border/default). Item rows
-// are audited with Item List / Dropdown.
+// Popup: the master opens an Item List (bg/surface + border/default) below the
+// field, as wide as the trigger. Item rows are audited with Item List / Dropdown.
 const popupStyles =
-  'min-w-[var(--size-180)] rounded-[var(--radius-md)] border border-[var(--border-default)] ' +
+  'w-[var(--anchor-width)] min-w-[var(--size-180)] rounded-[var(--radius-md)] border border-[var(--border-default)] ' +
   'bg-[var(--bg-surface)] p-[var(--spacing-04)] text-[var(--text-primary)] ' +
   'shadow-[var(--effect-shadow-down-md)] outline-none';
 
@@ -128,7 +128,7 @@ export function SelectInput({
           </Select.Icon>
         </Select.Trigger>
         <Select.Portal>
-          <Select.Positioner sideOffset={4}>
+          <Select.Positioner alignItemWithTrigger={false} sideOffset={4}>
             <Select.Popup className={popupStyles}>
               {items.map((item) => (
                 <Select.Item key={item.value} value={item.value} className={itemStyles}>
