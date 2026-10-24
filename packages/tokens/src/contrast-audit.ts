@@ -65,6 +65,11 @@ const buttonFamily: Override = {
 };
 
 const OVERRIDES: Record<string, Override> = {
+  // Inactive item text sits on the group's bg/subtle — different elements.
+  // Fails light AA (3.86); kept to match Figma by decision, on the designer list.
+  SegmentedControl: {
+    extra: [{ state: 'inactive', fgVar: '--text-secondary', bgVar: '--bg-subtle' }],
+  },
   Button: buttonFamily,
   IconOnlyButton: buttonFamily,
   SplitButton: buttonFamily,
