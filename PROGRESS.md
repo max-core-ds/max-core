@@ -157,12 +157,21 @@ Reuse these before writing inline classes — they keep Tailwind literals in one
 
 ## Remaining work
 
+0. **Phase 4.5 — Component audit (NEXT, before Batch 10)** — every shipped component vs its Figma doc page, page by page from `figma-node-links/catalog.json`. Process + checklist + order: **`PLAN.md → Phase 4.5`**. Findings in `docs/audit/<slug>.md`; status in the table below.
 1. **Phase 3.5 cross-check** — ✅ all exported files done (segmented-control, list-item, search-bar, dialog, top-bar, bottom-bar, sidebar). Resume when the designer drops new files into `figma-node-links/`.
 2. **Phase 4 — mega-systems + test infra** — planned in **`PLAN.md → Phase 4`**. Batches: **8 Stacked List** ✅ lean v1 (default/social/media/product; remaining row types on demand) → **9 Data Table** ✅ lean v1 (column-config + primitives; mobile/expandable/Table-Header deferred) → **10 Card** → **11 Bottom Sheet** (+18 premades) → **12 Date Picker** ✅ (day/range/input; month/year grid — Figma wheels deferred) → **13 test infra** (vitest + RTL + axe). Batches 10 & 11 remain.
 3. **Colour-contrast guardrail — shipped** (`pnpm -F @max-core/tokens contrast`): resolves every component's text/background pairing to hex in light + dark and flags any below WCAG AA (4.5 normal / 3 large). Reads source, never touches tokens.json; turbo `contrast` task reports non-blocking. Fixed the light-mode white-on-pale defects it caught (ListItem hover, EntityCard hover/selected). **Open: 13 findings across 12 components (as of 2026-10-23).** 12 are dark-mode only — the dark accent ramp is too light for white on-accent text (Avatar, Fab, ListItem ×2, Pin, SegmentedControl), plus mid-tone text on subtle/surface fills at 3.3–4.0 (Badge, ShareItem, BottomNavigation, ContentBlocks, DatePicker, Thumbnail); root-cause fix is Figma-side (adjust `accent/*` dark values + re-export), folded into the dark-mode visual pass. **1 fails in light too:** Pagination hover (`text/secondary` on `bg/subtle`, 3.86 light / 4.04 dark) — fixable in code. Extractor only sees within-className pairings; child-text-over-parent-surface needs `OVERRIDES[...].extra` in `contrast-audit.ts` if fuller coverage is wanted.
 
 > Not yet visually cross-checked (built from tokens only): every component in
 > the inventory below without a ✅ in the Cross-check column.
+
+## Audit status (Phase 4.5)
+
+| Page | Components | Status |
+|------|-----------|--------|
+| Buttons | Button, IconOnlyButton, SplitButton, Fab, LinkButton | ⏳ next |
+
+_Rows are added as each page is audited (order in `PLAN.md → Phase 4.5`)._
 
 ---
 

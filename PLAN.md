@@ -619,3 +619,106 @@ Layer 3 component-level token bridge (the `components` collection is still read
 for drift but not yet re-wirable per slot); publishing to npm; CI/CD; Figma
 plugin Community listing. These are productionization concerns tracked in the
 README "Status" gaps, not component work.
+
+---
+
+# Phase 4.5 — Component audit: Figma doc page ↔ React — ⏳ NEXT (before Batch 10)
+
+> **Why:** Phase 3.5 only covered the 12 files the designer exported, and it focused on
+> missing axes and colours. The List Item / Item List re-check (2026-10-23) showed that even
+> ✅ components drift: typography, structure, and props that were invented or are missing.
+> The focus-ring review (2026-10-24) turned up a cross-cutting gap too. Before building new
+> systems (Card, Bottom Sheet), we audit **every shipped component** against its **Figma doc
+> page**, page by page, from `figma-node-links/catalog.json`.
+>
+> Live status: the **Audit status** table in `PROGRESS.md`. Findings per page:
+> `docs/audit/<slug>.md`.
+
+## Ground rules
+- **The Figma master's bound variables are ground truth.** Doc-page text is the spec of
+  intent, but it can be stale. When they disagree, the binding wins and the stale doc text
+  goes on the designer list. (Recipe: memory `reference-figma-recheck-recipe`.)
+- **Figma is read-only during the audit.** No `use_figma` writes unless the user approves
+  that specific change. Figma-side issues go under "For the designer" in `PROGRESS.md`.
+- **Never hand-edit colour values in `tokens.json`.** Fix contrast in component code (with a
+  comment) or flag it to the designer.
+- **One page = one audit doc, one review with the user, one commit** (the user pushes).
+- File: working file `sX5tikviuBEhNbu2iPVya5`. Call `create_session` first; re-auth via
+  `/plugin` if MCP auth dropped.
+
+## Per-page process
+1. **Read the doc page.** Use the catalog `nodeId`. Run `get_screenshot` on the
+   `… Documentation` frame, and `node figma-node-links/query-tree.mjs "<master id>" 3` to get
+   the description and anatomy text.
+2. **Read the masters.** Run a read-only `use_figma` over each master/set in the page's
+   `masters[]`:
+   - `componentPropertyDefinitions` (variants, booleans, slots, instance swaps)
+   - per-variant fill/stroke colour bindings
+   - padding, gap, radius and stroke-weight bindings
+   - TEXT `textStyleId` and fills
+   - focus mechanism (`.Focus-ring` instance vs ad-hoc `Focus` rectangle vs none; State
+     value vs BOOLEAN)
+3. **Read the React side.** Component source, its CVA/utils, and its story. If the visuals
+   are in question, take Playwright screenshots of Storybook, light and dark.
+4. **Fill the checklist** below in `docs/audit/<slug>.md`. Each item is ✅, ❌ + finding, or
+   n/a. Classify every finding as **code fix**, **designer (Figma)**, or **deliberate
+   deviation** (with the reason).
+5. **Review with the user.** Present the findings and agree on the fix list.
+6. **Fix the code.** Run the verify gate (`PROGRESS.md → Verify a change`) and update the
+   story (only the stories Controls can't show), then **commit** with a message naming the
+   findings. Tick the page in `PROGRESS.md`.
+
+## Checklist (per component)
+| # | Area | Compare |
+|---|------|---------|
+| 1 | **API / axes** | Figma variant props, booleans, slots, instance swaps ↔ React props. Names, values and defaults. Flag invented and missing props. |
+| 2 | **States** | Default / Hover / Pressed / Disabled (+ Active / Selected / Validation where applicable). Disabled = opacity layer, not separate colours. |
+| 3 | **Colours** | Per-state fill / stroke / text token *names* (not hex). |
+| 4 | **Dimensions** | Padding / gap / radius / size / border weight bindings ↔ classes (drift covers most of this; also check unbound values). |
+| 5 | **Typography** | Text style per text node (drift never sees this). |
+| 6 | **Anatomy** | Sub-components / internals / slot structure and order. |
+| 7 | **Focus (hybrid model)** | Bordered **field** → own border `border/focus` 2px, React `focusBorder`, no ring. **Pressable** → `.Focus-ring` instance in Figma, React `focusRing` (keyboard-only `focus-visible`). Focused = BOOLEAN. Disabled = no focus. Ring covers only the focusable area. |
+| 8 | **A11y** | Semantic element / role / aria, keyboard interaction, contrast (`pnpm -F @max-core/tokens contrast`). |
+| 9 | **Doc page accuracy** | Doc text vs master (stale token names, usage lists, counts) → designer list. |
+| 10 | **Story** | Exposes every axis via Controls, plus matrix stories only where needed. |
+
+## Known findings to seed (from the 2026-10-24 focus review)
+- Inputs: `.Focus-ring` instances in the Input frames (about 81) → remove them in Figma (designer),
+  and React `Input` / `Textarea` `focusRingInset` → `focusBorder`. `SelectInput` uses the
+  outset `focusRing` (wrong for a field). Check Multiselect, Stepper, SearchBar,
+  BottomLineInput, the DateInput / TimePicker triggers.
+- Button / Pagination / Data Table use ad-hoc `Focus` rectangles instead of `.Focus-ring`.
+  Button, Link Button and FAB have `State=Focused` variants (should be a BOOLEAN).
+- Selection Controls: 43 `.Focus-ring` instances overridden to 1px. List item: 8 instances
+  bound to `/thick`. Unify these.
+- Switcher / Tabs / Range / Date Picker day cells have no focus in Figma (the rings were
+  reverted on 2026-09-13).
+- `DatePicker.tsx` / `TimePicker.tsx` repeat ring classes inline instead of using the
+  shared util.
+- `.Focus-ring` (`24:797`) component description is still the 2026-10-24 hybrid text (the
+  original was lost). Restore it from Figma version history, or leave it.
+- Figma `.Focus-ring` is 1px; React rings are 2px. Decide in the Buttons audit (designer).
+
+## Order (catalog tier order ≈ dependency order)
+**Atoms:** Buttons (Button, IconOnlyButton, SplitButton, Fab, LinkButton) → Selection
+Controls (Checkbox, Radio, Switch) → Segmented controls → Tag → Badge → List item → Knob →
+ScrollBar (+ ScrollArea) → Time picker → Tooltips → Divider → Spinner → Progress Bar →
+Status Dot → Avatar → User (no React counterpart: check whether EntityItem covers it) →
+Thumbnail → Content blocks.
+**Molecules:** Inputs (Input, BottomLineInput, Stepper, Textarea, SelectInput, Multiselect)
+→ Search bar → Item List → Dropdown → Form Groups → Date picker → Tabs (Switcher, Tabs) →
+Pagination → Range → Entity Item → User card (EntityCard) → Avatar group → Pin → Action bar
+→ Toast/snackbar → Dialogs.
+**Organisms:** Top Bar → Side bar → Bottom Navigation → Stacked List (+ ShareItem) → Stats
+card → Data table.
+
+**Skipped:** Foundations pages, Logo, Pay buttons (removed from the library), Focus ring
+(foundation, covered by checklist row 7). Widget card and Bottom sheet have no React yet;
+they are Phase 4 Batches 10/11 and get built against the same checklist.
+
+## Verification
+- Each page: an audit doc with every checklist row filled, the verify gate green, the
+  contrast count no worse than before, and Storybook screenshots matching the Figma
+  screenshot in light and dark.
+- Phase done when every non-skipped page is ✅ in the `PROGRESS.md` Audit status table and
+  the designer list is consolidated.

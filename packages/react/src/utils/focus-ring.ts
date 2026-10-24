@@ -4,13 +4,13 @@
  * - `ring` — an always-on ring (e.g. Tag's `selected` state).
  * - `focusRing` — an outset `focus-visible` ring for pressable elements
  *   (buttons, chips). Keyboard-focus only.
- * - `focusRingInset` — the ring for input *frames*, per the Figma rule
- *   (CLAUDE.md: "ring in INPUT FRAME, not wrapper"). Rendered as an absolute
- *   `::before` stretched -3px on every side so it hugs the field and survives
- *   the title/helper being toggled off. The element it sits on must be
- *   `relative` and carry the field's border-radius (for `rounded-[inherit]`).
- *   Because an `<input>` cannot host a `::before`, apply this to a wrapper
- *   frame around the input, triggered by `focus-within`.
+ * - `focusBorder` — focus for bordered *fields* (inputs, select, textarea…).
+ *   No ring: the field's own 1px border turns `border/focus` and thickens to
+ *   2px via an inset shadow, so layout doesn't shift. Apply to the element
+ *   that owns the border, triggered by `focus-within`.
+ * - `focusRingInset` — deprecated -3px `::before` ring around input frames;
+ *   replaced by `focusBorder` (hybrid focus model: fields = own border,
+ *   pressables = outset ring).
  */
 
 /** Ring geometry + color, no state prefix. */
@@ -23,7 +23,15 @@ export const focusRing =
   'focus-visible:ring-2 focus-visible:ring-[var(--border-focus)] ' +
   'focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-default)]';
 
-/** Inset -3px hugging ring for an input frame (apply to a `relative` wrapper). */
+/** Field focus: own border → `border/focus` at 2px (1px border + 1px inset shadow). */
+export const focusBorder =
+  'focus-within:border-[var(--border-focus)] ' +
+  'focus-within:shadow-[inset_0_0_0_1px_var(--border-focus)]';
+
+/**
+ * Inset -3px hugging ring for an input frame (apply to a `relative` wrapper).
+ * @deprecated Use `focusBorder` — fields show focus on their own border.
+ */
 export const focusRingInset =
   "before:content-[''] before:pointer-events-none before:absolute before:-inset-[3px] " +
   'before:rounded-[inherit] before:border-2 before:border-[var(--border-focus)] ' +

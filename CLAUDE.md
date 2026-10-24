@@ -155,11 +155,12 @@ Componenta atinge minimul din industrie?
 - Lipseste ceva ce orice DS serios are?
 - Color audit: sample variante, verifica fills/strokes pe tokeni corecti (nu hardcoded).
 
-### Pas 5 — Focus ring
-Componenta interactiva? Trebuie sa aiba focus ring:
-- Ca BOOLEAN pe wrapper (nu State variant value)
-- Acopera DOAR zona focusabila (nu label/helper). Outset 4.5px.
-- Disabled nu are ring.
+### Pas 5 — Focus (model hibrid, decis 24 Oct 2026)
+Componenta interactiva? Trebuie sa aiba focus vizibil:
+- **Field cu border** (Input, Select, Textarea, Stepper, Search Bar, trigger picker): focus = border-ul propriu devine `border/focus` @ `- Border Weight -/thick` (2px). **Fara ring separat.** React: `focusBorder`.
+- **Pressable** (Button, Icon Only, FAB, Link, Checkbox/Radio/Switch, Tabs, Pagination, Knob, List Item, Card etc.): ring outset cu gap = instanta **`.Focus-ring`** (`24:797`, 2px, OUTSIDE, -3px STRETCH). Nu dreptunghiuri ad-hoc. React: `focusRing`.
+- Focused = BOOLEAN (nu State variant value). Acopera DOAR zona focusabila (nu label/helper).
+- Disabled nu are focus.
 
 ### Pas 6 — Slots
 Componenta de tip container (Item List, Card, Bottom Sheet etc.) si nu are slots pt continut dinamic → trebuie adaugate.
@@ -238,7 +239,7 @@ ROOT FRAME (~2100-2228px wide, layoutMode NONE, clipsContent: true, bg/surface, 
 8. **NU presupune sizing mode ramane AUTO.** Re-aplica dupa resize.
 9. **State Layer pattern:** node opacity=0, fill opacity 1 cu bound color. Fill opacity override nu propaga la instances.
 10. **NU rebuild showcase fara sa muti masters inapoi.**
-11. **Focus ring in INPUT FRAME, nu in wrapper.** Ring = absolute child al Input frame din options, STRETCH constraints, -3px pe toate laturile. Focused = BOOLEAN pe options component set. Daca ring e pe wrapper, se deformeaza cand Show Title/Helper sunt off.
+11. **Field-urile NU au focus ring — focusul e border-ul propriu.** (Inlocuieste vechea regula "ring in Input frame -3px".) Focused = BOOLEAN pe options component set si schimba stroke-ul Input frame-ului la `border/focus` 2px. Ringurile `.Focus-ring` existente din inputuri se scot in faza de audit per componenta.
 12. **Base Input cross-refs.** Select Input si Multiselect aveau tokeni bound la Base Input in loc de proprii. Verifica mereu ca o componenta nu refera tokenii altei componente.
 
 ---
