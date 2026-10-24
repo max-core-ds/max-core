@@ -2,7 +2,7 @@ import { StatusDot } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
-  title: 'Atoms/StatusDot',
+  title: 'Atoms/Status Dot',
   component: StatusDot,
   parameters: { layout: 'centered' },
   argTypes: {
