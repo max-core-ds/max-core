@@ -213,6 +213,10 @@ Reuse these before writing inline classes — they keep Tailwind literals in one
 
 _Rows are added as each page is audited (order in `PLAN.md → Phase 4.5`)._
 
+**Carry-overs to later pages:**
+- **Item List page → Multiselect "list" version.** The Multiselect master opens an **Item List** (search field, Select all row, divider, scroll rail, rows) under a field that's only a chip display, with no typing. React ships the other pattern: you type in the chip field and get a plain filtered list. **Keep both** (user, 2026-10-24) as one component with an opt-in prop (e.g. `listSearch` / `selectAll`, name TBD). The default stays the current typeahead, and the opt-in renders the popup through the existing `ItemList` (`search`, `selectAll`, `showDivider`, `showScrollBar`). Select's popup rows get audited on the same page.
+- **Entity Item page:** the subtitle is weight 400; the master uses Body/SM/300.
+
 ---
 
 ## Verify a change (run before every commit)
