@@ -70,6 +70,9 @@ Run them as separate commands (or echo each exit code): a chained `&& … | tail
   controlled (`useControllableState`) and ignore empty emissions (Switcher, SegmentedControl).
 - **Base UI focus lives on inner inputs** for Slider (and other hidden-input widgets): `focus-visible:` on the
   wrapper never matches. Use `focusRingWithin` (`has-[:focus-visible]:`) and verify the ring with a Tab screenshot.
+- **Storybook's Tailwind doesn't rescan `packages/react/src` on a dist rebuild.** A *new* class (one not
+  used anywhere before) is in the DOM but has no CSS rule. `touch apps/storybook/src/global.css` forces
+  the rescan. Check the computed style before you trust a hover/focus screenshot.
 - **Comments:** never write `status/*/…` inside a `/** */` block — `*/` closes it.
 - **Storybook ids** are kebab-case per word: `atoms-segmented-control--default`
   (`curl -s localhost:6006/index.json`). Many stories render controls *checked*; uncheck first

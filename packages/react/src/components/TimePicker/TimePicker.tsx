@@ -75,6 +75,13 @@ const rowByDistance = [
 ];
 const spacerByDistance = ['h-[var(--size-24)]', 'h-[var(--size-20)]', 'h-[var(--size-16)]'];
 
+// Hover on a non-selected row (not in Figma): text/accent at full opacity, so the
+// faded row lights up without looking selected (no bar, no bold). text/accent is
+// the text-role accent — 6.29 light / 7.34 dark on bg/surface (accent/hover is a
+// pale fill, ~2:1 as text).
+const rowHover =
+  'transition-[color,opacity] enabled:hover:text-[var(--text-accent)] enabled:hover:opacity-100';
+
 // -- Atoms/Time Picker component tokens (referenced via the semantics they alias):
 // Radius = radius.l, Border Weight = none, Container Padding X/Y = spacing 24/16,
 // Gap = spacing.16, Items Gap = spacing.16. The selector bar is full-bleed via a
@@ -218,6 +225,7 @@ function WheelColumn<T>({
               'grid place-items-center bg-transparent tabular-nums outline-none',
               'disabled:cursor-not-allowed disabled:opacity-30',
               rowByDistance[distance],
+              !isCentre && rowHover,
             )}
           >
             {render(value)}

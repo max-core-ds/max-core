@@ -35,7 +35,7 @@
 - **List item page** (`docs/audit/list-item.md`): Label Helper Gap bound to `-- Molecule/Item List/Label Helper Gap` (needs its own `-- Atoms/List Item/` token); Disabled variants have no Level spacers; `.Focus-ring` instances at −2/−2.5 with radius 0 instead of −3 STRETCH (all bind `/thick` 2px, unlike the 1px rings elsewhere).
 - **Knob page** (`docs/audit/knob.md`): Disabled `off`/`on` → `Off`/`On`; Pressed handle stroke is an unbound 1px (bind `/thin`); container `itemSpacing` bound to `Spacing/10` with one child; doc page says Switch uses the Knob (it has its own).
 - **ScrollBar page** (`docs/audit/scrollbar.md`): page name typo "ScollBar"; thumb `accent/subtle` on `bg/default` is about 1.2:1 in light (barely visible); doc page shows no value for Thumb Width.
-- **Time picker page** (`docs/audit/time-picker.md`): centre `accent/default` on `accent/subtle` = 3.33 dark (fails AA, shipped as-is by decision); unselected period bound to `accent/subtle` (~1.2:1; React uses `text/secondary` @ dim); row text boxes stuck at 9–12px (frame 135×146 vs ~150×192); `Period Bottom Padding` documented but unbound.
+- **Time picker page** (`docs/audit/time-picker.md`): centre `accent/default` on `accent/subtle` = 3.33 dark (fails AA, shipped as-is by decision); unselected period bound to `accent/subtle` (~1.2:1; React uses `text/secondary` @ dim); row text boxes stuck at 9–12px (frame 135×146 vs ~150×192); `Period Bottom Padding` documented but unbound; React added a row hover (`text/accent` + full opacity, user request), so a Hover spec is needed.
 
 ---
 

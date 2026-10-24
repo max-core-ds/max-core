@@ -10,7 +10,7 @@ Legend: ✅ match · ❌ finding · n/a. Class: **[code]** · **[designer]** · 
 | # | Area | Status |
 |---|---|---|
 | 1 | API | ✅ The master has no properties (a static 4 : 10 PM frame). **[deviation]** All React props are behaviour Figma can't express: `value`/`defaultValue`/`onValueChange` (canonical 24h strings), `format` 12h/24h, `showSeconds`, `minuteStep`/`secondStep`, `minTime`/`maxTime`/`disabledTimes`, and `mode="popover"` with a field trigger (`label`/`helper`/`errorMessage`/`placeholder`/`clearable`). |
-| 2 | States | n/a in Figma. React adds blocked options (`disabled:opacity-30`) and `disabled` (`opacity/disabled` on the surface) **[deviation]**. |
+| 2 | States | n/a in Figma. React adds blocked options (`disabled:opacity-30`) and `disabled` (`opacity/disabled` on the surface) **[deviation]**. **Hover (user request, not in Figma):** a non-selected, enabled row turns `text/accent` at full opacity (6.29 light / 7.34 dark on `bg/surface`), so it lights up without looking selected (no bar, no bold). `accent/hover` was rejected because it's a pale fill token (about 2:1 as text). The designer should add a hover spec. |
 | 3 | Colours | ❌ **The wheel was off-master:** a solid `accent/default` bar with `text/on-accent` white centre text. Figma: **Selector `accent/subtle`, centre value `accent/default`** → **[code]** now matches. **User decision:** keep Figma's `accent/default` centre even though it fails dark AA (3.33; light 5.10) → designer list + contrast override. The old white-on-solid bar failed dark worse (2.85) but was untracked. ✅ ±1 `text/secondary` @ `opacity/dim`, ±2 @ `opacity/disabled`; Container `bg/surface`. ❌ The Figma **unselected period (AM) is bound to `accent/subtle`** (1.23 light / 1.47 dark, invisible) → **user decision:** it follows the ±1 neighbours (`text/secondary` @ dim); flagged to the designer as a likely mistake. |
 | 4 | Dimensions | ✅ Radius `l`, Border Weight none, Container Padding 24/16, Gap 16. ❌ **Items Gap (16) was ignored:** React used fixed 44px rows and 64px-wide columns (surface about 272×252). Figma: rows stacked with a 16px gap and hug-width columns → **[code]** rows are line-height tall (16/20/24 → `--size-16/20/24`) with `gap-[--spacing-16]`; columns hug (`min-w-[2ch]` so a 12h hour column doesn't narrow when every visible hour is one digit). Selector bar is 24 tall, full-bleed. Measured: surface 150×192, bar at y 84 = centre row. Figma's frame reads 135×146 only because of the stuck-text-box artifact (rows 9–12px tall) → [designer]. ❌ `Period Bottom Padding` (28) is defined and documented but bound nowhere in the master → [designer]. |
 | 5 | Typography | ❌ React: centre 18px bold, ±1 15px, ±2 14px, normal weight. Figma: **centre Body/MD/700, ±1 Body/SM/300, ±2 Caption/300** → **[code]** `text-base font-bold` / `text-sm font-light` / `text-xs font-light`. The Period spacer texts have no text style (Inter Light 12/14, transparent) → [designer] nit. |
@@ -25,7 +25,8 @@ Legend: ✅ match · ❌ finding · n/a. Class: **[code]** · **[designer]** · 
 2. Row typography Body/MD/700 · Body/SM/300 · Caption/300; row heights = line heights; Items Gap 16; hug columns (`min-w-[2ch]`). The `--tp-row` custom property is removed.
 3. Unselected AM/PM follows the ±1 neighbour treatment (by decision).
 4. Focus: columns → shared `focusRing`; popover trigger → `focusBorder` (hybrid model).
-5. `contrast-audit.ts`: TimePicker selected-row pairing declared (`accent/default` on `accent/subtle`).
+5. Hover on non-selected rows: `text/accent` + full opacity (user request).
+6. `contrast-audit.ts`: TimePicker selected-row pairing declared (`accent/default` on `accent/subtle`).
 
 **Contrast baseline:** **25 findings / 16 of 24 components** (TimePicker added; dark 3.33, kept by decision).
 **Verified:** typecheck, build, Storybook tsc, showcase tsc, drift (Time Picker ✓). Playwright light + dark: Inline, WithSeconds, Constrained, column focus, trigger focus, open popover; bar/centre geometry measured.
@@ -35,3 +36,4 @@ Legend: ✅ match · ❌ finding · n/a. Class: **[code]** · **[designer]** · 
 - The unselected period (AM) is bound to `accent/subtle` (about 1.2:1); React uses `text/secondary` @ dim like the other columns.
 - Row text boxes are stuck at 9–12px high, so the frame reads 135×146 instead of about 150×192.
 - `Period Bottom Padding` (28) is documented but bound nowhere; Period spacer texts have no text style.
+- React added a row hover (`text/accent`, full opacity); add a matching Hover spec to the master.
