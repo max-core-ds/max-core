@@ -29,6 +29,7 @@
 - **Selection Controls page** (full list in `docs/audit/selection-controls.md`): solid unchecked Hover/Pressed fills (shipped as-is by decision; Pressed and Error Hover are darker than checked); Checkbox focus: wrapper ring is malformed (14×4 sliver below the box) and the inner set duplicates `Focused` + ring (keep one, around the box, at 2px); Radio and Switch have no Disabled; Checkbox Disabled swaps its stroke; Checkbox Success unchecked stroke `/default` → `/border`; Checkbox M icon bound to an orphan `---` token; label type SM (Checkbox/Radio) vs MD (Switch); React top-aligns the control.
 - **Segmented controls page** (`docs/audit/segmented-controls.md`): inactive label `text/secondary` on `bg/subtle` fails AA (3.86 light / 4.04 dark), shipped as-is by decision; items need a Focused BOOLEAN + `.Focus-ring`; item label text box is stuck at 10px high (item renders 26px instead of about 34px).
 - **Tag page** (`docs/audit/tag.md`): wrapper Focused → BOOLEAN; overlay opacities bound to `opacity/disabled`/`opacity/dim` instead of hover/pressed; `overlay/hover` is indigo for every tone (status chips turn purple-ish on hover); Outline Default `text/secondary` on `bg/subtle` fails AA (3.86 light), shipped as-is.
+- **Badge page** (`docs/audit/badge.md`): label text box is stuck at 9px high (frames render 21/25/29 instead of about 28/32/36). Same stale-text-box artifact as the Segmented item.
 
 ---
 
@@ -164,7 +165,7 @@ Reuse these before writing inline classes — they keep Tailwind literals in one
 0. **Phase 4.5 — Component audit (NEXT, before Batch 10)** — every shipped component vs its Figma doc page, page by page from `figma-node-links/catalog.json`. Process + checklist + order: **`PLAN.md → Phase 4.5`**. Findings in `docs/audit/<slug>.md`; status in the table below.
 1. **Phase 3.5 cross-check** — ✅ all exported files done (segmented-control, list-item, search-bar, dialog, top-bar, bottom-bar, sidebar). Resume when the designer drops new files into `figma-node-links/`.
 2. **Phase 4 — mega-systems + test infra** — planned in **`PLAN.md → Phase 4`**. Batches: **8 Stacked List** ✅ lean v1 (default/social/media/product; remaining row types on demand) → **9 Data Table** ✅ lean v1 (column-config + primitives; mobile/expandable/Table-Header deferred) → **10 Card** → **11 Bottom Sheet** (+18 premades) → **12 Date Picker** ✅ (day/range/input; month/year grid — Figma wheels deferred) → **13 test infra** (vitest + RTL + axe). Batches 10 & 11 remain.
-3. **Colour-contrast guardrail — shipped** (`pnpm -F @max-core/tokens contrast`): resolves every component's text/background pairing to hex in light + dark and flags any below WCAG AA (4.5 normal / 3 large). Reads source, never touches tokens.json; turbo `contrast` task reports non-blocking. Fixed the light-mode white-on-pale defects it caught (ListItem hover, EntityCard hover/selected). **Open: 25 findings across 16 components (as of 2026-10-24; was 13/12 — Phase 4.5 audits surfaced real pairings: Button family + Tag Selected (dark ramp), SegmentedControl inactive + Tag Outline Default `text/secondary` on `bg/subtle` (light + dark)).** 12 are dark-mode only — the dark accent ramp is too light for white on-accent text (Avatar, Fab, ListItem ×2, Pin, SegmentedControl), plus mid-tone text on subtle/surface fills at 3.3–4.0 (Badge, ShareItem, BottomNavigation, ContentBlocks, DatePicker, Thumbnail); root-cause fix is Figma-side (adjust `accent/*` dark values + re-export), folded into the dark-mode visual pass. **1 fails in light too:** Pagination hover (`text/secondary` on `bg/subtle`, 3.86 light / 4.04 dark) — fixable in code. Extractor only sees within-className pairings; child-text-over-parent-surface needs `OVERRIDES[...].extra` in `contrast-audit.ts` if fuller coverage is wanted.
+3. **Colour-contrast guardrail — shipped** (`pnpm -F @max-core/tokens contrast`): resolves every component's text/background pairing to hex in light + dark and flags any below WCAG AA (4.5 normal / 3 large). Reads source, never touches tokens.json; turbo `contrast` task reports non-blocking. Fixed the light-mode white-on-pale defects it caught (ListItem hover, EntityCard hover/selected). **Open: 24 findings across 15 components (as of 2026-10-24; was 13/12 — Phase 4.5 audits surfaced real pairings: Button family + Tag Selected (dark ramp), SegmentedControl inactive + Tag Outline Default `text/secondary` on `bg/subtle` (light + dark)).** 12 are dark-mode only — the dark accent ramp is too light for white on-accent text (Avatar, Fab, ListItem ×2, Pin, SegmentedControl), plus mid-tone text on subtle/surface fills at 3.3–4.0 (ShareItem, BottomNavigation, ContentBlocks, DatePicker, Thumbnail); root-cause fix is Figma-side (adjust `accent/*` dark values + re-export), folded into the dark-mode visual pass. **1 fails in light too:** Pagination hover (`text/secondary` on `bg/subtle`, 3.86 light / 4.04 dark) — fixable in code. Extractor only sees within-className pairings; child-text-over-parent-surface needs `OVERRIDES[...].extra` in `contrast-audit.ts` if fuller coverage is wanted.
 
 > Not yet visually cross-checked (built from tokens only): every component in
 > the inventory below without a ✅ in the Cross-check column.
@@ -177,7 +178,8 @@ Reuse these before writing inline classes — they keep Tailwind literals in one
 | Selection Controls | Checkbox, Radio, Switch | ✅ 2026-10-24 — [audit](docs/audit/selection-controls.md) |
 | Segmented controls | SegmentedControl | ✅ 2026-10-24 — [audit](docs/audit/segmented-controls.md) |
 | Tag | Tag | ✅ 2026-10-24 — [audit](docs/audit/tag.md) |
-| Badge | Badge | ⏳ next |
+| Badge | Badge | ✅ 2026-10-24 — [audit](docs/audit/badge.md) |
+| List item | ListItem | ⏳ next |
 
 _Rows are added as each page is audited (order in `PLAN.md → Phase 4.5`)._
 
@@ -190,7 +192,7 @@ pnpm -F @max-core/react typecheck        # tsc --noEmit
 pnpm -F @max-core/react build            # tsup (rebuild dist so Storybook + drift see it)
 cd apps/storybook && npx tsc --noEmit -p tsconfig.json   # Storybook consumes built dist
 pnpm -F @max-core/tokens drift           # spacing/size/radius conformance
-pnpm -F @max-core/tokens contrast        # WCAG AA text/bg contrast, light + dark (reports; 25 known findings in 16 components — compare the count before/after)
+pnpm -F @max-core/tokens contrast        # WCAG AA text/bg contrast, light + dark (reports; 24 known findings in 15 components — compare the count before/after)
 npx biome check --write <changed files>
 ```
 

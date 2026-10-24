@@ -40,6 +40,16 @@ export const statusOutline: Record<StatusTone, string> = {
   warning: 'border-[var(--status-warning-default)] text-[var(--status-warning-default)]',
 };
 
+/**
+ * Tone *border token* + tone text — outline treatment for chips/labels (Tag,
+ * Badge), whose Figma outlines bind status/<tone>/border rather than the solid tone.
+ */
+export const statusBorderOutline: Record<StatusTone, string> = {
+  danger: 'border-[var(--status-danger-border)] text-[var(--status-danger-default)]',
+  success: 'border-[var(--status-success-border)] text-[var(--status-success-default)]',
+  warning: 'border-[var(--status-warning-border)] text-[var(--status-warning-default)]',
+};
+
 /** Tone-colored text only — ghost treatment. */
 export const statusText: Record<StatusTone, string> = {
   danger: 'text-[var(--status-danger-default)]',

@@ -1,16 +1,6 @@
-import { useEffect, useState, type ReactNode } from 'react';
 import { Avatar, Badge, Button, Input, Tag } from '@max-core/react';
-import {
-  ArrowRight,
-  Hash,
-  Moon,
-  Plus,
-  Search,
-  Star,
-  Sun,
-  Trash2,
-  X,
-} from 'lucide-react';
+import { ArrowRight, Hash, Moon, Plus, Search, Star, Sun, Trash2, X } from 'lucide-react';
+import { type ReactNode, useEffect, useState } from 'react';
 
 type Theme = 'light' | 'dark';
 
@@ -35,9 +25,7 @@ export function App() {
               <Star className="text-[var(--text-on-accent)]" size={20} />
             </div>
             <div>
-              <h1 className="text-base font-bold text-[var(--text-primary)]">
-                Max Core
-              </h1>
+              <h1 className="text-base font-bold text-[var(--text-primary)]">Max Core</h1>
               <p className="text-xs text-[var(--text-muted)]">Consumer showcase</p>
             </div>
           </div>
@@ -61,14 +49,11 @@ export function App() {
             How to use @max-core/react in your project
           </h2>
           <p className="max-w-2xl text-[var(--text-secondary)]">
-            This is the smallest possible Vite + React + Tailwind&nbsp;v4 app that
-            consumes the Max Core library. It imports the React atoms, loads{' '}
-            <code className="rounded bg-[var(--bg-subtle)] px-1.5 py-0.5 text-xs">
-              tokens.css
-            </code>{' '}
-            for the design tokens, and uses the same Tailwind setup any
-            downstream project would. Toggle dark mode above to see the token
-            cascade in action.
+            This is the smallest possible Vite + React + Tailwind&nbsp;v4 app that consumes the Max
+            Core library. It imports the React atoms, loads{' '}
+            <code className="rounded bg-[var(--bg-subtle)] px-1.5 py-0.5 text-xs">tokens.css</code>{' '}
+            for the design tokens, and uses the same Tailwind setup any downstream project would.
+            Toggle dark mode above to see the token cascade in action.
           </p>
         </section>
 
@@ -90,11 +75,7 @@ export function App() {
           <Row>
             <Button leftIcon={<Plus size={16} />}>Add user</Button>
             <Button rightIcon={<ArrowRight size={16} />}>Continue</Button>
-            <Button
-              variant="secondary"
-              tone="danger"
-              leftIcon={<Trash2 size={16} />}
-            >
+            <Button variant="secondary" tone="danger" leftIcon={<Trash2 size={16} />}>
               Delete account
             </Button>
           </Row>
@@ -106,29 +87,17 @@ export function App() {
           </Row>
         </Section>
 
-        <Section
-          title="Avatars"
-          description="Image with initials fallback. Five sizes."
-        >
+        <Section title="Avatars" description="Image with initials fallback. Five sizes.">
           <Row>
             {(['xs', 's', 'm', 'l', 'xl'] as const).map((size) => (
               <div key={size} className="flex flex-col items-center gap-2">
-                <Avatar
-                  size={size}
-                  src={sampleAvatar}
-                  alt="Max"
-                  fallback="MX"
-                />
-                <span className="text-xs uppercase text-[var(--text-muted)]">
-                  {size}
-                </span>
+                <Avatar size={size} src={sampleAvatar} alt="Max" fallback="MX" />
+                <span className="text-xs uppercase text-[var(--text-muted)]">{size}</span>
               </div>
             ))}
             <div className="flex flex-col items-center gap-2">
               <Avatar size="l" fallback="JD" />
-              <span className="text-xs uppercase text-[var(--text-muted)]">
-                fallback
-              </span>
+              <span className="text-xs uppercase text-[var(--text-muted)]">fallback</span>
             </div>
           </Row>
         </Section>
@@ -139,7 +108,7 @@ export function App() {
             <Badge tone="danger">Error</Badge>
             <Badge tone="success">Live</Badge>
             <Badge tone="warning">Beta</Badge>
-            <Badge tone="neutral">Draft</Badge>
+            <Badge variant="outline">Draft</Badge>
           </Row>
         </Section>
 
@@ -205,9 +174,7 @@ export function App() {
                 <Search className="text-[var(--text-on-accent)]" size={20} />
               </div>
               <div className="flex-1 space-y-1">
-                <h3 className="font-bold text-[var(--text-primary)]">
-                  Custom card
-                </h3>
+                <h3 className="font-bold text-[var(--text-primary)]">Custom card</h3>
                 <p className="text-sm text-[var(--text-secondary)]">
                   Uses{' '}
                   <code className="rounded bg-[var(--bg-subtle)] px-1.5 py-0.5 text-xs">
@@ -222,12 +189,10 @@ export function App() {
               </div>
             </div>
             <div className="space-y-2 rounded-[var(--radius-xl)] border border-[var(--status-danger-border)] bg-[var(--status-danger-subtle)] p-6">
-              <h3 className="font-bold text-[var(--status-danger-default)]">
-                Danger banner
-              </h3>
+              <h3 className="font-bold text-[var(--status-danger-default)]">Danger banner</h3>
               <p className="text-sm text-[var(--text-secondary)]">
-                Status tokens cascade through the same mechanism. Swap the
-                Figma source and this banner colors update automatically.
+                Status tokens cascade through the same mechanism. Swap the Figma source and this
+                banner colors update automatically.
               </p>
               <Row>
                 <Button tone="danger" size="s">
@@ -244,8 +209,7 @@ export function App() {
 
       <footer className="border-t border-[var(--border-muted)] px-8 py-6">
         <div className="mx-auto max-w-5xl text-xs text-[var(--text-muted)]">
-          Built with <code>@max-core/react</code>. See <code>README.md</code>{' '}
-          for setup details.
+          Built with <code>@max-core/react</code>. See <code>README.md</code> for setup details.
         </div>
       </footer>
     </div>
@@ -265,9 +229,7 @@ function Section({
     <section className="space-y-5">
       <div className="space-y-1">
         <h2 className="text-xl font-bold text-[var(--text-primary)]">{title}</h2>
-        {description ? (
-          <p className="text-sm text-[var(--text-secondary)]">{description}</p>
-        ) : null}
+        {description ? <p className="text-sm text-[var(--text-secondary)]">{description}</p> : null}
       </div>
       <div className="space-y-3">{children}</div>
     </section>

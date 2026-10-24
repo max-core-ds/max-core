@@ -2,7 +2,12 @@ import { type VariantProps, cva } from 'class-variance-authority';
 import type { HTMLAttributes, MouseEventHandler, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
 import { focusRing } from '../../utils/focus-ring.js';
-import { type StatusTone, statusSubtle, statusText } from '../../utils/tone.js';
+import {
+  type StatusTone,
+  statusBorderOutline,
+  statusSubtle,
+  statusText,
+} from '../../utils/tone.js';
 
 // Figma: 3 Variants (Primary, Outline, Ghost) × 4 Tones × 2 Sizes + Selected
 // (Primary only). Tag is a filter chip: Primary/Off is a subtle tinted fill,
@@ -31,12 +36,6 @@ const selectedFill: Record<StatusTone, string> = {
     'bg-[var(--status-success-default)] border-[var(--status-success-border)] text-[var(--text-on-accent)]',
   warning:
     'bg-[var(--status-warning-default)] border-[var(--status-warning-border)] text-[var(--text-on-accent)]',
-};
-
-const outlineBorder: Record<StatusTone, string> = {
-  danger: 'border-[var(--status-danger-border)] text-[var(--status-danger-default)]',
-  success: 'border-[var(--status-success-border)] text-[var(--status-success-default)]',
-  warning: 'border-[var(--status-warning-border)] text-[var(--status-warning-default)]',
 };
 
 // Interactive (clickable) tags get the Figma wrapper states: a `_StateOverlay`
@@ -111,9 +110,9 @@ const tagStyles = cva(
         tone: 'default',
         class: 'bg-[var(--bg-subtle)] border-[var(--border-default)] text-[var(--text-secondary)]',
       },
-      { variant: 'outline', tone: 'danger', class: outlineBorder.danger },
-      { variant: 'outline', tone: 'success', class: outlineBorder.success },
-      { variant: 'outline', tone: 'warning', class: outlineBorder.warning },
+      { variant: 'outline', tone: 'danger', class: statusBorderOutline.danger },
+      { variant: 'outline', tone: 'success', class: statusBorderOutline.success },
+      { variant: 'outline', tone: 'warning', class: statusBorderOutline.warning },
       // Ghost — tone text only; default is accent.
       { variant: 'ghost', tone: 'default', class: 'text-[var(--accent-default)]' },
       { variant: 'ghost', tone: 'danger', class: statusText.danger },
