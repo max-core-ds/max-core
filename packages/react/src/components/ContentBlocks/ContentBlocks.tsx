@@ -44,14 +44,17 @@ export function TextBlock({
   );
 }
 
+// Image Placeholder (2876:2): bg/subtle, square corners, a 48px icon over a
+// Caption/300 "Image" label, 8px apart. The master is a fixed 343×200; here it
+// fills its container at 16:9.
 export interface ImagePlaceholderProps extends ComponentPropsWithoutRef<'div'> {}
 
 export function ImagePlaceholder({ className, ...rest }: ImagePlaceholderProps) {
   return (
     <div
       className={cn(
-        'flex aspect-video w-full flex-col items-center justify-center gap-[var(--spacing-04)]',
-        'rounded-[var(--radius-md)] bg-[var(--bg-subtle)] text-[var(--text-muted)]',
+        'flex aspect-video w-full flex-col items-center justify-center gap-[var(--spacing-08)]',
+        'bg-[var(--bg-subtle)] text-[var(--text-muted)]',
         className,
       )}
       {...rest}
@@ -69,7 +72,7 @@ function ImageIcon() {
       fill="none"
       stroke="currentColor"
       strokeWidth={1.5}
-      className="size-[var(--size-32)]"
+      className="size-[var(--size-48)]"
       aria-hidden="true"
       focusable="false"
     >
