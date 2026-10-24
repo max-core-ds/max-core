@@ -22,6 +22,10 @@ Legend: ✅ match · ❌ finding · n/a. Class: **[code]** · **[designer]** · 
 | 9 | Doc page | See designer list. |
 | 10 | Story | ✅ Default, granularities, footer, constrained, disabled dates, range, input, input error. |
 
+### Follow-up (user report, 2026-10-24)
+- **Squeezed columns:** once range cells stretched to fill their column, a month that was mostly in range lost its minimum width and the grid collapsed. → each month has `min-w-[308px]` (One Calendar Min Width).
+- **Range kept growing:** after paging months, a click before the start stretched the old range back to the clicked day (react-day-picker's default), banding whole months. → a click after a finished range starts a new range (start = the clicked day, no end).
+
 ## DateInput (Input Date Picker)
 
 | # | Area | Finding → fix |

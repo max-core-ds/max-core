@@ -114,7 +114,9 @@ const paneSurface = 'rounded-[var(--radius-md)] bg-[var(--bg-surface)] text-[var
 // joins the band, so start → middle → end reads as one strip.
 const calendarClassNames: Partial<ClassNames> = {
   months: 'flex flex-col gap-[var(--spacing-08)] sm:flex-row',
-  month: 'flex flex-col',
+  // One Calendar Min Width (308 = 7 × 44): range cells stretch to their column,
+  // so without it a month that's mostly in range collapses.
+  month: 'flex min-w-[308px] flex-col',
   month_grid: 'w-full border-collapse',
   // _Weekday Header cell: Caption/300 text/secondary, 10px top/bottom.
   weekday: 'py-[var(--spacing-10)] text-xs font-light text-[var(--text-secondary)]',
@@ -617,7 +619,13 @@ export function DualDatePicker({
         mode="range"
         numberOfMonths={numberOfMonths}
         selected={rangeToRdp(range)}
-        onSelect={(next) => setRange(rdpToRange(next))}
+        // A click after a finished range starts a new one (rdp would stretch the
+        // old range to the clicked day instead).
+        onSelect={(next, clicked) =>
+          setRange(
+            range.start && range.end ? { start: dateToIso(clicked), end: null } : rdpToRange(next),
+          )
+        }
         defaultMonth={isoToDate(range.start)}
         startMonth={isoToDate(minDate)}
         endMonth={isoToDate(maxDate)}
