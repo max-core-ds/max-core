@@ -16,6 +16,7 @@ import {
   fieldLabel,
   fieldRoot,
 } from '../../utils/field.js';
+import { useFormGroupSize } from '../../utils/form-group-size.js';
 import { FieldIcon } from '../Input/Input.js';
 import { ItemList } from '../ItemList/ItemList.js';
 import { listItemOption } from '../ListItem/ListItem.js';
@@ -80,7 +81,7 @@ export interface SelectInputProps extends VariantProps<typeof triggerStyles> {
 export function SelectInput({
   items,
   placeholder = 'Select…',
-  size,
+  size: sizeProp,
   variant = 'primary',
   leadingIcon,
   value,
@@ -93,6 +94,7 @@ export function SelectInput({
   className,
   ...rest
 }: SelectInputProps) {
+  const size = useFormGroupSize(sizeProp);
   const isInvalid = Boolean(errorMessage);
   return (
     <Field.Root className={cn(fieldRoot, className)} invalid={isInvalid} disabled={disabled}>

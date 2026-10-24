@@ -4,14 +4,18 @@ import { Fieldset } from '@base-ui/react/fieldset';
 import { type VariantProps, cva } from 'class-variance-authority';
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
+import { FormGroupSizeContext } from '../../utils/form-group-size.js';
 
 // Figma Form Group set (4011:1119): Headline (Title + Description) → Items slot
 // → Action slot (an Action Bar). Per-size outer Gap and Items Gap, plus
 // Headline/Action gaps and (in premade mode) padding/radius, match
 // -- Molecule/Form Group/*. Title is Heading/H5 (S, M) or H4 (L), Description
-// Body/SM/300 text/muted. Premade = the Premades Form Group surface (bg/surface,
-// no border, radius md). Its Size L padding is 40 in Figma, but that token
-// isn't in the export yet, so L keeps M's 24 until the re-export.
+// Body/SM/300 text/muted. Size also sizes the content: fields and buttons inside
+// take the group's S/M/L unless they set their own `size`, as the master's Base
+// Inputs and Action Bar Buttons follow its Size. Premade = the Premades Form
+// Group surface (bg/surface, no border, radius md). Its Size L padding is 40 in
+// Figma, but that token isn't in the export yet, so L keeps M's 24 until the
+// re-export.
 const rootStyles = cva(['flex flex-col'], {
   variants: {
     size: {
@@ -75,22 +79,24 @@ export function FormGroup({
   ...rest
 }: FormGroupProps) {
   return (
-    <Fieldset.Root className={cn(rootStyles({ size, premade }), className)} {...rest}>
-      {headline || description ? (
-        <div className="flex flex-col gap-[var(--spacing-12)]">
-          {headline ? (
-            <Fieldset.Legend className={titleStyles({ size })}>{headline}</Fieldset.Legend>
-          ) : null}
-          {description ? (
-            <p className="text-sm font-light text-[var(--text-muted)]">{description}</p>
-          ) : null}
-        </div>
-      ) : null}
-      <div className={itemsStyles({ size })}>{children}</div>
-      {action ? (
-        // Children fill the width, like the master's Action Bar (FILL).
-        <div className="flex gap-[var(--spacing-08)] [&>*]:flex-1">{action}</div>
-      ) : null}
-    </Fieldset.Root>
+    <FormGroupSizeContext.Provider value={size ?? 'm'}>
+      <Fieldset.Root className={cn(rootStyles({ size, premade }), className)} {...rest}>
+        {headline || description ? (
+          <div className="flex flex-col gap-[var(--spacing-12)]">
+            {headline ? (
+              <Fieldset.Legend className={titleStyles({ size })}>{headline}</Fieldset.Legend>
+            ) : null}
+            {description ? (
+              <p className="text-sm font-light text-[var(--text-muted)]">{description}</p>
+            ) : null}
+          </div>
+        ) : null}
+        <div className={itemsStyles({ size })}>{children}</div>
+        {action ? (
+          // Children fill the width, like the master's Action Bar (FILL).
+          <div className="flex gap-[var(--spacing-08)] [&>*]:flex-1">{action}</div>
+        ) : null}
+      </Fieldset.Root>
+    </FormGroupSizeContext.Provider>
   );
 }

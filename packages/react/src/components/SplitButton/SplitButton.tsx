@@ -6,6 +6,7 @@ import { type VariantProps, cva } from 'class-variance-authority';
 import { type ComponentPropsWithoutRef, type ReactNode, useRef } from 'react';
 import { cn } from '../../utils/cn.js';
 import { focusRing } from '../../utils/focus-ring.js';
+import { useFormGroupSize } from '../../utils/form-group-size.js';
 import { statusBg, statusOutline, statusText, statusToneCompounds } from '../../utils/tone.js';
 import { type DropdownItem, DropdownMenu } from '../Dropdown/Dropdown.js';
 
@@ -126,7 +127,7 @@ export interface SplitButtonProps
 export function SplitButton({
   variant,
   tone,
-  size = 'm',
+  size: sizeProp,
   className,
   children,
   onClick,
@@ -136,6 +137,7 @@ export function SplitButton({
   disabled,
   ...rest
 }: SplitButtonProps) {
+  const size = useFormGroupSize(sizeProp) ?? 'm';
   // The menu lines up with the whole split button (end-aligned), not just the chevron.
   const containerRef = useRef<HTMLDivElement>(null);
   return (

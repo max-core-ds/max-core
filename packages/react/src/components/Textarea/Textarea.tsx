@@ -13,6 +13,7 @@ import {
   fieldLabel,
   fieldRoot,
 } from '../../utils/field.js';
+import { useFormGroupSize } from '../../utils/form-group-size.js';
 
 // .Textarea-Options → Input: bg/surface fill (unlike Base Input's bg/default),
 // Radius md + Padding X 12 per -- Molecule/Input/Textarea/Size */*; per-size
@@ -50,11 +51,12 @@ export function Textarea({
   label,
   helper,
   errorMessage,
-  size,
+  size: sizeProp,
   disabled,
   className,
   ...rest
 }: TextareaProps) {
+  const size = useFormGroupSize(sizeProp);
   const isInvalid = Boolean(errorMessage);
   return (
     <Field.Root className={cn(fieldRoot, className)} invalid={isInvalid} disabled={disabled}>

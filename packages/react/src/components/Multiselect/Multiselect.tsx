@@ -16,6 +16,7 @@ import {
   fieldLabel,
   fieldRoot,
 } from '../../utils/field.js';
+import { useFormGroupSize } from '../../utils/form-group-size.js';
 import { useControllableState } from '../../utils/use-controllable-state.js';
 import { CheckboxMark } from '../Checkbox/Checkbox.js';
 import { ItemList } from '../ItemList/ItemList.js';
@@ -120,7 +121,7 @@ export function Multiselect({
   value,
   defaultValue,
   onValueChange,
-  size,
+  size: sizeProp,
   variant = 'primary',
   disabled,
   placeholder = 'Select…',
@@ -132,6 +133,7 @@ export function Multiselect({
   className,
   ...rest
 }: MultiselectProps) {
+  const size = useFormGroupSize(sizeProp);
   const isInvalid = Boolean(errorMessage);
   const isList = mode === 'list';
   const [selected, setSelected] = useControllableState(value, defaultValue, onValueChange, []);

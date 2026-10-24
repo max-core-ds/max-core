@@ -14,6 +14,7 @@ import {
   fieldLabel,
   fieldRoot,
 } from '../../utils/field.js';
+import { useFormGroupSize } from '../../utils/form-group-size.js';
 import { stateLayer } from '../../utils/state-layer.js';
 
 // One uniform surface (bg/surface) across the whole control — the ± buttons have
@@ -85,7 +86,7 @@ export interface StepperProps
 }
 
 export function Stepper({
-  size,
+  size: sizeProp,
   label,
   helper,
   errorMessage,
@@ -93,6 +94,7 @@ export function Stepper({
   className,
   ...rest
 }: StepperProps) {
+  const size = useFormGroupSize(sizeProp);
   const isInvalid = Boolean(errorMessage);
   const sizeKey = size ?? 'm';
   return (

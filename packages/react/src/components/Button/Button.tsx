@@ -5,6 +5,7 @@ import { type VariantProps, cva } from 'class-variance-authority';
 import { type ComponentPropsWithoutRef, type ElementRef, type ReactNode, forwardRef } from 'react';
 import { cn } from '../../utils/cn.js';
 import { focusRing } from '../../utils/focus-ring.js';
+import { useFormGroupSize } from '../../utils/form-group-size.js';
 import { elevatePress, stateLayer } from '../../utils/state-layer.js';
 import { statusBg, statusOutline, statusText, statusToneCompounds } from '../../utils/tone.js';
 
@@ -90,9 +91,10 @@ export interface ButtonProps
 // forwardRef so the button can anchor Base UI popups (Tooltip/Dropdown/Dialog
 // triggers pass a ref to position against).
 export const Button = forwardRef<ElementRef<typeof BaseButton>, ButtonProps>(function Button(
-  { variant, tone, size, className, leftIcon, rightIcon, children, ...rest },
+  { variant, tone, size: sizeProp, className, leftIcon, rightIcon, children, ...rest },
   ref,
 ) {
+  const size = useFormGroupSize(sizeProp);
   return (
     <BaseButton
       ref={ref}

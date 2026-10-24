@@ -6,6 +6,7 @@ import { type VariantProps, cva } from 'class-variance-authority';
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
 import { fieldError, fieldHelper, fieldLabel, fieldRoot } from '../../utils/field.js';
+import { useFormGroupSize } from '../../utils/form-group-size.js';
 import { FieldIcon } from '../Input/Input.js';
 
 // Underline frame (.Bottom-Line-Input-Options → Input): no fill, radius none, a
@@ -53,13 +54,14 @@ export function BottomLineInput({
   label,
   helper,
   errorMessage,
-  size,
+  size: sizeProp,
   leadingIcon,
   trailingIcon,
   disabled,
   className,
   ...rest
 }: BottomLineInputProps) {
+  const size = useFormGroupSize(sizeProp);
   const isInvalid = Boolean(errorMessage);
   return (
     <Field.Root className={cn(fieldRoot, className)} invalid={isInvalid} disabled={disabled}>

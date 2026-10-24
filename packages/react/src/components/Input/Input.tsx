@@ -17,6 +17,7 @@ import {
   fieldLabel,
   fieldRoot,
 } from '../../utils/field.js';
+import { useFormGroupSize } from '../../utils/form-group-size.js';
 
 // Input frame (.Base-Input-Options → Input): owns the border, fill and focus
 // border; the <input> inside is bare. Figma strokes are INSIDE the frame, so the
@@ -65,7 +66,7 @@ export function Input({
   label,
   helper,
   errorMessage,
-  size,
+  size: sizeProp,
   variant = 'primary',
   leadingIcon,
   trailingIcon,
@@ -73,6 +74,7 @@ export function Input({
   className,
   ...rest
 }: InputProps) {
+  const size = useFormGroupSize(sizeProp);
   const isInvalid = Boolean(errorMessage);
   const sizeKey = size ?? 'm';
   return (
