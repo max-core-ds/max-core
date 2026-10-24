@@ -42,7 +42,8 @@ export interface SearchBarProps
   onClear?: () => void;
   /**
    * Trailing action button (Button=On mode) — pass a size-S Standard Button at every
-   * size, e.g. `action={<Button size="s">Search</Button>}`. Replaces the clear (✕) button.
+   * size, e.g. `action={<Button size="s">Search</Button>}`; it gets the bar's full radius.
+   * Replaces the clear (✕) button.
    */
   action?: ReactNode;
   /** Leading icon (Figma: Left icon swap). Defaults to the magnifier; `null` hides it. */
@@ -75,7 +76,9 @@ export function SearchBar({
         {...rest}
       />
       {action ? (
-        <span className="shrink-0">{action}</span>
+        // The master overrides the Button's radius with the bar's own (Global/Radius,
+        // full), so the action reads as a pill inside the pill.
+        <span className="inline-flex shrink-0 [&>*]:rounded-[var(--radius-full)]">{action}</span>
       ) : onClear && value ? (
         <button
           type="button"
