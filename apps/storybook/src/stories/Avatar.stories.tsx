@@ -7,6 +7,10 @@ const meta = {
   parameters: { layout: 'centered' },
   argTypes: {
     size: { control: 'select', options: ['xs', 's', 'm', 'l', 'xl'] },
+    status: {
+      control: 'select',
+      options: [undefined, 'default', 'busy', 'away', 'dnd', 'offline'],
+    },
   },
 } satisfies Meta<typeof Avatar>;
 
@@ -43,6 +47,26 @@ export const Initials: Story = {
           <Avatar size={size} fallback="MC" />
           <span className="text-xs uppercase text-[var(--text-muted)]">{size}</span>
         </div>
+      ))}
+    </div>
+  ),
+};
+
+// ShowStatus — the presence dot scales with the avatar (8/8/16/16/20).
+export const WithStatus: Story = {
+  parameters: { layout: 'padded' },
+  render: () => (
+    <div className="flex items-end gap-[var(--spacing-16)]">
+      {(['xs', 's', 'm', 'l', 'xl'] as const).map((size) => (
+        <Avatar
+          key={size}
+          size={size}
+          fallback="MC"
+          src={sampleSrc}
+          alt="Max"
+          status="default"
+          statusLabel="Online"
+        />
       ))}
     </div>
   ),

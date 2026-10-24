@@ -25,6 +25,8 @@ const statusDotStyles = cva(
   },
 );
 
+export type StatusDotStatus = NonNullable<VariantProps<typeof statusDotStyles>['status']>;
+
 export interface StatusDotProps
   extends ComponentPropsWithoutRef<'span'>,
     VariantProps<typeof statusDotStyles> {

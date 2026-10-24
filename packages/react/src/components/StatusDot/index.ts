@@ -1,1 +1,1 @@
-export { StatusDot, type StatusDotProps } from './StatusDot.js';
+export { StatusDot, type StatusDotProps, type StatusDotStatus } from './StatusDot.js';

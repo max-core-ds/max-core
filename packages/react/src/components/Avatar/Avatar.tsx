@@ -4,10 +4,13 @@ import { Avatar as BaseAvatar } from '@base-ui/react/avatar';
 import { type VariantProps, cva } from 'class-variance-authority';
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
+import { StatusDot, type StatusDotStatus } from '../StatusDot/index.js';
 
 const avatarStyles = cva(
   [
-    'relative inline-flex items-center justify-center overflow-hidden',
+    // No overflow-hidden: the status dot sits on the bounding-box corner, outside
+    // the circle (the master doesn't clip). Image and fallback round themselves.
+    'relative inline-flex shrink-0 items-center justify-center',
     'rounded-[var(--radius-full)]',
     'bg-[var(--bg-subtle)] text-[var(--text-primary)]',
     'font-bold uppercase select-none',
@@ -31,23 +34,57 @@ const avatarStyles = cva(
   },
 );
 
+// -- Atoms/Avatar/Size */Status Dot Size (8/8/16/16/20). The dot is pinned to the
+// bottom-right corner (constraints MAX/MAX in the master).
+const statusDotSize = {
+  xs: 'size-[var(--size-8)]',
+  s: 'size-[var(--size-8)]',
+  m: 'size-[var(--size-16)]',
+  l: 'size-[var(--size-16)]',
+  xl: 'size-[var(--size-20)]',
+} as const;
+
 export interface AvatarProps
   extends Omit<ComponentPropsWithoutRef<typeof BaseAvatar.Root>, 'children'>,
     VariantProps<typeof avatarStyles> {
   src?: string;
   alt?: string;
   fallback?: ReactNode;
+  /** Presence dot in the bottom-right corner (Figma: ShowStatus). Omit to hide it. */
+  status?: StatusDotStatus;
+  /** Accessible label for the status dot, e.g. "Online". */
+  statusLabel?: string;
 }
 
-export function Avatar({ size, src, alt, fallback, className, ...rest }: AvatarProps) {
+export function Avatar({
+  size,
+  src,
+  alt,
+  fallback,
+  status,
+  statusLabel,
+  className,
+  ...rest
+}: AvatarProps) {
   return (
     <BaseAvatar.Root className={cn(avatarStyles({ size }), className)} {...rest}>
       {src ? (
-        <BaseAvatar.Image src={src} alt={alt ?? ''} className="size-full object-cover" />
+        <BaseAvatar.Image
+          src={src}
+          alt={alt ?? ''}
+          className="size-full rounded-[inherit] object-cover"
+        />
       ) : null}
-      <BaseAvatar.Fallback className="flex size-full items-center justify-center bg-[var(--accent-default)] text-[var(--text-on-accent)]">
+      <BaseAvatar.Fallback className="flex size-full items-center justify-center rounded-[inherit] bg-[var(--accent-default)] text-[var(--text-on-accent)]">
         {fallback}
       </BaseAvatar.Fallback>
+      {status ? (
+        <StatusDot
+          status={status}
+          label={statusLabel}
+          className={cn('absolute right-0 bottom-0', statusDotSize[size ?? 'm'])}
+        />
+      ) : null}
     </BaseAvatar.Root>
   );
 }

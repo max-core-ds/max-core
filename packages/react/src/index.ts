@@ -33,7 +33,11 @@ export {
   type TimeValueParts,
   type TimeMatcher,
 } from './components/TimePicker/index.js';
-export { StatusDot, type StatusDotProps } from './components/StatusDot/index.js';
+export {
+  StatusDot,
+  type StatusDotProps,
+  type StatusDotStatus,
+} from './components/StatusDot/index.js';
 export {
   DatePicker,
   type DatePickerProps,
