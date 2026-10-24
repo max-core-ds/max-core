@@ -37,7 +37,7 @@ Legend: ✅ match · ❌ finding · n/a. Class: **[code]** · **[designer]** · 
 | 5 | Typography | Value 12/14/16 regular, as the other fields (the master's Caption/700 value is the Inputs-page deviation). |
 | 6–8 | Anatomy / Focus / A11y | ✅ Leading calendar, trailing clear ✕ (now `focusRing`, sized per field); label associated with the trigger. |
 
-**Contrast:** day colours are conditional classes the extractor can't see, so `contrast-audit.ts` now declares weekday, today, hover, pressed, selected and range-middle. New findings are the known dark accent ramp only: pressed `on-accent`/`accent/active` 1.91 dark, selected `on-accent`/`accent/default` 2.85 dark (the old `text/muted` on `bg/subtle` nav-hover finding is gone). **17 / 29 components.**
+**Contrast:** day colours are conditional classes the extractor can't see, so `contrast-audit.ts` declares weekday, today, hover and range-middle (all pass). Selected / pressed (`on-accent` on `accent/default` 2.85 dark, `accent/active` 1.91 dark) are extracted from the month/year grid's literals: the known dark accent ramp, Figma-side. The old `text/muted` on `bg/subtle` nav-hover finding is gone. **27 findings / 17 of 29 components.**
 
 **Verified:** typecheck, build, Storybook tsc, showcase tsc, drift ✓, biome, contrast. Playwright light + dark: Default, Range, WithFooter, Input open, hover, keyboard focus. Measured pane 308 × 368, rows 44, days 40 × 40 at 12/700, weekday 12/300 `text/secondary` "Mon", header buttons 32 tall (labels `text/primary`, icons `text/secondary`), footer buttons 138 × 32, hover `accent/subtle` + `text/primary`.
 

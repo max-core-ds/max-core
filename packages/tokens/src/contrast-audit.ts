@@ -92,16 +92,15 @@ const OVERRIDES: Record<string, Override> = {
     ],
   },
   // Day items build their classes conditionally (per rdp modifier), so the
-  // extractor can't pair them. Selected / pressed are the master's accent fills
-  // (dark accent-ramp findings, Figma-side); hover is the List Item wash by
+  // extractor can't pair them. Selected / pressed (on-accent on accent/default /
+  // accent/active, dark-ramp findings) are already extracted from the month/year
+  // grid's literals, so they aren't repeated here. Hover is the List Item wash by
   // decision (the master's accent/hover + white is 1.91 in light).
   DatePicker: {
     extra: [
       { state: 'weekday', fgVar: '--text-secondary', bgVar: '--bg-surface' },
       { state: 'today', fgVar: '--text-accent', bgVar: '--bg-surface' },
       { state: 'hover', fgVar: '--text-primary', bgVar: '--accent-subtle' },
-      { state: 'pressed', fgVar: '--text-on-accent', bgVar: '--accent-active' },
-      { state: 'selected', fgVar: '--text-on-accent', bgVar: '--accent-default' },
       { state: 'range-middle', fgVar: '--text-accent', bgVar: '--accent-surface' },
     ],
   },
