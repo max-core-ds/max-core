@@ -2,7 +2,7 @@
 
 > Living status doc for the `@max-core/react` buildout. Update it whenever a
 > component is added or a `figma-node-links/*.json` file is cross-checked.
-> Last updated: **2026-10-23** · Branch: **`main`** — 3 commits ahead of `origin/main` (unpushed; feature branches merged + deleted)
+> Last updated: **2026-10-23** · Branch: **`main`** — all work lives here (feature branches merged + deleted); run `git status -sb` for unpushed commits
 >
 > **To pick up the work**, paste one of the guides in `prompts/` into a new conversation:
 > [`figma-cross-check.md`](prompts/figma-cross-check.md) (continue the cross-check) or
@@ -20,6 +20,11 @@
 - **Phase 3.5 visual cross-check: all exported files done** — every `figma-node-links/*.json` the designer has provided is cross-checked and moved to `figma-node-links/checked/`. Each was drift-green yet had appearance/axis gaps the raw tokens didn't capture (states, colors, missing axes/slots), now fixed. Further cross-checks resume when the designer drops new files into `figma-node-links/`. See the process in `PLAN.md → Phase 3.5`.
 - **Phase 4 Batch 12 — Date Picker landed on `main` (2026-09-17)** — `DatePicker` (inline; `granularity` day/month/year), `DualDatePicker` (two-month range), and `DateInput` (popover field), built on **`react-day-picker@9`** restyled onto Max Core tokens via its `classNames`/`components` props (no CSS import; kept `external` in tsup so dist stays lean; first external UI dep after the dependency-free run). Public value model stays **ISO strings** (`"YYYY-MM-DD"`) / `{start,end}` ranges via a `date.ts` `Date↔ISO` boundary adapter (parsed at local noon to avoid TZ off-by-one). Custom `MonthCaption` override (rdp's default `Nav` renders as a sibling of the months and can't anchor to the caption → `hideNavigation` + our own header); the header month/year labels **drill down** to month/year pickers and back via a shared `displayMonth`. Drift-green (`SPECS` entry). Day picker visually cross-checked against the Figma master (`2486:6242`); **month/year render as grids — the Figma scroll-wheels are deferred** by decision. Commit `d17a0b7`. See memory `project-datepicker-react-build`.
 - **Polish + scrollbar work landed on `main` (2026-09-13)** — small fixes: **Pagination** (all buttons uniform 32×32 = 24px content + 4px padding; active-page border kept `border/default` so it's visible in dark) `cc3bd4b`; **Textarea** focus ring (`block` on the textarea removes the inline-block descender gap that pushed the inset ring low at the bottom) `ef39b85`; **Switcher** no longer deselects the active item (drives the Base UI ToggleGroup as controlled, ignores empty selections) `89d2d2b`. New **scrollbar** capability `3c6e351`: `.styled-scrollbar` + `.scrollbar-none` utilities shipped from `@max-core/tokens/scrollbar.css`, the **ScrollBar** atom gained a driven mode (`thumbSize`/`thumbOffset`/`orientation`), and a new **ScrollArea** wrapper hides the native bar and renders ScrollBar as an *external* rail (vertical=right, horizontal=below) driven by scroll metrics with click/drag. See memory `reference-scrollbar-utilities`.
+
+### For the designer (Figma-side fixes)
+- **Item List doc page** text says `bg/elevated` + `border/muted`; the master binds `bg/surface` + `border/default`.
+- **List Item master colors** (React deviates deliberately): hover support text `text/on-accent-muted` (1.1:1 on `accent/subtle`); Pressed label `text/primary` (2.3:1 on `accent/active`); Active+Collapsed icon `text/primary` (expanded Active uses `text/on-accent`); Disabled support text `text/on-accent-muted`.
+- **Dark accent ramp** too light for white `text/on-accent` (see Remaining work → contrast).
 
 ---
 
@@ -154,7 +159,7 @@ Reuse these before writing inline classes — they keep Tailwind literals in one
 
 1. **Phase 3.5 cross-check** — ✅ all exported files done (segmented-control, list-item, search-bar, dialog, top-bar, bottom-bar, sidebar). Resume when the designer drops new files into `figma-node-links/`.
 2. **Phase 4 — mega-systems + test infra** — planned in **`PLAN.md → Phase 4`**. Batches: **8 Stacked List** ✅ lean v1 (default/social/media/product; remaining row types on demand) → **9 Data Table** ✅ lean v1 (column-config + primitives; mobile/expandable/Table-Header deferred) → **10 Card** → **11 Bottom Sheet** (+18 premades) → **12 Date Picker** ✅ (day/range/input; month/year grid — Figma wheels deferred) → **13 test infra** (vitest + RTL + axe). Batches 10 & 11 remain.
-3. **Colour-contrast guardrail — shipped** (`pnpm -F @max-core/tokens contrast`): resolves every component's text/background pairing to hex in light + dark and flags any below WCAG AA (4.5 normal / 3 large). Reads source, never touches tokens.json; turbo `contrast` task reports non-blocking. Fixed the light-mode white-on-pale defects it caught (ListItem hover, EntityCard hover/selected). **11 dark-mode findings deferred** — the dark accent ramp is too light for white on-accent text, plus mid-tone text on subtle fills at 3.3–4.0; root-cause fix is Figma-side (adjust `accent/*` dark values + re-export), folded into the dark-mode visual pass. Extractor only sees within-className pairings; child-text-over-parent-surface needs `OVERRIDES[...].extra` in `contrast-audit.ts` if fuller coverage is wanted.
+3. **Colour-contrast guardrail — shipped** (`pnpm -F @max-core/tokens contrast`): resolves every component's text/background pairing to hex in light + dark and flags any below WCAG AA (4.5 normal / 3 large). Reads source, never touches tokens.json; turbo `contrast` task reports non-blocking. Fixed the light-mode white-on-pale defects it caught (ListItem hover, EntityCard hover/selected). **Open: 13 findings across 12 components (as of 2026-10-23).** 12 are dark-mode only — the dark accent ramp is too light for white on-accent text (Avatar, Fab, ListItem ×2, Pin, SegmentedControl), plus mid-tone text on subtle/surface fills at 3.3–4.0 (Badge, ShareItem, BottomNavigation, ContentBlocks, DatePicker, Thumbnail); root-cause fix is Figma-side (adjust `accent/*` dark values + re-export), folded into the dark-mode visual pass. **1 fails in light too:** Pagination hover (`text/secondary` on `bg/subtle`, 3.86 light / 4.04 dark) — fixable in code. Extractor only sees within-className pairings; child-text-over-parent-surface needs `OVERRIDES[...].extra` in `contrast-audit.ts` if fuller coverage is wanted.
 
 > Not yet visually cross-checked (built from tokens only): every component in
 > the inventory below without a ✅ in the Cross-check column.
@@ -168,7 +173,7 @@ pnpm -F @max-core/react typecheck        # tsc --noEmit
 pnpm -F @max-core/react build            # tsup (rebuild dist so Storybook + drift see it)
 cd apps/storybook && npx tsc --noEmit -p tsconfig.json   # Storybook consumes built dist
 pnpm -F @max-core/tokens drift           # spacing/size/radius conformance
-pnpm -F @max-core/tokens contrast        # WCAG AA text/bg contrast, light + dark (reports; 11 dark-mode findings known/deferred)
+pnpm -F @max-core/tokens contrast        # WCAG AA text/bg contrast, light + dark (reports; 13 known findings in 12 components — compare the count before/after)
 npx biome check --write <changed files>
 ```
 

@@ -46,6 +46,15 @@ THE LOOP (one component at a time, in the order I give you — don't jump ahead)
    get_screenshot(nodeId) (curl the URL → PNG → Read), get_variable_defs(nodeId), and
    get_design_context(nodeId) for exact bound tokens. Map by TOKEN NAME, not hex (hex
    depends on the file's light/dark mode).
+   MOST RELIABLE: a read-only use_figma script (load the figma-use skill first) that walks
+   the master/variants and returns, per node, the variable bound to each fill/stroke
+   (`paint.boundVariables.color` → getVariableByIdAsync → name), padding/gap/radius
+   bindings (`node.boundVariables`), each TEXT node's text style + fill, and the
+   componentPropertyDefinitions. This is exact and per-state; get_variable_defs only
+   lists the union. The page's doc TEXT can be stale (Item List's said bg/elevated +
+   border/muted; the master binds bg/surface + border/default) — the bindings win.
+   The figma-tree export has names/ids only (no fills), so it can't answer color questions.
+   If the Figma MCP is unauthenticated, ask the user to re-auth via /plugin.
 5. Fix — shared color literals go in packages/react/src/utils/* (Tailwind can't see
    interpolated classes; every class must be a full literal). Match Figma variant names.
 6. Verify (the gate below). Rebuild @max-core/react before the Storybook tsc + drift —
@@ -59,13 +68,21 @@ VERIFY GATE:
   pnpm -F @max-core/react build            # rebuild dist BEFORE the two below
   cd apps/storybook && npx tsc --noEmit -p tsconfig.json
   pnpm -F @max-core/tokens drift
+  pnpm -F @max-core/tokens contrast        # compare the failing count before/after
   npx biome check --write <changed files>
+Visual check: Storybook is usually already running on :6006; screenshot stories headless
+with the Playwright in the npx cache (`ls -d ~/.npm/_npx/*/node_modules/playwright`) —
+`iframe.html?id=<story-id>&viewMode=story&globals=theme:dark|light`.
 
 RECURRING LESSON: the failures are MISSING axes/states/tier, not wrong numbers — the drift
-gate guarantees dimensions, never appearance. Treat the master + its spec text as the truth.
+gate guarantees dimensions, never appearance — and never TYPOGRAPHY (ListItem inherited
+16px for months; the master's Caption/700 = 12px, which was the 48→44px row gap). Treat the
+master's bindings as the truth. Where a Figma color fails WCAG AA, deviate deliberately,
+comment why in the code, and list it for the designer in PROGRESS.md.
 
-Branch: feat/phase3-buildout. Work tier by tier from the PROGRESS.md cross-check table /
-PLAN.md Part D batches; ~28 components still unverified. I'll tell you which to start with.
+Branch: main. Every inventory row is ✅ except StatsCard (deferred), but a ✅ is not proof —
+List Item + Item List were ✅ and still had drifted (2026-10-23 re-check). I'll tell you
+which component to (re)check.
 Use a scratch dir for screenshots (not /tmp).
 ```
 
@@ -80,4 +97,6 @@ reconciles each one against its Figma showcase before Phase 4.
 
 **Findings so far** (all were drift-green but still wrong): Badge missing a whole variant axis;
 PayButton conflating Color with Provider; Tag treating Selected as a focus ring; LinkButton bold
-with no Pressed state; Checkbox/Radio/Switch missing the Validation axis + helper text.
+with no Pressed state; Checkbox/Radio/Switch missing the Validation axis + helper text;
+ListItem wrong label size (16px vs Caption 12px) + missing support text/levels; ItemList missing
+its search / select-all / divider / scrollbar parts and carrying an invented label header.
