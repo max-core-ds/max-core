@@ -133,6 +133,12 @@ export interface TagProps
   extends Omit<HTMLAttributes<HTMLElement>, 'onClick'>,
     VariantProps<typeof tagStyles> {
   leftIcon?: ReactNode;
+  /**
+   * Trailing icon (Figma default: an ×). Visual only — there is no `onRemove`.
+   * On a display-only tag you may pass a real `<button aria-label="Remove …">`
+   * here; on a clickable tag (`onClick` / `selected`) don't — it would nest a
+   * button inside the tag's button (invalid HTML, and its click bubbles).
+   */
   rightIcon?: ReactNode;
   children?: ReactNode;
   /** Makes the tag a clickable chip (rendered as a `<button>`). */

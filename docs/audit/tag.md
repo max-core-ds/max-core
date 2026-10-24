@@ -31,6 +31,12 @@ Legend: ✅ match · ❌ finding · n/a. Class: **[code]** · **[designer]** · 
 **Verified:** typecheck, build, Storybook tsc, drift ✅. Playwright: all variants in light and dark. Clicking toggles `aria-pressed`, disabled is skipped. Hover, pressed and focus captured.
 **Unrelated, pre-existing:** `apps/showcase` tsc fails on `<Badge tone="neutral">` (fails on clean `main` too) → Badge audit.
 
+## Known limitation — removable tags
+There is no `onRemove`: the right icon (Figma `Right Icon` swap, default `li:x`) is purely visual, as in Figma.
+- **Display-only tag** (`<span>`): a dev can pass a real button as `rightIcon` (`<button type="button" aria-label="Remove …">`). That's valid HTML and works as a remove action; the dev supplies the label and focus style.
+- **Clickable tag** (`onClick` / `selected` → `<button>`): don't nest a button in `rightIcon`. Nested buttons are invalid HTML, the click bubbles to the tag's `onClick` (it toggles too), and keyboard/AT behaviour is unreliable.
+- If removable + toggleable is ever needed: an `onRemove` prop that renders the X as a sibling button, outside the tag's main button.
+
 ## For the designer (→ PROGRESS.md)
 - Wrapper Focused → BOOLEAN; `.Focus-ring` 2px.
 - Overlay opacities bound to `opacity/disabled` / `opacity/dim`: rebind to `opacity/hover` / `opacity/pressed`?
