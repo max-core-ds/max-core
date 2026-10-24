@@ -83,6 +83,14 @@ const OVERRIDES: Record<string, Override> = {
   Multiselect: textField('--bg-default'),
   Textarea: textField('--bg-surface'),
   Stepper: textField('--bg-surface'),
+  // No error state; the magnifier + clear icons are text/secondary on the pill fill.
+  SearchBar: {
+    extra: [
+      { state: 'value', fgVar: '--text-primary', bgVar: '--bg-default' },
+      { state: 'placeholder', fgVar: '--text-muted', bgVar: '--bg-default' },
+      { state: 'icon', fgVar: '--text-secondary', bgVar: '--bg-default' },
+    ],
+  },
   // Inactive item text sits on the group's bg/subtle — different elements.
   // Fails light AA (3.86); kept to match Figma by decision, on the designer list.
   SegmentedControl: {
