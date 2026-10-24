@@ -1,4 +1,4 @@
-import { Button, FormGroup, Input } from '@max-core/react';
+import { ActionBar, Button, FormGroup, Input } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
@@ -27,10 +27,10 @@ export const Default: Story = {
       </>
     ),
     action: (
-      <>
-        <Button variant="ghost">Cancel</Button>
+      <ActionBar>
+        <Button variant="secondary">Cancel</Button>
         <Button>Save</Button>
-      </>
+      </ActionBar>
     ),
   },
 };

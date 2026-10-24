@@ -91,6 +91,13 @@ const OVERRIDES: Record<string, Override> = {
       { state: 'icon', fgVar: '--text-secondary', bgVar: '--bg-default' },
     ],
   },
+  // Title + description are separate elements on the premade bg/surface.
+  FormGroup: {
+    extra: [
+      { state: 'premade-title', fgVar: '--text-primary', bgVar: '--bg-surface' },
+      { state: 'premade-description', fgVar: '--text-muted', bgVar: '--bg-surface' },
+    ],
+  },
   // Inactive item text sits on the group's bg/subtle — different elements.
   // Fails light AA (3.86); kept to match Figma by decision, on the designer list.
   SegmentedControl: {

@@ -5,8 +5,13 @@ import { type VariantProps, cva } from 'class-variance-authority';
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
 
-// Per-size outer Gap and Items Gap, plus Headline/Action gaps and (in premade
-// mode) padding/radius, match -- Molecule/Form Group/*.
+// Figma Form Group set (4011:1119): Headline (Title + Description) → Items slot
+// → Action slot (an Action Bar). Per-size outer Gap and Items Gap, plus
+// Headline/Action gaps and (in premade mode) padding/radius, match
+// -- Molecule/Form Group/*. Title is Heading/H5 (S, M) or H4 (L), Description
+// Body/SM/300 text/muted. Premade = the Premades Form Group surface (bg/surface,
+// no border, radius md). Its Size L padding is 40 in Figma, but that token
+// isn't in the export yet, so L keeps M's 24 until the re-export.
 const rootStyles = cva(['flex flex-col'], {
   variants: {
     size: {
@@ -27,6 +32,16 @@ const rootStyles = cva(['flex flex-col'], {
   defaultVariants: { size: 'm', premade: false },
 });
 
+const titleStyles = cva(
+  ['font-bold leading-[1.2] tracking-[-0.005em] text-[var(--text-primary)]'],
+  {
+    variants: {
+      size: { s: 'text-2xl', m: 'text-2xl', l: 'text-3xl' },
+    },
+    defaultVariants: { size: 'm' },
+  },
+);
+
 const itemsStyles = cva(['flex flex-col'], {
   variants: {
     size: {
@@ -43,7 +58,7 @@ export interface FormGroupProps
     VariantProps<typeof rootStyles> {
   headline?: ReactNode;
   description?: ReactNode;
-  /** Action buttons rendered at the bottom. */
+  /** Action slot at the bottom — typically an `ActionBar` of Buttons. */
   action?: ReactNode;
   className?: string;
   children?: ReactNode;
@@ -64,17 +79,18 @@ export function FormGroup({
       {headline || description ? (
         <div className="flex flex-col gap-[var(--spacing-12)]">
           {headline ? (
-            <Fieldset.Legend className="text-2xl font-bold text-[var(--text-primary)]">
-              {headline}
-            </Fieldset.Legend>
+            <Fieldset.Legend className={titleStyles({ size })}>{headline}</Fieldset.Legend>
           ) : null}
           {description ? (
-            <p className="text-sm font-light text-[var(--text-secondary)]">{description}</p>
+            <p className="text-sm font-light text-[var(--text-muted)]">{description}</p>
           ) : null}
         </div>
       ) : null}
       <div className={itemsStyles({ size })}>{children}</div>
-      {action ? <div className="flex gap-[var(--spacing-08)]">{action}</div> : null}
+      {action ? (
+        // Children fill the width, like the master's Action Bar (FILL).
+        <div className="flex gap-[var(--spacing-08)] [&>*]:flex-1">{action}</div>
+      ) : null}
     </Fieldset.Root>
   );
 }
