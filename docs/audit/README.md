@@ -68,6 +68,8 @@ Run them as separate commands (or echo each exit code): a chained `&& … | tail
   `data-indeterminate`. Use `data-[unchecked]:hover:` for unchecked-only states.
 - **ToggleGroup single-select** emits `[]` when the active item is clicked. Keep the group
   controlled (`useControllableState`) and ignore empty emissions (Switcher, SegmentedControl).
+- **Base UI focus lives on inner inputs** for Slider (and other hidden-input widgets): `focus-visible:` on the
+  wrapper never matches. Use `focusRingWithin` (`has-[:focus-visible]:`) and verify the ring with a Tab screenshot.
 - **Comments:** never write `status/*/…` inside a `/** */` block — `*/` closes it.
 - **Storybook ids** are kebab-case per word: `atoms-segmented-control--default`
   (`curl -s localhost:6006/index.json`). Many stories render controls *checked*; uncheck first
