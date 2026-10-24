@@ -30,4 +30,4 @@ Legend: ✅ match · ❌ finding · n/a. Class: **[code]** · **[designer]** · 
 - `Premade/*/Size L/Padding` (40) and `- Spacing -/40` are missing from the token export: re-export.
 - `Items2` SLOT is bound to no node; the Action Bar is a fixed instance (the doc page says it's in `Items2`). Rename it to Action and bind it, or drop it.
 - Size M's Action Bar is `Direction=Vertical` while S/L are Horizontal; Size S's Action Bar is FIXED 332 wide inside a 274 group (it overflows).
-- Action buttons differ per size (32 / 40 / 48 tall). Fine as slot content, but worth stating on the doc page.
+- The doc page doesn't say that Size also sizes the inputs and buttons inside (S/M/L → S/M/L).

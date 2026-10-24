@@ -53,6 +53,9 @@ npx biome check --write <changed files>
 Run them as separate commands (or echo each exit code): a chained `&& … | tail` hides which step failed.
 
 ## Gotchas found so far
+- **A container's Size can size its children.** Read the nested instances' variant names per size
+  (walk `children` recursively; `findAllWithCriteria` doesn't reach into slot content). Form Group
+  S/M/L sets its Base Inputs + Buttons to S/M/L; missed in the first pass, fixed with a size context.
 - **Figma strokes are INSIDE; CSS borders add.** A bordered field built from token padding came out
   2px too tall. Give the border back in the padding (`py-[calc(var(--spacing-12)-var(--border-weight-thin))]`)
   and measure the rendered height against the master.
