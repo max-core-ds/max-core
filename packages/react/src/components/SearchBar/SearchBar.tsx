@@ -42,7 +42,8 @@ export interface SearchBarProps
   onClear?: () => void;
   /**
    * Trailing action button (Button=On mode) — pass a size-S Standard Button at every
-   * size, e.g. `action={<Button size="s">Search</Button>}`; it gets the bar's full radius.
+   * size, e.g. `action={<Button size="s">Search</Button>}`; it gets the bar's full radius and
+   * 16px side padding.
    * Replaces the clear (✕) button.
    */
   action?: ReactNode;
@@ -77,8 +78,12 @@ export function SearchBar({
       />
       {action ? (
         // The master overrides the Button's radius with the bar's own (Global/Radius,
-        // full), so the action reads as a pill inside the pill.
-        <span className="inline-flex shrink-0 [&>*]:rounded-[var(--radius-full)]">{action}</span>
+        // full) and hand-sizes it so the label sits 16px from each side; React pads
+        // instead of fixing the width (decision 2026-10-24). `!` beats the Button's
+        // own classes regardless of stylesheet order.
+        <span className="inline-flex shrink-0 [&>*]:rounded-[var(--radius-full)]! [&>*]:px-[var(--spacing-16)]!">
+          {action}
+        </span>
       ) : onClear && value ? (
         <button
           type="button"
