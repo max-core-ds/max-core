@@ -5,7 +5,7 @@ const meta = {
   title: 'Atoms/Progress Bar',
   component: ProgressBar,
   parameters: { layout: 'padded' },
-  args: { value: 60, size: 'm' },
+  args: { value: 60, size: 'm', 'aria-label': 'Upload progress' },
   argTypes: {
     value: { control: { type: 'range', min: 0, max: 100 } },
     size: { control: 'select', options: ['s', 'm', 'l'] },
@@ -25,7 +25,7 @@ export const Sizes: Story = {
   render: () => (
     <div className="flex flex-col gap-[var(--spacing-16)]">
       {(['s', 'm', 'l'] as const).map((size) => (
-        <ProgressBar key={size} size={size} value={60} />
+        <ProgressBar key={size} size={size} value={60} aria-label={`Size ${size}`} />
       ))}
     </div>
   ),

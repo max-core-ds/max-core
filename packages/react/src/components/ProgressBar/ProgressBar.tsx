@@ -7,7 +7,8 @@ import { type ProgressSize, progressFill, progressTrack } from '../../utils/prog
 
 export interface ProgressBarProps
   extends Omit<ComponentPropsWithoutRef<typeof Progress.Root>, 'className' | 'value'> {
-  /** 0–100 (or null for indeterminate). */
+  /** Between `min` and `max` (0–100 by default), or null for indeterminate.
+   * Give the bar an accessible name with `aria-label` or `aria-labelledby`. */
   value?: number | null;
   size?: ProgressSize;
   className?: string;
@@ -29,6 +30,7 @@ export function ProgressBar({
   return (
     <Progress.Root
       value={value}
+      min={min}
       max={max}
       // Item Gaps (8px) between the track and the range labels.
       className={cn('flex w-full flex-col gap-[var(--spacing-08)]', className)}
@@ -38,7 +40,12 @@ export function ProgressBar({
         <Progress.Indicator className={progressFill} />
       </Progress.Track>
       {showRangeLabels ? (
-        <div className="flex justify-between text-xs font-light text-[var(--text-primary)]">
+        // Labels: Caption/300, Spacing 04 between. Hidden from assistive tech — the
+        // progressbar already exposes aria-valuemin/max.
+        <div
+          aria-hidden
+          className="flex justify-between gap-[var(--spacing-04)] text-xs font-light text-[var(--text-primary)]"
+        >
           <span>{min}%</span>
           <span>{max}%</span>
         </div>
