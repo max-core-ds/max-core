@@ -104,6 +104,21 @@ const OVERRIDES: Record<string, Override> = {
       { state: 'range-middle', fgVar: '--text-accent', bgVar: '--accent-surface' },
     ],
   },
+  // Items sit on the container's bg/subtle; the active pill is bg/surface.
+  Switcher: {
+    extra: [
+      { state: 'base', fgVar: '--text-secondary', bgVar: '--bg-subtle' },
+      { state: 'hover', fgVar: '--text-primary', bgVar: '--bg-subtle' },
+    ],
+  },
+  // Underline tabs sit on the page (bg/default). The active Full tab keeps
+  // text/secondary on accent/surface, as the master does (Phase 4.5 decision).
+  Tabs: {
+    extra: [
+      { state: 'base', fgVar: '--text-secondary', bgVar: '--bg-default' },
+      { state: 'active', fgVar: '--text-secondary', bgVar: '--accent-surface' },
+    ],
+  },
   // Title + description are separate elements on the premade bg/surface.
   FormGroup: {
     extra: [

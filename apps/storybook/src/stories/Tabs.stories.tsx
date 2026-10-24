@@ -14,6 +14,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
+    fill: 'underline',
     defaultValue: 'overview',
     items: [
       {
@@ -25,6 +26,11 @@ export const Default: Story = {
         value: 'activity',
         label: 'Activity',
         content: <p className="text-[var(--text-secondary)]">Activity panel</p>,
+      },
+      {
+        value: 'billing',
+        label: 'Billing',
+        disabled: true,
       },
       {
         value: 'settings',

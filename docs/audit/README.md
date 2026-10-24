@@ -2,7 +2,7 @@
 
 Process, checklist and page order: **`PLAN.md → Phase 4.5`**. Status: **`PROGRESS.md → Audit status`**.
 One page = one `docs/audit/<slug>.md` + one commit. This file holds the practical recipe that
-worked on the first twenty-four pages (the Atoms tier + Inputs, Search bar, Item List, Dropdown, Form Groups, Date picker; see the Audit status table).
+worked on the first twenty-five pages (the Atoms tier + Inputs, Search bar, Item List, Dropdown, Form Groups, Date picker, Tabs; see the Audit status table).
 
 ## Loop per page
 1. `figma-node-links/catalog.json` → page `nodeId` + `masters[]`. Read the React source, utils and story.
@@ -75,6 +75,8 @@ Run them as separate commands (or echo each exit code): a chained `&& … | tail
 - **Contrast coverage:** the audit only pairs text/bg inside one class literal. Moving colours
   between files, or removing a bg class, can silently drop or add a component. Watch the
   denominator, and declare real cross-element pairings in `contrast-audit.ts` `OVERRIDES`.
+- **Base UI disabled isn't always the attribute:** a disabled Tab gets `data-disabled` + `aria-disabled`, not `disabled`, so `disabled:` never matches (Tabs never dimmed). Use `data-[disabled]:` and check the computed opacity.
+- **Overflow clips the focus ring:** an `overflow-x-auto` bar cut the outset `focusRing`; Tab-screenshot every ring.
 - **Base UI data attributes:** Checkbox/Radio/Switch expose `data-checked` / `data-unchecked` /
   `data-indeterminate`. Use `data-[unchecked]:hover:` for unchecked-only states.
 - **ToggleGroup single-select** emits `[]` when the active item is clicked. Keep the group
