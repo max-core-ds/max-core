@@ -6,11 +6,17 @@
  * dark `text/on-accent-muted` text — so it stands out from the page (~17:1
  * against bg/default, either mode). Padding, radius and arrow radius match
  * -- Atoms/Tooltip/* (16 / md / xs). No shadow: the master has no effect.
+ *
+ * Figma's text styles use leading trim (cap height), so the 16px padding runs
+ * from the cap top / baseline: the master bubble is 16 + 9 + 16 = 41 tall.
+ * `text-box: trim-both cap alphabetic` is the CSS equivalent (browsers without
+ * it fall back to the full 15.6px line box, about 7px taller). Caption is 130%.
  */
 // `relative` so an absolutely-positioned arrow anchors to the bubble.
 export const tooltipBubble =
   'relative rounded-[var(--radius-md)] bg-[var(--neutral-default)] p-[var(--spacing-16)] ' +
-  'text-xs font-light text-[var(--text-on-accent-muted)] outline-none';
+  'text-xs leading-[1.3] font-light text-[var(--text-on-accent-muted)] outline-none ' +
+  '[text-box:trim-both_cap_alphabetic]';
 
 // The arrow: an SVG triangle pointing down (away from a bubble above its
 // trigger), 16 wide at the bubble edge × 12 deep, matching the visible part of

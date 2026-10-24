@@ -64,9 +64,12 @@ Run them as separate commands (or echo each exit code): a chained `&& … | tail
   and measure the rendered height against the master.
 - **Shared util classes hide pairings from the contrast audit** (Inputs: SelectInput dropped out).
   Declare the real pairings in `contrast-audit.ts` `OVERRIDES` and diff the component list before/after.
-- **Text-box artifact:** several Figma masters have label text boxes stuck at 9–10px tall
-  (Segmented item, Badge), so frame heights read too small. Compute height from padding + the
-  text style line height; flag it to the designer, don't copy the frame height.
+- **Leading trim, not a text-box artifact.** Every Figma text style has `leadingTrim: CAP_HEIGHT`, so a
+  label's box is its cap height (9px for Caption, ~10 for Body/SM) and padding runs from cap top to
+  baseline (Tooltip 16 + 9 + 16 = 41). React's full line box makes padding-hugged parts ~7–8px
+  taller. Measure against the master's real frame height. The CSS equivalent is
+  `[text-box:trim-both_cap_alphabetic]` (used by the tooltip surface); the other components are the
+  open **cap-trim sweep** in PROGRESS. Earlier audits called this a "stuck text box" — that was wrong.
 - **Wrapper vs options sets:** most atoms are a wrapper (State/Disabled/Focused) around an
   options set (Variant/Tone/Size). Read both; focus/hover/disabled live on the wrapper.
 - **Focus in Figma is inconsistent:** ad-hoc `Focus` rects, `.Focus-ring` at 1px, State=Focused
