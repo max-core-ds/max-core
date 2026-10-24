@@ -26,9 +26,9 @@ Legend: ✅ match · ❌ finding · n/a. Class: **[code]** · **[designer]** · 
 Even though ItemList matched the master, three usability fixes were requested:
 - **Row gap:** rows are 4px apart (`spacing-04`); the master stacks them flush. `-- Molecule/Item List/Gap` (8) is unbound in Figma; bind it if the designer wants a gap there.
 - **Side inset:** the scroll content (and the Select all row, to keep the checkbox aligned with the row icons) sits 4px in from the container sides, so selected/hover fills no longer touch the left border.
-- **Clipping:** the bottom Container Padding Y moved inside the scroll content, so rows scroll right down to the border instead of being cut on a hard line 12px above it. At the end of the scroll the 12px padding still shows. While more rows sit below, the viewport fades its last 24px (`mask-image`). `ScrollArea` gained `viewportClassName` + `data-overflow-start` / `data-overflow-end` on the viewport to drive it.
+- **Clipping + padding:** the options area has an even 4px padding on every side, inside the scroll content, so rows scroll right down to the border instead of being cut on a hard line above it (the padding shows at the end of the scroll). Container Padding Y (12) now only tops the header (search / Select all); a header-less list (the Select popup) is 4px top and bottom. While more rows sit below, the viewport fades its last 24px (`mask-image`). `ScrollArea` gained `viewportClassName` + `data-overflow-start` / `data-overflow-end` on the viewport to drive it.
 
-These apply to the Select / Multiselect popups too (they render ItemList). Verified: rows 218 wide at x+5 (border + 4), the fade at the top of the scroll, gone at the end with the 12px padding visible.
+These apply to the Select / Multiselect popups too (they render ItemList). Verified: rows 218 wide at x+5 (border + 4); Select popup first row at list top + 5, last row 4px above the border; the fade at the top of the scroll, gone at the end.
 
 ## Select / Multiselect popups (carry-over)
 

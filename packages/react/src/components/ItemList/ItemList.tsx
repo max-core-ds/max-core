@@ -15,18 +15,17 @@ import { SearchBar, type SearchBarProps } from '../SearchBar/SearchBar.js';
 // The rail sits flush at the right edge like the master's absolute ScrollBar.
 //
 // Deliberate deviations from the master (user request, 2026-10-24): rows are
-// 4px apart (the master stacks them flush) and inset 4px from the sides, and
-// the bottom Container Padding Y lives inside the scroll content, so rows
-// scroll down to the border instead of being cut 12px above it; a fade marks
-// more rows below.
+// 4px apart (the master stacks them flush) with an even 4px inset on every
+// side of the options area; that padding lives inside the scroll content, so
+// rows scroll down to the border instead of being cut above it, and a fade
+// marks more rows below. Container Padding Y (12) only tops the header
+// (search / Select all).
 const containerStyles = cn(
   'flex min-w-[var(--size-120)] flex-col overflow-hidden',
   'rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--bg-surface)]',
-  'pt-[var(--spacing-12)]',
 );
 
-const contentStyles =
-  'flex flex-col gap-[var(--spacing-04)] px-[var(--spacing-04)] pb-[var(--spacing-12)]';
+const contentStyles = 'flex flex-col gap-[var(--spacing-04)] p-[var(--spacing-04)]';
 
 // Fade the last 24px while more rows sit below the fold.
 const fadeEnd =
@@ -80,12 +79,16 @@ export function ItemList({
   const hasHeader = Boolean(search || selectAll);
   return (
     <div className={cn(containerStyles, className)} {...rest}>
-      {search ? (
-        <div className="shrink-0 px-[var(--spacing-12)]">
-          <SearchBar size="s" {...search} />
+      {hasHeader ? (
+        <div className="flex shrink-0 flex-col pt-[var(--spacing-12)]">
+          {search ? (
+            <div className="px-[var(--spacing-12)]">
+              <SearchBar size="s" {...search} />
+            </div>
+          ) : null}
+          {selectAll ? <SelectAllRow {...selectAll} /> : null}
         </div>
       ) : null}
-      {selectAll ? <SelectAllRow {...selectAll} /> : null}
       {hasHeader && showDivider ? <Divider /> : null}
       {showScrollBar ? (
         <ScrollArea railGap={0} className="min-h-0 flex-1" viewportClassName={fadeEnd}>
