@@ -16,17 +16,6 @@
 export type Tone = 'default' | 'danger' | 'success' | 'warning';
 export type StatusTone = 'danger' | 'success' | 'warning';
 
-/** Solid brand fill for the `default` tone: accent bg, transparent border, on-accent text. */
-export const accentFill =
-  'bg-[var(--accent-default)] border-transparent text-[var(--text-on-accent)]';
-
-/** Solid fill: tone bg, transparent border, on-accent text (Badge tones, Tag `filled`). */
-export const statusFill: Record<StatusTone, string> = {
-  danger: 'bg-[var(--status-danger-default)] border-transparent text-[var(--text-on-accent)]',
-  success: 'bg-[var(--status-success-default)] border-transparent text-[var(--text-on-accent)]',
-  warning: 'bg-[var(--status-warning-default)] border-transparent text-[var(--text-on-accent)]',
-};
-
 /** Solid tone background only (no border/text override) — e.g. Button `primary`. */
 export const statusBg: Record<StatusTone, string> = {
   danger: 'bg-[var(--status-danger-default)]',

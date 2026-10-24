@@ -1,6 +1,7 @@
 import { Tag } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Hash, Star, X } from 'lucide-react';
+import { useState } from 'react';
 
 const meta = {
   title: 'Atoms/Tag',
@@ -60,21 +61,29 @@ export const AllVariants: Story = {
   ),
 };
 
-// Selected only applies to the Primary variant: Off = subtle fill, On = solid.
+// Passing `selected` (or onClick) makes the tag a clickable filter chip: a
+// toggle button with hover/pressed overlay and focus ring. Selected only
+// applies to the Primary variant: Off = subtle fill, On = solid.
+function FilterChips() {
+  const tones = ['default', 'danger', 'success', 'warning'] as const;
+  const [picked, setPicked] = useState<string[]>(['default']);
+  const toggle = (tone: string) =>
+    setPicked((p) => (p.includes(tone) ? p.filter((t) => t !== tone) : [...p, tone]));
+  return (
+    <div className="flex items-center gap-[var(--spacing-08)]">
+      {tones.map((tone) => (
+        <Tag key={tone} tone={tone} selected={picked.includes(tone)} onClick={() => toggle(tone)}>
+          {tone}
+        </Tag>
+      ))}
+      <Tag selected={false} disabled>
+        disabled
+      </Tag>
+    </div>
+  );
+}
+
 export const Selected: Story = {
   parameters: { layout: 'padded' },
-  render: () => (
-    <div className="flex flex-col gap-[var(--spacing-08)]">
-      {(['default', 'danger', 'success', 'warning'] as const).map((tone) => (
-        <div key={tone} className="flex items-center gap-[var(--spacing-08)]">
-          <Tag variant="primary" tone={tone} selected={false}>
-            {tone} off
-          </Tag>
-          <Tag variant="primary" tone={tone} selected>
-            {tone} on
-          </Tag>
-        </div>
-      ))}
-    </div>
-  ),
+  render: () => <FilterChips />,
 };
