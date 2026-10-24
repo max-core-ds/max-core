@@ -1,5 +1,6 @@
 import { BottomLineInput } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { User } from 'lucide-react';
 
 const meta = {
   title: 'Molecules/Bottom Line Input',
@@ -10,6 +11,8 @@ const meta = {
   argTypes: {
     size: { control: 'select', options: ['s', 'm', 'l'] },
     disabled: { control: 'boolean' },
+    leadingIcon: { control: false },
+    trailingIcon: { control: false },
   },
 } satisfies Meta<typeof BottomLineInput>;
 
@@ -21,3 +24,5 @@ export const Default: Story = {};
 export const WithError: Story = {
   args: { errorMessage: 'Enter your name' },
 };
+
+export const WithIcon: Story = { args: { leadingIcon: <User /> } };

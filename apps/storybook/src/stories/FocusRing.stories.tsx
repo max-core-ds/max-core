@@ -7,9 +7,8 @@ import type { ReactNode } from 'react';
 // them always-on so the geometry is visible without keyboard interaction.
 const ringPreview =
   'ring-2 ring-[var(--border-focus)] ring-offset-2 ring-offset-[var(--bg-default)]';
-const insetPreview =
-  "relative before:content-[''] before:absolute before:-inset-[3px] before:rounded-[inherit] " +
-  'before:border-2 before:border-[var(--border-focus)]';
+const borderPreview =
+  'border border-[var(--border-focus)] shadow-[inset_0_0_0_1px_var(--border-focus)]';
 
 const meta = {
   title: 'Foundations/Focus Ring',
@@ -38,11 +37,10 @@ export const Overview: Story = {
   render: () => (
     <div className="flex flex-col gap-[var(--spacing-32)] bg-[var(--bg-default)] p-[var(--spacing-24)]">
       <p className="max-w-2xl text-sm font-light text-[var(--text-secondary)]">
-        Focus indication uses <b>border/focus</b> as the ring color. Two geometries: an{' '}
-        <b>outset</b> keyboard-focus ring for pressable elements (<code>focusRing</code>) and an{' '}
-        <b>inset −3px</b> ring hugging input frames (<code>focusRingInset</code>), which survives
-        the title/helper being toggled off. Rings show only on keyboard focus — Tab through the live
-        examples.
+        Focus indication uses <b>border/focus</b>. Hybrid model: <b>pressable</b> elements get an
+        outset keyboard-focus ring (<code>focusRing</code>); bordered <b>fields</b> show focus on
+        their own border, which turns border/focus at 2px (<code>focusBorder</code>, no ring). Tab
+        through the live examples.
       </p>
 
       <Row
@@ -54,10 +52,10 @@ export const Overview: Story = {
       </Row>
 
       <Row
-        title="focusRingInset — inset −3px, input frame"
-        code="before:-inset-[3px] · focus-within · border/focus"
+        title="focusBorder — the field's own border, 2px"
+        code="focus-within · border/focus · 1px border + 1px inset shadow"
       >
-        <div className={`${swatch} ${insetPreview}`}>preview</div>
+        <div className={`${swatch} ${borderPreview}`}>preview</div>
         <div className="w-56">
           <Input placeholder="Focus me" />
         </div>

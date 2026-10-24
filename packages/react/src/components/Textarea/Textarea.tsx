@@ -4,22 +4,32 @@ import { Field } from '@base-ui/react/field';
 import { type VariantProps, cva } from 'class-variance-authority';
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
-import { fieldSurface } from '../../utils/field.js';
-import { focusRingInset } from '../../utils/focus-ring.js';
+import {
+  fieldBorder,
+  fieldError,
+  fieldHelper,
+  fieldHover,
+  fieldInvalid,
+  fieldLabel,
+  fieldRoot,
+} from '../../utils/field.js';
 
-// Radius/padding follow the Input Global tokens; per-size Min Height is a raw
-// px value in Figma (96/120/160).
+// .Textarea-Options → Input: bg/surface fill (unlike Base Input's bg/default),
+// Radius md + Padding X 12 per -- Molecule/Input/Textarea/Size */*; per-size
+// Min Width / Min Height are raw px in Figma (160·96 / 180·120 / 200·160).
+// The textarea owns the border, so focusBorder (focus-within) applies to it.
 const textareaStyles = cva(
-  // `block` removes the inline-block baseline descender gap that otherwise leaves
-  // a few px between the textarea's bottom and the wrapper frame (which the inset
-  // focus ring hugs), pushing the ring low at the bottom edge.
-  ['block w-full resize-y rounded-[var(--radius-md)] px-[var(--spacing-12)]', fieldSurface],
+  [
+    'block w-full resize-y rounded-[var(--radius-md)] px-[calc(var(--spacing-12)-var(--border-weight-thin))]',
+    fieldBorder,
+  ],
   {
     variants: {
+      // Text 12 / 14 / 16 regular (deviation from the master's Caption/300, as Input).
       size: {
-        s: 'min-h-[96px] py-[var(--spacing-12)] text-xs',
-        m: 'min-h-[120px] py-[var(--spacing-12)] text-sm',
-        l: 'min-h-[160px] py-[var(--spacing-16)] text-base',
+        s: 'min-h-[96px] min-w-[160px] py-[calc(var(--spacing-12)-var(--border-weight-thin))] text-xs',
+        m: 'min-h-[120px] min-w-[180px] py-[calc(var(--spacing-12)-var(--border-weight-thin))] text-sm',
+        l: 'min-h-[160px] min-w-[200px] py-[calc(var(--spacing-16)-var(--border-weight-thin))] text-base',
       },
     },
     defaultVariants: { size: 'm' },
@@ -27,32 +37,47 @@ const textareaStyles = cva(
 );
 
 export interface TextareaProps
-  extends Omit<ComponentPropsWithoutRef<'textarea'>, 'size'>,
+  extends Omit<ComponentPropsWithoutRef<'textarea'>, 'size' | 'className'>,
     VariantProps<typeof textareaStyles> {
   label?: ReactNode;
   helper?: ReactNode;
   errorMessage?: ReactNode;
+  /** Applied to the field wrapper (label + textarea + helper). */
+  className?: string;
 }
 
-export function Textarea({ label, helper, errorMessage, size, className, ...rest }: TextareaProps) {
+export function Textarea({
+  label,
+  helper,
+  errorMessage,
+  size,
+  disabled,
+  className,
+  ...rest
+}: TextareaProps) {
   const isInvalid = Boolean(errorMessage);
   return (
-    <Field.Root className="flex flex-col gap-[var(--spacing-04)]" invalid={isInvalid}>
-      {label ? (
-        <Field.Label className="text-sm font-bold text-[var(--text-primary)]">{label}</Field.Label>
-      ) : null}
-      {/* Input frame hosts the inset -3px focus ring (focus-within on this wrapper). */}
-      <div className={cn('relative w-full rounded-[var(--radius-md)]', focusRingInset)}>
-        <Field.Control
-          render={<textarea className={cn(textareaStyles({ size }), className)} {...rest} />}
-        />
-      </div>
+    <Field.Root className={cn(fieldRoot, className)} invalid={isInvalid} disabled={disabled}>
+      {label ? <Field.Label className={fieldLabel(isInvalid)}>{label}</Field.Label> : null}
+      <Field.Control
+        render={
+          <textarea
+            className={cn(
+              textareaStyles({ size }),
+              isInvalid
+                ? [fieldInvalid, 'bg-[var(--status-danger-subtle)]']
+                : ['bg-[var(--bg-surface)]', fieldHover],
+            )}
+            {...rest}
+          />
+        }
+      />
       {errorMessage ? (
-        <Field.Error match={true} className="text-xs text-[var(--status-danger-default)]">
+        <Field.Error match={true} className={fieldError}>
           {errorMessage}
         </Field.Error>
       ) : helper ? (
-        <Field.Description className="text-xs text-[var(--text-muted)]">{helper}</Field.Description>
+        <Field.Description className={fieldHelper}>{helper}</Field.Description>
       ) : null}
     </Field.Root>
   );

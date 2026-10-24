@@ -8,6 +8,7 @@ const meta = {
   args: { label: 'Quantity', defaultValue: 1, min: 0, size: 'm' },
   argTypes: {
     size: { control: 'select', options: ['s', 'm', 'l'] },
+    disabled: { control: 'boolean' },
   },
 } satisfies Meta<typeof Stepper>;
 
@@ -25,7 +26,13 @@ export const Sizes: Story = {
   render: () => (
     <div className="flex items-end gap-[var(--spacing-16)]">
       {(['s', 'm', 'l'] as const).map((size) => (
-        <Stepper key={size} size={size} defaultValue={1} min={0} />
+        <Stepper
+          key={size}
+          size={size}
+          label={`Size ${size.toUpperCase()}`}
+          defaultValue={1}
+          min={0}
+        />
       ))}
     </div>
   ),

@@ -14,8 +14,13 @@ const meta = {
   component: Multiselect,
   parameters: { layout: 'padded' },
   decorators: [(Story) => <div className="w-80">{Story()}</div>],
-  args: { items, placeholder: 'Add frameworks…', 'aria-label': 'Frameworks' },
-  argTypes: { items: { control: false } },
+  args: { items, placeholder: 'Add frameworks…', label: 'Frameworks', size: 'm' },
+  argTypes: {
+    size: { control: 'select', options: ['s', 'm', 'l'] },
+    variant: { control: 'inline-radio', options: ['primary', 'secondary'] },
+    disabled: { control: 'boolean' },
+    items: { control: false },
+  },
 } satisfies Meta<typeof Multiselect>;
 
 export default meta;

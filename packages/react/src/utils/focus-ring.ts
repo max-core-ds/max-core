@@ -10,9 +10,6 @@
  *   No ring: the field's own 1px border turns `border/focus` and thickens to
  *   2px via an inset shadow, so layout doesn't shift. Apply to the element
  *   that owns the border, triggered by `focus-within`.
- * - `focusRingInset` — deprecated -3px `::before` ring around input frames;
- *   replaced by `focusBorder` (hybrid focus model: fields = own border,
- *   pressables = outset ring).
  */
 
 /** Ring geometry + color, no state prefix. */
@@ -34,12 +31,3 @@ export const focusRingWithin =
 export const focusBorder =
   'focus-within:border-[var(--border-focus)] ' +
   'focus-within:shadow-[inset_0_0_0_1px_var(--border-focus)]';
-
-/**
- * Inset -3px hugging ring for an input frame (apply to a `relative` wrapper).
- * @deprecated Use `focusBorder` — fields show focus on their own border.
- */
-export const focusRingInset =
-  "before:content-[''] before:pointer-events-none before:absolute before:-inset-[3px] " +
-  'before:rounded-[inherit] before:border-2 before:border-[var(--border-focus)] ' +
-  'before:opacity-0 before:transition-opacity focus-within:before:opacity-100';

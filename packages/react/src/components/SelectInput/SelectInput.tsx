@@ -5,32 +5,48 @@ import { Select } from '@base-ui/react/select';
 import { type VariantProps, cva } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
-import { fieldSurface } from '../../utils/field.js';
-import { focusRing } from '../../utils/focus-ring.js';
+import {
+  type FieldVariant,
+  fieldBorder,
+  fieldError,
+  fieldFill,
+  fieldHelper,
+  fieldHover,
+  fieldInvalidFill,
+  fieldLabel,
+  fieldRoot,
+} from '../../utils/field.js';
+import { FieldIcon } from '../Input/Input.js';
 
+// The trigger is the field frame (.Select-Input-Options → Input): it owns the
+// border, fill and focus border (hybrid model: no outset ring). Open = the
+// master's State=Active → border/accent. The placeholder shows in text/muted.
 const triggerStyles = cva(
   [
-    'inline-flex w-full items-center justify-between gap-[var(--spacing-08)]',
-    'rounded-[var(--radius-md)] px-[var(--spacing-12)]',
-    fieldSurface,
-    focusRing,
+    'inline-flex w-full items-center gap-[var(--spacing-08)]',
+    'rounded-[var(--radius-md)] px-[calc(var(--spacing-12)-var(--border-weight-thin))] text-left',
+    fieldBorder,
+    'data-[popup-open]:border-[var(--border-accent)] data-[placeholder]:text-[var(--text-muted)]',
   ],
   {
     variants: {
-      // Padding Y + Icon Size per -- Molecule/Input/Select Input/Size {S,M,L}
-      // (Icon Size 16/20/24 targets the trigger chevron).
+      // Padding Y, Min Width (raw px) + Icon Size per -- Molecule/Input/Select
+      // Input/Size {S,M,L} (Icon Size 16/20/24 for the leading icon and chevron).
+      // Text 12 / 14 / 16 regular (deviation from Caption/700, as Input).
       size: {
-        s: 'py-[var(--spacing-12)] text-xs [&_svg]:size-[var(--size-16)]',
-        m: 'py-[var(--spacing-12)] text-sm [&_svg]:size-[var(--size-20)]',
-        l: 'py-[var(--spacing-16)] text-base [&_svg]:size-[var(--size-24)]',
+        s: 'min-w-[160px] py-[calc(var(--spacing-12)-var(--border-weight-thin))] text-xs [&_svg]:size-[var(--size-16)]',
+        m: 'min-w-[180px] py-[calc(var(--spacing-12)-var(--border-weight-thin))] text-sm [&_svg]:size-[var(--size-20)]',
+        l: 'min-w-[200px] py-[calc(var(--spacing-16)-var(--border-weight-thin))] text-base [&_svg]:size-[var(--size-24)]',
       },
     },
     defaultVariants: { size: 'm' },
   },
 );
 
+// Popup: the master opens an Item List (bg/surface + border/default). Item rows
+// are audited with Item List / Dropdown.
 const popupStyles =
-  'min-w-[var(--size-180)] rounded-[var(--radius-md)] border border-[var(--border-muted)] ' +
+  'min-w-[var(--size-180)] rounded-[var(--radius-md)] border border-[var(--border-default)] ' +
   'bg-[var(--bg-surface)] p-[var(--spacing-04)] text-[var(--text-primary)] ' +
   'shadow-[var(--effect-shadow-down-md)] outline-none';
 
@@ -46,6 +62,10 @@ export interface SelectOption {
 
 export interface SelectInputProps extends VariantProps<typeof triggerStyles> {
   items: SelectOption[];
+  /** Primary = filled (`bg/default`), Secondary = outline only. */
+  variant?: FieldVariant;
+  /** Icon before the value (Figma: Show Leading / Left Icon). */
+  leadingIcon?: ReactNode;
   placeholder?: string;
   value?: string;
   defaultValue?: string;
@@ -54,6 +74,7 @@ export interface SelectInputProps extends VariantProps<typeof triggerStyles> {
   label?: ReactNode;
   helper?: ReactNode;
   errorMessage?: ReactNode;
+  /** Applied to the field wrapper (label + trigger + helper). */
   className?: string;
   'aria-label'?: string;
 }
@@ -62,6 +83,8 @@ export function SelectInput({
   items,
   placeholder = 'Select…',
   size,
+  variant = 'primary',
+  leadingIcon,
   value,
   defaultValue,
   onValueChange,
@@ -74,14 +97,8 @@ export function SelectInput({
 }: SelectInputProps) {
   const isInvalid = Boolean(errorMessage);
   return (
-    <Field.Root
-      className="flex flex-col gap-[var(--spacing-04)]"
-      invalid={isInvalid}
-      disabled={disabled}
-    >
-      {label ? (
-        <Field.Label className="text-sm font-bold text-[var(--text-primary)]">{label}</Field.Label>
-      ) : null}
+    <Field.Root className={cn(fieldRoot, className)} invalid={isInvalid} disabled={disabled}>
+      {label ? <Field.Label className={fieldLabel(isInvalid)}>{label}</Field.Label> : null}
       <Select.Root
         value={value}
         defaultValue={defaultValue}
@@ -91,13 +108,22 @@ export function SelectInput({
         <Select.Trigger
           className={cn(
             triggerStyles({ size }),
-            isInvalid && 'border-[var(--status-danger-default)]',
-            className,
+            isInvalid
+              ? [
+                  'border-[var(--status-danger-border)] data-[placeholder]:text-[var(--status-danger-default)]',
+                  fieldInvalidFill[variant],
+                ]
+              : [fieldFill[variant], fieldHover],
           )}
           {...rest}
         >
-          <Select.Value placeholder={placeholder} />
-          <Select.Icon className="text-[var(--text-muted)]">
+          {leadingIcon ? (
+            <FieldIcon className={isInvalid ? 'text-[var(--status-danger-default)]' : undefined}>
+              {leadingIcon}
+            </FieldIcon>
+          ) : null}
+          <Select.Value className="min-w-0 flex-1 truncate" placeholder={placeholder} />
+          <Select.Icon className="flex shrink-0 text-[var(--text-muted)]">
             <ChevronDown />
           </Select.Icon>
         </Select.Trigger>
@@ -117,11 +143,11 @@ export function SelectInput({
         </Select.Portal>
       </Select.Root>
       {errorMessage ? (
-        <Field.Error match={true} className="text-xs text-[var(--status-danger-default)]">
+        <Field.Error match={true} className={fieldError}>
           {errorMessage}
         </Field.Error>
       ) : helper ? (
-        <Field.Description className="text-xs text-[var(--text-muted)]">{helper}</Field.Description>
+        <Field.Description className={fieldHelper}>{helper}</Field.Description>
       ) : null}
     </Field.Root>
   );

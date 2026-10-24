@@ -5,36 +5,48 @@ import { Input as BaseInput } from '@base-ui/react/input';
 import { type VariantProps, cva } from 'class-variance-authority';
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
+import { fieldError, fieldHelper, fieldLabel, fieldRoot } from '../../utils/field.js';
+import { FieldIcon } from '../Input/Input.js';
 
-// Underline field: radius none + a thick bottom border (Bottom Line/Radius =
-// none, Stroke = thick). Focus recolors the underline.
-const inputStyles = cva(
+// Underline frame (.Bottom-Line-Input-Options → Input): no fill, radius none, a
+// bottom stroke of -- Molecule/Input/Bottom Line/Size */Stroke Weight (thick, 2px).
+// Padding X 12 and Inner Gap 8 at every size. Focus recolours the underline to
+// border/focus (it's already 2px, so the hybrid focusBorder has nothing to add);
+// hover → border/hover. The stroke is INSIDE in Figma, so the bottom padding
+// gives back the 2px underline.
+const frameStyles = cva(
   [
-    'w-full rounded-[var(--radius-none)] bg-transparent px-0',
-    'border-0 border-b-2 border-[var(--border-default)]',
-    'text-[var(--text-primary)] placeholder:text-[var(--text-muted)]',
-    'transition-colors focus:outline-none focus:border-[var(--border-focus)]',
-    'disabled:cursor-not-allowed disabled:opacity-[var(--opacity-disabled)]',
-    'data-[invalid]:border-[var(--status-danger-default)]',
+    'flex w-full items-center gap-[var(--spacing-08)] rounded-[var(--radius-none)] bg-transparent px-[var(--spacing-12)]',
+    'border-0 border-b-[length:var(--border-weight-thick)] border-solid border-[var(--border-default)]',
+    'text-[var(--text-primary)] transition-colors focus-within:border-[var(--border-focus)]',
   ],
   {
     variants: {
       size: {
-        s: 'py-[var(--spacing-12)] text-xs',
-        m: 'py-[var(--spacing-12)] text-sm',
-        l: 'py-[var(--spacing-16)] text-base',
+        s: 'min-w-[160px] pt-[var(--spacing-12)] pb-[calc(var(--spacing-12)-var(--border-weight-thick))] [&_svg]:size-[var(--size-16)]',
+        m: 'min-w-[180px] pt-[var(--spacing-12)] pb-[calc(var(--spacing-12)-var(--border-weight-thick))] [&_svg]:size-[var(--size-20)]',
+        l: 'min-w-[200px] pt-[var(--spacing-16)] pb-[calc(var(--spacing-16)-var(--border-weight-thick))] [&_svg]:size-[var(--size-24)]',
       },
     },
     defaultVariants: { size: 'm' },
   },
 );
 
+// Value + placeholder 12 / 14 / 16 regular (deviation from Caption/700, as Input).
+const textSize = { s: 'text-xs', m: 'text-sm', l: 'text-base' } as const;
+
 export interface BottomLineInputProps
-  extends Omit<ComponentPropsWithoutRef<typeof BaseInput>, 'size'>,
-    VariantProps<typeof inputStyles> {
+  extends Omit<ComponentPropsWithoutRef<typeof BaseInput>, 'size' | 'className'>,
+    VariantProps<typeof frameStyles> {
   label?: ReactNode;
   helper?: ReactNode;
   errorMessage?: ReactNode;
+  /** Icon before the value (Figma: Show Leading / Left Icon). */
+  leadingIcon?: ReactNode;
+  /** Icon after the value (Figma: Show Trailing / Right Icon). */
+  trailingIcon?: ReactNode;
+  /** Applied to the field wrapper (label + frame + helper). */
+  className?: string;
 }
 
 export function BottomLineInput({
@@ -42,22 +54,47 @@ export function BottomLineInput({
   helper,
   errorMessage,
   size,
+  leadingIcon,
+  trailingIcon,
+  disabled,
   className,
   ...rest
 }: BottomLineInputProps) {
   const isInvalid = Boolean(errorMessage);
   return (
-    <Field.Root className="flex flex-col gap-[var(--spacing-04)]" invalid={isInvalid}>
-      {label ? (
-        <Field.Label className="text-sm font-bold text-[var(--text-primary)]">{label}</Field.Label>
-      ) : null}
-      <BaseInput className={cn(inputStyles({ size }), className)} {...rest} />
+    <Field.Root className={cn(fieldRoot, className)} invalid={isInvalid} disabled={disabled}>
+      {label ? <Field.Label className={fieldLabel(isInvalid)}>{label}</Field.Label> : null}
+      <div
+        className={cn(
+          frameStyles({ size }),
+          isInvalid
+            ? 'border-[var(--status-danger-border)]'
+            : 'hover:not-focus-within:not-has-[:disabled]:border-[var(--border-hover)]',
+        )}
+      >
+        {leadingIcon ? (
+          <FieldIcon className={isInvalid ? 'text-[var(--status-danger-default)]' : undefined}>
+            {leadingIcon}
+          </FieldIcon>
+        ) : null}
+        <BaseInput
+          className={cn(
+            'min-w-0 flex-1 bg-transparent outline-none disabled:cursor-not-allowed',
+            isInvalid
+              ? 'placeholder:text-[var(--status-danger-default)]'
+              : 'placeholder:text-[var(--text-muted)]',
+            textSize[size ?? 'm'],
+          )}
+          {...rest}
+        />
+        {trailingIcon ? <FieldIcon>{trailingIcon}</FieldIcon> : null}
+      </div>
       {errorMessage ? (
-        <Field.Error match={true} className="text-xs text-[var(--status-danger-default)]">
+        <Field.Error match={true} className={fieldError}>
           {errorMessage}
         </Field.Error>
       ) : helper ? (
-        <Field.Description className="text-xs text-[var(--text-muted)]">{helper}</Field.Description>
+        <Field.Description className={fieldHelper}>{helper}</Field.Description>
       ) : null}
     </Field.Root>
   );

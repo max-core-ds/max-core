@@ -2,7 +2,7 @@
 
 Process, checklist and page order: **`PLAN.md → Phase 4.5`**. Status: **`PROGRESS.md → Audit status`**.
 One page = one `docs/audit/<slug>.md` + one commit. This file holds the practical recipe that
-worked on the first eighteen pages (the whole Atoms tier, Buttons → Content blocks; see the Audit status table).
+worked on the first nineteen pages (the Atoms tier + Inputs; see the Audit status table).
 
 ## Loop per page
 1. `figma-node-links/catalog.json` → page `nodeId` + `masters[]`. Read the React source, utils and story.
@@ -53,6 +53,11 @@ npx biome check --write <changed files>
 Run them as separate commands (or echo each exit code): a chained `&& … | tail` hides which step failed.
 
 ## Gotchas found so far
+- **Figma strokes are INSIDE; CSS borders add.** A bordered field built from token padding came out
+  2px too tall. Give the border back in the padding (`py-[calc(var(--spacing-12)-var(--border-weight-thin))]`)
+  and measure the rendered height against the master.
+- **Shared util classes hide pairings from the contrast audit** (Inputs: SelectInput dropped out).
+  Declare the real pairings in `contrast-audit.ts` `OVERRIDES` and diff the component list before/after.
 - **Text-box artifact:** several Figma masters have label text boxes stuck at 9–10px tall
   (Segmented item, Badge), so frame heights read too small. Compute height from padding + the
   text style line height; flag it to the designer, don't copy the frame height.

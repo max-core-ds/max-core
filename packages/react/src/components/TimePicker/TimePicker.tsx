@@ -4,8 +4,8 @@ import { Field } from '@base-ui/react/field';
 import { Popover } from '@base-ui/react/popover';
 import { type ReactNode, useCallback, useEffect, useId, useRef, useState } from 'react';
 import { cn } from '../../utils/cn.js';
-import { fieldSurface } from '../../utils/field.js';
-import { focusBorder, focusRing } from '../../utils/focus-ring.js';
+import { fieldHover, fieldSurface } from '../../utils/field.js';
+import { focusRing } from '../../utils/focus-ring.js';
 import { useControllableState } from '../../utils/use-controllable-state.js';
 import {
   HOURS_12,
@@ -442,8 +442,7 @@ export function TimePicker({
               'inline-flex w-full items-center gap-[var(--spacing-08)]',
               'rounded-[var(--radius-md)] px-[var(--spacing-12)] py-[var(--spacing-12)] text-sm',
               fieldSurface,
-              focusBorder,
-              isInvalid && 'border-[var(--status-danger-default)]',
+              isInvalid ? 'border-[var(--status-danger-border)]' : fieldHover,
               '[&_svg]:size-[var(--size-20)] [&_svg]:text-[var(--text-muted)]',
             )}
           >

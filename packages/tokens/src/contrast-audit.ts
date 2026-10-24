@@ -64,7 +64,25 @@ const buttonFamily: Override = {
   ],
 };
 
+// Text fields: the field chrome lives in utils/field.ts (fieldBorder / fieldFill /
+// fieldInvalid…), so value, placeholder and fill never share a class literal in
+// the component file. Declare the real pairings per fill: value text/primary and
+// placeholder text/muted on the field fill; the error placeholder
+// status/danger/default on status/danger/subtle (Primary + invalid).
+const textField = (fill: string): Override => ({
+  extra: [
+    { state: 'value', fgVar: '--text-primary', bgVar: fill },
+    { state: 'placeholder', fgVar: '--text-muted', bgVar: fill },
+    { state: 'invalid', fgVar: '--status-danger-default', bgVar: '--status-danger-subtle' },
+  ],
+});
+
 const OVERRIDES: Record<string, Override> = {
+  Input: textField('--bg-default'),
+  SelectInput: textField('--bg-default'),
+  Multiselect: textField('--bg-default'),
+  Textarea: textField('--bg-surface'),
+  Stepper: textField('--bg-surface'),
   // Inactive item text sits on the group's bg/subtle — different elements.
   // Fails light AA (3.86); kept to match Figma by decision, on the designer list.
   SegmentedControl: {

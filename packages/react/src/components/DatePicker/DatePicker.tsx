@@ -11,8 +11,7 @@ import {
   useDayPicker,
 } from 'react-day-picker';
 import { cn } from '../../utils/cn.js';
-import { fieldSurface } from '../../utils/field.js';
-import { focusRing } from '../../utils/focus-ring.js';
+import { fieldHover, fieldSurface } from '../../utils/field.js';
 import { stateLayer } from '../../utils/state-layer.js';
 import { useControllableState } from '../../utils/use-controllable-state.js';
 import { ActionBar } from '../ActionBar/ActionBar.js';
@@ -587,8 +586,7 @@ export function DateInput({
               'inline-flex w-full items-center gap-[var(--spacing-12)]',
               'rounded-[var(--radius-md)] px-[var(--spacing-12)] py-[var(--spacing-12)] text-sm',
               fieldSurface,
-              focusRing,
-              isInvalid && 'border-[var(--status-danger-default)]',
+              isInvalid ? 'border-[var(--status-danger-border)]' : fieldHover,
               '[&_svg]:size-[var(--size-20)] [&_svg]:text-[var(--text-muted)]',
             )}
           >
