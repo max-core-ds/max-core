@@ -3,13 +3,23 @@
 import { Tooltip as BaseTooltip } from '@base-ui/react/tooltip';
 import type { ComponentPropsWithoutRef, ReactElement, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
-import { tooltipArrow, tooltipBubble } from '../../utils/tooltip-surface.js';
+import {
+  TOOLTIP_ARROW_PATH,
+  TOOLTIP_ARROW_VIEWBOX,
+  tooltipArrow,
+  tooltipBubble,
+} from '../../utils/tooltip-surface.js';
 
-// Base UI positions the arrow along the edge; we add the perpendicular offset so
-// it straddles the popup border and protrudes toward the trigger (size-2 → -4px).
+// Base UI positions the arrow along the edge; we add the perpendicular offset and
+// rotation so the downward triangle (16×12 box) points at the trigger from any
+// side, overlapping the bubble by 1px so no seam shows. Left/right rotate the box
+// about its centre: its visual 12px depth then sits 2px inside the 16px box, so
+// the offset is 16 − 2 − 1 = 13px.
 const arrowSides =
-  'data-[side=top]:bottom-[-4px] data-[side=bottom]:top-[-4px] ' +
-  'data-[side=left]:right-[-4px] data-[side=right]:left-[-4px]';
+  'data-[side=top]:bottom-[-11px] ' +
+  'data-[side=bottom]:top-[-11px] data-[side=bottom]:rotate-180 ' +
+  'data-[side=left]:right-[-13px] data-[side=left]:-rotate-90 ' +
+  'data-[side=right]:left-[-13px] data-[side=right]:rotate-90';
 
 export interface TooltipProps {
   /** The tooltip content. */
@@ -40,7 +50,11 @@ export function Tooltip({
       <BaseTooltip.Portal>
         <BaseTooltip.Positioner side={side} sideOffset={sideOffset}>
           <BaseTooltip.Popup className={tooltipBubble}>
-            <BaseTooltip.Arrow className={cn(tooltipArrow, arrowSides)} />
+            <BaseTooltip.Arrow className={arrowSides}>
+              <svg viewBox={TOOLTIP_ARROW_VIEWBOX} className={tooltipArrow} aria-hidden="true">
+                <path d={TOOLTIP_ARROW_PATH} />
+              </svg>
+            </BaseTooltip.Arrow>
             {content}
           </BaseTooltip.Popup>
         </BaseTooltip.Positioner>

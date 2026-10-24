@@ -5,7 +5,12 @@ import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
 import { focusRingWithin } from '../../utils/focus-ring.js';
 import { progressFill, progressTrack } from '../../utils/progress.js';
-import { tooltipArrow, tooltipBubble } from '../../utils/tooltip-surface.js';
+import {
+  TOOLTIP_ARROW_PATH,
+  TOOLTIP_ARROW_VIEWBOX,
+  tooltipArrow,
+  tooltipBubble,
+} from '../../utils/tooltip-surface.js';
 import { Knob } from '../Knob/Knob.js';
 
 // Composed from the Progress Bar (track + fill), Knob (thumb) and Tooltip (value
@@ -65,9 +70,16 @@ export function Range({
                 <div className="pointer-events-none absolute bottom-full left-1/2 mb-[var(--spacing-16)] -translate-x-1/2">
                   <div className={cn('relative', tooltipBubble)}>
                     <Slider.Value>{(_, v) => (Array.isArray(v) ? v[i] : v)}</Slider.Value>
-                    <span
-                      className={cn('absolute -bottom-1 left-1/2 -translate-x-1/2', tooltipArrow)}
-                    />
+                    <svg
+                      viewBox={TOOLTIP_ARROW_VIEWBOX}
+                      aria-hidden="true"
+                      className={cn(
+                        'absolute top-full left-1/2 -mt-px -translate-x-1/2',
+                        tooltipArrow,
+                      )}
+                    >
+                      <path d={TOOLTIP_ARROW_PATH} />
+                    </svg>
                   </div>
                 </div>
               ) : null}
