@@ -622,7 +622,7 @@ README "Status" gaps, not component work.
 
 ---
 
-# Phase 4.5 — Component audit: Figma doc page ↔ React — ⏳ NEXT (before Batch 10)
+# Phase 4.5 — Component audit: Figma doc page ↔ React — ⏳ IN PROGRESS (Atoms + Molecules done 2026-10-25; Organisms next; before Batch 10)
 
 > **Why:** Phase 3.5 only covered the 12 files the designer exported, and it focused on
 > missing axes and colours. The List Item / Item List re-check (2026-10-23) showed that even

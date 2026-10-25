@@ -114,3 +114,13 @@ Run them as separate commands (or echo each exit code): a chained `&& … | tail
   `--available-height` clips the list and clicks hit the header instead of the rows.
 - **Figma "rendered" sizes can be hand resizes:** check `layoutSizingHorizontal` before copying a
   width (the Search bar button was FIXED 72/74, not a token).
+- **Unbound render vs token:** when the master renders a value with no binding (Toast icons 48)
+  but its own token says otherwise (`Icon Size` 32, bound nowhere), React keeps the token —
+  the drift gate mandates it, and it's what propagates once the designer binds it. Flag it.
+- **Fixed-size masters:** cards/dialogs drawn FIXED × FIXED with SPACE_BETWEEN (Dialogs 347 × 327)
+  hug in React with the token gap instead, so any copy fits; record it as a deviation.
+- **Reuse the composed atom:** if the master nests an Action Bar / Link Button / Spinner instance,
+  render that React component (Dialog actions → `ActionBar`, Toast action → `LinkButton`,
+  Toast loading → `Spinner` XL), not a hand-rolled copy.
+- **Icons:** components inline lucide paths (no lucide dependency). Copy the exact lucide icon the
+  master names (`li:check`, `li:map-pin-plus-inside` …), not a lookalike.
