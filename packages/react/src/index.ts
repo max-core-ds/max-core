@@ -131,7 +131,18 @@ export {
   type BottomNavigationProps,
   type BottomNavItem,
 } from './components/BottomNavigation/index.js';
-export { StatsCard, type StatsCardProps } from './components/StatsCard/index.js';
+export {
+  ChartLegend,
+  type ChartLegendItem,
+  type ChartLegendProps,
+  chartTheme,
+  StatsCard,
+  type StatsCardProps,
+  StatsComparison,
+  type StatsComparisonProps,
+  StatsMetric,
+  type StatsMetricProps,
+} from './components/StatsCard/index.js';
 export { ShareItem, type ShareItemProps } from './components/ShareItem/index.js';
 export {
   StackedList,

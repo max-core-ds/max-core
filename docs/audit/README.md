@@ -2,7 +2,7 @@
 
 Process, checklist and page order: **`PLAN.md → Phase 4.5`**. Status: **`PROGRESS.md → Audit status`**.
 One page = one `docs/audit/<slug>.md` + one commit. This file holds the practical recipe that
-worked on the first thirty-eight pages (the Atoms tier + Inputs, Search bar, Item List, Dropdown, Form Groups, Date picker, Tabs, Pagination, Range, Entity Item, User card, Avatar group, Pin, Action bar, Toast, Dialogs, Top Bar, Side bar, Bottom Navigation, Stacked List; see the Audit status table).
+worked on the first thirty-nine pages (the Atoms tier + Inputs, Search bar, Item List, Dropdown, Form Groups, Date picker, Tabs, Pagination, Range, Entity Item, User card, Avatar group, Pin, Action bar, Toast, Dialogs, Top Bar, Side bar, Bottom Navigation, Stacked List, Stats card; see the Audit status table).
 
 ## Loop per page
 1. `figma-node-links/catalog.json` → page `nodeId` + `masters[]`. Read the React source, utils and story.
@@ -127,5 +127,7 @@ Run them as separate commands (or echo each exit code): a chained `&& … | tail
 - **Gradient strokes:** read the stops *and* `gradientTransform`; the Top Bar's accent → focus ramp sits at
   94–98% along the stroked edge, so it renders flat. A 1px inside bottom stroke on a translucent or rounded
   surface → inset `box-shadow` (no height change, follows the radius).
+- **New dependency in a story → restart Storybook.** Vite answers "504 Outdated Optimize Dep" until the
+  dev server restarts; don't restart the user's :6006, run a second one on :6007 for the check.
 - **Icons:** components inline lucide paths (no lucide dependency). Copy the exact lucide icon the
   master names (`li:check`, `li:map-pin-plus-inside` …), not a lookalike.
