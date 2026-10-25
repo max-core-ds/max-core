@@ -2,7 +2,7 @@
 
 Process, checklist and page order: **`PLAN.md → Phase 4.5`**. Status: **`PROGRESS.md → Audit status`**.
 One page = one `docs/audit/<slug>.md` + one commit. This file holds the practical recipe that
-worked on the first thirty-five pages (the Atoms tier + Inputs, Search bar, Item List, Dropdown, Form Groups, Date picker, Tabs, Pagination, Range, Entity Item, User card, Avatar group, Pin, Action bar, Toast, Dialogs, Top Bar; see the Audit status table).
+worked on the first thirty-six pages (the Atoms tier + Inputs, Search bar, Item List, Dropdown, Form Groups, Date picker, Tabs, Pagination, Range, Entity Item, User card, Avatar group, Pin, Action bar, Toast, Dialogs, Top Bar, Side bar; see the Audit status table).
 
 ## Loop per page
 1. `figma-node-links/catalog.json` → page `nodeId` + `masters[]`. Read the React source, utils and story.
@@ -82,6 +82,7 @@ Run them as separate commands (or echo each exit code): a chained `&& … | tail
 - **Tailwind variant order:** a compound `not-…:hover:` rule can outrank `active:` (Pagination pressed never showed). Exclude it with `not-active:` and check the pressed computed style.
 - **Contrast denominator check every page:** list the audited components before/after (`grep -E '^\s+[✓✗]'`). An apostrophe in a comment used to misalign the extractor and silently drop a component (Pagination); `contrast.ts` now strips comments, but still diff the list.
 - **Overflow clips the focus ring:** an `overflow-x-auto` bar cut the outset `focusRing`; Tab-screenshot every ring.
+  A scroll container clips on both axes (`overflow-y-auto` too): give it a `-m-[4px] p-[4px]` pair (Side bar nav).
 - **Base UI data attributes:** Checkbox/Radio/Switch expose `data-checked` / `data-unchecked` /
   `data-indeterminate`. Use `data-[unchecked]:hover:` for unchecked-only states.
 - **ToggleGroup single-select** emits `[]` when the active item is clicked. Keep the group

@@ -1,5 +1,7 @@
 import {
   Avatar,
+  Dropdown,
+  EntityCard,
   EntityItem,
   ListItem,
   SideBar,
@@ -9,16 +11,7 @@ import {
   useRailCollapsed,
 } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import {
-  ChevronDown,
-  FileText,
-  Home,
-  LifeBuoy,
-  PanelLeft,
-  PieChart,
-  Settings,
-  Users,
-} from 'lucide-react';
+import { FileText, Home, LifeBuoy, PanelLeft, PieChart, Plus, Settings, Users } from 'lucide-react';
 import { useState } from 'react';
 
 const meta = {
@@ -40,41 +33,44 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// A collapse-aware brand row: shows the wordmark when expanded, and the toggle
-// (SideBarTrigger, wired to the rail via context) in both states. This is the
-// intended way to compose the topBar slot.
+// The Top Bar slot content: wordmark + collapse toggle. The rail lays it out (row
+// when expanded, centred column when collapsed); the wordmark hides when
+// collapsed. SideBarTrigger flips the rail via context.
 function Brand() {
   const collapsed = useRailCollapsed();
   return (
-    <div
-      className={`flex items-center px-[var(--spacing-04)] ${
-        collapsed ? 'justify-center' : 'justify-between'
-      }`}
-    >
+    <>
       {!collapsed && (
         <span className="text-lg font-black text-[var(--text-primary)]">Max Core</span>
       )}
       <SideBarTrigger>
         <PanelLeft />
       </SideBarTrigger>
-    </div>
+    </>
   );
 }
 
+// The master's default slot content: workspace Dropdown (Entity Card trigger) in
+// the Header, List Items in the Body, the user's Entity Card in the Footer.
+// Sub Header is hidden by default, as in the master.
 const slots = {
   topBar: <Brand />,
   header: (
-    <EntityItem
-      type="workspace"
-      title="Max core v0.9"
-      leading={<Thumbnail shape="circle" size="s" src="https://picsum.photos/seed/max/64" />}
-      trailing={<ChevronDown className="size-4 text-[var(--text-muted)]" />}
+    <Dropdown
+      trigger={
+        <EntityCard className="w-full">
+          <EntityItem
+            type="workspace"
+            title="Max core v0.9"
+            leading={<Thumbnail shape="circle" size="s" src="https://picsum.photos/seed/max/64" />}
+          />
+        </EntityCard>
+      }
+      items={[
+        { label: 'Max core v0.9', onClick: () => {} },
+        { label: 'New workspace', icon: <Plus />, onClick: () => {} },
+      ]}
     />
-  ),
-  subHeader: (
-    <ListItem leftIcon={<PieChart />} rightIcon={<ChevronDown className="size-4" />}>
-      Workspace
-    </ListItem>
   ),
   children: (
     <>
@@ -89,11 +85,12 @@ const slots = {
     </>
   ),
   footer: (
-    <EntityItem
-      title="Username"
-      leading={<Avatar size="s" src="https://i.pravatar.cc/64?img=22" />}
-      trailing={<ChevronDown className="size-4 text-[var(--text-muted)]" />}
-    />
+    <EntityCard className="w-full">
+      <EntityItem
+        title="Username"
+        leading={<Avatar size="s" src="https://i.pravatar.cc/64?img=22" />}
+      />
+    </EntityCard>
   ),
 } satisfies Partial<SideBarProps>;
 
