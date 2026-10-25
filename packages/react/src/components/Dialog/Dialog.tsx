@@ -3,12 +3,15 @@
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import type { ReactElement, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
+import { ActionBar } from '../ActionBar/ActionBar.js';
 
-// Padding, Text Gap and Radius match -- Molecule/Dialogs/*.
+// Padding and Radius match -- Molecule/Dialogs/*; flat bg/surface, no shadow or
+// stroke (as the master). The master is a fixed 347 × 327 card with its parts
+// spread apart; React hugs its content with a 20px gap so any copy fits.
 const popupStyles = cn(
   'fixed left-1/2 top-1/2 z-50 flex w-full max-w-md -translate-x-1/2 -translate-y-1/2 flex-col',
   'gap-[var(--spacing-20)] rounded-[var(--radius-l)] bg-[var(--bg-surface)] p-[var(--spacing-20)]',
-  'text-[var(--text-primary)] shadow-[var(--effect-shadow-down-xl)] outline-none',
+  'text-[var(--text-primary)] outline-none',
 );
 
 export type DialogTone = 'danger' | 'success' | 'warning';
@@ -21,11 +24,11 @@ const toneIconColor: Record<DialogTone, string> = {
   warning: 'text-[var(--status-warning-default)]',
 };
 
-// Sensible per-tone default icons (overridable via the `icon` prop).
+// The master's per-tone icons (Icon Danger / Success / Warning swaps; `icon` overrides).
 const defaultToneIcon: Record<DialogTone, ReactNode> = {
   danger: <TrashIcon />,
   success: <CheckIcon />,
-  warning: <PinIcon />,
+  warning: <MapPinPlusIcon />,
 };
 
 export interface DialogProps {
@@ -44,9 +47,9 @@ export interface DialogProps {
   icon?: ReactNode;
   /** Show the icon. Defaults to true when a tone (or custom icon) is set. */
   showIcon?: boolean;
-  /** Footer actions (e.g. Cancel / Confirm buttons). */
+  /** Footer actions, laid out by an Action Bar (the master uses Button S: Ghost + Primary). */
   actions?: ReactNode;
-  /** Button layout: side-by-side (default) or full-width stacked. */
+  /** Figma Type — Action Bar direction: side-by-side (default) or full-width stacked. */
   actionsLayout?: 'horizontal' | 'vertical';
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -80,7 +83,7 @@ export function Dialog({
           {displayIcon ? (
             <span
               className={cn(
-                'flex justify-center [&_svg]:size-[var(--size-40)]',
+                'flex justify-center [&_svg]:size-[var(--size-56)]',
                 tone && toneIconColor[tone],
               )}
             >
@@ -88,12 +91,12 @@ export function Dialog({
             </span>
           ) : null}
           {title || description ? (
-            <div className={cn('flex flex-col gap-[var(--spacing-08)]', centered && 'text-center')}>
+            // Text Gap between title (Heading/H4) and body (Body/SM/300).
+            <div className={cn('flex flex-col gap-[var(--spacing-20)]', centered && 'text-center')}>
               {title ? (
                 <BaseDialog.Title
                   className={cn(
-                    'font-bold',
-                    centered ? 'text-3xl' : 'text-lg',
+                    'text-3xl leading-[1.2] font-bold tracking-[-0.005em]',
                     tone === 'danger'
                       ? 'text-[var(--status-danger-default)]'
                       : 'text-[var(--text-primary)]',
@@ -103,27 +106,14 @@ export function Dialog({
                 </BaseDialog.Title>
               ) : null}
               {description ? (
-                <BaseDialog.Description className="text-sm text-[var(--text-secondary)]">
+                <BaseDialog.Description className="text-sm font-light text-[var(--text-secondary)]">
                   {description}
                 </BaseDialog.Description>
               ) : null}
             </div>
           ) : null}
           {children}
-          {actions ? (
-            <div
-              className={cn(
-                'flex gap-[var(--spacing-08)]',
-                actionsLayout === 'vertical'
-                  ? 'flex-col [&>*]:w-full'
-                  : centered
-                    ? 'justify-center'
-                    : 'justify-end',
-              )}
-            >
-              {actions}
-            </div>
-          ) : null}
+          {actions ? <ActionBar direction={actionsLayout}>{actions}</ActionBar> : null}
         </BaseDialog.Popup>
       </BaseDialog.Portal>
     </BaseDialog.Root>
@@ -140,7 +130,11 @@ function TrashIcon() {
       aria-hidden="true"
       focusable="false"
     >
-      <path d="M3 6h18M8 6V4h8v2m1 0-1 14H8L7 6" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
@@ -155,12 +149,12 @@ function CheckIcon() {
       aria-hidden="true"
       focusable="false"
     >
-      <path d="m5 13 4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M20 6 9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
 
-function PinIcon() {
+function MapPinPlusIcon() {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -170,8 +164,11 @@ function PinIcon() {
       aria-hidden="true"
       focusable="false"
     >
-      <path d="M12 21s7-5.5 7-11a7 7 0 0 0-14 0c0 5.5 7 11 7 11Z" strokeLinejoin="round" />
-      <path d="M12 7v4m-2-2h4" strokeLinecap="round" />
+      <path
+        d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"
+        strokeLinejoin="round"
+      />
+      <path d="M12 7v6M9 10h6" strokeLinecap="round" />
     </svg>
   );
 }

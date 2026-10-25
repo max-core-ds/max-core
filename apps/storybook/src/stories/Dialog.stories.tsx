@@ -17,7 +17,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// Plain modal — no tone, left-aligned, right-aligned actions.
+// Plain modal — no tone: no icon, left-aligned text (not a Figma variant).
 export const Default: Story = {
   args: {
     trigger: <Button>Delete account</Button>,
@@ -25,14 +25,18 @@ export const Default: Story = {
     description: 'This action is permanent and cannot be undone.',
     actions: (
       <>
-        <Button variant="ghost">Cancel</Button>
-        <Button tone="danger">Delete</Button>
+        <Button size="s" variant="ghost">
+          Cancel
+        </Button>
+        <Button size="s" tone="danger">
+          Delete
+        </Button>
       </>
     ),
   },
 };
 
-// Danger confirmation — tone icon, centered, tinted title, horizontal actions.
+// Danger confirmation — tone icon, centered, tinted title, Ghost + Primary S actions (as the master).
 export const DangerConfirmation: Story = {
   args: {
     trigger: <Button tone="danger">Delete item</Button>,
@@ -41,16 +45,18 @@ export const DangerConfirmation: Story = {
     description: 'This action cannot be undone.',
     actions: (
       <>
-        <Button variant="ghost" tone="danger">
+        <Button size="s" variant="ghost">
           Cancel
         </Button>
-        <Button tone="danger">Delete</Button>
+        <Button size="s" tone="danger">
+          Delete
+        </Button>
       </>
     ),
   },
 };
 
-// Success, vertical layout — primary on top, ghost below, both full-width.
+// Success, vertical (Figma Type=Vertical) — primary on top, ghost below, both full-width.
 export const SuccessVertical: Story = {
   args: {
     trigger: <Button tone="success">Pay</Button>,
@@ -60,8 +66,10 @@ export const SuccessVertical: Story = {
     description: 'Your payment has been processed! Details have been sent to your email.',
     actions: (
       <>
-        <Button tone="success">View Order</Button>
-        <Button variant="ghost" tone="success">
+        <Button size="s" tone="success">
+          View Order
+        </Button>
+        <Button size="s" variant="ghost">
           Back to home
         </Button>
       </>
@@ -69,7 +77,7 @@ export const SuccessVertical: Story = {
   },
 };
 
-// Warning confirmation.
+// Warning confirmation — the master's primary action stays the Default (accent) tone.
 export const WarningConfirmation: Story = {
   args: {
     trigger: <Button tone="warning">Enable location</Button>,
@@ -78,10 +86,10 @@ export const WarningConfirmation: Story = {
     description: 'We need access to your location to show you nearby hotels and restaurants.',
     actions: (
       <>
-        <Button variant="ghost" tone="warning">
+        <Button size="s" variant="ghost">
           Not now
         </Button>
-        <Button tone="warning">Allow Access</Button>
+        <Button size="s">Allow Access</Button>
       </>
     ),
   },
