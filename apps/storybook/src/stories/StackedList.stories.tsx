@@ -1,93 +1,91 @@
-import {
-  Avatar,
-  AvatarGroup,
-  Badge,
-  LinkButton,
-  StackedList,
-  StackedListRow,
-  Thumbnail,
-} from '@max-core/react';
+import { Avatar, IconOnlyButton, StackedList, StackedListRow } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { ChevronRight, CreditCard, Settings, User } from 'lucide-react';
+import { ChevronDown, ChevronRight, Equal, Settings, Trash2 } from 'lucide-react';
 
 const meta = {
   title: 'Organisms/Stacked List',
   component: StackedList,
   parameters: { layout: 'padded' },
-  decorators: [(Story) => <div className="max-w-md">{Story()}</div>],
+  decorators: [(Story) => <div className="max-w-[375px]">{Story()}</div>],
+  argTypes: { bordered: { control: 'boolean' }, divided: { control: 'boolean' } },
 } satisfies Meta<typeof StackedList>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// The four built row types with the master's default content. The 56px media /
+// product slot crops whatever it holds to the Item Radius.
 export const Default: Story = {
-  render: () => (
-    <StackedList>
-      <StackedListRow
-        variant="default"
-        leading={<User />}
-        title="Profile"
-        subtitle="Name, photo, contact"
-        trailing={<ChevronRight className="text-[var(--text-muted)]" />}
-        onClick={() => {}}
-      />
-      <StackedListRow
-        variant="default"
-        leading={<CreditCard />}
-        title="Billing"
-        subtitle="Plan and invoices"
-        trailing={<ChevronRight className="text-[var(--text-muted)]" />}
-        onClick={() => {}}
-      />
+  render: (args) => (
+    <StackedList {...args}>
       <StackedListRow
         variant="default"
         leading={<Settings />}
         title="Settings"
-        subtitle="Preferences and security"
-        trailing={<ChevronRight className="text-[var(--text-muted)]" />}
-        onClick={() => {}}
+        subtitle="options"
+        trailing={
+          <IconOnlyButton variant="ghost" size="s" icon={<ChevronRight />} aria-label="Open" />
+        }
+      />
+      <StackedListRow
+        variant="social"
+        leading={<Avatar size="s" src="https://i.pravatar.cc/64?img=12" />}
+        title="Your story"
+        subtitle="View share options"
+        subtitleIcon={<ChevronDown />}
+        trailing={
+          <IconOnlyButton variant="ghost" size="s" icon={<ChevronRight />} aria-label="Open" />
+        }
+      />
+      <StackedListRow
+        variant="media"
+        leading={
+          <img alt="" src="https://picsum.photos/seed/dog/112" className="size-full object-cover" />
+        }
+        title="Where the dog's at"
+        subtitle="Dog • Balling hard"
+        trailing={<Equal className="size-[var(--size-24)] text-[var(--text-secondary)]" />}
+      />
+      <StackedListRow
+        variant="product"
+        leading={
+          <img
+            alt=""
+            src="https://picsum.photos/seed/phone/112"
+            className="size-full object-cover"
+          />
+        }
+        title="Iphone 17 pro"
+        subtitle="512GB • Orange"
+        price="$999"
+        trailing={
+          <IconOnlyButton
+            variant="ghost"
+            tone="danger"
+            size="s"
+            icon={<Trash2 />}
+            aria-label="Remove"
+          />
+        }
       />
     </StackedList>
   ),
 };
 
-export const Variants: Story = {
-  render: () => (
-    <StackedList>
-      <StackedListRow
-        variant="social"
-        leading={<Avatar size="s" fallback="AM" />}
-        title="Ana Marin"
-        subtitle="Commented on your post"
-        trailing={<Badge tone="default">New</Badge>}
-      />
-      <StackedListRow
-        variant="social"
-        leading={
-          <AvatarGroup
-            size="s"
-            max={3}
-            avatars={[{ fallback: 'A' }, { fallback: 'B' }, { fallback: 'C' }, { fallback: 'D' }]}
-          />
-        }
-        title="Design review"
-        subtitle="4 people are attending"
-        trailing={<LinkButton>Join</LinkButton>}
-      />
-      <StackedListRow
-        variant="media"
-        leading={<Thumbnail shape="square" size="l" fallback="▶" />}
-        title="Weekly sync recording"
-        subtitle="42:18 · yesterday"
-        trailing={<LinkButton>Play</LinkButton>}
-      />
-      <StackedListRow
-        variant="product"
-        leading={<Thumbnail shape="square" size="l" fallback="📦" />}
-        title="Mechanical keyboard"
-        subtitle="In stock"
-        trailing={<span className="font-bold text-[var(--text-primary)]">$129</span>}
-      />
+// Clickable rows (`onClick`) render as buttons with hover + focus ring.
+export const Interactive: Story = {
+  render: (args) => (
+    <StackedList {...args}>
+      {['Profile', 'Billing', 'Security'].map((title) => (
+        <StackedListRow
+          key={title}
+          leading={<Settings />}
+          title={title}
+          subtitle="options"
+          trailing={<ChevronRight className="size-[var(--size-20)] text-[var(--accent-default)]" />}
+          onClick={() => {}}
+        />
+      ))}
     </StackedList>
   ),
 };

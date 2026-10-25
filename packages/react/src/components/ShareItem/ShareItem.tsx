@@ -1,6 +1,7 @@
 import { type VariantProps, cva } from 'class-variance-authority';
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
+import { focusRing } from '../../utils/focus-ring.js';
 
 // Share-sheet item: an icon tile ("item") or an avatar, plus a caption. Composes
 // the Stacked List Item Grid sizing (48px tile / 28px icon / full radius); each
@@ -23,8 +24,8 @@ const tileStyles = cva(
   },
 );
 
-// Caption is Caption/700 (12px Bold); its color follows the tone (default = secondary).
-const labelStyles = cva('text-xs font-bold', {
+// Caption is Caption/700 (12 / 130% / +0.5%, Bold); its color follows the tone (default = secondary).
+const labelStyles = cva('text-xs leading-[1.3] font-bold tracking-[0.005em]', {
   variants: {
     tone: {
       default: 'text-[var(--text-secondary)]',
@@ -50,7 +51,11 @@ export function ShareItem({ tone, label, icon, avatar, className, ...rest }: Sha
   return (
     <button
       type="button"
-      className={cn('flex flex-col items-center gap-[var(--spacing-08)] text-center', className)}
+      className={cn(
+        'flex flex-col items-center gap-[var(--spacing-08)] rounded-[var(--radius-sm)] text-center',
+        focusRing,
+        className,
+      )}
       {...rest}
     >
       {avatar ?? <span className={tileStyles({ tone })}>{icon}</span>}
