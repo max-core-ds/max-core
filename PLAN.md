@@ -584,13 +584,14 @@ the 5 prebuilders (Invoice, Users, Tickets, Products, Transactions).
   `title` / `meta` (Show Date) / `description` / `children`, right-aligned `action`.
 - Stroke drawn as an overlay (Figma INSIDE stroke takes no space). Drift spec `Card`.
 
-### Batch 11 — Bottom Sheet system
-- **`_Bottom Sheet` (Builder)** — 375px, Show Handle/Header/Footer booleans, Body
-  + Footer slots (body has no padding; sub-components own their padding). Shadow
-  up/md, radius 2xl top-only.
-- **18 premades** — Share (3), Transport, Ride (2), General (3), Payment (2),
-  Media, Auth, Commerce (2), Info, Booking (2). Each composes DS components into
-  the builder's slots.
+### Batch 11 — Bottom Sheet system — ✅ landed (2026-10-25)
+- **`BottomSheet`** (= Bottom Sheet Builder) on Base UI `Drawer` (modal, Esc / outside
+  press / swipe-down dismiss): `handle`, `title` + `showClose`, Body (`children`, no
+  padding), `footer` (equal columns, 16 apart). Shadow up/md, radius 2xl top-only,
+  bottom padding 32 or the safe area. Drift spec `Bottom Sheet`.
+- **Premades** = Storybook recipes (`Premade` story, Type as a control): 13 of 18. Transport /
+  Map, Ride ×2, Booking / Place List wait for their Stacked List rows; Sort duplicates
+  Settings in the master. See `docs/audit/bottom-sheet.md`.
 
 ### Batch 12 — Date Picker — ✅ landed (2026-09-17, commit `d17a0b7`)
 React counterpart of the Figma Date Picker (Calendar + Header + Footer; Date /
@@ -611,7 +612,7 @@ The honest gap from Phase 3. Add:
 ## Sequencing
 
 Stacked List ✅ → Data Table ✅ (both lean v1) → Date Picker ✅ (Batch 12) →
-**next: Card** → Bottom Sheet (needs Card + many atoms as slot content). Test infra (Batch 13)
+Card ✅ → Bottom Sheet ✅. Test infra (Batch 13)
 can start in parallel — the contrast guardrail already covers part of the a11y
 goal. Return to the deferred Stacked List row types / Data Table mobile+expandable
 + prebuilders when the real project needs them.

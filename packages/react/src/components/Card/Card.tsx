@@ -1,7 +1,7 @@
 import { type VariantProps, cva } from 'class-variance-authority';
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import { CloseIcon, closeButtonStyles } from '../../utils/close-button.js';
 import { cn } from '../../utils/cn.js';
-import { focusRing } from '../../utils/focus-ring.js';
 import { ActionBar } from '../ActionBar/ActionBar.js';
 
 // Widget cards — the Figma "_Card" and "_Media Card" masters (page "widget card").
@@ -80,25 +80,9 @@ export function Card({
               type="button"
               aria-label={closeLabel}
               onClick={onClose}
-              className={cn(
-                'inline-flex size-[var(--size-24)] shrink-0 items-center justify-center rounded-[var(--radius-sm)]',
-                'text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]',
-                focusRing,
-              )}
+              className={closeButtonStyles}
             >
-              {/* The master's Close Icon: two 12px strokes (2px) in a 24 frame. */}
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                strokeLinecap="round"
-                aria-hidden="true"
-                focusable="false"
-                className="size-[var(--size-24)]"
-              >
-                <path d="M6 6l12 12M18 6 6 18" />
-              </svg>
+              <CloseIcon />
             </button>
           ) : null}
         </div>

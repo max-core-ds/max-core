@@ -357,6 +357,15 @@ const SPECS: ComponentSpec[] = [
     source: 'components/Card/Card.tsx',
     prefixes: ['Organism/Card/Base', 'Organism/Card/Media'],
   },
+  // --- Batch 11: Bottom Sheet ---
+  {
+    name: 'Bottom Sheet',
+    source: 'components/BottomSheet/BottomSheet.tsx',
+    prefixes: ['Organism/Bottom Sheet'],
+    exempt: [
+      '--spacing-24', // General Gap — bound nowhere on the builder master
+    ],
+  },
   {
     name: 'Data Table',
     source: 'components/DataTable/DataTable.tsx',
