@@ -344,7 +344,7 @@ function DatePickerFooter({ onClear, onApply }: { onClear: () => void; onApply: 
   return (
     <ActionBar
       direction="horizontal"
-      className="gap-[var(--spacing-08)] p-[var(--spacing-12)] [&>*]:min-w-0"
+      className="auto-cols-[minmax(0,1fr)] gap-[var(--spacing-08)] p-[var(--spacing-12)]"
     >
       <Button variant="ghost" size="s" onClick={onClear}>
         Clear

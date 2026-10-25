@@ -2,7 +2,7 @@ import { ActionBar, Button } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
-  title: 'Molecules/ActionBar',
+  title: 'Molecules/Action Bar',
   component: ActionBar,
   parameters: { layout: 'padded' },
   argTypes: {

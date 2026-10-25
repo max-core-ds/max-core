@@ -5,11 +5,14 @@ import { cn } from '../../utils/cn.js';
 // Layout-only button-group container matching Action Bar (Figma node 4112:93):
 // a flexible slot of Button instances that expand equally (min-width 160px) in
 // the chosen Direction. Colors come from the buttons inside — no color tokens.
-const actionBarStyles = cva('flex gap-[var(--spacing-08)]', {
+// Horizontal is a grid of equal columns: `flex: 1` left a bordered (secondary)
+// button 2px wider than a borderless one. Override the minimum with
+// `auto-cols-[minmax(0,1fr)]` where the buttons must share a narrow width.
+const actionBarStyles = cva('gap-[var(--spacing-08)]', {
   variants: {
     direction: {
-      horizontal: 'flex-row [&>*]:min-w-[var(--size-160)] [&>*]:flex-1',
-      vertical: 'flex-col [&>*]:min-w-[var(--size-160)] [&>*]:w-full',
+      horizontal: 'grid grid-flow-col auto-cols-[minmax(var(--size-160),1fr)]',
+      vertical: 'flex flex-col [&>*]:min-w-[var(--size-160)] [&>*]:w-full',
     },
   },
   defaultVariants: { direction: 'horizontal' },
