@@ -2,6 +2,7 @@
 
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
+import { focusRing } from '../../utils/focus-ring.js';
 import { useControllableState } from '../../utils/use-controllable-state.js';
 import { Checkbox } from '../Checkbox/index.js';
 
@@ -11,9 +12,11 @@ import { Checkbox } from '../Checkbox/index.js';
 //   Header Cell: height 40, padding Y 08, label gap 04, sort icon 12
 //   Table Cell:  height 56, horizontal padding = Global/Padding (16)
 //   Outer radius xl, thin bottom borders, footer padding 16 / gap 10.
-// Colours are semantic tokens; header text is secondary, body text primary,
-// hovered rows bg/subtle and selected rows accent/subtle (text/primary flips
-// per mode, so both read in light and dark).
+// Table Builder (Desktop): no outer stroke — the Table Header rounds the top and
+// the Footer the bottom (Global/Radius); the header row is bg/default with
+// border/muted lines, body cells bg/surface with border/default lines. Header
+// labels Body/SM/700 text/secondary, cell text Body/MD/300 text/primary; hovered
+// rows bg/subtle, selected rows accent/subtle (text/primary flips per mode).
 
 const alignClass = {
   left: 'text-left',
@@ -33,7 +36,10 @@ export interface TableProps extends ComponentPropsWithoutRef<'table'> {}
 export function Table({ className, children, ...rest }: TableProps) {
   return (
     <table
-      className={cn('w-full border-collapse text-sm text-[var(--text-primary)]', className)}
+      className={cn(
+        'w-full border-collapse text-base leading-[1.4] font-light text-[var(--text-primary)]',
+        className,
+      )}
       {...rest}
     >
       {children}
@@ -62,9 +68,9 @@ export function HeaderCell({
   ...rest
 }: HeaderCellProps) {
   const base = cn(
-    'h-[var(--size-40)] min-w-[93px] border-b border-[var(--border-muted)] bg-[var(--bg-surface)]',
+    'h-[var(--size-40)] min-w-[93px] border-b border-[var(--border-muted)] bg-[var(--bg-default)]',
     'px-[var(--spacing-16)] py-[var(--spacing-08)]',
-    'text-xs font-bold uppercase tracking-wide text-[var(--text-secondary)]',
+    'text-sm leading-[1.3] font-bold text-[var(--text-secondary)]',
     alignClass[align],
     className,
   );
@@ -88,9 +94,9 @@ export function HeaderCell({
         type="button"
         onClick={onSort}
         className={cn(
-          'inline-flex items-center gap-[var(--spacing-04)] uppercase tracking-wide',
+          'inline-flex items-center gap-[var(--spacing-04)] rounded-[var(--radius-sm)]',
           'transition-colors hover:text-[var(--text-primary)]',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--border-focus)]',
+          focusRing,
           align === 'right' && 'flex-row-reverse',
         )}
       >
@@ -133,7 +139,7 @@ export function TableCell({ align = 'left', className, children, ...rest }: Tabl
   return (
     <td
       className={cn(
-        'h-[var(--size-56)] min-w-[93px] border-b border-[var(--border-muted)]',
+        'h-[var(--size-56)] min-w-[93px] border-b border-[var(--border-default)]',
         'px-[var(--spacing-16)] align-middle',
         alignClass[align],
         className,
@@ -197,8 +203,10 @@ export interface DataTableProps<Row> extends Omit<ComponentPropsWithoutRef<'div'
   defaultSelectedRowIds?: (string | number)[];
   /** Header area (e.g. a title, stats, tabs, or a filter), rendered above the table. */
   header?: ReactNode;
-  /** Footer area (e.g. a <Pagination/>), rendered below the table. */
+  /** Footer area, right side (e.g. a <Pagination/>), rendered below the table. */
   footer?: ReactNode;
+  /** Footer text, left side (e.g. "Showing 1–10 of 100"; Body/SM/300). */
+  footerInfo?: ReactNode;
   /** Accessible table caption (visually hidden). */
   caption?: ReactNode;
 }
@@ -224,6 +232,7 @@ export function DataTable<Row>({
   defaultSelectedRowIds = [],
   header,
   footer,
+  footerInfo,
   caption,
   className,
   ...rest
@@ -283,16 +292,11 @@ export function DataTable<Row>({
 
   return (
     <div
-      className={cn(
-        'overflow-hidden rounded-[var(--radius-xl)] border border-[var(--border-default)] bg-[var(--bg-surface)]',
-        className,
-      )}
+      className={cn('overflow-hidden rounded-[var(--radius-xl)] bg-[var(--bg-surface)]', className)}
       {...rest}
     >
       {header != null ? (
-        <div className="border-b border-[var(--border-muted)] px-[var(--spacing-16)] py-[var(--spacing-16)]">
-          {header}
-        </div>
+        <div className="px-[var(--spacing-16)] py-[var(--spacing-16)]">{header}</div>
       ) : null}
       <div className="overflow-x-auto">
         <Table>
@@ -364,8 +368,11 @@ export function DataTable<Row>({
           </tbody>
         </Table>
       </div>
-      {footer != null ? (
-        <div className="flex items-center justify-end gap-[var(--spacing-10)] px-[var(--spacing-16)] py-[var(--spacing-16)]">
+      {footer != null || footerInfo != null ? (
+        <div className="flex items-center justify-between gap-[var(--spacing-10)] px-[var(--spacing-16)] py-[var(--spacing-16)]">
+          <span className="text-sm leading-[1.3] font-light text-[var(--text-primary)]">
+            {footerInfo}
+          </span>
           {footer}
         </div>
       ) : null}
@@ -382,8 +389,13 @@ export interface RatingStarsProps extends Omit<ComponentPropsWithoutRef<'span'>,
   max?: number;
 }
 
-/** Read-only star rating for a rating cell. */
+/**
+ * Read-only star rating (_Cell Item / Rating Group): lucide outline stars in
+ * text/secondary, rounded to halves — Full, Half (star-half) and Empty (the
+ * master's 30% opacity, unbound).
+ */
 export function RatingStars({ value, max = 5, className, ...rest }: RatingStarsProps) {
+  const halves = Math.round(value * 2);
   return (
     <span
       className={cn('inline-flex items-center gap-[var(--spacing-04)]', className)}
@@ -393,7 +405,10 @@ export function RatingStars({ value, max = 5, className, ...rest }: RatingStarsP
     >
       {Array.from({ length: max }, (_, i) => (
         // biome-ignore lint/suspicious/noArrayIndexKey: fixed-length star list, order is stable
-        <Star key={i} filled={i < Math.round(value)} />
+        <Star
+          key={i}
+          fill={halves >= (i + 1) * 2 ? 'full' : halves === i * 2 + 1 ? 'half' : 'empty'}
+        />
       ))}
     </span>
   );
@@ -403,37 +418,47 @@ export function RatingStars({ value, max = 5, className, ...rest }: RatingStarsP
 // Inline icons (the react package carries no icon dependency)
 // ---------------------------------------------------------------------------
 
+// lucide chevrons-up-down (12, text/muted); the inactive half dims to show the direction.
 function SortIcon({ direction }: { direction: SortDirection | null }) {
   return (
     <svg
-      className="size-[var(--size-12)] shrink-0"
+      className="size-[var(--size-12)] shrink-0 text-[var(--text-muted)]"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="currentColor"
-      strokeWidth={3}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="m8 9 4-4 4 4" opacity={direction === 'desc' ? 0.3 : 1} />
-      <path d="m16 15-4 4-4-4" opacity={direction === 'asc' ? 0.3 : 1} />
-    </svg>
-  );
-}
-
-function Star({ filled }: { filled: boolean }) {
-  return (
-    <svg
-      className="size-[var(--size-20)] shrink-0 text-[var(--status-warning-default)]"
-      viewBox="0 0 24 24"
-      fill={filled ? 'currentColor' : 'none'}
       stroke="currentColor"
       strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
     >
-      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+      <path d="m7 9 5-5 5 5" opacity={direction === 'desc' ? 0.3 : 1} />
+      <path d="m7 15 5 5 5-5" opacity={direction === 'asc' ? 0.3 : 1} />
+    </svg>
+  );
+}
+
+const STAR =
+  'M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z';
+const STAR_HALF =
+  'M12 18.338a2.1 2.1 0 0 0-.987.244L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.12 2.12 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.12 2.12 0 0 0 1.597-1.16l2.309-4.679A.53.53 0 0 1 12 2';
+
+// lucide star / star-half, as the master's li:star / li:star-half.
+function Star({ fill }: { fill: 'full' | 'half' | 'empty' }) {
+  return (
+    <svg
+      className={cn(
+        'size-[var(--size-20)] shrink-0 text-[var(--text-secondary)]',
+        fill === 'empty' && 'opacity-30',
+      )}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d={fill === 'half' ? STAR_HALF : STAR} />
     </svg>
   );
 }

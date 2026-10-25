@@ -1,9 +1,7 @@
 import {
-  Avatar,
   Badge,
   DataTable,
   type DataTableColumn,
-  EntityItem,
   HeaderCell,
   Pagination,
   RatingStars,
@@ -61,12 +59,22 @@ const columns: DataTableColumn<Product>[] = [
     key: 'name',
     header: 'Product',
     sortable: true,
+    // _Cell Item / Product Info: thumbnail + Body/SM/700 title over a Caption/300
+    // description (Product Info Gap 8, Title Subtitle Gap 4). Cell items are caller-composed.
     cell: (r) => (
-      <EntityItem
-        leading={<Avatar size="s" fallback={r.name[0]} />}
-        title={r.name}
-        subtitle={r.category}
-      />
+      <span className="flex items-center gap-[var(--spacing-08)]">
+        <img
+          alt=""
+          src={`https://picsum.photos/seed/p${r.id}/56`}
+          className="size-[27px] object-cover"
+        />
+        <span className="flex flex-col gap-[var(--spacing-04)]">
+          <span className="text-sm leading-[1.3] font-bold">{r.name}</span>
+          <span className="text-xs leading-[1.3] font-light tracking-[0.005em] text-[var(--text-secondary)]">
+            {r.category}
+          </span>
+        </span>
+      </span>
     ),
   },
   { key: 'price', header: 'Price', sortable: true, align: 'right', cell: (r) => `$${r.price}` },
@@ -113,6 +121,7 @@ export const Default: StoryObj = {
               </span>
             </div>
           }
+          footerInfo={`Showing 1–${rows.length} of 25`}
           footer={<Pagination page={page} count={5} onPageChange={setPage} />}
         />
       );
@@ -148,7 +157,7 @@ export const ControlledSort: StoryObj = {
 
 export const Primitives: StoryObj = {
   render: () => (
-    <div className="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--border-default)] bg-[var(--bg-surface)]">
+    <div className="overflow-hidden rounded-[var(--radius-xl)] bg-[var(--bg-surface)]">
       <Table>
         <thead>
           <tr>
