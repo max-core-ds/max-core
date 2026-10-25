@@ -181,19 +181,12 @@ call.
 
 **Adopting it before it's finished.** The library is usable for real work
 today — you don't have to wait for every component. Once the Tailwind + token
-wiring above is in place, import what you need. How much to trust a given
-component depends on where it sits in the Phase 3.5 visual cross-check
-(tracked in [`PROGRESS.md`](PROGRESS.md)):
-
-- 🟢 **Cross-checked (safe to build on).** Verified pixel-for-pixel against the
-  Figma showcase: Button family (Standard, Icon Only, Link, Split, FAB), Badge,
-  Tag, and the selection controls (Checkbox, Radio, Switch). Stable API + visuals.
-- 🟡 **Token-only (fine for internal/preview work).** The other ~35 components
-  are structurally sound and drift-green, but not yet pixel-confirmed — visuals
-  or minor API (e.g. an added axis) **may still shift** during cross-check. Pin
-  the version and expect tweaks before shipping these to production.
-- 🔴 **Not built yet.** Stacked List (Batch 8) and all of Phase 4 (Data Table,
-  Date Picker, Bottom Sheet + premades). Don't plan around these yet.
+wiring above is in place, import what you need. Every shipped component has been
+audited against its Figma master (Phase 4.5, per-page notes in
+[`docs/audit/`](docs/audit/), status in [`PROGRESS.md`](PROGRESS.md)). Expect
+visual tweaks while the designer list is worked through, and note the deferred
+pieces (some Stacked List row types, Data Table mobile / expandable rows, four
+Bottom Sheet premades) and that there are no tests yet.
 
 Because it's a workspace package at `0.0.0` (not published to npm), "consume"
 today means inside this monorepo, via `pnpm link`, or from a tarball — not a
@@ -363,15 +356,12 @@ Phases 1–3 of `PLAN.md` are complete:
   typed, built, and drift-green
 - ✅ Storybook with dark-mode toggle, per-component stories, token reference
 - ✅ Figma plugin building and verified end-to-end
-- 🔄 **Phase 3.5 — visual cross-check against Figma** in progress (5 files
-  done, 7 pending). See [`PROGRESS.md`](PROGRESS.md).
+- ✅ **Phase 4.5 — component audit against Figma** complete (40 pages). See
+  [`PROGRESS.md`](PROGRESS.md).
 
 Gaps to "production-ready":
 
 - ❌ No tests (Vitest + axe deferred)
-- ❌ ~35 components not yet pixel-matched to Figma showcases (token-only)
-- ❌ Batch 8 (Stacked List) + Phase 4 (Data Table, Date Picker, Bottom Sheet)
-  not built
 - ❌ Components-level tokens (Layer 3 cascade) not yet bridged
 - ❌ Not published to npm
 - ❌ No CI/CD
