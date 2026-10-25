@@ -115,6 +115,13 @@ export {
   type SwitcherItem,
 } from './components/Switcher/index.js';
 export { EntityItem, type EntityItemProps } from './components/EntityItem/index.js';
+export {
+  Card,
+  type CardElevation,
+  type CardProps,
+  MediaCard,
+  type MediaCardProps,
+} from './components/Card/index.js';
 export { EntityCard, type EntityCardProps } from './components/EntityCard/index.js';
 export { FormGroup, type FormGroupProps } from './components/FormGroup/index.js';
 export { Dialog, type DialogProps } from './components/Dialog/index.js';

@@ -576,11 +576,13 @@ the 5 prebuilders (Invoice, Users, Tickets, Products, Transactions).
 - Design rules already fixed: background on row (not cell) for full-row states;
   height fixed per density; row has no own tokens (dimensions come from cells).
 
-### Batch 10 — Card system
-- **`_Card` (Base)** — 3 elevations (None/Low/High), Show Header/Footer booleans,
-  Body slot. Tokens `--Organism/Card/Base/*`.
-- **`_Media Card`** — 3 elevations, Show Tag/Date booleans, Media + Content slots,
-  right-aligned link button. Tokens `--Organism/Card/Media/*`.
+### Batch 10 — Card system — ✅ landed (2026-10-25)
+- **`Card`** (= `_Card`) — `elevation` none / low / high (shadow down sm / md), optional
+  header (`title` + `onClose` ✕), Body Content (`children`, Body Gap 16), `actions` in an
+  Action Bar. The current master has no Show Header/Footer booleans; optional props cover it.
+- **`MediaCard`** (= `_Media Card`) — `media` (240 tall, bg/subtle), `badge` (top-left 12/12),
+  `title` / `meta` (Show Date) / `description` / `children`, right-aligned `action`.
+- Stroke drawn as an overlay (Figma INSIDE stroke takes no space). Drift spec `Card`.
 
 ### Batch 11 — Bottom Sheet system
 - **`_Bottom Sheet` (Builder)** — 375px, Show Handle/Header/Footer booleans, Body

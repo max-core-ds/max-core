@@ -351,6 +351,12 @@ const SPECS: ComponentSpec[] = [
       'Organism/Stacked List/Product',
     ],
   },
+  // --- Batch 10: Card system ---
+  {
+    name: 'Card',
+    source: 'components/Card/Card.tsx',
+    prefixes: ['Organism/Card/Base', 'Organism/Card/Media'],
+  },
   {
     name: 'Data Table',
     source: 'components/DataTable/DataTable.tsx',
