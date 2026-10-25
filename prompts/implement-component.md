@@ -2,8 +2,8 @@
 
 > **How to use:** paste the block below to start a conversation that builds a **new**
 > `@max-core/react` component and its Storybook story, following the established convention.
-> After building, verify Figma parity using [`figma-cross-check.md`](./figma-cross-check.md)
-> (steps 3–5) — the same MCP flow, applied to a fresh component.
+> After building, verify Figma parity with the audit recipe in [`component-audit.md`](./component-audit.md)
+> (read scripts + verify gate in `docs/audit/README.md`) — the same flow, applied to a fresh component.
 
 ---
 
@@ -61,8 +61,8 @@ VERIFY GATE (before commit):
 
 THEN:
 - Add the component's row to PROGRESS.md.
-- Verify Figma parity against the showcase — follow prompts/figma-cross-check.md steps 3–5
-  (get_screenshot / get_variable_defs / get_design_context; map by token name, not hex).
+- Verify Figma parity against the master — follow prompts/component-audit.md (read-only
+  use_figma reads of the bound variables; map by token name, not hex) and add docs/audit/<slug>.md.
 - One focused commit.
 
 Branch: feat/phase3-buildout. Tell me which component to build; if it maps to a Figma node
@@ -75,7 +75,7 @@ I'll give you the node id / page. Use a scratch dir for screenshots (not /tmp).
 
 - **Drift check** only asserts that a component binds the spacing/size/radius semantic vars its
   Figma `components` tokens mandate — it guarantees *dimensions, never appearance*. Visual
-  correctness comes from the Figma cross-check (see [`figma-cross-check.md`](./figma-cross-check.md)).
+  correctness comes from the Figma audit (see [`component-audit.md`](./component-audit.md)).
 - **Mega-systems** (Data Table, Date Picker, Bottom Sheet + premades) are Phase 4 — out of scope for
   the single-component flow above. Batch 8 (Stacked List, 9 row types) is the one remaining large
   build and composes from ListItem + EntityItem + selection controls.

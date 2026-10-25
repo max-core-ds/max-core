@@ -3,7 +3,7 @@
 @docs/MAX-CORE-SUMMARY.md
 
 <!-- docs/CLAUDE-ARCHIVE.md holds completed per-component QA logs. Not auto-imported (too large) — read it on demand when a task touches past component work. -->
-<!-- React library work: PROGRESS.md tracks live component + Figma cross-check status; prompts/ holds copy-paste guides (figma-cross-check.md, implement-component.md) for continuing that work in a fresh conversation. -->
+<!-- React library work: PROGRESS.md tracks live component + Figma audit status; prompts/ holds copy-paste guides (component-audit.md, implement-component.md) for continuing that work in a fresh conversation. -->
 <!-- Two Figma files (see Context general): sX5tikviuBEhNbu2iPVya5 (pt-razvan-max-core) is the current working/cross-check file; ouyi08XxN4l4VCsao1nNQu is the production/original. -->
 
 

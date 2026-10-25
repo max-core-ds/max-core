@@ -5,8 +5,7 @@
 > Last updated: **2026-10-25** · Branch: **`main`** — all work lives here (feature branches merged + deleted); run `git status -sb` for unpushed commits
 >
 > **To pick up the work**, paste one of the guides in `prompts/` into a new conversation:
-> [`component-audit.md`](prompts/component-audit.md) (continue the **Phase 4.5 audit**, current work),
-> [`figma-cross-check.md`](prompts/figma-cross-check.md) (continue the cross-check) or
+> [`component-audit.md`](prompts/component-audit.md) (audit a component against its Figma page) or
 > [`implement-component.md`](prompts/implement-component.md) (build a new component + story).
 
 ---
