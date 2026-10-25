@@ -1,7 +1,8 @@
 # Phase 4.5 audit — how to run a page
 
 Process, checklist and page order: **`PLAN.md → Phase 4.5`**. Status: **`PROGRESS.md → Audit status`**.
-One page = one `docs/audit/<slug>.md` + one commit. This file holds the practical recipe that
+One page = one `docs/audit/<slug>.md` + one commit. The same loop builds new components from a Figma page
+(Batch 10 Card, Batch 11 Bottom Sheet — `docs/audit/bottom-sheet.md`). This file holds the practical recipe that
 worked on all forty pages (the Atoms tier + Inputs, Search bar, Item List, Dropdown, Form Groups, Date picker, Tabs, Pagination, Range, Entity Item, User card, Avatar group, Pin, Action bar, Toast, Dialogs, Top Bar, Side bar, Bottom Navigation, Stacked List, Stats card, Data table; see the Audit status table).
 
 ## Loop per page
@@ -94,6 +95,11 @@ Run them as separate commands (or echo each exit code): a chained `&& … | tail
   the rescan. Check the computed style before you trust a hover/focus screenshot.
 - **Outline vs positioned child:** an inset outline on a wrapper is painted under a `position: relative` child (Avatar root), so put the ring on the child (`[&>*]:outline-…`) — Pin's avatar ring was invisible.
 - **Comments:** never write `status/*/…` inside a `/** */` block — `*/` closes it.
+- **New dependency → stale Storybook pre-bundle.** A story importing a dep the running dev server hasn't
+  optimised (Recharts, `@base-ui/react/drawer`) fails with "504 Outdated Optimize Dep"; a second dev server
+  shares the same Vite cache and fails too. Don't restart the user's :6006 — verify against a static build
+  (`npx storybook build -o <scratchpad>/sb-static` + `python3 -m http.server`; no Inter there) and tell the user to restart.
+- **Storybook URL args drop values containing `/`** — map URL-safe ids to labels (`mapping` + `control.labels`; Bottom Sheet `Premade`).
 - **Storybook ids** are kebab-case per word: `atoms-segmented-control--default`
   (`curl -s localhost:6006/index.json`). Many stories render controls *checked*; uncheck first
   before hover shots.
