@@ -2,7 +2,7 @@
 
 Process, checklist and page order: **`PLAN.md → Phase 4.5`**. Status: **`PROGRESS.md → Audit status`**.
 One page = one `docs/audit/<slug>.md` + one commit. This file holds the practical recipe that
-worked on the first thirty pages (the Atoms tier + Inputs, Search bar, Item List, Dropdown, Form Groups, Date picker, Tabs, Pagination, Range, Entity Item, User card, Avatar group; see the Audit status table).
+worked on the first thirty-one pages (the Atoms tier + Inputs, Search bar, Item List, Dropdown, Form Groups, Date picker, Tabs, Pagination, Range, Entity Item, User card, Avatar group, Pin; see the Audit status table).
 
 ## Loop per page
 1. `figma-node-links/catalog.json` → page `nodeId` + `masters[]`. Read the React source, utils and story.
@@ -91,6 +91,7 @@ Run them as separate commands (or echo each exit code): a chained `&& … | tail
 - **Storybook's Tailwind doesn't rescan `packages/react/src` on a dist rebuild.** A *new* class (one not
   used anywhere before) is in the DOM but has no CSS rule. `touch apps/storybook/src/global.css` forces
   the rescan. Check the computed style before you trust a hover/focus screenshot.
+- **Outline vs positioned child:** an inset outline on a wrapper is painted under a `position: relative` child (Avatar root), so put the ring on the child (`[&>*]:outline-…`) — Pin's avatar ring was invisible.
 - **Comments:** never write `status/*/…` inside a `/** */` block — `*/` closes it.
 - **Storybook ids** are kebab-case per word: `atoms-segmented-control--default`
   (`curl -s localhost:6006/index.json`). Many stories render controls *checked*; uncheck first

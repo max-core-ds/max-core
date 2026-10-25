@@ -1,20 +1,19 @@
 import { Avatar, Pin } from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { MapPin } from 'lucide-react';
+import { User } from 'lucide-react';
 
 const meta = {
   title: 'Molecules/Pin',
   component: Pin,
   parameters: { layout: 'centered' },
+  argTypes: { type: { control: false } },
 } satisfies Meta<typeof Pin>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const WithIcon: Story = { args: { children: <MapPin /> } };
-
-export const WithInitials: Story = { args: { children: 'JD' } };
+export const Icon: Story = { args: { children: <User /> } };
 
 export const WithAvatar: Story = {
-  args: { children: <Avatar size="m" src="https://i.pravatar.cc/80?img=8" /> },
+  args: { type: 'avatar', children: <Avatar size="m" src="https://i.pravatar.cc/80?img=8" /> },
 };
