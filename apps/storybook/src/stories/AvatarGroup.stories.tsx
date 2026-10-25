@@ -14,7 +14,7 @@ const meta = {
   title: 'Molecules/Avatar Group',
   component: AvatarGroup,
   parameters: { layout: 'centered' },
-  args: { avatars, size: 'm' },
+  args: { avatars, size: 'xs' },
   argTypes: {
     size: { control: 'select', options: ['xs', 's', 'm', 'l', 'xl'] },
     avatars: { control: false },

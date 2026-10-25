@@ -2,8 +2,18 @@ import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
 import { Avatar } from '../Avatar/Avatar.js';
 
-// Overlapping avatars. Gap = -12 (raw negative overlap); each avatar gets a ring
-// in the page background to separate it (Border Weight token).
+// Overlapping avatars. Gap = -12 (raw negative overlap, -- Molecule/Avatar Group/Gap).
+// Each avatar gets an inside 1px `border/surface` stroke (Border Weight token) to
+// separate it — an inset outline, so it draws over the image like Figma's INSIDE
+// stroke and doesn't grow the circle. Later avatars sit on top (DOM order), as in
+// the master. The +N counter is the Avatar Text type (accent/default + Caption/700).
+const overlapItem = cn(
+  // Avatars Radius (full) — the outline follows it.
+  'rounded-[var(--radius-full)]',
+  'outline-solid outline-[length:var(--border-weight-thin)] outline-[var(--border-surface)]',
+  'outline-offset-[calc(-1*var(--border-weight-thin))]',
+);
+
 export interface AvatarGroupItem {
   src?: string;
   fallback?: ReactNode;
@@ -12,33 +22,40 @@ export interface AvatarGroupItem {
 
 export interface AvatarGroupProps extends Omit<ComponentPropsWithoutRef<'div'>, 'children'> {
   avatars: AvatarGroupItem[];
-  /** Max avatars to show before collapsing into a +N counter. */
+  /** Max avatars to show before collapsing into a +N counter (Figma: Show Counter). */
   max?: number;
+  /** Avatar size (default `xs`, as the master). */
   size?: 'xs' | 's' | 'm' | 'l' | 'xl';
 }
 
-export function AvatarGroup({ avatars, max, size = 'm', className, ...rest }: AvatarGroupProps) {
+export function AvatarGroup({ avatars, max, size = 'xs', className, ...rest }: AvatarGroupProps) {
   const shown = max != null ? avatars.slice(0, max) : avatars;
   const overflow = max != null ? avatars.length - shown.length : 0;
 
   return (
     <div className={cn('flex items-center', className)} {...rest}>
       {shown.map((avatar, i) => (
-        <div
+        <Avatar
           // biome-ignore lint/suspicious/noArrayIndexKey: avatars are a static, ordered list
           key={i}
-          className={cn(
-            'rounded-[var(--radius-full)] ring-1 ring-[var(--border-surface)]',
-            i > 0 && 'ml-[-12px]',
-          )}
-        >
-          <Avatar size={size} src={avatar.src} fallback={avatar.fallback} alt={avatar.alt} />
-        </div>
+          size={size}
+          src={avatar.src}
+          fallback={avatar.fallback}
+          alt={avatar.alt}
+          className={cn(overlapItem, i > 0 && 'ml-[-12px]')}
+        />
       ))}
       {overflow > 0 ? (
-        <div className="ml-[-12px] rounded-[var(--radius-full)] ring-1 ring-[var(--border-surface)]">
-          <Avatar size={size} fallback={`+${overflow}`} />
-        </div>
+        <Avatar
+          size={size}
+          className={cn(overlapItem, shown.length > 0 && 'ml-[-12px]')}
+          fallback={
+            <>
+              <span aria-hidden="true">+{overflow}</span>
+              <span className="sr-only normal-case">{overflow} more</span>
+            </>
+          }
+        />
       ) : null}
     </div>
   );
