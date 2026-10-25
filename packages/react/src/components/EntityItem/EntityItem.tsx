@@ -50,11 +50,19 @@ export function EntityItem({
       {leading}
       {!isCollapsed && (
         <div className="flex flex-1 flex-col gap-[var(--spacing-08)]">
-          <span className={cn(titleSize[type], 'font-bold text-[var(--text-primary)]')}>
+          <span
+            data-entity-title={type}
+            className={cn(titleSize[type], 'font-bold text-[var(--text-primary)]')}
+          >
             {title}
           </span>
           {subtitle ? (
-            <span className="text-xs font-light text-[var(--text-secondary)]">{subtitle}</span>
+            <span
+              data-entity-subtitle=""
+              className="text-xs font-light text-[var(--text-secondary)]"
+            >
+              {subtitle}
+            </span>
           ) : null}
         </div>
       )}
