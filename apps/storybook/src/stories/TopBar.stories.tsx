@@ -1,6 +1,14 @@
-import { Avatar, IconOnlyButton, TopBar } from '@max-core/react';
+import {
+  Avatar,
+  Button,
+  EntityCard,
+  EntityItem,
+  IconOnlyButton,
+  SearchBar,
+  TopBar,
+} from '@max-core/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Bell, Menu, Search } from 'lucide-react';
+import { Menu, Plus, Search } from 'lucide-react';
 
 const meta = {
   title: 'Organisms/Top Bar',
@@ -19,46 +27,52 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// The master's default slot content: logo + Search bar M (Button=On) leading,
+// Button L + Entity Card trailing.
 export const Desktop: Story = {
   args: {
     variant: 'desktop',
-    leading: <span className="text-lg font-black text-[var(--text-primary)]">Max Core</span>,
+    leading: (
+      <>
+        <span className="text-lg font-black text-[var(--text-primary)]">Logo</span>
+        <SearchBar
+          size="m"
+          placeholder="Search..."
+          className="w-[270px]"
+          action={<Button size="s">Search</Button>}
+        />
+      </>
+    ),
     trailing: (
       <>
-        <IconOnlyButton variant="ghost" icon={<Search />} aria-label="Search" />
-        <IconOnlyButton variant="ghost" icon={<Bell />} aria-label="Notifications" />
-        <Avatar size="s" src="https://i.pravatar.cc/64?img=20" />
+        <Button size="l" rightIcon={<Plus />}>
+          New project
+        </Button>
+        <EntityCard>
+          <EntityItem
+            leading={<Avatar size="m" src="https://i.pravatar.cc/80?img=15" fallback="U" />}
+            title="Username"
+          />
+        </EntityCard>
       </>
     ),
   },
 };
 
-export const DesktopElevated: Story = {
-  args: { ...Desktop.args, elevated: true },
-};
-
-// Type=Standard — compact bar: leading + center title + trailing.
+// Type=Standard — square frosted bar: left icon, centred H5 title, right icon.
 export const MobileStandard: Story = {
-  parameters: { layout: 'centered' },
+  decorators: [(Story) => <div className="w-[393px]">{Story()}</div>],
   args: {
     variant: 'mobile',
     type: 'standard',
-    leading: <IconOnlyButton variant="ghost" icon={<Menu />} aria-label="Menu" />,
-    center: <span className="font-bold text-[var(--text-primary)]">Page title</span>,
-    trailing: <IconOnlyButton variant="ghost" icon={<Search />} aria-label="Search" />,
+    leading: <IconOnlyButton variant="ghost" size="l" icon={<Menu />} aria-label="Menu" />,
+    center: 'Page title',
+    trailing: <IconOnlyButton variant="ghost" size="l" icon={<Search />} aria-label="Search" />,
   },
 };
 
-// Type=Mobile — floating: frosted circular buttons on top, page title below.
+// Type=Mobile — floating: frosted circular buttons on top, H4 page title below.
 export const MobileFloating: Story = {
-  parameters: { layout: 'padded' },
-  decorators: [(Story) => <div className="w-80">{Story()}</div>],
-  args: {
-    variant: 'mobile',
-    type: 'mobile',
-    elevated: true,
-    leading: <IconOnlyButton variant="ghost" icon={<Menu />} aria-label="Menu" />,
-    center: 'Page title',
-    trailing: <IconOnlyButton variant="ghost" icon={<Search />} aria-label="Search" />,
-  },
+  decorators: [(Story) => <div className="w-[393px]">{Story()}</div>],
+  args: { ...MobileStandard.args, type: 'mobile' },
 };

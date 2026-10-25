@@ -2,7 +2,7 @@
 
 Process, checklist and page order: **`PLAN.md → Phase 4.5`**. Status: **`PROGRESS.md → Audit status`**.
 One page = one `docs/audit/<slug>.md` + one commit. This file holds the practical recipe that
-worked on the first thirty-four pages (the Atoms tier + Inputs, Search bar, Item List, Dropdown, Form Groups, Date picker, Tabs, Pagination, Range, Entity Item, User card, Avatar group, Pin, Action bar, Toast, Dialogs; see the Audit status table).
+worked on the first thirty-five pages (the Atoms tier + Inputs, Search bar, Item List, Dropdown, Form Groups, Date picker, Tabs, Pagination, Range, Entity Item, User card, Avatar group, Pin, Action bar, Toast, Dialogs, Top Bar; see the Audit status table).
 
 ## Loop per page
 1. `figma-node-links/catalog.json` → page `nodeId` + `masters[]`. Read the React source, utils and story.
@@ -97,7 +97,8 @@ Run them as separate commands (or echo each exit code): a chained `&& … | tail
   (`curl -s localhost:6006/index.json`). Many stories render controls *checked*; uncheck first
   before hover shots.
 - Playwright: `~/.npm/_npx/*/node_modules/playwright`, `deviceScaleFactor: 2`,
-  `&globals=theme:light|dark`. Screenshots go in the session scratchpad, not the repo.
+  `&globals=theme:light|dark`. Boolean URL args need `!`: `&args=elevated:!true` (plain `false` arrives
+  as a truthy string). Screenshots go in the session scratchpad, not the repo.
 - **Base UI Select needs `items` on `Select.Root`**, or `Select.Value` shows the raw value (`ro`)
   instead of the label once chosen.
 - **Hover vs open:** a field's `hover:` border beats `data-[popup-open]` unless the hover rule
@@ -122,5 +123,8 @@ Run them as separate commands (or echo each exit code): a chained `&& … | tail
 - **Reuse the composed atom:** if the master nests an Action Bar / Link Button / Spinner instance,
   render that React component (Dialog actions → `ActionBar`, Toast action → `LinkButton`,
   Toast loading → `Spinner` XL), not a hand-rolled copy.
+- **Gradient strokes:** read the stops *and* `gradientTransform`; the Top Bar's accent → focus ramp sits at
+  94–98% along the stroked edge, so it renders flat. A 1px inside bottom stroke on a translucent or rounded
+  surface → inset `box-shadow` (no height change, follows the radius).
 - **Icons:** components inline lucide paths (no lucide dependency). Copy the exact lucide icon the
   master names (`li:check`, `li:map-pin-plus-inside` …), not a lookalike.
