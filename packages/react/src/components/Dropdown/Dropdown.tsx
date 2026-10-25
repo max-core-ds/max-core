@@ -28,16 +28,27 @@ export interface DropdownItem {
 export interface DropdownMenuProps {
   items: DropdownItem[];
   align?: 'start' | 'center' | 'end';
+  /** Which side of the anchor the list opens on (Bottom Navigation's More opens upward). */
+  side?: 'top' | 'bottom';
+  /** Distance from the anchor in px. Defaults to the Dropdown Gap (4). */
+  sideOffset?: number;
   /** Element the list lines up with (and is at least as wide as). Defaults to the trigger. */
   anchor?: RefObject<Element | null>;
   className?: string;
 }
 
 /** The Dropdown popup, shared with SplitButton's menu. Render inside a `Menu.Root`. */
-export function DropdownMenu({ items, align = 'start', anchor, className }: DropdownMenuProps) {
+export function DropdownMenu({
+  items,
+  align = 'start',
+  side = 'bottom',
+  sideOffset = 4,
+  anchor,
+  className,
+}: DropdownMenuProps) {
   return (
     <Menu.Portal>
-      <Menu.Positioner sideOffset={4} align={align} anchor={anchor}>
+      <Menu.Positioner side={side} sideOffset={sideOffset} align={align} anchor={anchor}>
         <Menu.Popup className="outline-none">
           <ItemList className={cn(listStyles, className)}>
             {items.map((item, i) => (
