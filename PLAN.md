@@ -404,12 +404,14 @@ Leave the components block as forward-compatible JSON only; components keep read
 
 ---
 
-# Phase 3 — React component buildout (~40 components)
+# Phase 3 — React component buildout (~40 components) — ✅ DONE
 
-> **Status (2026-07-13):** Batch 0 (foundation + drift gate) and Batches 1–7 shipped —
-> 46 components, drift-green, in tiered Storybook folders (Atoms/Molecules/Organisms ×
-> functional themes). **Remaining:** Batch 8 (Stacked List) + the visual cross-check
-> pass (see **Phase 3.5** and **Phase 4.5** below).
+> **Status (2026-10-25): complete.** Batch 0 (foundation + drift gate) and Batches 1–7
+> shipped 2026-07-13 — 46 components, drift-green, in tiered Storybook folders
+> (Atoms/Molecules/Organisms × functional themes). The two carry-overs closed later:
+> Batch 8 (Stacked List) shipped as a lean v1 under **Phase 4**, and the visual
+> cross-check was done in **Phase 3.5** and re-done page by page in **Phase 4.5**.
+> Pay Button (Batch 1) was later removed from the library by product decision.
 
 ## Context
 
@@ -475,21 +477,20 @@ description text.
 
 ---
 
-# Phase 4 — Mega-systems + test infra — 🔄 IN PROGRESS
+# Phase 4 — Mega-systems — ✅ DONE (2026-10-25)
 
-> The large composite systems deferred out of Phase 3, plus the first automated
-> test layer beyond the drift gate. Component specs already exist on the Figma
+> The large composite systems deferred out of Phase 3. Component specs already exist on the Figma
 > side in **`docs/MAX-CORE-SUMMARY.md`** (Data Table System, Card System, Bottom
 > Sheet System) — this phase builds their React counterparts. Live status is
 > tracked in **`PROGRESS.md`** as batches land.
 >
-> **Status (2026-10-23):** Batches **8 (Stacked List)** and **9 (Data Table)**
-> shipped as **lean v1s** and visually cross-checked against the Figma masters;
-> **12 (Date Picker)** landed 2026-09-17 — see the per-batch notes below and
-> `PROGRESS.md`. Batches **10 (Card)**, **11 (Bottom Sheet)** and **13 (test infra)**
-> not started — next is Card. Also landed: the **contrast guardrail** (`pnpm -F @max-core/tokens
-> contrast`, WCAG AA text/bg pairings, light+dark) which pre-empts part of Batch 13's
-> a11y goal.
+> **Status (2026-10-25): complete.** Batches **8 (Stacked List)** and **9 (Data Table)**
+> shipped as **lean v1s**, **10 (Card)**, **11 (Bottom Sheet)** and **12 (Date Picker)**
+> landed — see the per-batch notes below and `PROGRESS.md`. What the lean v1s left out
+> is listed in the **On-demand backlog** at the end of this file. The test-infra batch
+> (formerly Batch 13) moved to its own **Phase 6**. Also landed: the **contrast
+> guardrail** (`pnpm -F @max-core/tokens contrast`, WCAG AA text/bg pairings,
+> light+dark), which pre-empts part of Phase 6's a11y goal.
 
 ## Scope
 
@@ -546,19 +547,13 @@ cross-checked against the Figma master; **month/year render as grids — Figma
 scroll-wheels deferred** by decision. See PROGRESS.md + memory
 `project-datepicker-react-build`.
 
-### Batch 13 — Test infrastructure
-The honest gap from Phase 3. Add:
-- **Vitest** + React Testing Library — render/interaction tests per component.
-- **axe** (jest-axe / vitest-axe) — automated a11y assertions on every story.
-- Wire into CI once CI exists (also currently missing — see README "Status").
+### ~~Batch 13 — Test infrastructure~~ → moved to **Phase 6**
 
 ## Sequencing
 
 Stacked List ✅ → Data Table ✅ (both lean v1) → Date Picker ✅ (Batch 12) →
-Card ✅ → Bottom Sheet ✅. Test infra (Batch 13)
-can start in parallel — the contrast guardrail already covers part of the a11y
-goal. Return to the deferred Stacked List row types / Data Table mobile+expandable
-+ prebuilders when the real project needs them.
+Card ✅ → Bottom Sheet ✅. Return to the deferred items (**On-demand backlog**,
+end of this file) when the real project needs them.
 
 ## Out of scope for Phase 4
 Layer 3 component-level token bridge (the `components` collection is still read
@@ -668,3 +663,61 @@ they are Phase 4 Batches 10/11 and get built against the same checklist.
   screenshot in light and dark.
 - Phase done when every non-skipped page is ✅ in the `PROGRESS.md` Audit status table and
   the designer list is consolidated.
+
+---
+
+# Phase 5 — Cap-trim sweep — ⏳ NOT STARTED
+
+> **Why:** every Figma text style has `leadingTrim: CAP_HEIGHT`, so a label's Figma box is its
+> cap height (Caption ~9, Body/SM ~10) and padding runs from the cap top to the baseline. React
+> renders full line boxes (and Tailwind `text-sm` is a 20px line vs Figma's 18.2), so every
+> padding-hugged component is ~7–8px taller than its master. Fixed-height parts (buttons,
+> inputs) are fine. Decided 2026-10-24 as one focused pass; it comes before Phase 6 so tests
+> never lock in the old heights.
+
+## Step 1 — Pick the mechanism (ask the user)
+- **CSS trim** — `[text-box:trim-both_cap_alphabetic]`, as the tooltip surface already does
+  (`utils/tooltip-surface.ts`, commit `36fa09e`). Exact in Chrome/Edge 133+ and Safari 18.2+;
+  other browsers fall back to today's taller rendering.
+- **Padding compensation** — subtract the trimmed half-leading from the padding. Works
+  everywhere, less exact, and couples padding to line height.
+
+## Step 2 — Apply + re-measure against each master
+Measured gaps (React vs Figma) from the Phase 4.5 audits: Tabs 45 vs 34 · Badge ~28/32/36 vs
+21/25/29 · Segmented item ~34 vs 26 · Entity Item 48 vs 32 (with subtitle) · Stacked List rows
+70/80/104 vs 56/80/80 · Top Bar floating 132 vs 118 · Stats card compact 239/198 vs 220/180 ·
+Bottom Sheet header 26 vs 24. Also: Switcher, Tag, Time picker rows, Progress Bar / Range
+labels, Date picker weekday row, Input placeholders.
+- **Toast:** title/body have no gap today because the untrimmed line boxes supply the
+  master's 10px; trimming them needs a 10px gap back.
+- **Done already:** Tooltip + Range bubble (40.8 vs 41).
+
+## Verification
+Each component re-measured against its master's real frame height (not the token sum), the
+verify gate green, Storybook screenshots matching Figma in light and dark. Note the outcome on
+each `docs/audit/<slug>.md` page and close the carry-over in `PROGRESS.md`.
+
+---
+
+# Phase 6 — Test infrastructure — ⏳ NOT STARTED
+
+> Formerly Phase 4 Batch 13 — the honest gap from Phase 3. The drift check and the contrast
+> guardrail are the only automated gates today.
+
+- **Vitest** + React Testing Library — render/interaction tests per component.
+- **axe** (jest-axe / vitest-axe) — automated a11y assertions on every story.
+- Wire into CI once CI exists (also currently missing — see README "Status").
+
+---
+
+# On-demand backlog
+
+Left out of the Phase 4 lean v1s by design; build when a real project needs them.
+
+- **Stacked List** — ride / delivery / booking / items-grid / transport row types (5 of 9).
+- **Data Table** — mobile scroll variant + "Load more"; `_Table Row Expanded`; the stats/tabs
+  Table Header content (callers compose it into `header` today); the 5 prebuilders (Invoice,
+  Users, Tickets, Products, Transactions).
+- **Bottom Sheet** — 5 of the 18 premades: Transport / Map, Ride ×2 and Booking / Place List
+  wait on their Stacked List rows; Sort duplicates Settings in the master.
+- **Date Picker** — Figma's month/year scroll wheels (grids today, by decision).
