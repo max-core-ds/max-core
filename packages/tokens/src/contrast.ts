@@ -102,19 +102,20 @@ export function extractPairings(source: string): Pairing[] {
   const code = source.replace(/(^|[^:])\/\/.*$/gm, '$1').replace(/\/\*[\s\S]*?\*\//g, '');
   const literals = code.match(/(['"`])(?:\\.|(?!\1)[\s\S])*?\1/g) ?? [];
   for (const literal of literals) {
-    if (!literal.includes('-[var(--')) continue;
+    if (!literal.includes('-[var(--') && !literal.includes('-(--')) continue;
     pairFromLiteral(literal, seen, pairings);
   }
   return pairings;
 }
 
 function pairFromLiteral(literal: string, seen: Set<string>, out: Pairing[]): void {
-  const re = /(?:([a-z][a-z0-9-]*(?:\[[^\]]*\])?):)?(text|bg)-\[var\((--[a-z0-9-]+)\)\]/gi;
+  // Both the arbitrary-value form `bg-[var(--x)]` and the v4 shorthand `bg-(--x)`.
+  const re = /(?:([a-z][a-z0-9-]*(?:\[[^\]]*\])?):)?(text|bg)-(?:\[var\((--[a-z0-9-]+)\)\]|\((--[a-z0-9-]+)\))/gi;
   const buckets = new Map<string, { fg: Set<string>; bg: Set<string> }>();
   for (const m of literal.matchAll(re)) {
     const state = m[1] ?? 'base';
     const kind = m[2] as 'text' | 'bg';
-    const varName = m[3] as string;
+    const varName = (m[3] ?? m[4]) as string;
     let bucket = buckets.get(state);
     if (!bucket) {
       bucket = { fg: new Set(), bg: new Set() };

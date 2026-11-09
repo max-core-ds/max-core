@@ -666,7 +666,182 @@ they are Phase 4 Batches 10/11 and get built against the same checklist.
 
 ---
 
-# Phase 5 — Cap-trim sweep — ⏳ NOT STARTED
+# Figma as the single source — Phases 4.6 / 4.7 / 4.8 (planned 2026-11-09)
+
+> Each subphase ends with a report to the user and waits for their go-ahead.
+
+## Context
+Max answered (`~/projects/max-core-answers-for-dev.md`): **everything in Figma drives the code**:
+- text styles
+- font family
+- all 20 effect styles
+- the whole Primitives collection (z-index, motion, breakpoints, …)
+- **the 720 component tokens** (Q8: "the code should read the component tokens directly")
+
+He also made three rounds of fixes in the **working file `sX5tikviuBEhNbu2iPVya5`**, including accent ramp, text colours, states, API changes and new tokens.
+
+The order the user chose: **(A) exporter → (B) one pass per component → (C) publishing pipeline.**
+The token format is stabilised first, each of the 55 components is touched once, and publishing is automated on the final format.
+
+Phase renumbering in `PLAN.md`:
+- Phase 4.6 = A
+- Phase 4.7 = B (absorbs Phase 5 cap-trim)
+- Phase 4.8 = C
+- Phase 6 tests unchanged
+
+Step 0 of execution: copy this plan into `PLAN.md` and `PROGRESS.md` (memory rule: plans live in the repo). Also save Max's answers in the repo as `docs/figma-answers-round-1.md`; it's the spec for Phase 4.7.
+
+---
+
+# Phase 4.6 — Full export (exporter + CSS generator) — ✅ DONE (2026-11-09)
+
+> **Status (2026-11-09):** 4.6.1 ✅ inventory · 4.6.2 ✅ plugin (v0.4.0; warns on aliases to
+> variables in no collection — 4 Form Group premade tokens → Max) · 4.6.3 ✅ types · 4.6.4 ✅
+> `tokens.css` (1113 vars) + `theme.css` (18 utilities), existing vars byte-identical · 4.6.5 ✅
+> re-exported from `sX5tik…` and synced (Max's colour ramp in; only component *value* change:
+> Item List Gap 8 → 4); apps import `theme.css`, body font = `--typeface-family-base`; cap-trim
+> measured = Figma (Caption 9, Body/SM 10). Contrast 19 → **12** components. Drift follows
+> `{components.*}` chains; **red on purpose** for Max's plain → alias rebinds (Input / Select /
+> Bottom Line / Textarea / Multiselect min sizes, Tag S min height, Toast Content Gap, Card) —
+> fixed in each component's Phase 4.7 pass. 4.6.6 ✅ drift: unknown-var check (every `var(--…)` in
+> react/src must be defined; Base UI / Tailwind runtime vars allowlisted) + per-spec
+> `mode: 'component'` (binds its own component vars) for Phase 4.7; contrast extractor reads the v4
+> `bg-(--x)` shorthand (no component token is a colour, so nothing else to follow).
+
+### 4.6.1 Inventory (read-only, `use_figma` on `sX5tik…`)
+List every variable name and type per collection and mode, all text styles (with bound vars, fontName, lineHeight, letterSpacing, leadingTrim) and all effect styles (with layer types and their fields, including the Glass effect's API fields).
+
+The output goes to the scratchpad and fixes the exact name→path mappings below. No Figma writes.
+
+### 4.6.2 Plugin (`packages/figma-plugin/src/transform.ts`)
+- **Primitives and semantics, fully generic.** Keep today's special-cased paths (spacing, radius, border-width, opacity, color), so the existing `{primitives.*}` / `{semantics.*}` references and CSS names don't change. Every other variable falls back to its own name path, slug-cased, instead of being dropped (`return null` today):
+  - `zIndex/dropdown` → `primitives.z-index.dropdown`
+  - `motion/duration/fast`
+  - `motion/easing/default` (string)
+  - `breakpoint/*`, `container/max/*`, `grid/*`, `tapArea/min`, `focus/*`, `text-size/size/*`
+  - `- Typeface family -/base|brand|mono` → `semantics.typeface-family.*` (string)
+
+  The one exception is `icon/size/*`, which Max says to skip.
+- **Components:** keep the alias reference to the *nearest* token, not only the first semantic. A level‑4 → level‑3 alias becomes `{components.<key>}`, so the component cascade survives into CSS (`firstMappableRef` is kept as the fallback). Also emit **string and colour component tokens** if the inventory shows any.
+- **New `typography` block**, from `figma.getLocalTextStylesAsync()`. For each of the 15 styles:
+  - `fontFamily` reference (`{semantics.typeface-family.base}`) and `fontSize` reference (`{primitives.text-size.*}`), from `boundVariables`
+  - `fontWeight` mapped from `fontName.style` (Light 300 / Regular 400 / Bold 700 / Black 900)
+  - `lineHeight` (%)
+  - `letterSpacing` (%)
+  - `leadingTrim`
+- **Effects:** keep the drop/inner shadows and add:
+  - `LAYER_BLUR` / `BACKGROUND_BLUR` → `{ type: 'blur', radius }`
+  - the Glass effect → `{ type: 'glass', blur, … }` with the raw fields kept, plus the existing shadow layers for `glass/elevated`
+- `$version` becomes `0.4.0`. Update `countTokens` and the UI summary with the new counts (typography, effect kinds).
+
+### 4.6.3 Types (`packages/tokens/src/types.ts`)
+- Add `typography`, `EffectLayer = shadow | blur | glass`, and open semantics/primitives trees.
+- Fix the package export `./types` (currently points at `src/types.ts`, which isn't shipped). This step is pulled forward from Phase 4.8.
+
+### 4.6.4 CSS generator (`packages/tokens/src/transform.ts` → `dist/tokens.css` + new `dist/theme.css`)
+- **`tokens.css` (plain CSS, any consumer):**
+  - Existing semantic and colour vars, unchanged.
+  - New:
+    - `--z-index-*`, `--motion-duration-*`, `--motion-easing-*`
+    - `--breakpoint-*`, `--container-max-*`, `--grid-*`, `--tap-area-min`, `--focus-width|offset`
+    - `--typeface-family-base|brand|mono` (with a fallback stack after the Figma family)
+    - `--text-size-*`
+  - **Component vars**, emitted as `var()` references so they cascade and a theme can override at any level. For example `--buttons-global-size-s-padding: var(--spacing-06);` and `--stepper-padding-x: var(--input-global-general-padding-x);`.
+    - **Naming:** drop the tier prefix (`-- Atoms/`, `-- Molecule/`, `--Organism/`), then slug the rest.
+    - Collisions are checked at build time and fail loudly; if any occur, keep the tier prefix for those names only.
+    - Raw numbers are written in `px`; opacity values stay unitless.
+  - **Effects:** shadows as today. Blur becomes `--effect-blur-*: blur(Npx)`. Glass becomes `--effect-glass-*-backdrop: blur(N) saturate(…)` plus `--effect-glass-*-edge` (a 1px light edge) and `--effect-glass-elevated-shadow`.
+  - **Typography composite vars** per style: `--type-body-sm-300-font`, `-size`, `-weight`, `-line-height`, `-letter-spacing`.
+- **`theme.css` (Tailwind v4 layer, generated):**
+  - `@theme` maps: `--font-base` / `--font-brand`, the shadow, blur and ease names, and the breakpoints from tokens.
+  - `@utility` per text style: `type-h1 … type-caption-xs`. Each sets font, size, weight, line-height and letter-spacing, plus the cap-trim from Max's Q2: `text-box: trim-both cap alphabetic`, inside `@supports`. Without support the full line box stays (no padding hack).
+  - `@utility glass-base|strong|elevated` and `bar-blur-*` (the backdrop approximation from Q4).
+  - This file replaces "the code's own type scale".
+- `cli.ts` writes both files. `scrollbar.css` is unchanged.
+
+### 4.6.5 Re-export + sync
+1. Build the plugin. **You** run it in Figma Desktop on `sX5tik…`; it downloads `tokens.json`.
+2. Run `pnpm -F @max-core/tokens sync --dry-run`, then `sync`, then `build`.
+3. Review the diff: Max's colour changes arrive here (accent ramp, `text/secondary` / `text/muted`, `overlay/scrim`, `chart/*`, `opacity/faint`, new component tokens).
+4. Reconcile the plain-number list against Max's 15 (send him our list if it differs).
+
+### 4.6.6 Guardrails updated
+- **`drift.ts` / `conformance.ts`:** the rule changes from "binds the semantic vars its Figma tokens mandate" to:
+  1. every `var(--…)` in a component exists in `tokens.css` (catches typos and renamed tokens after a re-export)
+  2. per family, each component token is referenced by its owner component, or is listed as exempt with a reason
+- Until Phase 4.7 migrates a component, its old semantic-var check stays on. Each component switches mode as it is migrated.
+- **`contrast-audit`:** resolves component colour vars too. Re-run it after the sync; Max's ramp should clear most of the 30 findings.
+
+---
+
+# Phase 4.7 — One pass per component (55 files) — ⏳ NOT STARTED
+**The recipe, applied per component, in tier order (Atoms → Molecules → Organisms):**
+1. **Tokens:** replace semantic refs with the component's own vars: `px-[var(--spacing-06)]` → `px-(--buttons-global-size-s-padding)`. The shared utils (`utils/field.ts`, `state-layer.ts`, `tone.ts`, `focus-ring.ts`, `tooltip-surface.ts`) take per-component vars where they size things.
+2. **Type:** replace `text-xs font-bold leading-…` with the matching `type-*` utility (cap-trim comes with it; this absorbs the old Phase 5). Re-measure padding-hugged parts against Figma (Tabs, Badge, Segmented, Toast).
+3. **Max's changes for that component**, from `docs/figma-answers-round-1.md`. Examples:
+   - Tooltip `Position` meaning
+   - `Focused` boolean instead of `State=Focused`
+   - Toast `Show Dismiss`, Thumbnail `Show Status`, Pagination ellipsis
+   - Radio/Switch `Disabled`, FAB hover, Switcher fill/shadow
+   - input hover = `border/hover`, placeholder sizes, unchecked tints
+   - Tabs 2px underline, Item List shadow, bars on `bg/surface`
+   - `overlay/scrim` on Dialog/Bottom Sheet
+   - `z-(--z-index-*)` replacing `z-50` / `z-[100]`
+   - glass/blur on the bars and FAB
+   - `chart/*` as StatsCard's default `chartTheme`
+4. **Verify:** typecheck, `drift`, Storybook build, and a Playwright screenshot next to a Figma screenshot of the master.
+
+Batches of about 6 components per commit. The user reviews each batch.
+
+The **"Still open" list** in Max's file stays Figma-side. React matches Figma when it lands (next re-export).
+
+Motion: propose spring values (duration + bounce) for Max to add as `motion/*` tokens, in a short note at the end of Phase 4.7.
+
+---
+
+# Phase 4.8 — Publishing pipeline (Figma → GitHub → npm → projects) — ⏳ NOT STARTED
+- **GitHub setup** (the user does this by hand, from my checklist): org `max-core`, repo transfer, Max invited, Max's fine-grained PAT, a `packages:read` token for consumers, branch protection.
+- **Make the packages publishable:**
+  - `@max-core/react` ships `styles.css` (`@source "./";`) plus `exports` and `publishConfig` (GitHub Packages), version `0.1.0`.
+  - `@max-core/tokens` gets `publishConfig`, a `bin` (`max-core-tokens build`, prepared for template use) and Changesets.
+  - Consumer CSS becomes: `@import 'tailwindcss'; @import '@max-core/react/styles.css'; @import '@max-core/tokens/tokens.css'; @import '@max-core/tokens/theme.css';`.
+- **CI** (`ci.yml`): build, typecheck, lint, drift (blocking), contrast (reported). Token PRs get a diff comment through a new `packages/tokens/src/diff.ts`, extracted from `sync.ts`.
+- **Release** (`release.yml`) on merge to main: `changeset version`, then publish to GitHub Packages, push tags, and create a GitHub Release with the `.tgz` files.
+- **Plugin "Publish to GitHub":**
+  - manifest allows `api.github.com`
+  - settings saved in `figma.clientStorage`
+  - flow: GET current tokens → diff → branch → PUT `tokens.json` → write a `.changeset` file → open a PR → show the link
+  - keep the Download button as a fallback
+- **Docs:** consumer setup (`.npmrc`, `dependabot.yml`). Migrate `react-forms` after the first release, and ask first.
+
+---
+
+## Critical files
+- **Plugin:** `packages/figma-plugin/src/transform.ts` (`figmaNameToTokenPath`, `buildComponents`, `buildEffects`, new `buildTypography`), `code.ts`, `ui.html`
+- **Tokens:** `packages/tokens/src/types.ts`, `transform.ts` (`generateTokensCss`, new `generateThemeCss`), `cli.ts`, `sync.ts` (`validateShape`), `drift.ts`, `conformance.ts`, `contrast-audit.ts`, `package.json` (exports for `theme.css` and types)
+- **Apps:** `apps/storybook/src/global.css` and `apps/showcase/src/styles.css` (import `theme.css`; drop the hard-coded Inter)
+- **Phase 4.7:** `packages/react/src/components/**`, `packages/react/src/utils/*`
+
+## Verification (Phase 4.6)
+- **Before the re-export:**
+  - Run the new generator on the *current* `tokens.json`. The existing vars must come out byte-identical, so new output is additive only: diff old vs new `tokens.css`, ignoring the new sections.
+  - `tsc` on the plugin and the tokens package.
+- **After the re-export:**
+  - `sync --dry-run` lists the expected changes: Max's colour ramp, new tokens, the 11 plain numbers that became aliases.
+  - `build` reports no name collisions.
+  - `drift` passes in legacy mode.
+  - `contrast` findings drop.
+  - Storybook builds. Playwright spot-check of Button, Input and Tabs in light and dark (only colour changes expected).
+- **`theme.css`:** a Storybook scratch story renders all 15 `type-*` utilities next to the Figma text-style specimen screenshot. Cap-trimmed heights match Figma (Tooltip: 41px).
+
+---
+
+# Phase 5 — Cap-trim sweep — ➡️ FOLDED INTO PHASE 4.7 (2026-11-09)
+
+> Max (round-1 answers, Q2) decided the mechanism: CSS `text-box: trim-both cap alphabetic`
+> with the untrimmed fallback. It ships inside the generated `type-*` utilities (Phase 4.6.4)
+> and each component adopts it in its Phase 4.7 pass. The gap list below is the re-measure list.
+
 
 > **Why:** every Figma text style has `leadingTrim: CAP_HEIGHT`, so a label's Figma box is its
 > cap height (Caption ~9, Body/SM ~10) and padding runs from the cap top to the baseline. React
@@ -675,7 +850,7 @@ they are Phase 4 Batches 10/11 and get built against the same checklist.
 > inputs) are fine. Decided 2026-10-24 as one focused pass; it comes before Phase 6 so tests
 > never lock in the old heights.
 
-## Step 1 — Pick the mechanism (ask the user)
+## Step 1 — Pick the mechanism — ✅ decided: CSS trim (Max, Q2)
 - **CSS trim** — `[text-box:trim-both_cap_alphabetic]`, as the tooltip surface already does
   (`utils/tooltip-surface.ts`, commit `36fa09e`). Exact in Chrome/Edge 133+ and Safari 18.2+;
   other browsers fall back to today's taller rendering.

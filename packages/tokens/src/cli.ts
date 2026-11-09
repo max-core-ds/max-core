@@ -2,7 +2,7 @@
 import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { generateTokensCss } from './transform.js';
+import { generateThemeCss, generateTokensCss } from './transform.js';
 import type { TokensFile } from './types.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -16,8 +16,11 @@ const tokens = JSON.parse(raw) as TokensFile;
 
 const css = generateTokensCss(tokens);
 
+const themeCss = generateThemeCss(tokens);
+
 mkdirSync(outDir, { recursive: true });
 writeFileSync(outPath, css, 'utf8');
+writeFileSync(resolve(outDir, 'theme.css'), themeCss, 'utf8');
 
 // Ship the hand-authored static utilities (e.g. .styled-scrollbar) alongside
 // the generated variables.
@@ -28,4 +31,6 @@ const lightCount = Object.keys(tokens.colors.light).length;
 const darkCount = Object.keys(tokens.colors.dark).length;
 
 console.log(`✓ Wrote ${outPath}`);
+const utilityCount = (themeCss.match(/^@utility /gm) ?? []).length;
 console.log(`  ${variableCount} variables · ${lightCount} light colors · ${darkCount} dark colors`);
+console.log(`✓ Wrote ${resolve(outDir, 'theme.css')} (${utilityCount} utilities)`);

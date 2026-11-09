@@ -1,6 +1,6 @@
 /// <reference types="@figma/plugin-typings" />
 
-import { buildTokensFile, countTokens } from './transform';
+import { buildTokensFile, countTokens, exportWarnings } from './transform';
 
 interface ExportMessage {
   type: 'export';
@@ -10,7 +10,7 @@ interface CancelMessage {
 }
 type PluginMessage = ExportMessage | CancelMessage;
 
-figma.showUI(__html__, { width: 320, height: 220, themeColors: true });
+figma.showUI(__html__, { width: 360, height: 380, themeColors: true });
 
 figma.ui.onmessage = async (msg: PluginMessage) => {
   if (msg.type === 'cancel') {
@@ -27,6 +27,7 @@ figma.ui.onmessage = async (msg: PluginMessage) => {
         type: 'tokens',
         payload: tokens,
         counts,
+        warnings: [...exportWarnings],
       });
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);

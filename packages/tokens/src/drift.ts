@@ -4,15 +4,29 @@
  *
  *   pnpm -F @max-core/tokens drift
  *
- * Reads the `components` block from tokens.json and every mapped React
- * component's source, then asserts each component binds the spacing/size/radius
- * semantic vars its Figma tokens mandate. Unmapped families are skipped, so the
- * check grows incrementally as Phase 3 batches land. Exits non-zero on drift.
+ * Two checks, exit non-zero on either:
+ *
+ * 1. Unknown vars — every `var(--…)` / `p-(--…)` in packages/react/src must be
+ *    defined by the generated tokens.css / theme.css, scrollbar.css, the source
+ *    itself (`[--x:…]`), or a library (Base UI, Tailwind). Catches typos and
+ *    tokens renamed or deleted in Figma after a re-export.
+ * 2. Conformance — per mapped component, against the `components` block:
+ *    `semantic` mode (not yet migrated) binds the spacing/size/radius semantic
+ *    vars its Figma tokens resolve to; `component` mode (Phase 4.7 migrated)
+ *    binds its own component vars. Unmapped families are skipped.
  */
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { type ComponentSpec, checkComponent } from './conformance.js';
+import {
+  type ComponentSpec,
+  LIBRARY_VAR_PREFIXES,
+  checkComponent,
+  definedVarsIn,
+  localVarsIn,
+  usedVarsIn,
+} from './conformance.js';
+import { generateThemeCss, generateTokensCss } from './transform.js';
 import type { TokensFile } from './types.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -393,28 +407,62 @@ const SPECS: ComponentSpec[] = [
 
 const tokens = JSON.parse(readFileSync(tokensPath, 'utf8')) as TokensFile;
 
+// ---- 1. unknown vars ----
+const defined = new Set([
+  ...definedVarsIn(generateTokensCss(tokens)),
+  ...definedVarsIn(generateThemeCss(tokens)),
+  ...definedVarsIn(readFileSync(resolve(here, 'scrollbar.css'), 'utf8')),
+]);
+const sourceFiles: string[] = [];
+const walk = (dir: string): void => {
+  for (const f of readdirSync(dir)) {
+    const p = resolve(dir, f);
+    if (statSync(p).isDirectory()) walk(p);
+    else if (/\.(tsx?|css)$/.test(f) && !/\.(stories|test)\.tsx?$/.test(f)) sourceFiles.push(p);
+  }
+};
+walk(reactSrc);
+const sources = sourceFiles.map((f) => [f, readFileSync(f, 'utf8')] as const);
+const local = new Set(sources.flatMap(([, s]) => [...localVarsIn(s)]));
+const unknown: string[] = [];
+for (const [file, src] of sources) {
+  for (const v of usedVarsIn(src)) {
+    if (defined.has(v) || local.has(v) || LIBRARY_VAR_PREFIXES.some((p) => v.startsWith(p))) continue;
+    unknown.push(`${v}  (${file.slice(reactSrc.length + 1)})`);
+  }
+}
+console.log('Token drift check\n\n1. Unknown CSS vars (not defined by tokens.css / theme.css)\n');
+if (unknown.length) {
+  for (const u of unknown.sort()) console.log(`  ✗ ${u}`);
+} else {
+  console.log(`  ✓ none — ${sourceFiles.length} files, ${defined.size} defined vars`);
+}
+
+// ---- 2. conformance ----
 let failed = 0;
-console.log('Token drift check — spacing/size/radius conformance\n');
+console.log('\n2. Conformance — semantic mode: spacing/size/radius · component mode: own vars\n');
 for (const spec of SPECS) {
   const paths = Array.isArray(spec.source) ? spec.source : [spec.source];
   const source = paths.map((p) => readFileSync(resolve(reactSrc, p), 'utf8')).join('\n');
   const r = checkComponent(tokens, spec, source);
+  const tag = spec.mode === 'component' ? ' [component vars]' : '';
   if (r.ok) {
-    console.log(`  ✓ ${r.name}`);
+    console.log(`  ✓ ${r.name}${tag}`);
   } else {
     failed += 1;
-    console.log(`  ✗ ${r.name} — missing ${r.missing.length} mandated var(s):`);
+    console.log(`  ✗ ${r.name}${tag} — missing ${r.missing.length} mandated var(s):`);
     for (const v of r.missing) console.log(`      ${v}`);
   }
   if (r.extra.length) {
-    console.log(
-      `      (binds ${r.extra.length} var(s) not in its Figma spec: ${r.extra.join(', ')})`,
-    );
+    const what =
+      spec.mode === 'component'
+        ? 'raw semantic var(s) instead of its own tokens'
+        : 'var(s) not in its Figma spec';
+    console.log(`      (binds ${r.extra.length} ${what}: ${r.extra.join(', ')})`);
   }
 }
 
-if (failed) {
-  console.log(`\n✗ ${failed} component(s) drifted from their Figma token spec.`);
-  process.exit(1);
-}
-console.log('\n✓ All mapped components conform to their Figma token spec.');
+if (unknown.length) console.log(`\n✗ ${unknown.length} unknown CSS var reference(s).`);
+if (failed) console.log(`\n✗ ${failed} component(s) drifted from their Figma token spec.`);
+if (unknown.length || failed) process.exit(1);
+console.log('\n✓ No unknown vars; all mapped components conform to their Figma token spec.');

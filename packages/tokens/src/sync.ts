@@ -115,7 +115,8 @@ if (existing) {
     if (!existingPaths.has(p)) continue;
     const before = leafByPath(existing, p);
     const after = leafByPath(incoming, p);
-    if (before !== after) changed.push(p);
+    // Arrays (effect layers) are leaves: compare by value, not reference.
+    if (JSON.stringify(before) !== JSON.stringify(after)) changed.push(p);
   }
 }
 

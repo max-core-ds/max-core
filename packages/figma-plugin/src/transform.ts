@@ -3,12 +3,17 @@
  *
  * Walks the four relevant collections (Primitives, Semantics, Colors,
  * Components) in the `Max core` / `Light Mode` / `Dark Mode` modes, and produces
- * JSON matching the `tokens.json` shape. The first three feed the existing CSS
- * pipeline unchanged; `components` is an additive, flat-keyed block (level 3/4
- * tokens) that the CSS transform does not yet consume.
+ * JSON matching the `tokens.json` shape. Since v0.4.0 (Phase 4.6) EVERYTHING the
+ * file defines is exported — Figma is the single source of truth:
+ *   - every Primitives / Semantics variable (generic name → path fallback, only
+ *     `icon/size/*` skipped on the designer's instruction),
+ *   - the flat-keyed `components` block, whose values keep their nearest alias
+ *     (a level-4 token referencing a level-3 one stays `{components.<name>}`),
+ *   - `typography` (the 15 text styles) and every effect style (shadow, blur,
+ *     glass layers).
  */
 
-import type { EffectShadowLayer, TokensFile, Tree } from '@max-core/tokens/types';
+import type { EffectLayer, EffectShadowLayer, TokensFile, Tree, TypographyStyle } from '@max-core/tokens/types';
 
 const PRIM_COLLECTION = 'Max Core - Primitives';
 const SEM_COLLECTION = 'Max Core - Semantics';
@@ -26,6 +31,35 @@ interface RGB {
   g: number;
   b: number;
   a?: number;
+}
+
+/** Primitives groups exported through the generic name → path fallback. */
+const PRIMITIVE_ROOTS = new Set(['zIndex', 'motion', 'focus', 'grid', 'breakpoint', 'container', 'tapArea']);
+
+/**
+ * Ids of alias targets that resolve by id but are listed in no local collection
+ * (deleted variables something still aliases). Reset on every export.
+ */
+const detachedIds = new Set<string>();
+
+/** Human-readable problems found during the last export (shown in the plugin UI). */
+export const exportWarnings: string[] = [];
+
+const COMPONENT_PREFIX = /^--\s*(Atoms|Molecule|Organism)\//;
+
+/** Round Figma's float noise (110.00000238 → 110, 1.39999997 → 1.4). */
+function round(n: number, places = 3): number {
+  const f = 10 ** places;
+  return Math.round(n * f) / f;
+}
+
+/** `zIndex` → `z-index`, `tapArea` → `tap-area`, `Desktop` → `desktop`, `- Typeface family -` → `typeface-family`. */
+function slug(segment: string): string {
+  return segment
+    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 }
 
 function stripLeadingZeros(s: string): string {
@@ -111,8 +145,21 @@ function figmaNameToTokenPath(name: string, valueHint?: number): string[] | null
   if (name.startsWith('- opacity -/')) {
     return ['semantics', 'opacity', name.split('/')[1]!];
   }
-  // Everything else (text-size, z-index, motion, icon size, breakpoints, etc.)
-  // is intentionally skipped — not part of the current TokensFile shape.
+  // Any other semantic group (`- Typeface family -/base`, …) → semantics.<slug>.<key>
+  const sem = name.match(/^- (.+?) -\/(.+)$/);
+  if (sem) return ['semantics', slug(sem[1]!), sem[2]!];
+  // Component tokens are flat-keyed by their full Figma name. A `.` would break
+  // the `{a.b.c}` reference syntax, so such names fall back (firstMappableRef).
+  if (COMPONENT_PREFIX.test(name)) return name.includes('.') ? null : ['components', name];
+  // Icon sizes: unused by any component token — skipped on the designer's call.
+  if (name.startsWith('icon/size/')) return null;
+  // Remaining primitives, generic: `text-size/size/xs` → text-size.xs,
+  // `zIndex/dropdown` → z-index.dropdown, `motion/easing/in` → motion.easing.in,
+  // `radius/focus/md` → radius-focus.md, `grid/margin/Desktop` → grid.margin.desktop.
+  if (name.startsWith('text-size/size/')) return ['primitives', 'text-size', slug(name.split('/')[2]!)];
+  if (name.startsWith('radius/focus/')) return ['primitives', 'radius-focus', slug(name.split('/')[2]!)];
+  // Whitelisted by root so Colors names (`bg/surface`, `border/default`) never land here.
+  if (PRIMITIVE_ROOTS.has(name.split('/')[0]!)) return ['primitives', ...name.split('/').map(slug)];
   return null;
 }
 
@@ -124,6 +171,9 @@ function figmaNameToTokenPath(name: string, valueHint?: number): string[] | null
  * we return null so the caller can fall back to resolving to a literal hex.
  */
 function aliasReference(targetVar: Variable, targetValue?: number): string | null {
+  // A variable that's no longer in any collection has no token to point at;
+  // the caller falls back to its resolved value (and the export warns).
+  if (detachedIds.has(targetVar.id)) return null;
   const path = figmaNameToTokenPath(targetVar.name, targetValue);
   if (!path) return null;
   return `{${path.join('.')}}`;
@@ -213,22 +263,37 @@ function buildPrimitives(
     color: {},
   };
 
-  // Pass 1: numeric primitives live in the Primitives collection.
+  // Pass 1: everything in the Primitives collection. Numbers and strings are
+  // written as-is (opacity converted 0–100 → 0–1); aliases inside the collection
+  // (e.g. `grid/gutter` → `spacing/scale/24`) keep their reference.
   for (const vid of primCol.variableIds) {
     const v = ctx.varsById.get(vid);
     if (!v) continue;
     const raw = v.valuesByMode[primMode];
-    if (isAlias(raw)) continue;
+
+    if (isAlias(raw)) {
+      const path = figmaNameToTokenPath(v.name);
+      if (!path || path[0] !== 'primitives') continue;
+      const target = ctx.varsById.get(raw.id);
+      const targetRaw = target?.valuesByMode[primMode];
+      const ref = target
+        ? aliasReference(target, typeof targetRaw === 'number' ? targetRaw : undefined)
+        : null;
+      const value = ref ?? resolveLeaf(v, primMode, ctx);
+      if (typeof value === 'number' || typeof value === 'string') setPath(out, path.slice(1), value);
+      continue;
+    }
+
+    if (typeof raw === 'string') {
+      const path = figmaNameToTokenPath(v.name);
+      if (path && path[0] === 'primitives') setPath(out, path.slice(1), raw);
+      continue;
+    }
     if (typeof raw !== 'number') continue;
 
     const path = figmaNameToTokenPath(v.name, raw);
-    if (!path) continue;
-    if (path[1] === 'opacity') {
-      // Figma stores 0–100; convert to 0–1
-      setPath(out, path.slice(1), raw / 100);
-    } else if (path[1] === 'spacing' || path[1] === 'radius' || path[1] === 'border-width') {
-      setPath(out, path.slice(1), raw);
-    }
+    if (!path || path[0] !== 'primitives') continue;
+    setPath(out, path.slice(1), path[1] === 'opacity' ? round(raw / 100) : round(raw));
   }
 
   // Pass 2: color palette entries live in the Colors collection (Palette/*).
@@ -268,12 +333,15 @@ function buildSemantics(
     if (!path || path[0] !== 'semantics') continue;
     const subgroup = path[1] as keyof typeof out;
     const key = path[2]!;
+    // Groups beyond the five dimensional ones (e.g. typeface-family) are created on demand.
+    out[subgroup] ??= {};
     const raw = v.valuesByMode[modeId];
 
     if (isAlias(raw)) {
       const target = ctx.varsById.get(raw.id);
       if (!target) continue;
-      const targetRaw = target.valuesByMode[modeId];
+      const targetMode = ctx.modeByCollection.get(target.variableCollectionId) ?? modeId;
+      const targetRaw = target.valuesByMode[targetMode];
       const targetValue = typeof targetRaw === 'number' ? targetRaw : undefined;
       const alias = aliasReference(target, targetValue);
       if (alias) {
@@ -365,16 +433,19 @@ function buildComponents(
 
     if (isAlias(raw)) {
       const target = ctx.varsById.get(raw.id);
-      if (!target) continue;
-      const targetRaw = target.valuesByMode[modeId];
+      if (!target) continue; // reported in buildTokensFile
+      const targetMode = ctx.modeByCollection.get(target.variableCollectionId) ?? modeId;
+      const targetRaw = target.valuesByMode[targetMode];
       const targetValue = typeof targetRaw === 'number' ? targetRaw : undefined;
+      // Nearest alias wins: a level-4 token referencing a level-3 one stays
+      // `{components.<level-3 name>}` so the CSS cascade mirrors Figma's.
       const alias = aliasReference(target, targetValue);
       if (alias) {
         out[v.name] = alias;
       } else {
-        // Target is a component token (level 4 → level 3). Prefer the semantic
-        // reference the chain ultimately lands on so the cascade + drift check
-        // survive; only flatten to a concrete value if no such reference exists.
+        // Target can't be referenced by name (e.g. a `.` in a component name).
+        // Use the semantic the chain lands on; only flatten to a concrete value
+        // if no such reference exists.
         const ref = firstMappableRef(v, modeId, ctx);
         if (ref) {
           out[v.name] = ref;
@@ -384,6 +455,8 @@ function buildComponents(
             out[v.name] = resolved;
           } else if (typeof resolved === 'object' && resolved !== null && 'r' in resolved) {
             out[v.name] = rgbToHex(resolved as RGB);
+          } else {
+            exportWarnings.push(`${v.name} → alias chain did not resolve; token skipped`);
           }
         }
       }
@@ -398,38 +471,108 @@ function buildComponents(
 }
 
 /**
- * Shadow effect styles. Geometry lives in Figma Effect Styles (not variables),
- * so this reads `getLocalEffectStylesAsync()` directly. Only DROP_SHADOW and
- * INNER_SHADOW layers are kept — background-blur and glass map to
- * `backdrop-filter`, not `box-shadow`, so styles with only those layers are
- * dropped. Each kept layer records its bound `shadow/color *` variable name so
- * the CSS transform can reference it (and inherit light/dark for free).
+ * Effect styles → ordered layer lists. Shadow layers record their bound
+ * `shadow/color *` variable so the CSS can reference it (and inherit light/dark);
+ * background/layer blurs keep their Figma radius (the CSS transform halves it,
+ * like Figma's own CSS export); Figma's Glass effect keeps its raw parameters
+ * for the CSS approximation (backdrop blur + saturation + edge).
  */
-async function buildEffects(ctx: BuildContext): Promise<Record<string, EffectShadowLayer[]>> {
-  const out: Record<string, EffectShadowLayer[]> = {};
+async function buildEffects(ctx: BuildContext): Promise<Record<string, EffectLayer[]>> {
+  const out: Record<string, EffectLayer[]> = {};
   const styles = await figma.getLocalEffectStylesAsync();
 
   for (const s of styles) {
-    const layers: EffectShadowLayer[] = [];
-    for (const e of s.effects) {
-      if (e.type !== 'DROP_SHADOW' && e.type !== 'INNER_SHADOW') continue;
-      const layer: EffectShadowLayer = {
-        inset: e.type === 'INNER_SHADOW',
-        x: e.offset.x,
-        y: e.offset.y,
-        blur: e.radius,
-        spread: e.spread ?? 0,
-      };
-      const bound = e.boundVariables?.color;
-      const target = bound?.id ? ctx.varsById.get(bound.id) : undefined;
-      if (target) {
-        layer.colorVar = target.name;
-      } else if (e.color) {
-        layer.color = rgbToHex(e.color as RGB);
+    const layers: EffectLayer[] = [];
+    for (const e of s.effects as readonly (Effect | { type: 'GLASS'; [k: string]: unknown })[]) {
+      if (e.visible === false) continue;
+      if (e.type === 'DROP_SHADOW' || e.type === 'INNER_SHADOW') {
+        const layer: EffectShadowLayer = {
+          inset: e.type === 'INNER_SHADOW',
+          x: round(e.offset.x),
+          y: round(e.offset.y),
+          blur: round(e.radius),
+          spread: round(e.spread ?? 0),
+        };
+        const bound = e.boundVariables?.color;
+        const target = bound?.id ? ctx.varsById.get(bound.id) : undefined;
+        if (target) {
+          layer.colorVar = target.name;
+        } else if (e.color) {
+          layer.color = rgbToHex(e.color as RGB);
+        }
+        layers.push(layer);
+      } else if (e.type === 'BACKGROUND_BLUR' || e.type === 'LAYER_BLUR') {
+        layers.push({
+          type: 'blur',
+          backdrop: e.type === 'BACKGROUND_BLUR',
+          radius: round(e.radius),
+        });
+      } else if (e.type === 'GLASS') {
+        const g = e as unknown as Record<string, number>;
+        layers.push({
+          type: 'glass',
+          radius: round(g.radius ?? 0),
+          refraction: round(g.refraction ?? 0),
+          depth: round(g.depth ?? 0),
+          lightAngle: round(g.lightAngle ?? 0),
+          lightIntensity: round(g.lightIntensity ?? 0),
+          dispersion: round(g.dispersion ?? 0),
+          splay: round(g.splay ?? 0),
+        });
       }
-      layers.push(layer);
     }
     if (layers.length > 0) out[s.name] = layers;
+  }
+
+  return out;
+}
+
+const WEIGHT_BY_STYLE: Record<string, number> = {
+  Thin: 100,
+  'Extra Light': 200,
+  Light: 300,
+  Regular: 400,
+  Medium: 500,
+  'Semi Bold': 600,
+  Bold: 700,
+  'Extra Bold': 800,
+  Black: 900,
+};
+
+/**
+ * Text styles → composite typography tokens. Family and size come from the
+ * bound variables (references, so a family swap in Figma reaches the code);
+ * weight, line height (%) and letter spacing (%) live on the style itself.
+ */
+async function buildTypography(ctx: BuildContext): Promise<Record<string, TypographyStyle>> {
+  const out: Record<string, TypographyStyle> = {};
+  const styles = await figma.getLocalTextStylesAsync();
+
+  const refFor = (alias: VariableAlias | undefined, fallback: string | number): string | number => {
+    const target = alias?.id ? ctx.varsById.get(alias.id) : undefined;
+    if (!target) return fallback;
+    return aliasReference(target) ?? fallback;
+  };
+
+  for (const s of styles) {
+    const bound = (s.boundVariables ?? {}) as Partial<Record<string, VariableAlias>>;
+    const wght = (s.fontName as FontName & { variationSettings?: { wght?: number } })
+      .variationSettings?.wght;
+    const lh = s.lineHeight;
+    const ls = s.letterSpacing;
+    out[s.name] = {
+      fontFamily: String(refFor(bound.fontFamily, s.fontName.family)),
+      fontSize: refFor(bound.fontSize, round(s.fontSize)),
+      fontWeight: wght ?? WEIGHT_BY_STYLE[s.fontName.style] ?? 400,
+      lineHeight:
+        lh.unit === 'AUTO'
+          ? 'normal'
+          : lh.unit === 'PERCENT'
+            ? `${round(lh.value, 2)}%`
+            : round(lh.value, 2),
+      letterSpacing: ls.unit === 'PERCENT' ? `${round(ls.value, 2)}%` : round(ls.value, 2),
+      leadingTrim: s.leadingTrim === 'CAP_HEIGHT' ? 'cap-height' : 'none',
+    };
   }
 
   return out;
@@ -443,6 +586,26 @@ export async function buildTokensFile(): Promise<TokensFile> {
     for (const vid of col.variableIds) {
       const v = await figma.variables.getVariableByIdAsync(vid);
       if (v) varsById.set(v.id, v);
+    }
+  }
+
+  // Alias targets missing from every collection: load them so chains still
+  // resolve, and record a warning per token that points at one.
+  detachedIds.clear();
+  exportWarnings.length = 0;
+  for (const v of [...varsById.values()]) {
+    for (const raw of Object.values(v.valuesByMode)) {
+      if (!isAlias(raw) || varsById.has(raw.id)) continue;
+      const target = await figma.variables.getVariableByIdAsync(raw.id);
+      if (!target) {
+        exportWarnings.push(`${v.name} → missing variable (${raw.id}); token skipped`);
+        continue;
+      }
+      varsById.set(target.id, target);
+      detachedIds.add(target.id);
+      exportWarnings.push(
+        `${v.name} → "${target.name}" is in no collection (deleted?); exported as its value`,
+      );
     }
   }
 
@@ -482,7 +645,7 @@ export async function buildTokensFile(): Promise<TokensFile> {
   };
 
   return {
-    $version: '0.3.0',
+    $version: '0.4.0',
     $description: `Auto-generated by @max-core/figma-plugin on ${new Date().toISOString()}`,
     primitives: buildPrimitives(primCol, primMode, colCol, lightMode, ctx),
     semantics: buildSemantics(semCol, semMode, ctx),
@@ -491,6 +654,7 @@ export async function buildTokensFile(): Promise<TokensFile> {
       dark: buildColors(colCol, darkMode, ctx),
     },
     components: buildComponents(compCol, compMode, ctx),
+    typography: await buildTypography(ctx),
     effects: await buildEffects(ctx),
   };
 }
@@ -501,6 +665,7 @@ export interface ExportCounts {
   light: number;
   dark: number;
   components: number;
+  typography: number;
   effects: number;
 }
 
@@ -518,6 +683,7 @@ export function countTokens(tokens: TokensFile): ExportCounts {
     light: Object.keys(tokens.colors.light).length,
     dark: Object.keys(tokens.colors.dark).length,
     components: tokens.components ? Object.keys(tokens.components).length : 0,
+    typography: tokens.typography ? Object.keys(tokens.typography).length : 0,
     effects: tokens.effects ? Object.keys(tokens.effects).length : 0,
   };
 }

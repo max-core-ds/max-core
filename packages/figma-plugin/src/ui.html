@@ -93,7 +93,7 @@
       statusEl.classList.toggle('error', !!isError);
     }
 
-    function triggerDownload(payload, counts) {
+    function triggerDownload(payload, counts, warnings) {
       const json = JSON.stringify(payload, null, 2);
       const blob = new Blob([json], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
@@ -111,7 +111,11 @@
         '  ' + counts.light + ' light colors\n' +
         '  ' + counts.dark + ' dark colors\n' +
         '  ' + counts.components + ' components\n' +
-        '  ' + counts.effects + ' shadow effects';
+        '  ' + counts.typography + ' text styles\n' +
+        '  ' + counts.effects + ' effect styles' +
+        (warnings && warnings.length
+          ? '\n\n⚠ ' + warnings.length + ' warning(s):\n  ' + warnings.join('\n  ')
+          : '');
       setStatus(summary, false);
       exportBtn.disabled = false;
     }
@@ -130,7 +134,7 @@
       const msg = event.data && event.data.pluginMessage;
       if (!msg) return;
       if (msg.type === 'tokens') {
-        triggerDownload(msg.payload, msg.counts);
+        triggerDownload(msg.payload, msg.counts, msg.warnings);
       } else if (msg.type === 'status') {
         setStatus(msg.text);
       } else if (msg.type === 'error') {

@@ -14,6 +14,7 @@
  * features it does not implement (e.g. an avatar status dot), with a reason.
  */
 
+import { componentVarName } from './transform.js';
 import type { TokensFile } from './types.js';
 
 /** Semantic groups we hold code accountable for binding. */
@@ -42,6 +43,14 @@ export interface ComponentSpec {
   prefixes: string[];
   /** Vars intentionally not bound — pair each with a reason in the caller. */
   exempt?: string[];
+  /**
+   * `semantic` (default): the pre-Phase 4.7 rule — the component binds the
+   * semantic vars its Figma tokens resolve to. `component`: migrated in its
+   * Phase 4.7 pass — it binds its OWN component vars
+   * (`--buttons-global-size-s-padding`), so a Figma rebind reaches it with no
+   * code change. `exempt` then lists component var names.
+   */
+  mode?: 'semantic' | 'component';
 }
 
 export interface DriftResult {
@@ -54,6 +63,23 @@ export interface DriftResult {
   ok: boolean;
 }
 
+/**
+ * Follow `{components.<name>}` references (since v0.4.0 a level-4 token keeps
+ * its alias to the level-3 one) down to the first non-component value, so the
+ * check still sees the semantic the chain lands on.
+ */
+export function followComponentRefs(value: unknown, comps: Record<string, unknown>): unknown {
+  const seen = new Set<string>();
+  let cur = value;
+  while (typeof cur === 'string' && cur.startsWith('{components.') && cur.endsWith('}')) {
+    const name = cur.slice('{components.'.length, -1);
+    if (seen.has(name)) return null;
+    seen.add(name);
+    cur = comps[name];
+  }
+  return cur;
+}
+
 /** Collect the mandated dimensional vars for one component from the tokens file. */
 export function specVarsFor(tokens: TokensFile, spec: ComponentSpec): Set<string> {
   const comps = tokens.components ?? {};
@@ -61,7 +87,7 @@ export function specVarsFor(tokens: TokensFile, spec: ComponentSpec): Set<string
   for (const [rawKey, value] of Object.entries(comps)) {
     const key = rawKey.replace(/^--\s*/, '');
     if (!spec.prefixes.some((p) => key.startsWith(p))) continue;
-    const v = refToVar(value);
+    const v = refToVar(followComponentRefs(value, comps));
     if (v) out.add(v);
   }
   return out;
@@ -76,11 +102,60 @@ export function boundVarsIn(source: string): Set<string> {
   return out;
 }
 
+/** Every custom property the source reads: `var(--x)`, Tailwind `p-(--x)`, `[--x]`. */
+export function usedVarsIn(source: string): Set<string> {
+  const out = new Set<string>();
+  for (const m of source.matchAll(/(?:var\(|[a-z]-\(|\[)(--[a-zA-Z0-9-]+)[,)\]]/g)) {
+    if (m[1]) out.add(m[1]);
+  }
+  return out;
+}
+
+/** Custom properties the source defines itself: `[--x:…]`, `'--x': …`, `setProperty('--x'`. */
+export function localVarsIn(source: string): Set<string> {
+  const out = new Set<string>();
+  for (const m of source.matchAll(
+    /\[(--[a-zA-Z0-9-]+):|['"](--[a-zA-Z0-9-]+)['"]\s*[:,\]]|setProperty\(\s*['"](--[a-zA-Z0-9-]+)/g,
+  )) {
+    const name = m[1] ?? m[2] ?? m[3];
+    if (name) out.add(name);
+  }
+  return out;
+}
+
+/** Runtime vars set by libraries (Base UI positioning / drawer, Tailwind internals). */
+export const LIBRARY_VAR_PREFIXES = ['--anchor-', '--available-', '--transform-origin', '--drawer-', '--tw-'];
+
+/** Every custom property a stylesheet defines (`--x:`). */
+export function definedVarsIn(css: string): Set<string> {
+  return new Set([...css.matchAll(/(--[a-zA-Z0-9-]+)\s*:/g)].map((m) => m[1]!));
+}
+
+/** Component-mode spec: the component's own var names, one per owned token. */
+export function componentSpecVars(tokens: TokensFile, spec: ComponentSpec): Set<string> {
+  const out = new Set<string>();
+  for (const rawKey of Object.keys(tokens.components ?? {})) {
+    const key = rawKey.replace(/^--\s*/, '');
+    if (spec.prefixes.some((p) => key.startsWith(p))) out.add(componentVarName(rawKey));
+  }
+  return out;
+}
+
 export function checkComponent(
   tokens: TokensFile,
   spec: ComponentSpec,
   source: string,
 ): DriftResult {
+  if (spec.mode === 'component') {
+    const specVars = componentSpecVars(tokens, spec);
+    const used = usedVarsIn(source);
+    const exempt = new Set(spec.exempt ?? []);
+    const missing = [...specVars].filter((v) => !used.has(v) && !exempt.has(v)).sort();
+    // A migrated component should size itself through its own tokens; a raw
+    // semantic dimension var is reported (not failed) so it can be reviewed.
+    const extra = [...boundVarsIn(source)].sort();
+    return { name: spec.name, missing, extra, spec: [...specVars].sort(), ok: missing.length === 0 };
+  }
   const specVars = specVarsFor(tokens, spec);
   const bound = boundVarsIn(source);
   const exempt = new Set(spec.exempt ?? []);

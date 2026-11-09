@@ -9,14 +9,16 @@
  * [data-theme="dark"] CSS variable scopes. */
 @import '@max-core/tokens/tokens.css';
 
+/* Tailwind layer generated from the same tokens: type-* / glass-* utilities,
+   font-sans / font-brand, shadow-* / ease-* names, breakpoints. */
+@import '@max-core/tokens/theme.css';
+
 html,
 body {
   background-color: var(--bg-default);
   color: var(--text-primary);
-  font-family:
-    'Inter',
-    system-ui,
-    sans-serif;
+  /* The Figma font family (`- Typeface family -/base`), with its fallback stack. */
+  font-family: var(--typeface-family-base);
   min-height: 100vh;
 }
 

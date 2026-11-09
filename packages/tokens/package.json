@@ -1,10 +1,11 @@
 {
   "name": "@max-core/tokens",
   "version": "0.0.0",
-  "description": "Max Core design tokens — JSON source of truth and CSS variable generator",
+  "description": "Max Core design tokens \u2014 JSON source of truth and CSS variable generator",
   "type": "module",
   "exports": {
     "./tokens.css": "./dist/tokens.css",
+    "./theme.css": "./dist/theme.css",
     "./scrollbar.css": "./dist/scrollbar.css",
     "./tokens.json": "./src/tokens.json",
     "./types": "./src/types.ts",
