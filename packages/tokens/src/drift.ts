@@ -65,12 +65,16 @@ const SPECS: ComponentSpec[] = [
   {
     name: 'Tag',
     source: 'components/Tag/Tag.tsx',
-    prefixes: ['Atoms/Tag'],
+    mode: 'component', // Phase 4.7
+    // Its per-size tokens (they alias Global/*).
+    prefixes: ['Atoms/Tag/S', 'Atoms/Tag/M'],
   },
   {
     name: 'Badge',
     source: 'components/Badge/Badge.tsx',
-    prefixes: ['Atoms/Badge'],
+    mode: 'component', // Phase 4.7
+    // Its per-size tokens (they alias Global/*).
+    prefixes: ['Atoms/Badge/S', 'Atoms/Badge/M', 'Atoms/Badge/L'],
   },
   {
     name: 'Input (Base)',

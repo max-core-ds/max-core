@@ -792,6 +792,14 @@ The output goes to the scratchpad and fixes the exact name→path mappings below
 > item hug 42 / 26 exactly as the master (a CSS border made it 44); active item stroke bound to
 > Item/Border Weight.
 
+> **Batch 3 — Tag + Badge ✅:** own per-size component vars (Tag S Min Height now its token —
+> clears that drift failure); labels Caption/300 in a cap-trimmed span. Badge renders 23 / 27 / 31
+> = the master's 21 / 25 / 29 frame + its OUTSIDE 1px stroke (was 28 / 32 / 36). Tag's stroke is
+> INSIDE, so the border width comes out of the padding (`calc`): exactly 28 / 32 with or without
+> icons. Default-tone labels → `text/accent` (Tag Primary-off was `accent/active`, Ghost + Badge
+> Outline/Ghost `accent/default`); Badge Outline border → `border/accent`; Tag hover / pressed
+> overlay opacities → `- opacity -/hover` / `/pressed`.
+
 > **Notes for Max — round 2 (collected during 4.7):**
 > - Form Group premade: `Size L/Padding` → `- Spacing -/40` and `Size S/M/L/Content Width` →
 >   `- Size -/288/392/480` alias variables that are in no collection (deleted?) — recreate or rebind.
@@ -799,8 +807,9 @@ The output goes to the scratchpad and fixes the exact name→path mappings below
 > - `glass/elevated` drop shadow colour is raw black 12%, not a token.
 > - Button Link, Default tone: Hover / Pressed now stay `text/accent` (status tones still step
 >   default → hover → active) — side effect of the `accent/*` → `text/accent` sweep? Code follows Figma.
-> - Danger Primary (Button / Icon Only / Split): `text/on-accent` on dark `status/danger/default`
->   = 2.90:1 (needs 4.5) — the danger ramp needs the same fix the accent ramp got.
+> - Status ramps in dark mode: `text/on-accent` on dark `status/*/default` — danger 2.90, success
+>   2.08, warning 1.91 (needs 4.5). Hits Danger Primary buttons (Button / Icon Only / Split) and the
+>   Selected status Tags — the status ramps need the same fix the accent ramp got.
 > - Radio Default unchecked **Hover** still binds `accent/hover` (now primary/700 — reads as
 >   checked); round-1 rule says `accent/surface`. Code follows the rule.
 > - Radio dot `accent/default` on dark `bg/surface` = 2.33:1 (non-text needs 3:1) since dark
