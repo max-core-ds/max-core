@@ -3,24 +3,30 @@
 import { Toggle } from '@base-ui/react/toggle';
 import { ToggleGroup } from '@base-ui/react/toggle-group';
 import type { ReactNode } from 'react';
+import { capTrim } from '../../utils/cap-trim.js';
 import { cn } from '../../utils/cn.js';
 import { focusRing } from '../../utils/focus-ring.js';
 import { useControllableState } from '../../utils/use-controllable-state.js';
 
 // Single-select segmented control on Base UI ToggleGroup (multiple defaults to
-// false). Container/item radius, padding and gap match -- Atoms/Segmented Control/*.
+// false). Radius, padding, gap and border weight are its own Figma tokens
+// (-- Atoms/Segmented Control/Main/* and Item/*). Strokes are Figma INSIDE
+// strokes, drawn as inset rings so they never add to the hugged size (42 / 26).
 const groupStyles =
-  'inline-flex items-center gap-[var(--spacing-16)] rounded-[var(--radius-full)] ' +
-  'border border-[var(--border-default)] bg-[var(--bg-subtle)] p-[var(--spacing-08)]';
+  'inline-flex items-center gap-(--segmented-control-main-gap) rounded-(--segmented-control-main-radius) ' +
+  'inset-ring-(length:--segmented-control-main-border-weight) inset-ring-[var(--border-default)] ' +
+  'bg-[var(--bg-subtle)] p-(--segmented-control-main-padding)';
 
-// Active item = accent/default fill + text/on-accent label (no shadow), matching
-// the Figma showcase — not the iOS-style white surface pill. Label Body/SM/300.
-// Inactive text/secondary on the bg/subtle container is 3.86:1 (light) — below
-// AA, kept to match Figma by decision (Phase 4.5 audit); flagged to the designer.
+// Active item = accent/default fill + text/on-accent label + a `border/default`
+// stroke at Item/Border Weight (none today), no shadow. Label Body/SM/300 in a
+// cap-trimmed span, so an item is Padding + cap height + Padding (26px) as the
+// master. Inactive label text/secondary. Item gap (icon ↔ label) = Item/Padding,
+// as the master binds it.
 const itemStyles = cn(
-  'inline-flex items-center gap-[var(--spacing-08)] rounded-[var(--radius-full)] border-0 ' +
-    'p-[var(--spacing-08)] text-sm font-light text-[var(--text-secondary)] transition-colors ' +
-    'data-[pressed]:bg-[var(--accent-default)] data-[pressed]:text-[var(--text-on-accent)] ' +
+  'inline-flex items-center gap-(--segmented-control-item-padding) rounded-(--segmented-control-item-radius) ' +
+    'inset-ring-(length:--segmented-control-item-border-weight) inset-ring-transparent ' +
+    'p-(--segmented-control-item-padding) type-body-sm-300 text-[var(--text-secondary)] transition-colors ' +
+    'data-[pressed]:inset-ring-[var(--border-default)] data-[pressed]:bg-[var(--accent-default)] data-[pressed]:text-[var(--text-on-accent)] ' +
     '[&_svg]:size-[var(--size-20)] ' +
     'disabled:pointer-events-none disabled:opacity-[var(--opacity-disabled)]',
   focusRing,
@@ -67,7 +73,7 @@ export function SegmentedControl({
       {items.map((item) => (
         <Toggle key={item.value} value={item.value} disabled={item.disabled} className={itemStyles}>
           {item.icon}
-          {item.label}
+          <span className={capTrim}>{item.label}</span>
         </Toggle>
       ))}
     </ToggleGroup>

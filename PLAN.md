@@ -784,6 +784,14 @@ The output goes to the scratchpad and fixes the exact name→path mappings below
 > (`accent/hover` / `accent/active`, no state layer); Link Default tone flat `text/accent` (as the
 > master); shared focus ring reads `focus/width` / `focus/offset`.
 
+> **Batch 2 — Selection Controls + Segmented Control ✅ (Checkbox, Radio, Switch, Segmented):**
+> own component vars (drift component mode); labels Body/SM/300 on all three wrappers (Switch was
+> Body/MD), helpers Caption/300, cap-trimmed; unchecked Hover/Pressed = light tints
+> (`accent/surface` / `accent/subtle` + `border/accent`; status validations keep their subtle
+> fill); Switch Pressed knob stroke `border/accent`; Segmented strokes as inset rings so the bar /
+> item hug 42 / 26 exactly as the master (a CSS border made it 44); active item stroke bound to
+> Item/Border Weight.
+
 > **Notes for Max — round 2 (collected during 4.7):**
 > - Form Group premade: `Size L/Padding` → `- Spacing -/40` and `Size S/M/L/Content Width` →
 >   `- Size -/288/392/480` alias variables that are in no collection (deleted?) — recreate or rebind.
@@ -793,6 +801,10 @@ The output goes to the scratchpad and fixes the exact name→path mappings below
 >   default → hover → active) — side effect of the `accent/*` → `text/accent` sweep? Code follows Figma.
 > - Danger Primary (Button / Icon Only / Split): `text/on-accent` on dark `status/danger/default`
 >   = 2.90:1 (needs 4.5) — the danger ramp needs the same fix the accent ramp got.
+> - Radio Default unchecked **Hover** still binds `accent/hover` (now primary/700 — reads as
+>   checked); round-1 rule says `accent/surface`. Code follows the rule.
+> - Radio dot `accent/default` on dark `bg/surface` = 2.33:1 (non-text needs 3:1) since dark
+>   `accent/default` moved to primary/600.
 **The recipe, applied per component, in tier order (Atoms → Molecules → Organisms):**
 1. **Tokens:** replace semantic refs with the component's own vars: `px-[var(--spacing-06)]` → `px-(--buttons-global-size-s-padding)`. The shared utils (`utils/field.ts`, `state-layer.ts`, `tone.ts`, `focus-ring.ts`, `tooltip-surface.ts`) take per-component vars where they size things.
 2. **Type:** replace `text-xs font-bold leading-…` with the matching `type-*` utility (cap-trim comes with it; this absorbs the old Phase 5). Re-measure padding-hugged parts against Figma (Tabs, Badge, Segmented, Toast).

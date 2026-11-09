@@ -7,24 +7,24 @@ import { cn } from '../../utils/cn.js';
 import { focusRing } from '../../utils/focus-ring.js';
 import { type Validation, checkboxValidation } from '../../utils/validation.js';
 
-// Box size from Selection Control/Global/Size (16/24); radius xs; border thin.
-// Color comes from the Validation axis (Default/Error/Warning/Success). A
-// <label> wraps the button so clicking the text/helper toggles it.
+// Box size = Selection Control/Global/Size S|M; Radius + Border Weight = the
+// Checkbox's own tokens. Color comes from the Validation axis
+// (Default/Error/Warning/Success). A <label> wraps the button so clicking the
+// text/helper toggles it.
 const boxStyles = cva(
   [
     'inline-flex shrink-0 items-center justify-center',
-    'rounded-[var(--radius-xs)] border',
+    'rounded-(--selection-control-checkbox-radius)',
+    'border-solid border-(length:--selection-control-checkbox-border-weight)',
     'text-[var(--text-on-accent)] transition-colors',
     focusRing,
     'data-[disabled]:pointer-events-none data-[disabled]:opacity-[var(--opacity-disabled)]',
   ],
   {
     variants: {
-      // The Checkbox Figma size token aliases to Spacing (not Size) — bind
-      // spacing-16/24 to stay conformant with the token spec.
       size: {
-        s: 'size-[var(--spacing-16)]',
-        m: 'size-[var(--spacing-24)]',
+        s: 'size-(--selection-control-global-size-s)',
+        m: 'size-(--selection-control-global-size-m)',
       },
       validation: checkboxValidation,
     },
@@ -76,23 +76,23 @@ export function Checkbox({
     // biome-ignore lint/a11y/noLabelWithoutControl: wraps the Base UI checkbox button (a labelable control)
     <label
       className={cn(
-        'inline-flex cursor-pointer items-start gap-[var(--spacing-08)] p-[var(--spacing-04)]',
+        'inline-flex cursor-pointer items-start gap-(--selection-control-checkbox-checkbox-gap) p-(--selection-control-global-padding)',
         className,
       )}
     >
       {box}
-      {/* Label Body/SM/300; helper/error Caption/300 (helper in text/secondary).
-          The control is top-aligned with the label (Figma centres it — deliberate). */}
-      <span className="flex flex-col gap-[var(--spacing-06)]">
+      {/* Label Body/SM/300; helper/error Caption/300 (helper in text/secondary),
+          cap-trimmed by the type-* utilities. The control is top-aligned with the label. */}
+      <span className="flex flex-col gap-(--selection-control-checkbox-text-gap)">
         {label ? (
-          <span className="text-sm font-light text-[var(--text-primary)]">{label}</span>
+          <span className="type-body-sm-300 text-[var(--text-primary)]">{label}</span>
         ) : null}
         {errorMessage ? (
-          <span id={descId} className="text-xs font-light text-[var(--status-danger-default)]">
+          <span id={descId} className="type-caption-300 text-[var(--status-danger-default)]">
             {errorMessage}
           </span>
         ) : helperText ? (
-          <span id={descId} className="text-xs font-light text-[var(--text-secondary)]">
+          <span id={descId} className="type-caption-300 text-[var(--text-secondary)]">
             {helperText}
           </span>
         ) : null}
@@ -111,8 +111,9 @@ export function CheckboxMark() {
     <span
       aria-hidden="true"
       className={cn(
-        'inline-flex size-[var(--spacing-16)] shrink-0 items-center justify-center',
-        'rounded-[var(--radius-xs)] border border-[var(--border-default)] bg-[var(--bg-default)] text-[var(--text-on-accent)]',
+        'inline-flex size-(--selection-control-global-size-s) shrink-0 items-center justify-center',
+        'rounded-(--selection-control-checkbox-radius) border-solid border-(length:--selection-control-checkbox-border-weight)',
+        'border-[var(--border-default)] bg-[var(--bg-default)] text-[var(--text-on-accent)]',
         'group-data-[selected]/option:border-[var(--border-accent)] group-data-[selected]/option:bg-[var(--accent-default)]',
       )}
     >

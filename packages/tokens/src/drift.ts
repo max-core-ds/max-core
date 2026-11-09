@@ -182,28 +182,41 @@ const SPECS: ComponentSpec[] = [
     prefixes: ['Atoms/Content Blocks'],
   },
   // --- Batch 3: Selection & interaction ---
-  // Checkbox owns the shared Selection Control Global tokens (size boxes, text
-  // gap, padding); Radio/Switch check only their dedicated prefixes.
+  // Each control binds its own tokens plus the Global box sizes / wrapper padding.
   {
     name: 'Checkbox',
     source: 'components/Checkbox/Checkbox.tsx',
-    prefixes: ['Atoms/Selection Control/Checkbox', 'Atoms/Selection Control/Global'],
-    exempt: ['--spacing-08'], // Global/Item Gap — group-level (CheckboxGroup), not a single control
+    mode: 'component', // Phase 4.7
+    // Its own tokens + the Global sizes / padding it uses directly (Global
+    // Text Gap / Item Gap / Border Weight are reached through its own aliases).
+    prefixes: [
+      'Atoms/Selection Control/Checkbox',
+      'Atoms/Selection Control/Global/Size',
+      'Atoms/Selection Control/Global/Padding',
+    ],
   },
   {
     name: 'Radio',
     source: 'components/Radio/Radio.tsx',
-    prefixes: ['Atoms/Selection Control/Radio Button'],
-    exempt: ['--radius-xs'], // Focus Radius — the ring follows the circular box, no rounded-xs square
+    mode: 'component', // Phase 4.7
+    prefixes: [
+      'Atoms/Selection Control/Radio Button',
+      'Atoms/Selection Control/Global/Size',
+      'Atoms/Selection Control/Global/Padding',
+    ],
+    // Focus Radius — the ring follows the circular box, no rounded-xs square
+    exempt: ['--selection-control-radio-button-focus-radius'],
   },
   {
     name: 'Switch',
     source: 'components/Switch/Switch.tsx',
-    prefixes: ['Atoms/Selection Control/Switch'],
+    mode: 'component', // Phase 4.7
+    prefixes: ['Atoms/Selection Control/Switch', 'Atoms/Selection Control/Global/Padding'],
   },
   {
     name: 'Segmented Control',
     source: 'components/SegmentedControl/SegmentedControl.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Atoms/Segmented Control'],
   },
   {
