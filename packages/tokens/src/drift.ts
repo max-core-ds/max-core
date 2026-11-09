@@ -95,7 +95,14 @@ const SPECS: ComponentSpec[] = [
   {
     name: 'Spinner',
     source: 'components/Spinner/Spinner.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Atoms/Spinner'],
+    exempt: [
+      // Bound to strokes with no paint in Figma — they never render. The ring
+      // follows the master's rendered donut geometry instead (flagged to Max).
+      '--spinner-track-stroke',
+      '--spinner-indicator-stroke',
+    ],
   },
   {
     name: 'Icon Only Button',
@@ -137,23 +144,31 @@ const SPECS: ComponentSpec[] = [
   {
     name: 'Divider',
     source: 'components/Divider/Divider.tsx',
-    prefixes: ['Atoms/Divider'], // only a border-weight token — nothing dimensional to check
+    mode: 'component', // Phase 4.7
+    prefixes: ['Atoms/Divider'],
   },
   {
     name: 'Progress Bar',
     // Track heights + radius live in the shared util (also used by Range).
     source: ['components/ProgressBar/ProgressBar.tsx', 'utils/progress.ts'],
+    mode: 'component', // Phase 4.7
     prefixes: ['Atoms/Progress Bar'],
+    exempt: [
+      '--progress-bar-global-border-weight', // none: the track has no visible stroke
+      '--progress-bar-global-radius', // reached through Size */Radius
+    ],
   },
   {
     name: 'Tooltip',
     // Padding/radius/arrow-radius live in the shared bubble util (also used by Range).
     source: ['components/Tooltip/Tooltip.tsx', 'utils/tooltip-surface.ts'],
+    mode: 'component', // Phase 4.7
     prefixes: ['Atoms/Tooltip'],
   },
   {
     name: 'Knob',
     source: 'components/Knob/Knob.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Atoms/Knob'],
   },
   {
@@ -164,6 +179,7 @@ const SPECS: ComponentSpec[] = [
   {
     name: 'ScrollBar',
     source: 'components/ScrollBar/ScrollBar.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Atoms/Scroll Bar'],
   },
   {
@@ -178,6 +194,7 @@ const SPECS: ComponentSpec[] = [
   {
     name: 'Status Dot',
     source: 'components/StatusDot/StatusDot.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Atoms/Status Dot'], // within-avatar sizes live under Atoms/Avatar
   },
   {

@@ -3,28 +3,28 @@ import { cn } from '../../utils/cn.js';
 
 // Minimal scroll-position indicator matching -- Atoms/Scroll Bar (Figma):
 // a transparent track (4px padding all sides) holding a rounded thumb —
-// 4px wide, 24px tall, accent/subtle fill, fully rounded. Standalone atom,
+// 4px wide, 24px tall, neutral/subtle fill, fully rounded (-- Atoms/Scroll Bar/*). Standalone atom,
 // no variants/states/focus. Decorative by default (aria-hidden); the real
 // scroll region owns the semantics.
 //
 // Standalone (default): the thumb is a fixed 24px pill — a static accent.
 // Driven: pass `thumbSize`/`thumbOffset` (px) and the atom becomes a full-length
 // rail with an absolutely-positioned thumb a parent can move from scroll metrics
-// (see ScrollArea). Both keep the same 4px accent/subtle rounded look.
-const trackClass = 'inline-flex shrink-0 p-[var(--spacing-04)]';
+// (see ScrollArea). Both keep the same 4px neutral/subtle rounded look.
+const trackClass = 'inline-flex shrink-0 p-(--scroll-bar-padding)';
 const thumbClass =
-  'block w-[var(--spacing-04)] h-[var(--size-24)] rounded-[var(--radius-full)] bg-[var(--accent-subtle)]';
+  'block w-(--scroll-bar-thumb-width) h-(--scroll-bar-thumb-height) rounded-(--scroll-bar-radius) bg-(--neutral-subtle)';
 
 // Driven rail: the same 4px padding on every side as the standalone track (so
 // the cross axis is 4 + 4 + 4 = 12px and the thumb stops 4px short of either
 // end), around an inner lane the thumb is positioned in via inline style from
 // the parent. Vertical grows full height; horizontal grows full width.
-const railClass = 'relative shrink-0 p-[var(--spacing-04)]';
+const railClass = 'relative shrink-0 p-(--scroll-bar-padding)';
 const laneClass = {
-  vertical: 'relative block h-full w-[var(--spacing-04)]',
-  horizontal: 'relative block w-full h-[var(--spacing-04)]',
+  vertical: 'relative block h-full w-(--scroll-bar-thumb-width)',
+  horizontal: 'relative block w-full h-(--scroll-bar-thumb-width)',
 } as const;
-const railThumbBaseClass = 'absolute rounded-[var(--radius-full)] bg-[var(--accent-subtle)]';
+const railThumbBaseClass = 'absolute rounded-(--scroll-bar-radius) bg-(--neutral-subtle)';
 const railThumbCrossClass = {
   vertical: 'inset-x-0 top-0',
   horizontal: 'inset-y-0 left-0',

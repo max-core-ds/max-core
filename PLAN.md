@@ -800,6 +800,16 @@ The output goes to the scratchpad and fixes the exact name→path mappings below
 > Outline/Ghost `accent/default`); Badge Outline border → `border/accent`; Tag hover / pressed
 > overlay opacities → `- opacity -/hover` / `/pressed`.
 
+> **Batch 4 — small atoms ✅:** Tooltip (+ Range bubble, shared util), Divider, Spinner,
+> Progress Bar (+ Range track, shared util), Knob, ScrollBar, Status Dot on their own component
+> vars, all drift `component` mode. Tooltip bubble → `type-caption-300` (cap-trim unchanged, 41px);
+> Progress range labels + Spinner % → `type-*` + cap-trim span. Max's changes: Spinner Inverse %
+> label → `text/on-accent`; ScrollBar thumb → `neutral/subtle` (atom, rail, and the
+> `.styled-scrollbar` utility; its hover → `neutral/active`); Knob pressed ring width →
+> `- Border Weight -/thin`; Progress fill radius follows the per-size track radius. Exempt with
+> reasons: Spinner Track/Indicator Stroke (never render), Progress Global Border Weight (none) +
+> Global Radius (reached via Size */Radius). Contrast unchanged (12/34, none in this batch).
+
 > **Notes for Max — round 2 (collected during 4.7):**
 > - Form Group premade: `Size L/Padding` → `- Spacing -/40` and `Size S/M/L/Content Width` →
 >   `- Size -/288/392/480` alias variables that are in no collection (deleted?) — recreate or rebind.

@@ -10,15 +10,15 @@ import { cn } from '../../utils/cn.js';
 // is proportional because the bar's constraints are SCALE. Percentages resolve
 // against the padding box, so the stroke is added back to measure the whole dot.
 const statusDotStyles = cva(
-  'relative inline-block shrink-0 rounded-full border-solid border-[length:var(--border-weight-thin)] size-[var(--size-8)] border-[var(--border-muted)]',
+  'relative inline-block shrink-0 rounded-full border-solid border-(length:--status-dot-border-weight) size-(--status-dot-size) border-(--border-muted)',
   {
     variants: {
       status: {
-        default: 'bg-[var(--status-success-default)]',
-        busy: 'bg-[var(--status-danger-default)]',
-        away: 'bg-[var(--status-warning-default)]',
-        dnd: "bg-[var(--status-danger-border)] after:absolute after:top-1/2 after:left-1/2 after:h-[calc((100%+2*var(--border-weight-thin))*0.27)] after:w-[calc((100%+2*var(--border-weight-thin))*0.64)] after:-translate-1/2 after:bg-[var(--bg-surface)] after:content-['']",
-        offline: 'border-[var(--border-hover)] bg-[var(--bg-surface)]',
+        default: 'bg-(--status-success-default)',
+        busy: 'bg-(--status-danger-default)',
+        away: 'bg-(--status-warning-default)',
+        dnd: "bg-[var(--status-danger-border)] after:absolute after:top-1/2 after:left-1/2 after:h-[calc((100%+2*var(--status-dot-border-weight))*0.27)] after:w-[calc((100%+2*var(--status-dot-border-weight))*0.64)] after:-translate-1/2 after:bg-(--bg-surface) after:content-['']",
+        offline: 'border-(--border-hover) bg-(--bg-surface)',
       },
     },
     defaultVariants: { status: 'default' },

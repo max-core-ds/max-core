@@ -2,6 +2,7 @@
 
 import { Progress } from '@base-ui/react/progress';
 import type { ComponentPropsWithoutRef } from 'react';
+import { capTrim } from '../../utils/cap-trim.js';
 import { cn } from '../../utils/cn.js';
 import { type ProgressSize, progressFill, progressTrack } from '../../utils/progress.js';
 
@@ -32,8 +33,8 @@ export function ProgressBar({
       value={value}
       min={min}
       max={max}
-      // Item Gaps (8px) between the track and the range labels.
-      className={cn('flex w-full flex-col gap-[var(--spacing-08)]', className)}
+      // Global/Item Gaps (8px) between the track and the range labels.
+      className={cn('flex w-full flex-col gap-(--progress-bar-global-item-gaps)', className)}
       {...rest}
     >
       <Progress.Track className={cn(progressTrack(size), 'overflow-hidden')}>
@@ -44,10 +45,10 @@ export function ProgressBar({
         // progressbar already exposes aria-valuemin/max.
         <div
           aria-hidden
-          className="flex justify-between gap-[var(--spacing-04)] text-xs font-light text-[var(--text-primary)]"
+          className="flex justify-between gap-(--spacing-04) type-caption-300 text-(--text-primary)"
         >
-          <span>{min}%</span>
-          <span>{max}%</span>
+          <span className={capTrim}>{min}%</span>
+          <span className={capTrim}>{max}%</span>
         </div>
       ) : null}
     </Progress.Root>

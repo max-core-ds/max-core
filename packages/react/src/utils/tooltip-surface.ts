@@ -4,19 +4,18 @@
  *
  * The tooltip is an INVERTED surface — a light `neutral/default` bubble with
  * dark `text/on-accent-muted` text — so it stands out from the page (~17:1
- * against bg/default, either mode). Padding, radius and arrow radius match
+ * against bg/default, either mode). Padding, radius and arrow radius are
  * -- Atoms/Tooltip/* (16 / md / xs). No shadow: the master has no effect.
  *
  * Figma's text styles use leading trim (cap height), so the 16px padding runs
  * from the cap top / baseline: the master bubble is 16 + 9 + 16 = 41 tall.
- * `text-box: trim-both cap alphabetic` is the CSS equivalent (browsers without
- * it fall back to the full 15.6px line box, about 7px taller). Caption is 130%.
+ * `type-caption-300` carries the CSS equivalent (`text-box: trim-both cap
+ * alphabetic`; browsers without it fall back to the full 15.6px line box).
  */
 // `relative` so an absolutely-positioned arrow anchors to the bubble.
 export const tooltipBubble =
-  'relative rounded-[var(--radius-md)] bg-[var(--neutral-default)] p-[var(--spacing-16)] ' +
-  'text-xs leading-[1.3] font-light text-[var(--text-on-accent-muted)] outline-none ' +
-  '[text-box:trim-both_cap_alphabetic]';
+  'relative rounded-(--tooltip-radius) bg-(--neutral-default) p-(--tooltip-padding) ' +
+  'type-caption-300 text-(--text-on-accent-muted) outline-none';
 
 // The arrow: an SVG triangle pointing down (away from a bubble above its
 // trigger), 16 wide at the bubble edge × 12 deep, matching the visible part of
@@ -28,7 +27,7 @@ export const tooltipBubble =
 // adds the perpendicular offset and rotation (see the Tooltip component's
 // data-side classes, or the Range bubble's manual placement).
 export const tooltipArrow =
-  'block h-[var(--spacing-12)] w-[var(--size-16)] fill-[var(--neutral-default)] ' +
-  'stroke-[var(--neutral-default)] [stroke-linejoin:round] [stroke-width:calc(var(--radius-xs)*2)]';
+  'block h-(--spacing-12) w-(--size-16) fill-(--neutral-default) ' +
+  'stroke-(--neutral-default) [stroke-linejoin:round] [stroke-width:calc(var(--tooltip-arrow-radius)*2)]';
 export const TOOLTIP_ARROW_VIEWBOX = '0 0 16 12';
 export const TOOLTIP_ARROW_PATH = 'M2 0H14L8 10Z';

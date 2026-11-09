@@ -1,8 +1,9 @@
 import { type VariantProps, cva } from 'class-variance-authority';
 import type { ComponentPropsWithoutRef } from 'react';
+import { capTrim } from '../../utils/cap-trim.js';
 import { cn } from '../../utils/cn.js';
 
-// Sizes match -- Atoms/Spinner/Size */Size (16/20/24/48). A full Track ring plus
+// Sizes are -- Atoms/Spinner/Size */Size (16/20/24/48). A full Track ring plus
 // a quarter Indicator arc that spins, per the Figma Style columns:
 //   brand (Brand)      accent/subtle track    · accent/default arc
 //   neutral (Neutral)  neutral/subtle track   · neutral/active arc
@@ -23,10 +24,10 @@ const RING = {
 const spinnerStyles = cva('relative inline-grid shrink-0 place-items-center', {
   variants: {
     size: {
-      s: 'size-[var(--size-16)]',
-      m: 'size-[var(--size-20)]',
-      l: 'size-[var(--size-24)]',
-      xl: 'size-[var(--size-48)]',
+      s: 'size-(--spinner-size-s-size-s)',
+      m: 'size-(--spinner-size-m-size)',
+      l: 'size-(--spinner-size-l-size)',
+      xl: 'size-(--spinner-size-xl-size)',
     },
   },
   defaultVariants: { size: 'm' },
@@ -34,12 +35,22 @@ const spinnerStyles = cva('relative inline-grid shrink-0 place-items-center', {
 
 // Fully-written literals (Tailwind must see them verbatim).
 const toneStroke = {
-  brand: { track: 'stroke-[var(--accent-subtle)]', indicator: 'stroke-[var(--accent-default)]' },
-  neutral: {
-    track: 'stroke-[var(--neutral-subtle)]',
-    indicator: 'stroke-[var(--neutral-active)]',
+  brand: {
+    track: 'stroke-(--accent-subtle)',
+    indicator: 'stroke-(--accent-default)',
+    label: 'text-(--text-primary)',
   },
-  inverse: { track: 'stroke-[var(--text-on-accent)]', indicator: 'stroke-[var(--accent-active)]' },
+  neutral: {
+    track: 'stroke-(--neutral-subtle)',
+    indicator: 'stroke-(--neutral-active)',
+    label: 'text-(--text-primary)',
+  },
+  // The % label sits on an accent background, like the track: text/on-accent.
+  inverse: {
+    track: 'stroke-(--text-on-accent)',
+    indicator: 'stroke-(--accent-active)',
+    label: 'text-(--text-on-accent)',
+  },
 } as const;
 
 type SpinnerTone = keyof typeof toneStroke;
@@ -113,7 +124,13 @@ export function Spinner({
         />
       </svg>
       {percent != null ? (
-        <span className="col-start-1 row-start-1 text-sm font-bold text-[var(--text-primary)] tabular-nums">
+        <span
+          className={cn(
+            'col-start-1 row-start-1 type-body-sm-700 tabular-nums',
+            capTrim,
+            stroke.label,
+          )}
+        >
           {percent}%
         </span>
       ) : null}

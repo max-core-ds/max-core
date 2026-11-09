@@ -6,13 +6,13 @@ import type { ComponentPropsWithoutRef } from 'react';
 import { cn } from '../../utils/cn.js';
 
 // Hairline in border/default, as thick as -- Atoms/Divider/Border Weight
-// (→ border-weight.thin, 1px). Figma only draws the horizontal line; vertical is
+// (--divider-border-weight → border-weight.thin, 1px). Figma only draws the horizontal line; vertical is
 // the same line rotated, for toolbars and inline groups (stretches in a flex row).
-const dividerStyles = cva(['shrink-0 border-0 bg-[var(--border-default)]'], {
+const dividerStyles = cva(['shrink-0 border-0 bg-(--border-default)'], {
   variants: {
     orientation: {
-      horizontal: 'h-[var(--border-weight-thin)] w-full',
-      vertical: 'w-[var(--border-weight-thin)] self-stretch',
+      horizontal: 'h-(--divider-border-weight) w-full',
+      vertical: 'w-(--divider-border-weight) self-stretch',
     },
   },
   defaultVariants: { orientation: 'horizontal' },
