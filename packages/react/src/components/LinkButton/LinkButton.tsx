@@ -3,33 +3,32 @@
 import { Button as BaseButton } from '@base-ui/react/button';
 import { type VariantProps, cva } from 'class-variance-authority';
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import { capTrim } from '../../utils/cap-trim.js';
 import { cn } from '../../utils/cn.js';
 import { focusRing } from '../../utils/focus-ring.js';
 
 // A button that reads as a text link. No state-layer/elevation — just color +
-// underline on hover. Gap/padding/icon size/focus radius match
-// -- Atoms/Buttons/Link Button/*. Focus radius is `sm` (the element is `rounded-sm`
-// so the outset focus ring follows it). Label uses Body/MD/300 (Light, 16px).
-// Figma: 4 States (Default, Focused, Hover, Pressed) × 4 Tones + Disabled —
-// each tone shifts through default → hover → active across the states.
+// underline on hover. Gap / Padding / Icon Size / Focus Radius are its own Figma
+// tokens -- Atoms/Buttons/Link Button/* (the element takes the Focus Radius so the
+// outset focus ring follows it). Label: Body/MD/300.
+// Figma: States Default / Hover / Pressed × 4 Tones + Disabled (opacity only,
+// keeps the tone colour). The status tones walk default → hover → active; the
+// Default tone stays `text/accent` in every state (round-1 Figma change).
 const linkButtonStyles = cva(
   [
     'relative inline-flex items-center',
-    'gap-[var(--spacing-08)] p-[var(--spacing-04)]',
-    '[&_svg]:size-[var(--size-20)]',
-    'rounded-[var(--radius-sm)]',
-    'text-base font-light whitespace-nowrap',
+    'gap-(--buttons-link-button-gap) p-(--buttons-link-button-padding)',
+    '[&_svg]:size-(--buttons-link-button-icon-size)',
+    'rounded-(--buttons-link-button-focus-radius)',
+    'type-body-md-300 whitespace-nowrap',
     'transition-colors hover:underline',
     focusRing,
     'disabled:pointer-events-none disabled:no-underline disabled:opacity-[var(--opacity-disabled)]',
   ],
   {
-    // Each tone walks default → hover → active (Pressed) exactly as the Figma
-    // states do; `default` is the brand accent.
     variants: {
       tone: {
-        default:
-          'text-[var(--accent-default)] hover:text-[var(--accent-hover)] active:text-[var(--accent-active)]',
+        default: 'text-[var(--text-accent)]',
         danger:
           'text-[var(--status-danger-default)] hover:text-[var(--status-danger-hover)] active:text-[var(--status-danger-active)]',
         success:
@@ -65,7 +64,7 @@ export function LinkButton({
   return (
     <BaseButton className={cn(linkButtonStyles({ tone }), className)} {...rest}>
       {leftIcon}
-      {children}
+      {children != null && children !== false ? <span className={capTrim}>{children}</span> : null}
       {rightIcon}
     </BaseButton>
   );

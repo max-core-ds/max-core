@@ -110,7 +110,8 @@ export function extractPairings(source: string): Pairing[] {
 
 function pairFromLiteral(literal: string, seen: Set<string>, out: Pairing[]): void {
   // Both the arbitrary-value form `bg-[var(--x)]` and the v4 shorthand `bg-(--x)`.
-  const re = /(?:([a-z][a-z0-9-]*(?:\[[^\]]*\])?):)?(text|bg)-(?:\[var\((--[a-z0-9-]+)\)\]|\((--[a-z0-9-]+)\))/gi;
+  const re =
+    /(?:([a-z][a-z0-9-]*(?:\[[^\]]*\])?):)?(text|bg)-(?:\[var\((--[a-z0-9-]+)\)\]|\((--[a-z0-9-]+)\))/gi;
   const buckets = new Map<string, { fg: Set<string>; bg: Set<string> }>();
   for (const m of literal.matchAll(re)) {
     const state = m[1] ?? 'base';

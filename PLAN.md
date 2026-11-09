@@ -774,7 +774,25 @@ The output goes to the scratchpad and fixes the exact name→path mappings below
 
 ---
 
-# Phase 4.7 — One pass per component (55 files) — ⏳ NOT STARTED
+# Phase 4.7 — One pass per component (55 files) — 🔄 IN PROGRESS (2026-11-09)
+
+> **Batch 1 — Buttons ✅ (Button, Icon Only, Split, Link, FAB):** all five on their own component
+> vars (drift `mode: 'component'`); labels on `type-*` + a cap-trimmed label span
+> (`utils/cap-trim.ts`) — label boxes measure exactly as the masters (S 9px @ y 11.5 … XL 12px @ 22);
+> Link Button with icon 28px = master. Secondary/Ghost Default → `text/accent` (dark contrast
+> fixed); Primary/Secondary border widths bound to their tokens; FAB states = fill swaps
+> (`accent/hover` / `accent/active`, no state layer); Link Default tone flat `text/accent` (as the
+> master); shared focus ring reads `focus/width` / `focus/offset`.
+
+> **Notes for Max — round 2 (collected during 4.7):**
+> - Form Group premade: `Size L/Padding` → `- Spacing -/40` and `Size S/M/L/Content Width` →
+>   `- Size -/288/392/480` alias variables that are in no collection (deleted?) — recreate or rebind.
+> - `radius/focus/3xl` = 24 is smaller than `2xl` = 26 — typo?
+> - `glass/elevated` drop shadow colour is raw black 12%, not a token.
+> - Button Link, Default tone: Hover / Pressed now stay `text/accent` (status tones still step
+>   default → hover → active) — side effect of the `accent/*` → `text/accent` sweep? Code follows Figma.
+> - Danger Primary (Button / Icon Only / Split): `text/on-accent` on dark `status/danger/default`
+>   = 2.90:1 (needs 4.5) — the danger ramp needs the same fix the accent ramp got.
 **The recipe, applied per component, in tier order (Atoms → Molecules → Organisms):**
 1. **Tokens:** replace semantic refs with the component's own vars: `px-[var(--spacing-06)]` → `px-(--buttons-global-size-s-padding)`. The shared utils (`utils/field.ts`, `state-layer.ts`, `tone.ts`, `focus-ring.ts`, `tooltip-surface.ts`) take per-component vars where they size things.
 2. **Type:** replace `text-xs font-bold leading-…` with the matching `type-*` utility (cap-trim comes with it; this absorbs the old Phase 5). Re-measure padding-hugged parts against Figma (Tabs, Badge, Segmented, Toast).

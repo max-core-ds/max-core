@@ -102,10 +102,13 @@ export function boundVarsIn(source: string): Set<string> {
   return out;
 }
 
-/** Every custom property the source reads: `var(--x)`, Tailwind `p-(--x)`, `[--x]`. */
+/**
+ * Every custom property the source reads: `var(--x)`, Tailwind `p-(--x)`, the
+ * typed shorthand `border-(length:--x)`, `[--x]`.
+ */
 export function usedVarsIn(source: string): Set<string> {
   const out = new Set<string>();
-  for (const m of source.matchAll(/(?:var\(|[a-z]-\(|\[)(--[a-zA-Z0-9-]+)[,)\]]/g)) {
+  for (const m of source.matchAll(/(?:var\(|[a-z]-\((?:[a-z-]+:)?|\[)(--[a-zA-Z0-9-]+)[,)\]]/g)) {
     if (m[1]) out.add(m[1]);
   }
   return out;
@@ -124,7 +127,13 @@ export function localVarsIn(source: string): Set<string> {
 }
 
 /** Runtime vars set by libraries (Base UI positioning / drawer, Tailwind internals). */
-export const LIBRARY_VAR_PREFIXES = ['--anchor-', '--available-', '--transform-origin', '--drawer-', '--tw-'];
+export const LIBRARY_VAR_PREFIXES = [
+  '--anchor-',
+  '--available-',
+  '--transform-origin',
+  '--drawer-',
+  '--tw-',
+];
 
 /** Every custom property a stylesheet defines (`--x:`). */
 export function definedVarsIn(css: string): Set<string> {
@@ -154,7 +163,13 @@ export function checkComponent(
     // A migrated component should size itself through its own tokens; a raw
     // semantic dimension var is reported (not failed) so it can be reviewed.
     const extra = [...boundVarsIn(source)].sort();
-    return { name: spec.name, missing, extra, spec: [...specVars].sort(), ok: missing.length === 0 };
+    return {
+      name: spec.name,
+      missing,
+      extra,
+      spec: [...specVars].sort(),
+      ok: missing.length === 0,
+    };
   }
   const specVars = specVarsFor(tokens, spec);
   const bound = boundVarsIn(source);

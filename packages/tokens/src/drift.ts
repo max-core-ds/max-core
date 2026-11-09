@@ -43,7 +43,14 @@ const SPECS: ComponentSpec[] = [
   {
     name: 'Button (Standard)',
     source: 'components/Button/Button.tsx',
-    prefixes: ['Atoms/Buttons/Global'], // Fab / Pay / Link / Split are separate components
+    mode: 'component', // Phase 4.7
+    // Its own level-4 tokens (they alias Global/Size *) + the shared Global ones.
+    prefixes: [
+      'Atoms/Buttons/Standard Button',
+      'Atoms/Buttons/Global/Primary Border Width',
+      'Atoms/Buttons/Global/Secondary Border Width',
+      'Atoms/Buttons/Global/Standard Min Width',
+    ],
   },
   {
     name: 'Avatar',
@@ -89,32 +96,38 @@ const SPECS: ComponentSpec[] = [
   {
     name: 'Icon Only Button',
     source: 'components/IconOnlyButton/IconOnlyButton.tsx',
-    prefixes: ['Atoms/Buttons/Global'],
-    exempt: [
-      // Padding X and Gap are Standard Button tokens; the icon button is square
-      // with a centered icon and no horizontal padding/gap.
-      '--spacing-06',
-      '--spacing-08',
-      '--spacing-10',
-      '--spacing-12',
-      '--spacing-14',
-      '--spacing-16',
+    mode: 'component', // Phase 4.7
+    prefixes: [
+      'Atoms/Buttons/Icon Only',
+      'Atoms/Buttons/Global/Primary Border Width',
+      'Atoms/Buttons/Global/Secondary Border Width',
     ],
   },
   {
     name: 'Link Button',
     source: 'components/LinkButton/LinkButton.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Atoms/Buttons/Link Button'],
   },
   {
     name: 'Split Button',
     source: 'components/SplitButton/SplitButton.tsx',
-    prefixes: ['Atoms/Buttons/Split Button'],
+    mode: 'component', // Phase 4.7
+    prefixes: [
+      'Atoms/Buttons/Split Button',
+      'Atoms/Buttons/Global/Primary Border Width',
+      'Atoms/Buttons/Global/Secondary Border Width',
+    ],
   },
   {
     name: 'FAB',
     source: 'components/Fab/Fab.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Atoms/Buttons/Fab'],
+    exempt: [
+      '--buttons-fab-border-width', // none, and the master has no stroke to size
+      '--buttons-fab-global-radius', // reached through Main/<size>/Radius + Menu/Item Radius
+    ],
   },
   // --- Batch 2: Display atoms ---
   {
@@ -427,7 +440,8 @@ const local = new Set(sources.flatMap(([, s]) => [...localVarsIn(s)]));
 const unknown: string[] = [];
 for (const [file, src] of sources) {
   for (const v of usedVarsIn(src)) {
-    if (defined.has(v) || local.has(v) || LIBRARY_VAR_PREFIXES.some((p) => v.startsWith(p))) continue;
+    if (defined.has(v) || local.has(v) || LIBRARY_VAR_PREFIXES.some((p) => v.startsWith(p)))
+      continue;
     unknown.push(`${v}  (${file.slice(reactSrc.length + 1)})`);
   }
 }

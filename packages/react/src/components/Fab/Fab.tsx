@@ -14,16 +14,17 @@ import { cn } from '../../utils/cn.js';
 import { focusRing } from '../../utils/focus-ring.js';
 import { elevatePress, stateLayer } from '../../utils/state-layer.js';
 
-// Circular floating action button. Main sizes/icon sizes and the speed-dial
-// menu dimensions match -- Atoms/Buttons/Fab/*.
+// Circular floating action button. Every dimension is its own Figma token
+// (-- Atoms/Buttons/Fab/Main/<size>/*, Fab/Menu/*, Fab/Expandable Gap).
+// States are fill swaps, as the master: Hover `accent/hover`, Pressed
+// `accent/active`, Disabled = the Default look at `- opacity -/disabled`.
 const mainStyles = cva(
   [
     'relative isolate inline-flex items-center justify-center',
-    'rounded-[var(--radius-full)]',
     'bg-[var(--accent-default)] text-[var(--text-on-accent)]',
+    'hover:bg-[var(--accent-hover)] active:bg-[var(--accent-active)]',
     'shadow-[var(--effect-shadow-down-md)]',
     'transition',
-    stateLayer,
     elevatePress,
     focusRing,
     'disabled:pointer-events-none disabled:opacity-[var(--opacity-disabled)]',
@@ -31,9 +32,9 @@ const mainStyles = cva(
   {
     variants: {
       size: {
-        s: 'size-[var(--size-40)] [&_svg]:size-[var(--size-20)]',
-        m: 'size-[var(--size-56)] [&_svg]:size-[var(--size-32)]',
-        xl: 'size-[var(--size-64)] [&_svg]:size-[var(--size-32)]',
+        s: 'size-(--buttons-fab-main-s-size) rounded-(--buttons-fab-main-s-radius) [&_svg]:size-(--buttons-fab-main-s-icon-size)',
+        m: 'size-(--buttons-fab-main-m-size) rounded-(--buttons-fab-main-m-radius) [&_svg]:size-(--buttons-fab-main-m-icon-size)',
+        xl: 'size-(--buttons-fab-main-xl-size) rounded-(--buttons-fab-main-xl-radius) [&_svg]:size-(--buttons-fab-main-xl-icon-size)',
       },
     },
     defaultVariants: { size: 'm' },
@@ -43,19 +44,19 @@ const mainStyles = cva(
 // Speed-dial action button — fixed Item Size / Item Icon Size. Figma: an accent
 // circle with an on-accent icon and shadow/down/md, like the main button.
 const itemStyles = cn(
-  'relative isolate inline-flex size-[var(--size-40)] items-center justify-center',
-  'rounded-[var(--radius-full)] bg-[var(--accent-default)] text-[var(--text-on-accent)]',
-  'shadow-[var(--effect-shadow-down-md)] [&_svg]:size-[var(--size-20)]',
+  'relative isolate inline-flex size-(--buttons-fab-menu-item-size) items-center justify-center',
+  'rounded-(--buttons-fab-menu-item-radius) bg-[var(--accent-default)] text-[var(--text-on-accent)]',
+  'shadow-[var(--effect-shadow-down-md)] [&_svg]:size-(--buttons-fab-menu-item-icon-size)',
   'transition',
   stateLayer,
   focusRing,
 );
 
-// Item label: Caption/700 on bg/surface, no shadow. Figma binds the primitive
-// Palette/neutral/500; text/secondary is its mode-aware equivalent.
+// Item label: Caption/700 `text/secondary` on bg/surface, no shadow.
 const labelStyles =
-  'rounded-[var(--radius-md)] bg-[var(--bg-surface)] px-[var(--spacing-08)] py-[var(--spacing-04)] ' +
-  'text-xs font-bold text-[var(--text-secondary)]';
+  'rounded-(--buttons-fab-menu-label-radius) bg-[var(--bg-surface)] ' +
+  'px-(--buttons-fab-menu-label-padding-x) py-(--buttons-fab-menu-label-padding-y) ' +
+  'type-caption-700 text-[var(--text-secondary)]';
 
 export interface FabAction {
   label: ReactNode;
@@ -100,10 +101,10 @@ export function Fab({ size = 'm', className, icon, onClick, actions, ...rest }: 
   }, [open]);
 
   return (
-    // Expandable Gap (main ↔ list) and List Gap (between items) are both 16.
+    // Expandable Gap (main ↔ list) and List Gap (between items).
     <div
       ref={rootRef}
-      className="relative inline-flex flex-col-reverse items-end gap-[var(--spacing-16)]"
+      className="relative inline-flex flex-col-reverse items-end gap-(--buttons-fab-expandable-gap)"
     >
       <BaseButton
         className={cn(mainStyles({ size }), className)}
@@ -115,11 +116,11 @@ export function Fab({ size = 'm', className, icon, onClick, actions, ...rest }: 
         {icon}
       </BaseButton>
       {hasMenu && open ? (
-        <ul id={menuId} className="flex flex-col-reverse gap-[var(--spacing-16)]">
+        <ul id={menuId} className="flex flex-col-reverse gap-(--buttons-fab-menu-list-gap)">
           {actions?.map((action, i) => (
-            // Item Gap (label ↔ button) = 8.
+            // Item Gap (label ↔ button).
             // biome-ignore lint/suspicious/noArrayIndexKey: actions are a static, ordered list
-            <li key={i} className="flex items-center justify-end gap-[var(--spacing-08)]">
+            <li key={i} className="flex items-center justify-end gap-(--buttons-fab-menu-item-gap)">
               {/* The label names the icon-only item button. */}
               <span id={`${id}-item-${i}`} className={labelStyles}>
                 {action.label}

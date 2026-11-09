@@ -13,7 +13,13 @@
  *     glass layers).
  */
 
-import type { EffectLayer, EffectShadowLayer, TokensFile, Tree, TypographyStyle } from '@max-core/tokens/types';
+import type {
+  EffectLayer,
+  EffectShadowLayer,
+  TokensFile,
+  Tree,
+  TypographyStyle,
+} from '@max-core/tokens/types';
 
 const PRIM_COLLECTION = 'Max Core - Primitives';
 const SEM_COLLECTION = 'Max Core - Semantics';
@@ -34,7 +40,15 @@ interface RGB {
 }
 
 /** Primitives groups exported through the generic name → path fallback. */
-const PRIMITIVE_ROOTS = new Set(['zIndex', 'motion', 'focus', 'grid', 'breakpoint', 'container', 'tapArea']);
+const PRIMITIVE_ROOTS = new Set([
+  'zIndex',
+  'motion',
+  'focus',
+  'grid',
+  'breakpoint',
+  'container',
+  'tapArea',
+]);
 
 /**
  * Ids of alias targets that resolve by id but are listed in no local collection
@@ -69,18 +83,17 @@ function stripLeadingZeros(s: string): string {
 
 function rgbToHex(c: RGB): string {
   const to = (n: number) =>
-    Math.round(n * 255).toString(16).padStart(2, '0').toUpperCase();
+    Math.round(n * 255)
+      .toString(16)
+      .padStart(2, '0')
+      .toUpperCase();
   let hex = `#${to(c.r)}${to(c.g)}${to(c.b)}`;
   if (c.a !== undefined && c.a < 1) hex += to(c.a);
   return hex;
 }
 
 function isAlias(v: unknown): v is VariableAlias {
-  return (
-    typeof v === 'object' &&
-    v !== null &&
-    (v as { type?: string }).type === 'VARIABLE_ALIAS'
-  );
+  return typeof v === 'object' && v !== null && (v as { type?: string }).type === 'VARIABLE_ALIAS';
 }
 
 function setPath(tree: Tree, segments: string[], value: unknown): void {
@@ -156,8 +169,10 @@ function figmaNameToTokenPath(name: string, valueHint?: number): string[] | null
   // Remaining primitives, generic: `text-size/size/xs` → text-size.xs,
   // `zIndex/dropdown` → z-index.dropdown, `motion/easing/in` → motion.easing.in,
   // `radius/focus/md` → radius-focus.md, `grid/margin/Desktop` → grid.margin.desktop.
-  if (name.startsWith('text-size/size/')) return ['primitives', 'text-size', slug(name.split('/')[2]!)];
-  if (name.startsWith('radius/focus/')) return ['primitives', 'radius-focus', slug(name.split('/')[2]!)];
+  if (name.startsWith('text-size/size/'))
+    return ['primitives', 'text-size', slug(name.split('/')[2]!)];
+  if (name.startsWith('radius/focus/'))
+    return ['primitives', 'radius-focus', slug(name.split('/')[2]!)];
   // Whitelisted by root so Colors names (`bg/surface`, `border/default`) never land here.
   if (PRIMITIVE_ROOTS.has(name.split('/')[0]!)) return ['primitives', ...name.split('/').map(slug)];
   return null;
@@ -280,7 +295,8 @@ function buildPrimitives(
         ? aliasReference(target, typeof targetRaw === 'number' ? targetRaw : undefined)
         : null;
       const value = ref ?? resolveLeaf(v, primMode, ctx);
-      if (typeof value === 'number' || typeof value === 'string') setPath(out, path.slice(1), value);
+      if (typeof value === 'number' || typeof value === 'string')
+        setPath(out, path.slice(1), value);
       continue;
     }
 
@@ -364,11 +380,7 @@ function buildSemantics(
  * (e.g. `bg/surface`, `status/danger/default`). Values are either alias paths
  * to primitives or literal hex strings.
  */
-function buildColors(
-  col: VariableCollection,
-  modeId: string,
-  ctx: BuildContext,
-): Tree {
+function buildColors(col: VariableCollection, modeId: string, ctx: BuildContext): Tree {
   const out: Tree = {};
 
   for (const vid of col.variableIds) {
@@ -419,11 +431,7 @@ function buildColors(
  * that reference (firstMappableRef); only chains that never reach a mappable
  * token fall back to the resolved leaf value (concrete number/hex).
  */
-function buildComponents(
-  col: VariableCollection,
-  modeId: string,
-  ctx: BuildContext,
-): Tree {
+function buildComponents(col: VariableCollection, modeId: string, ctx: BuildContext): Tree {
   const out: Tree = {};
 
   for (const vid of col.variableIds) {

@@ -9,13 +9,11 @@ import { elevatePress, stateLayer } from '../../utils/state-layer.js';
 import { statusBg, statusOutline, statusText, statusToneCompounds } from '../../utils/tone.js';
 
 // Square sibling of Button: same variant/tone system and shared interaction
-// primitives, but sized as a square (size = Standard Button Min Height) with a
-// centered icon and no horizontal padding. Sizes/icon sizes match
-// -- Atoms/Buttons/Global/Size */{Min Height,Icon Size}.
+// primitives, sized by its own Figma tokens -- Atoms/Buttons/Icon Only/<size>/*
+// (Height = width, Padding X/Y, Radius, Icon Size; they alias Global/Size <size>/*).
 const iconOnlyButtonStyles = cva(
   [
-    'relative isolate inline-flex items-center justify-center',
-    'rounded-[var(--radius-l)]',
+    'relative isolate inline-flex shrink-0 items-center justify-center',
     'transition',
     stateLayer,
     // Deliberate deviation: Figma's Icon Only Hover/Pressed are state-layer only
@@ -27,8 +25,10 @@ const iconOnlyButtonStyles = cva(
   {
     variants: {
       variant: {
-        primary: 'text-[var(--text-on-accent)]',
-        secondary: 'border bg-transparent text-[var(--text-primary)]',
+        primary:
+          'border-solid border-(length:--buttons-global-primary-border-width) border-[var(--border-default)] text-[var(--text-on-accent)]',
+        secondary:
+          'border-solid border-(length:--buttons-global-secondary-border-width) bg-transparent text-[var(--text-primary)]',
         ghost: 'bg-transparent text-[var(--text-primary)]',
       },
       tone: {
@@ -38,10 +38,10 @@ const iconOnlyButtonStyles = cva(
         warning: '',
       },
       size: {
-        s: 'size-[var(--size-32)] [&_svg]:size-[var(--size-20)]',
-        m: 'size-[var(--size-40)] [&_svg]:size-[var(--size-20)]',
-        l: 'size-[var(--size-48)] [&_svg]:size-[var(--size-24)]',
-        xl: 'size-[var(--size-56)] [&_svg]:size-[var(--size-28)]',
+        s: 'size-(--buttons-icon-only-s-height) px-(--buttons-icon-only-s-padding-x) py-(--buttons-icon-only-s-padding-y) rounded-(--buttons-icon-only-s-radius) [&_svg]:size-(--buttons-icon-only-s-icon-size)',
+        m: 'size-(--buttons-icon-only-m-height) px-(--buttons-icon-only-m-padding-x) py-(--buttons-icon-only-m-padding-y) rounded-(--buttons-icon-only-m-radius) [&_svg]:size-(--buttons-icon-only-m-icon-size)',
+        l: 'size-(--buttons-icon-only-l-height) px-(--buttons-icon-only-l-padding-x) py-(--buttons-icon-only-l-padding-y) rounded-(--buttons-icon-only-l-radius) [&_svg]:size-(--buttons-icon-only-l-icon-size)',
+        xl: 'size-(--buttons-icon-only-xl-height) px-(--buttons-icon-only-xl-padding-x) py-(--buttons-icon-only-xl-padding-y) rounded-(--buttons-icon-only-xl-radius) [&_svg]:size-(--buttons-icon-only-xl-icon-size)',
       },
     },
     compoundVariants: [
@@ -50,10 +50,10 @@ const iconOnlyButtonStyles = cva(
       {
         variant: 'secondary',
         tone: 'default',
-        class: 'border-[var(--border-accent)] text-[var(--accent-default)]',
+        class: 'border-[var(--border-accent)] text-[var(--text-accent)]',
       },
       ...statusToneCompounds('secondary', statusOutline),
-      { variant: 'ghost', tone: 'default', class: 'text-[var(--accent-default)]' },
+      { variant: 'ghost', tone: 'default', class: 'text-[var(--text-accent)]' },
       ...statusToneCompounds('ghost', statusText),
     ],
     defaultVariants: {

@@ -159,7 +159,11 @@ function formatValue(v: string | number, unit: 'px' | 'ms' | 'raw'): string {
   return `${v}${unit}`;
 }
 
-function walkLeaves(node: Tree, path: string[], visit: (path: string[], value: unknown) => void): void {
+function walkLeaves(
+  node: Tree,
+  path: string[],
+  visit: (path: string[], value: unknown) => void,
+): void {
   for (const [k, v] of Object.entries(node)) {
     if (v !== null && typeof v === 'object') walkLeaves(v as Tree, [...path, k], visit);
     else visit([...path, k], v);
@@ -242,7 +246,9 @@ function emitComponents(tokens: TokensFile, root: Tree, names: Set<string>): str
   const entries = Object.entries(comps);
   if (entries.length === 0) return '';
   const owner = new Map<string, string>();
-  const lines: string[] = [`  /* Components — ${entries.length} tokens (level 3/4), tier prefix dropped */`];
+  const lines: string[] = [
+    `  /* Components — ${entries.length} tokens (level 3/4), tier prefix dropped */`,
+  ];
   for (const [figmaName, value] of entries) {
     const name = componentVarName(figmaName);
     const clash = owner.get(name) ?? (names.has(name) ? '(another token group)' : undefined);
@@ -453,7 +459,10 @@ export function generateThemeCss(tokens: TokensFile): string {
     theme.push(`  --container-${slug(key)}: ${formatValue(resolve(value, root), 'px')};`);
   }
 
-  for (const [styleName, t] of Object.entries(tokens.typography ?? {}) as [string, TypographyStyle][]) {
+  for (const [styleName, t] of Object.entries(tokens.typography ?? {}) as [
+    string,
+    TypographyStyle,
+  ][]) {
     const s = typeStyleSlug(styleName);
     const v = `--type-${s}`;
     utilities.push(

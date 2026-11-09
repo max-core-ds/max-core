@@ -55,12 +55,13 @@ const matches = (p: Pairing, m: PairMatcher): boolean =>
 
 // Button family: the Primary fill lives in compoundVariants and the label colour
 // in `variant`, so they never share a class literal; Secondary/Ghost are
-// transparent and sit on the page surface. Declare the real pairings.
+// transparent and sit on the page surface (label `text/accent` since Phase 4.7).
+// Declare the real pairings.
 const buttonFamily: Override = {
   extra: [
     { state: 'primary', fgVar: '--text-on-accent', bgVar: '--accent-default' },
     { state: 'primary-danger', fgVar: '--text-on-accent', bgVar: '--status-danger-default' },
-    { state: 'secondary', fgVar: '--accent-default', bgVar: '--bg-surface' },
+    { state: 'secondary', fgVar: '--text-accent', bgVar: '--bg-surface' },
   ],
 };
 
