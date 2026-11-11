@@ -393,16 +393,28 @@ const SPECS: ComponentSpec[] = [
   {
     name: 'Top Bar',
     source: 'components/TopBar/TopBar.tsx',
-    prefixes: ['Organism/Top Bar'], // Background opacity is a {primitives.opacity} ref — auto-excluded
+    mode: 'component', // Phase 4.7
+    prefixes: ['Organism/Top Bar'],
+    exempt: [
+      // Global/* tokens React reaches through their Desktop / Mobile aliases.
+      '--top-bar-global-padding-x',
+      '--top-bar-global-padding-y',
+      '--top-bar-global-item-gap',
+      // Desktop / Mobile Border Weight alias Global/Border Weight, which the stroke binds.
+      '--top-bar-desktop-border-weight',
+      '--top-bar-mobile-border-weight',
+    ],
   },
   {
     name: 'Side Bar',
     source: 'components/SideBar/SideBar.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Organism/Side Bar'],
   },
   {
     name: 'Bottom Navigation',
     source: 'components/BottomNavigation/BottomNavigation.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Organism/Bottom Navigation Bar'],
   },
   {

@@ -899,9 +899,25 @@ The output goes to the scratchpad and fixes the exact name→path mappings below
 > sideOffset), Container Padding (weekday cells share the column), Sub Text Gap (no price label).
 > Contrast unchanged (11/34).
 >
-> **NEXT — Batch 10:** bars (Top Bar / Side Bar / Bottom Navigation) — ask first. Then Stacked
-> List / Stats Card / Data Table / Bottom Sheet; finish with the z-index sweep + motion note for
-> Max. Per batch: re-read `docs/figma-answers-round-1.md` for its components.
+> **Batch 10 — bars ✅ (Top Bar, Side Bar, Bottom Navigation):** all drift `component` mode.
+> Round 1 applied: every translucent surface is `bg/surface` at its Background opacity token
+> (`--top-bar-global-background-opacity`, `--side-bar-background-opacity`, via `color-mix`) +
+> `effect/blur/md` (`backdrop-blur-effect-md` = 12px; was `backdrop-blur-xl` 24) — Top Bar
+> Desktop + floating circles and Side Bar move off `bg/brand`, Side Bar gains the blur; Bottom
+> Navigation Items Gap + Dot Size; its Active content `text/accent` (was `accent/default`, too
+> dark in dark mode) → contrast **10/34** (BottomNavigation passes). Top Bar Desktop / Mobile
+> Padding X/Y + Item Gap (slots too), Global Radius + Border Weight on the inset stroke, Mobile
+> Radius + Icon Size; titles `type-h4` (floating) / `type-h5` (standard, capTrim span). Side Bar
+> Width Expanded / Collapsed, Gap, Padding, Expanded Padding (collapsed gap, as bound), Body
+> items gap, Radius, Border Weight. Bottom Navigation bar Padding (top gives back the INSIDE
+> stroke → 72), Radius, Border Weight; nav item Padding X/Y, Gap, Radius, Icon Size; label
+> `type-caption-300`. Measured: Desktop 88, Bottom Navigation 72 / items 56. Exempt: Top Bar
+> Global Padding / Item Gap (reached via the Desktop / Mobile aliases) and Desktop / Mobile
+> Border Weight (alias Global, which the stroke binds).
+>
+> **NEXT — Batch 11:** Stacked List / Stats Card / Data Table / Bottom Sheet — ask first; then
+> the z-index sweep + motion note for Max. Per batch: re-read `docs/figma-answers-round-1.md`
+> for its components.
 >
 > **Per-batch loop:** read the master's bindings (`use_figma`, read-only, file `sX5tik…`) + the
 > component's tokens in `packages/tokens/dist/tokens.css` → swap to component vars + `type-*` +

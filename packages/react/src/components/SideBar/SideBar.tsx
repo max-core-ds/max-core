@@ -6,25 +6,29 @@ import { cn } from '../../utils/cn.js';
 import { RailContext } from '../../utils/rail-context.js';
 import { useControllableState } from '../../utils/use-controllable-state.js';
 
-// Widths, gap, padding, radius match -- Organism/Side Bar/*. The shell is the
-// master's glass: bg/brand @ 20% (no blur, unlike the Top Bar) with a 1px OUTSIDE
-// stroke, a border/accent → border/focus gradient at 40%. On the long edges the
+// Width Expanded / Collapsed, Gap, Padding, Body items gap, Radius, Border Weight and
+// Background opacity are -- Organism/Side Bar/*. The shell is the master's glass:
+// bg/surface at Background opacity (20%) + effect/blur/md, as the Top Bar (Max, round
+// 1: was bg/brand, no blur) with a Border Weight OUTSIDE stroke, a border/accent →
+// border/focus gradient at 40%. On the long edges the
 // ramp runs ~40% → 97% (one palette step apart in light, identical in dark), so it
 // renders as border/focus; a spread shadow keeps it outside like Figma's stroke.
-// Collapsed: 24 top/bottom, no side padding, slot gap 16 (bound to Expanded Padding).
+// Collapsed: 24 top/bottom, no side padding, slot gap 16 (the master binds it to
+// Expanded Padding).
 // `overflow-hidden` keeps the collapsed rail from spilling sideways; the collapsed
 // state is broadcast to slotted items (ListItem/EntityItem/EntityCard) via
 // RailContext so they render icon-only.
 const sideBarStyles = cva(
   [
-    'flex h-full flex-col overflow-hidden rounded-[var(--radius-3xl)] bg-[var(--bg-brand)]/20',
-    'shadow-[0_0_0_var(--border-weight-thin)_color-mix(in_srgb,var(--border-focus)_40%,transparent)]',
+    'flex h-full flex-col overflow-hidden rounded-(--side-bar-radius) backdrop-blur-effect-md',
+    'bg-[color-mix(in_srgb,var(--bg-surface)_calc(var(--side-bar-background-opacity)*100%),transparent)]',
+    'shadow-[0_0_0_var(--side-bar-border-weight)_color-mix(in_srgb,var(--border-focus)_40%,transparent)]',
   ],
   {
     variants: {
       collapsed: {
-        true: 'w-[var(--size-64)] items-center gap-[var(--spacing-16)] py-[var(--spacing-24)]',
-        false: 'w-[var(--size-280)] gap-[var(--spacing-48)] p-[var(--spacing-16)]',
+        true: 'w-(--side-bar-width-collapsed) items-center gap-(--side-bar-expanded-padding) py-[var(--spacing-24)]',
+        false: 'w-(--side-bar-width-expanded) gap-(--side-bar-gap) p-(--side-bar-padding)',
       },
     },
     defaultVariants: { collapsed: false },
@@ -84,7 +88,7 @@ export function SideBar({
         {topBar ? (
           <div
             className={cn(
-              'flex w-full items-center gap-[var(--spacing-24)] px-[var(--spacing-16)]',
+              'flex w-full items-center gap-[var(--spacing-24)] px-(--side-bar-padding)',
               isCollapsed ? 'flex-col' : 'justify-between',
             )}
           >
@@ -102,7 +106,7 @@ export function SideBar({
             outset focus ring, which the scroll container would otherwise clip. */}
         <nav
           className={cn(
-            'styled-scrollbar -m-[var(--spacing-04)] flex min-h-0 flex-1 flex-col gap-[var(--spacing-24)] overflow-y-auto p-[var(--spacing-04)]',
+            'styled-scrollbar -m-[var(--spacing-04)] flex min-h-0 flex-1 flex-col gap-(--side-bar-body-items-gap) overflow-y-auto p-[var(--spacing-04)]',
             isCollapsed && 'items-center',
           )}
         >
