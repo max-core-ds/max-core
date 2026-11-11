@@ -137,3 +137,12 @@ Run them as separate commands (or echo each exit code): a chained `&& … | tail
   dev server restarts; don't restart the user's :6006, run a second one on :6007 for the check.
 - **Icons:** components inline lucide paths (no lucide dependency). Copy the exact lucide icon the
   master names (`li:check`, `li:map-pin-plus-inside` …), not a lookalike.
+
+## Helper scripts (Phase 4.7)
+
+Build Storybook statically (`cd apps/storybook && pnpm run build`), then from the repo root:
+
+- `node docs/audit/scripts/shots.mjs apps/storybook/storybook-static <outdir> <story-id>...` — light + dark PNGs per story.
+- `node docs/audit/scripts/measure.mjs apps/storybook/storybook-static "<story-id>|<css selector>"...` — size / padding / border / colour of the first 8 matches.
+
+Story ids are in `apps/storybook/storybook-static/index.json` (e.g. `atoms-list-item--default`). Playwright is picked up from the npx cache.

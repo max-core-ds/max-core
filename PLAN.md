@@ -774,7 +774,7 @@ The output goes to the scratchpad and fixes the exact name→path mappings below
 
 ---
 
-# Phase 4.7 — One pass per component (55 files) — 🔄 IN PROGRESS (2026-11-09)
+# Phase 4.7 — One pass per component (55 files) — 🔄 IN PROGRESS (2026-11-09; batches 1–5 = all Atoms done by 2026-11-11, `d1df222`)
 
 > **Batch 1 — Buttons ✅ (Button, Icon Only, Split, Link, FAB):** all five on their own component
 > vars (drift `mode: 'component'`); labels on `type-*` + a cap-trimmed label span
@@ -823,6 +823,22 @@ The output goes to the scratchpad and fixes the exact name→path mappings below
 > targets (master stacks cap-trimmed 9–12px rows) with the label trimmed and centred — deliberate.
 > Content Blocks: H6 / Body/SM/300. Contrast 12 → 11 (Time Picker selected now `text/accent`).
 > z-index tokens: sweep all `z-50` / `z-[…]` once at the end of 4.7 (9 sites).
+
+> **NEXT — Batch 6 (input molecules):** Input, Textarea, Bottom Line, Select, Multiselect, Stepper,
+> Search Bar (+ `utils/field.ts`). Clears the last drift failures (Input Base / Textarea / Bottom Line /
+> Select / Multiselect min sizes). Max's changes: hover → `border/hover`, placeholder text style per
+> size, Stepper title Body/MD/700, Bottom Line padding renamed `Padding X`, Multiselect chips = Badge
+> Default. Then (≈6 per batch, Molecules → Organisms): Toast / Dialog / Tabs / Pagination / Switcher /
+> Item List / Dropdown / Range / Entity Item+Card / Date Picker / Form Group / Card / bars / Stacked
+> List / Stats Card / Data Table / Bottom Sheet; finish with the z-index sweep + motion note for Max.
+>
+> **Per-batch loop:** read the master's bindings (`use_figma`, read-only, file `sX5tik…`) + the
+> component's tokens in `packages/tokens/dist/tokens.css` → swap to component vars + `type-*` +
+> `capTrim` (`utils/cap-trim.ts`) where a label must trim → spec to `mode: 'component'` in
+> `drift.ts` (exempt unused tokens with a reason) → gate: react typecheck + build, `pnpm -F
+> @max-core/tokens drift` + `contrast`, `cd apps/storybook && pnpm run build`, biome →
+> `docs/audit/scripts/{shots,measure}.mjs` against the static build → PLAN batch note → report,
+> wait for the user's go-ahead (commit only when asked).
 
 > **Notes for Max — round 2 (collected during 4.7):**
 > - Form Group premade: `Size L/Padding` → `- Spacing -/40` and `Size S/M/L/Content Width` →
