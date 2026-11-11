@@ -66,7 +66,16 @@ const actionTone = {
  *   const toast = useToast();
  *   toast.add({ title: 'Saved', type: 'success', actionProps: { children: 'Undo', onClick } });
  * `type: 'loading'` shows the XL spinner; pass `data: { progress }` (0–100) for its %.
+ * `data: { showDismiss: false }` hides the close button (Figma Show Dismiss, default on).
  */
+/** Max Core options read from a toast's `data`. */
+export interface ToastData {
+  /** Loading tone: progress 0–100 shown in the spinner. */
+  progress?: number;
+  /** Figma Show Dismiss — the close button (default true). */
+  showDismiss?: boolean;
+}
+
 export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <BaseToast.Provider>
@@ -84,7 +93,8 @@ function ToastList() {
   const { toasts } = BaseToast.useToastManager();
   return toasts.map((toast) => {
     const tone = toneOf(toast.type);
-    const progress = (toast.data as { progress?: unknown } | undefined)?.progress;
+    const data = toast.data as ToastData | undefined;
+    const progress = data?.progress;
     return (
       <BaseToast.Root key={toast.id} toast={toast} className={cn(toastStyles, toneBg[tone])}>
         {tone === 'loading' ? (
@@ -109,10 +119,12 @@ function ToastList() {
         </div>
         <BaseToast.Action render={<LinkButton tone={actionTone[tone]} />} className="shrink-0" />
         {/* Dismiss = Icon Only Button, Ghost / Default / S, as in the master. */}
-        <BaseToast.Close
-          className="shrink-0"
-          render={<IconOnlyButton aria-label="Close" variant="ghost" size="s" icon={<XIcon />} />}
-        />
+        {data?.showDismiss !== false ? (
+          <BaseToast.Close
+            className="shrink-0"
+            render={<IconOnlyButton aria-label="Close" variant="ghost" size="s" icon={<XIcon />} />}
+          />
+        ) : null}
       </BaseToast.Root>
     );
   });

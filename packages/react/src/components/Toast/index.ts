@@ -1,1 +1,1 @@
-export { ToastProvider, useToast } from './Toast.js';
+export { ToastProvider, useToast, type ToastData } from './Toast.js';

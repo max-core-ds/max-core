@@ -53,7 +53,7 @@ const itemsGap = {
 
 // Popup: the master's State=Active opens an Item List (Show search / Select all /
 // Divider off, ScrollBar on) 8px below the field (Items Gap), as wide as it, with
-// no shadow (decision 2026-10-24). Rows are List Items with a leading Radio S;
+// the Item List's shadow. Rows are List Items with a leading Radio S;
 // the dot marks the selected value.
 const listStyles =
   'w-[var(--anchor-width)] max-h-[min(var(--available-height),calc(var(--size-40)*6+var(--spacing-12)*2))]';

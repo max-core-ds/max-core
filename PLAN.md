@@ -875,6 +875,13 @@ The output goes to the scratchpad and fixes the exact name→path mappings below
 > Global (spec takes Global/Size/Premade-Global prefixes; Content Width exempt). Contrast
 > unchanged (11/34).
 >
+> **Round-1 catch-up (after Batch 8):** three of Max's round-1 answers missed in Batch 7 —
+> Item List carries `effect/shadow/down/md` (so every popup on it: Select, Multiselect,
+> Dropdown; reverses the 2026-10-24 no-shadow decision, user OK); Dialog + Bottom Sheet
+> backdrops on `overlay/scrim` (was `bg-black/50`); Toast `Show Dismiss` → `data: { showDismiss:
+> false }` (exported `ToastData`). Lesson: re-read `docs/figma-answers-round-1.md` for each
+> batch's components before closing it.
+>
 > **NEXT — Batch 9:** Date Picker / Card (clears the last drift red) — ask first. Then bars
 > (Top Bar / Side Bar / Bottom Navigation) / Stacked List / Stats Card / Data Table / Bottom
 > Sheet; finish with the z-index sweep + motion note for Max.

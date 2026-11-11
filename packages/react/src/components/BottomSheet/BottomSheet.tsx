@@ -73,7 +73,7 @@ export function BottomSheet({
       <Drawer.Portal>
         <Drawer.Backdrop
           className={cn(
-            'fixed inset-0 z-40 bg-black/50 transition-opacity duration-[450ms]',
+            'fixed inset-0 z-40 bg-[var(--overlay-scrim)] transition-opacity duration-[450ms]',
             'data-[starting-style]:opacity-0 data-[ending-style]:opacity-0 motion-reduce:transition-none',
           )}
         />

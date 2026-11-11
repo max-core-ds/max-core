@@ -79,7 +79,7 @@ export function Dialog({
     <BaseDialog.Root open={open} onOpenChange={onOpenChange}>
       {trigger ? <BaseDialog.Trigger render={trigger} /> : null}
       <BaseDialog.Portal>
-        <BaseDialog.Backdrop className="fixed inset-0 z-40 bg-black/50" />
+        <BaseDialog.Backdrop className="fixed inset-0 z-40 bg-[var(--overlay-scrim)]" />
         <BaseDialog.Popup className={cn(popupStyles, className)}>
           {displayIcon ? (
             <span

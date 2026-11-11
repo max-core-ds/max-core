@@ -126,7 +126,7 @@ export { EntityCard, type EntityCardProps } from './components/EntityCard/index.
 export { FormGroup, type FormGroupProps } from './components/FormGroup/index.js';
 export { BottomSheet, type BottomSheetProps } from './components/BottomSheet/index.js';
 export { Dialog, type DialogProps } from './components/Dialog/index.js';
-export { ToastProvider, useToast } from './components/Toast/index.js';
+export { ToastProvider, useToast, type ToastData } from './components/Toast/index.js';
 export { TopBar, type TopBarProps } from './components/TopBar/index.js';
 export {
   SideBar,

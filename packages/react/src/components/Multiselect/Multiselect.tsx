@@ -78,8 +78,8 @@ const chevronSize = {
   l: '[&_svg]:size-(--input-multiselect-size-l-icon-size)',
 } as const;
 
-// The popup is an Item List 8px below the field (Items Gap), as wide as it, no
-// shadow; rows are List Items with a leading Checkbox S. mode="list" (the
+// The popup is an Item List 8px below the field (Items Gap), as wide as it, with
+// the Item List's shadow; rows are List Items with a leading Checkbox S. mode="list" (the
 // master's State=Active) adds the Searchbar, Select all and Divider header;
 // typeahead filters from the field, so its list has no header.
 const listStyles =

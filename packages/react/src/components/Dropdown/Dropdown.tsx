@@ -11,8 +11,8 @@ import { listItemOption } from '../ListItem/ListItem.js';
 // sideOffset, since the positioner takes px), shown
 // while Active. The list is the Item List master (no search / Select all /
 // divider, ScrollBar on) holding List Item rows with a leading icon, so the
-// popup renders ItemList + the List Item row look (`listItemOption`); like the
-// Select popup it has no shadow. The list is at least as wide as the trigger:
+// popup renders ItemList + the List Item row look (`listItemOption`), with the
+// Item List's shadow. The list is at least as wide as the trigger:
 // the master's left-only Item List Padding (4) reads as a slip, not an offset.
 const listStyles =
   'min-w-[var(--anchor-width)] max-h-[var(--available-height)] text-[var(--text-primary)]';

@@ -14,7 +14,8 @@ import { SearchBar, type SearchBarProps } from '../SearchBar/SearchBar.js';
 // rail. Min Width, Radius, Border Weight, Container Padding Y, Search Padding X
 // and Gap are -- Molecule/Item List/*; the surface is bg/surface + border/default.
 // The rail sits flush at the right edge like the master's absolute ScrollBar.
-// No shadow, unlike the master (decision 2026-10-24).
+// effect/shadow/down/md as the master (Max, round 1: the floating list lifts) — so
+// every popup built on it (Select, Multiselect, Dropdown) carries it too.
 //
 // Deliberate deviations from the master (user request, 2026-10-24): the rows'
 // Gap (4) also insets the options area evenly on every side; that padding lives
@@ -24,6 +25,7 @@ import { SearchBar, type SearchBarProps } from '../SearchBar/SearchBar.js';
 const containerStyles = cn(
   'flex min-w-(--item-list-min-width) flex-col overflow-hidden',
   'rounded-(--item-list-radius) border-solid border-(length:--item-list-border-weight) border-[var(--border-default)] bg-[var(--bg-surface)]',
+  'shadow-[var(--effect-shadow-down-md)]',
 );
 
 const contentStyles = 'flex flex-col gap-(--item-list-gap) p-(--item-list-gap)';
