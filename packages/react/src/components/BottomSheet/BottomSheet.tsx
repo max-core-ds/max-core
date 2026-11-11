@@ -4,6 +4,7 @@ import { Drawer } from '@base-ui/react/drawer';
 import type { ReactElement, ReactNode } from 'react';
 import { CloseIcon } from '../../utils/close-button.js';
 import { cn } from '../../utils/cn.js';
+import { OverlayLayerProvider } from '../../utils/layer.js';
 import { Divider } from '../Divider/Divider.js';
 import { IconOnlyButton } from '../IconOnlyButton/IconOnlyButton.js';
 
@@ -76,11 +77,11 @@ export function BottomSheet({
       <Drawer.Portal>
         <Drawer.Backdrop
           className={cn(
-            'fixed inset-0 z-40 bg-[var(--overlay-scrim)] transition-opacity duration-[450ms]',
+            'fixed inset-0 z-(--z-index-drawer) bg-[var(--overlay-scrim)] transition-opacity duration-[450ms]',
             'data-[starting-style]:opacity-0 data-[ending-style]:opacity-0 motion-reduce:transition-none',
           )}
         />
-        <Drawer.Viewport className="fixed inset-0 z-50 flex items-end justify-center">
+        <Drawer.Viewport className="fixed inset-0 z-(--z-index-drawer) flex items-end justify-center">
           <Drawer.Popup
             className={cn(
               popupStyles,
@@ -89,45 +90,47 @@ export function BottomSheet({
               className,
             )}
           >
-            {handle ? (
-              <div
-                aria-hidden="true"
-                className="flex shrink-0 justify-center py-(--bottom-sheet-handle-padding)"
-              >
-                <div className="h-(--bottom-sheet-handle-height) w-(--bottom-sheet-handle-width) rounded-(--bottom-sheet-handle-radius) bg-[var(--bg-subtle)]" />
-              </div>
-            ) : null}
-            {title != null ? (
-              <div className="flex shrink-0 items-center justify-between gap-(--bottom-sheet-header-gap) px-(--bottom-sheet-padding-x)">
-                <Drawer.Title className="min-w-0 flex-1 type-h6 text-[var(--text-primary)]">
-                  {title}
-                </Drawer.Title>
-                {showClose ? (
-                  // Ghost S Icon Only Button, as the master (round 1).
-                  <Drawer.Close
-                    render={
-                      <IconOnlyButton
-                        aria-label={closeLabel}
-                        variant="ghost"
-                        size="s"
-                        icon={<CloseIcon />}
-                      />
-                    }
-                  />
-                ) : null}
-              </div>
-            ) : null}
-            {children != null ? (
-              <Drawer.Content className="flex min-h-0 flex-1 flex-col gap-(--bottom-sheet-content-gap) overflow-y-auto">
-                {children}
-              </Drawer.Content>
-            ) : null}
-            {footer != null ? <Divider className="shrink-0" /> : null}
-            {footer != null ? (
-              <div className="grid shrink-0 grid-flow-col auto-cols-[minmax(0,1fr)] items-center gap-(--bottom-sheet-content-gap) px-(--bottom-sheet-padding-x)">
-                {footer}
-              </div>
-            ) : null}
+            <OverlayLayerProvider value="drawer">
+              {handle ? (
+                <div
+                  aria-hidden="true"
+                  className="flex shrink-0 justify-center py-(--bottom-sheet-handle-padding)"
+                >
+                  <div className="h-(--bottom-sheet-handle-height) w-(--bottom-sheet-handle-width) rounded-(--bottom-sheet-handle-radius) bg-[var(--bg-subtle)]" />
+                </div>
+              ) : null}
+              {title != null ? (
+                <div className="flex shrink-0 items-center justify-between gap-(--bottom-sheet-header-gap) px-(--bottom-sheet-padding-x)">
+                  <Drawer.Title className="min-w-0 flex-1 type-h6 text-[var(--text-primary)]">
+                    {title}
+                  </Drawer.Title>
+                  {showClose ? (
+                    // Ghost S Icon Only Button, as the master (round 1).
+                    <Drawer.Close
+                      render={
+                        <IconOnlyButton
+                          aria-label={closeLabel}
+                          variant="ghost"
+                          size="s"
+                          icon={<CloseIcon />}
+                        />
+                      }
+                    />
+                  ) : null}
+                </div>
+              ) : null}
+              {children != null ? (
+                <Drawer.Content className="flex min-h-0 flex-1 flex-col gap-(--bottom-sheet-content-gap) overflow-y-auto">
+                  {children}
+                </Drawer.Content>
+              ) : null}
+              {footer != null ? <Divider className="shrink-0" /> : null}
+              {footer != null ? (
+                <div className="grid shrink-0 grid-flow-col auto-cols-[minmax(0,1fr)] items-center gap-(--bottom-sheet-content-gap) px-(--bottom-sheet-padding-x)">
+                  {footer}
+                </div>
+              ) : null}
+            </OverlayLayerProvider>
           </Drawer.Popup>
         </Drawer.Viewport>
       </Drawer.Portal>

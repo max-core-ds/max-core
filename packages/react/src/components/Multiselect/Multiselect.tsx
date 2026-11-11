@@ -18,6 +18,7 @@ import {
   fieldRoot,
 } from '../../utils/field.js';
 import { useFormGroupSize } from '../../utils/form-group-size.js';
+import { useFloatingZIndex } from '../../utils/layer.js';
 import { useControllableState } from '../../utils/use-controllable-state.js';
 import { CheckboxMark } from '../Checkbox/Checkbox.js';
 import { ItemList } from '../ItemList/ItemList.js';
@@ -127,6 +128,7 @@ export function Multiselect({
   className,
   ...rest
 }: MultiselectProps) {
+  const floatingZ = useFloatingZIndex('dropdown');
   const size = useFormGroupSize(sizeProp);
   const isInvalid = Boolean(errorMessage);
   const isList = mode === 'list';
@@ -261,7 +263,11 @@ export function Multiselect({
         <Combobox.Portal>
           {/* Both modes open an Item List 8px below the field (Items Gap); the
               typeahead one has no header — the field itself is the search. */}
-          <Combobox.Positioner anchor={isList ? triggerRef : chipsRef} sideOffset={8}>
+          <Combobox.Positioner
+            style={{ zIndex: floatingZ }}
+            anchor={isList ? triggerRef : chipsRef}
+            sideOffset={8}
+          >
             <Combobox.Popup className="outline-none">
               <ItemList
                 className={listStyles}

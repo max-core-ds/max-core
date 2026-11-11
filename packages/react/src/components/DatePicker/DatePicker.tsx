@@ -24,6 +24,7 @@ import {
 } from '../../utils/field.js';
 import { focusRing } from '../../utils/focus-ring.js';
 import { useFormGroupSize } from '../../utils/form-group-size.js';
+import { useFloatingZIndex } from '../../utils/layer.js';
 import { useControllableState } from '../../utils/use-controllable-state.js';
 import { ActionBar } from '../ActionBar/ActionBar.js';
 import { Button } from '../Button/Button.js';
@@ -674,6 +675,7 @@ export function DateInput({
   className,
   'aria-label': ariaLabel,
 }: DateInputProps) {
+  const floatingZ = useFloatingZIndex('popover');
   const size = useFormGroupSize(sizeProp) ?? 'm';
   const [value, setValue] = useControllableState<DateValue | null>(
     controlledValue,
@@ -747,11 +749,12 @@ export function DateInput({
           ) : null}
           <Popover.Portal>
             <Popover.Positioner
+              style={{ zIndex: floatingZ }}
               side="bottom"
               align="start"
               // Input Date Picker Gap (12) — the positioner takes px.
               sideOffset={12}
-              className="isolate z-50"
+              className="isolate"
             >
               <Popover.Popup className="outline-none">
                 <DatePicker

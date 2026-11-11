@@ -3,6 +3,7 @@
 import { Menu } from '@base-ui/react/menu';
 import type { ReactElement, ReactNode, RefObject } from 'react';
 import { cn } from '../../utils/cn.js';
+import { useFloatingZIndex } from '../../utils/layer.js';
 import { ItemList } from '../ItemList/ItemList.js';
 import { listItemOption } from '../ListItem/ListItem.js';
 
@@ -47,9 +48,16 @@ export function DropdownMenu({
   anchor,
   className,
 }: DropdownMenuProps) {
+  const floatingZ = useFloatingZIndex('dropdown');
   return (
     <Menu.Portal>
-      <Menu.Positioner side={side} sideOffset={sideOffset} align={align} anchor={anchor}>
+      <Menu.Positioner
+        style={{ zIndex: floatingZ }}
+        side={side}
+        sideOffset={sideOffset}
+        align={align}
+        anchor={anchor}
+      >
         <Menu.Popup className="outline-none">
           <ItemList className={cn(listStyles, className)}>
             {items.map((item, i) => (

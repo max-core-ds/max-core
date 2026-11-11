@@ -81,7 +81,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     <BaseToast.Provider>
       {children}
       <BaseToast.Portal>
-        <BaseToast.Viewport className="fixed right-0 bottom-0 z-[100] flex w-full max-w-lg flex-col gap-[var(--spacing-12)] p-[var(--spacing-16)]">
+        <BaseToast.Viewport className="fixed right-0 bottom-0 z-(--z-index-toast) flex w-full max-w-lg flex-col gap-[var(--spacing-12)] p-[var(--spacing-16)]">
           <ToastList />
         </BaseToast.Viewport>
       </BaseToast.Portal>

@@ -936,8 +936,20 @@ The output goes to the scratchpad and fixes the exact name→path mappings below
 > Icon Size (size the caller's trailing button), Data Table cell items not in v1, Header Cell
 > Gap, Table Row Gap, Global Min Width / Border Weight (via aliases), mobile footer gap.
 >
-> **NEXT — close 4.7:** the z-index sweep (`z-50` / `z-[…]` → `z-(--z-index-*)`) + the motion
-> note for Max — ask first. Then 4.8 publishing pipeline.
+> **z-index sweep ✅:** page layers on Max's `--z-index-*` — Dialog backdrop + popup `modal`,
+> Bottom Sheet backdrop + viewport `drawer`, Toast viewport `toast`; Select / Menu (Dropdown,
+> Split Button, Bottom Nav More) / Combobox positioners `dropdown`, Date / Time picker popovers
+> `popover`, Tooltip `tooltip` (inline `zIndex` from `useFloatingZIndex`, `utils/layer.ts`).
+> **Bug fixed:** Base UI portals popups to `<body>` with no z-index, so a Select opened inside a
+> Bottom Sheet (or Dialog) rendered under it (reproduced on the Booking premade); with the bare
+> scale it would stay under (dropdown 400 < drawer 800). Overlays now publish their layer via
+> `OverlayLayerProvider`; a floating element inside one stacks at that layer + 1 / 2 / 3
+> (dropdown / popover / tooltip). Verified: option on top inside the sheet; page Select 400,
+> Dialog 900, Toast 1000. Local stacking (`z-10` focus lift, `z-[1]`, `-z-[1]`) stays.
+>
+> **NEXT — close 4.7:** the motion note for Max (spring proposals; Bottom Sheet still uses its own
+> 450ms / cubic-bezier slide, the only motion not on `--motion-*`) — ask first. Then 4.8
+> publishing pipeline.
 >
 > **Per-batch loop:** read the master's bindings (`use_figma`, read-only, file `sX5tik…`) + the
 > component's tokens in `packages/tokens/dist/tokens.css` → swap to component vars + `type-*` +

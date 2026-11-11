@@ -3,6 +3,7 @@
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import type { ReactElement, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
+import { OverlayLayerProvider } from '../../utils/layer.js';
 import { ActionBar } from '../ActionBar/ActionBar.js';
 
 // Padding, Radius and Text Gap are -- Molecule/Dialogs/*; flat bg/surface, no
@@ -10,7 +11,7 @@ import { ActionBar } from '../ActionBar/ActionBar.js';
 // its parts spread apart (unbound); React hugs its content with a 20px gap so any
 // copy fits.
 const popupStyles = cn(
-  'fixed left-1/2 top-1/2 z-50 flex w-full max-w-md -translate-x-1/2 -translate-y-1/2 flex-col',
+  'fixed left-1/2 top-1/2 z-(--z-index-modal) flex w-full max-w-md -translate-x-1/2 -translate-y-1/2 flex-col',
   'gap-[var(--spacing-20)] rounded-(--dialogs-radius) bg-[var(--bg-surface)] p-(--dialogs-padding)',
   'text-[var(--text-primary)] outline-none',
 );
@@ -79,44 +80,47 @@ export function Dialog({
     <BaseDialog.Root open={open} onOpenChange={onOpenChange}>
       {trigger ? <BaseDialog.Trigger render={trigger} /> : null}
       <BaseDialog.Portal>
-        <BaseDialog.Backdrop className="fixed inset-0 z-40 bg-[var(--overlay-scrim)]" />
+        {/* Backdrop and popup share the modal layer; DOM order puts the popup on top. */}
+        <BaseDialog.Backdrop className="fixed inset-0 z-(--z-index-modal) bg-[var(--overlay-scrim)]" />
         <BaseDialog.Popup className={cn(popupStyles, className)}>
-          {displayIcon ? (
-            <span
-              className={cn(
-                'flex justify-center [&_svg]:size-[var(--size-56)]',
-                tone && toneIconColor[tone],
-              )}
-            >
-              {iconNode}
-            </span>
-          ) : null}
-          {title || description ? (
-            // Text Gap between title (Heading/H4) and body (Body/SM/300), both cap-trimmed.
-            <div
-              className={cn('flex flex-col gap-(--dialogs-text-gap)', centered && 'text-center')}
-            >
-              {title ? (
-                <BaseDialog.Title
-                  className={cn(
-                    'type-h4',
-                    tone === 'danger'
-                      ? 'text-[var(--status-danger-default)]'
-                      : 'text-[var(--text-primary)]',
-                  )}
-                >
-                  {title}
-                </BaseDialog.Title>
-              ) : null}
-              {description ? (
-                <BaseDialog.Description className="type-body-sm-300 text-[var(--text-secondary)]">
-                  {description}
-                </BaseDialog.Description>
-              ) : null}
-            </div>
-          ) : null}
-          {children}
-          {actions ? <ActionBar direction={actionsLayout}>{actions}</ActionBar> : null}
+          <OverlayLayerProvider value="modal">
+            {displayIcon ? (
+              <span
+                className={cn(
+                  'flex justify-center [&_svg]:size-[var(--size-56)]',
+                  tone && toneIconColor[tone],
+                )}
+              >
+                {iconNode}
+              </span>
+            ) : null}
+            {title || description ? (
+              // Text Gap between title (Heading/H4) and body (Body/SM/300), both cap-trimmed.
+              <div
+                className={cn('flex flex-col gap-(--dialogs-text-gap)', centered && 'text-center')}
+              >
+                {title ? (
+                  <BaseDialog.Title
+                    className={cn(
+                      'type-h4',
+                      tone === 'danger'
+                        ? 'text-[var(--status-danger-default)]'
+                        : 'text-[var(--text-primary)]',
+                    )}
+                  >
+                    {title}
+                  </BaseDialog.Title>
+                ) : null}
+                {description ? (
+                  <BaseDialog.Description className="type-body-sm-300 text-[var(--text-secondary)]">
+                    {description}
+                  </BaseDialog.Description>
+                ) : null}
+              </div>
+            ) : null}
+            {children}
+            {actions ? <ActionBar direction={actionsLayout}>{actions}</ActionBar> : null}
+          </OverlayLayerProvider>
         </BaseDialog.Popup>
       </BaseDialog.Portal>
     </BaseDialog.Root>

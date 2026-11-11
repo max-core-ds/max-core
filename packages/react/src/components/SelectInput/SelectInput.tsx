@@ -17,6 +17,7 @@ import {
   fieldRoot,
 } from '../../utils/field.js';
 import { useFormGroupSize } from '../../utils/form-group-size.js';
+import { useFloatingZIndex } from '../../utils/layer.js';
 import { FieldIcon } from '../Input/Input.js';
 import { ItemList } from '../ItemList/ItemList.js';
 import { listItemOption } from '../ListItem/ListItem.js';
@@ -98,6 +99,7 @@ export function SelectInput({
   className,
   ...rest
 }: SelectInputProps) {
+  const floatingZ = useFloatingZIndex('dropdown');
   const size = useFormGroupSize(sizeProp);
   const isInvalid = Boolean(errorMessage);
   return (
@@ -138,7 +140,11 @@ export function SelectInput({
           </Select.Icon>
         </Select.Trigger>
         <Select.Portal>
-          <Select.Positioner alignItemWithTrigger={false} sideOffset={8}>
+          <Select.Positioner
+            style={{ zIndex: floatingZ }}
+            alignItemWithTrigger={false}
+            sideOffset={8}
+          >
             <Select.Popup className="outline-none">
               <ItemList className={listStyles}>
                 {items.map((item) => (

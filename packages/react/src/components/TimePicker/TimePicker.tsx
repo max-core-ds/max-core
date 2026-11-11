@@ -7,6 +7,7 @@ import { capTrim } from '../../utils/cap-trim.js';
 import { cn } from '../../utils/cn.js';
 import { fieldHover, fieldSurface } from '../../utils/field.js';
 import { focusRing } from '../../utils/focus-ring.js';
+import { useFloatingZIndex } from '../../utils/layer.js';
 import { useControllableState } from '../../utils/use-controllable-state.js';
 import {
   HOURS_12,
@@ -335,6 +336,7 @@ export function TimePicker({
   className,
   'aria-label': ariaLabel,
 }: TimePickerProps) {
+  const floatingZ = useFloatingZIndex('popover');
   const [value, setValue] = useControllableState<TimeValue | null>(
     controlledValue,
     defaultValue,
@@ -470,7 +472,13 @@ export function TimePicker({
             </button>
           ) : null}
           <Popover.Portal>
-            <Popover.Positioner side="bottom" align="start" sideOffset={8} className="isolate z-50">
+            <Popover.Positioner
+              style={{ zIndex: floatingZ }}
+              side="bottom"
+              align="start"
+              sideOffset={8}
+              className="isolate"
+            >
               <Popover.Popup
                 className={cn(
                   surfaceStyles,

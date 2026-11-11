@@ -3,6 +3,7 @@
 import { Tooltip as BaseTooltip } from '@base-ui/react/tooltip';
 import type { ComponentPropsWithoutRef, ReactElement, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
+import { useFloatingZIndex } from '../../utils/layer.js';
 import {
   TOOLTIP_ARROW_PATH,
   TOOLTIP_ARROW_VIEWBOX,
@@ -44,11 +45,12 @@ export function Tooltip({
   closeDelay,
   rootProps,
 }: TooltipProps) {
+  const floatingZ = useFloatingZIndex('tooltip');
   const root = (
     <BaseTooltip.Root {...rootProps}>
       <BaseTooltip.Trigger render={children} />
       <BaseTooltip.Portal>
-        <BaseTooltip.Positioner side={side} sideOffset={sideOffset}>
+        <BaseTooltip.Positioner style={{ zIndex: floatingZ }} side={side} sideOffset={sideOffset}>
           <BaseTooltip.Popup className={tooltipBubble}>
             <BaseTooltip.Arrow className={arrowSides}>
               <svg viewBox={TOOLTIP_ARROW_VIEWBOX} className={tooltipArrow} aria-hidden="true">
