@@ -5,36 +5,45 @@ import { Input as BaseInput } from '@base-ui/react/input';
 import { type VariantProps, cva } from 'class-variance-authority';
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
-import { fieldError, fieldHelper, fieldLabel, fieldRoot } from '../../utils/field.js';
+import { fieldError, fieldHelper, fieldLabel, fieldRoot, fieldText } from '../../utils/field.js';
 import { useFormGroupSize } from '../../utils/form-group-size.js';
 import { FieldIcon } from '../Input/Input.js';
 
-// Underline frame (.Bottom-Line-Input-Options → Input): no fill, radius none, a
-// bottom stroke of -- Molecule/Input/Bottom Line/Size */Stroke Weight (thick, 2px).
-// Padding X 12 and Inner Gap 8 at every size. Focus recolours the underline to
-// border/focus (it's already 2px, so the hybrid focusBorder has nothing to add);
-// hover → border/hover. The stroke is INSIDE in Figma, so the bottom padding
-// gives back the 2px underline.
+// Underline frame (.Bottom-Line-Input-Options → Input): no fill, a bottom stroke
+// only, every dimension from -- Molecule/Input/Bottom Line/Size */* (Radius none,
+// Stroke Weight thick = 2px, Padding X 12, Inner Gap 8). Focus recolours the
+// underline to border/focus (it's already 2px, so the hybrid focusBorder has
+// nothing to add); hover → border/hover. The stroke is INSIDE in Figma, so the
+// bottom padding gives it back; the row is Icon Size tall → 40 / 44 / 56 (the S
+// master reads 44, a copy of M — flagged for Max).
 const frameStyles = cva(
   [
-    'flex w-full items-center gap-[var(--spacing-08)] rounded-[var(--radius-none)] bg-transparent px-[var(--spacing-12)]',
-    'border-0 border-b-[length:var(--border-weight-thick)] border-solid border-[var(--border-default)]',
+    'flex w-full items-center bg-transparent border-0 border-solid border-[var(--border-default)]',
     'text-[var(--text-primary)] transition-colors focus-within:border-[var(--border-focus)]',
   ],
   {
     variants: {
       size: {
-        s: 'min-w-[160px] pt-[var(--spacing-12)] pb-[calc(var(--spacing-12)-var(--border-weight-thick))] [&_svg]:size-[var(--size-16)]',
-        m: 'min-w-[180px] pt-[var(--spacing-12)] pb-[calc(var(--spacing-12)-var(--border-weight-thick))] [&_svg]:size-[var(--size-20)]',
-        l: 'min-w-[200px] pt-[var(--spacing-16)] pb-[calc(var(--spacing-16)-var(--border-weight-thick))] [&_svg]:size-[var(--size-24)]',
+        s: 'min-w-(--input-bottom-line-size-s-min-width) gap-(--input-bottom-line-size-s-inner-gap) rounded-(--input-bottom-line-size-s-radius) border-b-(length:--input-bottom-line-size-s-stroke-weight) px-(--input-bottom-line-size-s-padding-x) pt-(--input-bottom-line-size-s-padding-y) pb-[calc(var(--input-bottom-line-size-s-padding-y)-var(--input-bottom-line-size-s-stroke-weight))] [&_svg]:size-(--input-bottom-line-size-s-icon-size)',
+        m: 'min-w-(--input-bottom-line-size-m-min-width) gap-(--input-bottom-line-size-m-inner-gap) rounded-(--input-bottom-line-size-m-radius) border-b-(length:--input-bottom-line-size-m-stroke-weight) px-(--input-bottom-line-size-m-padding-x) pt-(--input-bottom-line-size-m-padding-y) pb-[calc(var(--input-bottom-line-size-m-padding-y)-var(--input-bottom-line-size-m-stroke-weight))] [&_svg]:size-(--input-bottom-line-size-m-icon-size)',
+        l: 'min-w-(--input-bottom-line-size-l-min-width) gap-(--input-bottom-line-size-l-inner-gap) rounded-(--input-bottom-line-size-l-radius) border-b-(length:--input-bottom-line-size-l-stroke-weight) px-(--input-bottom-line-size-l-padding-x) pt-(--input-bottom-line-size-l-padding-y) pb-[calc(var(--input-bottom-line-size-l-padding-y)-var(--input-bottom-line-size-l-stroke-weight))] [&_svg]:size-(--input-bottom-line-size-l-icon-size)',
       },
     },
     defaultVariants: { size: 'm' },
   },
 );
 
-// Value + placeholder 12 / 14 / 16 regular (deviation from Caption/700, as Input).
-const textSize = { s: 'text-xs', m: 'text-sm', l: 'text-base' } as const;
+const inputHeight = {
+  s: 'h-(--input-bottom-line-size-s-icon-size)',
+  m: 'h-(--input-bottom-line-size-m-icon-size)',
+  l: 'h-(--input-bottom-line-size-l-icon-size)',
+} as const;
+
+const itemsGap = {
+  s: 'gap-(--input-bottom-line-size-s-items-gap)',
+  m: 'gap-(--input-bottom-line-size-m-items-gap)',
+  l: 'gap-(--input-bottom-line-size-l-items-gap)',
+} as const;
 
 export interface BottomLineInputProps
   extends Omit<ComponentPropsWithoutRef<typeof BaseInput>, 'size' | 'className'>,
@@ -63,8 +72,13 @@ export function BottomLineInput({
 }: BottomLineInputProps) {
   const size = useFormGroupSize(sizeProp);
   const isInvalid = Boolean(errorMessage);
+  const sizeKey = size ?? 'm';
   return (
-    <Field.Root className={cn(fieldRoot, className)} invalid={isInvalid} disabled={disabled}>
+    <Field.Root
+      className={cn(fieldRoot, itemsGap[sizeKey], className)}
+      invalid={isInvalid}
+      disabled={disabled}
+    >
       {label ? <Field.Label className={fieldLabel(isInvalid)}>{label}</Field.Label> : null}
       <div
         className={cn(
@@ -85,7 +99,8 @@ export function BottomLineInput({
             isInvalid
               ? 'placeholder:text-[var(--status-danger-default)]'
               : 'placeholder:text-[var(--text-muted)]',
-            textSize[size ?? 'm'],
+            fieldText[sizeKey],
+            inputHeight[sizeKey],
           )}
           {...rest}
         />

@@ -15,27 +15,26 @@ import {
 } from '../../utils/field.js';
 import { useFormGroupSize } from '../../utils/form-group-size.js';
 
-// .Textarea-Options → Input: bg/surface fill (unlike Base Input's bg/default),
-// Radius md + Padding X 12 per -- Molecule/Input/Textarea/Size */*; per-size
-// Min Width / Min Height are raw px in Figma (160·96 / 180·120 / 200·160).
+// .Textarea-Options → Input: bg/surface fill (unlike Base Input's bg/default);
+// every dimension from -- Molecule/Input/Textarea/Size */* (Min Height 96 / 120 /
+// 160). Text per size as the other fields (Caption/300, Body/SM/300, Body/MD/300).
 // The textarea owns the border, so focusBorder (focus-within) applies to it.
-const textareaStyles = cva(
-  [
-    'block w-full resize-y rounded-[var(--radius-md)] px-[calc(var(--spacing-12)-var(--border-weight-thin))]',
-    fieldBorder,
-  ],
-  {
-    variants: {
-      // Text 12 / 14 / 16 regular (deviation from the master's Caption/300, as Input).
-      size: {
-        s: 'min-h-[96px] min-w-[160px] py-[calc(var(--spacing-12)-var(--border-weight-thin))] text-xs',
-        m: 'min-h-[120px] min-w-[180px] py-[calc(var(--spacing-12)-var(--border-weight-thin))] text-sm',
-        l: 'min-h-[160px] min-w-[200px] py-[calc(var(--spacing-16)-var(--border-weight-thin))] text-base',
-      },
+const textareaStyles = cva(['block w-full resize-y', fieldBorder], {
+  variants: {
+    size: {
+      s: 'min-h-(--input-textarea-size-s-min-height) min-w-(--input-textarea-size-s-min-width) rounded-(--input-textarea-size-s-radius) border-(length:--input-textarea-size-s-stroke-weight) px-[calc(var(--input-textarea-size-s-padding-x)-var(--input-textarea-size-s-stroke-weight))] py-[calc(var(--input-textarea-size-s-padding-y)-var(--input-textarea-size-s-stroke-weight))] type-caption-300',
+      m: 'min-h-(--input-textarea-size-m-min-height) min-w-(--input-textarea-size-m-min-width) rounded-(--input-textarea-size-m-radius) border-(length:--input-textarea-size-m-stroke-weight) px-[calc(var(--input-textarea-size-m-padding-x)-var(--input-textarea-size-m-stroke-weight))] py-[calc(var(--input-textarea-size-m-padding-y)-var(--input-textarea-size-m-stroke-weight))] type-body-sm-300',
+      l: 'min-h-(--input-textarea-size-l-min-height) min-w-(--input-textarea-size-l-min-width) rounded-(--input-textarea-size-l-radius) border-(length:--input-textarea-size-l-stroke-weight) px-[calc(var(--input-textarea-size-l-padding-x)-var(--input-textarea-size-l-stroke-weight))] py-[calc(var(--input-textarea-size-l-padding-y)-var(--input-textarea-size-l-stroke-weight))] type-body-md-300',
     },
-    defaultVariants: { size: 'm' },
   },
-);
+  defaultVariants: { size: 'm' },
+});
+
+const itemsGap = {
+  s: 'gap-(--input-textarea-size-s-items-gap)',
+  m: 'gap-(--input-textarea-size-m-items-gap)',
+  l: 'gap-(--input-textarea-size-l-items-gap)',
+} as const;
 
 export interface TextareaProps
   extends Omit<ComponentPropsWithoutRef<'textarea'>, 'size' | 'className'>,
@@ -59,7 +58,11 @@ export function Textarea({
   const size = useFormGroupSize(sizeProp);
   const isInvalid = Boolean(errorMessage);
   return (
-    <Field.Root className={cn(fieldRoot, className)} invalid={isInvalid} disabled={disabled}>
+    <Field.Root
+      className={cn(fieldRoot, itemsGap[size ?? 'm'], className)}
+      invalid={isInvalid}
+      disabled={disabled}
+    >
       {label ? <Field.Label className={fieldLabel(isInvalid)}>{label}</Field.Label> : null}
       <Field.Control
         render={

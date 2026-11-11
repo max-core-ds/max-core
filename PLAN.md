@@ -774,7 +774,7 @@ The output goes to the scratchpad and fixes the exact name→path mappings below
 
 ---
 
-# Phase 4.7 — One pass per component (55 files) — 🔄 IN PROGRESS (2026-11-09; batches 1–5 = all Atoms done by 2026-11-11, `d1df222`)
+# Phase 4.7 — One pass per component (55 files) — 🔄 IN PROGRESS (2026-11-09; batches 1–5 = all Atoms done by 2026-11-11, `d1df222`; batch 6 inputs done 2026-11-11)
 
 > **Batch 1 — Buttons ✅ (Button, Icon Only, Split, Link, FAB):** all five on their own component
 > vars (drift `mode: 'component'`); labels on `type-*` + a cap-trimmed label span
@@ -824,13 +824,28 @@ The output goes to the scratchpad and fixes the exact name→path mappings below
 > Content Blocks: H6 / Body/SM/300. Contrast 12 → 11 (Time Picker selected now `text/accent`).
 > z-index tokens: sweep all `z-50` / `z-[…]` once at the end of 4.7 (9 sites).
 
-> **NEXT — Batch 6 (input molecules):** Input, Textarea, Bottom Line, Select, Multiselect, Stepper,
-> Search Bar (+ `utils/field.ts`). Clears the last drift failures (Input Base / Textarea / Bottom Line /
-> Select / Multiselect min sizes). Max's changes: hover → `border/hover`, placeholder text style per
-> size, Stepper title Body/MD/700, Bottom Line padding renamed `Padding X`, Multiselect chips = Badge
-> Default. Then (≈6 per batch, Molecules → Organisms): Toast / Dialog / Tabs / Pagination / Switcher /
-> Item List / Dropdown / Range / Entity Item+Card / Date Picker / Form Group / Card / bars / Stacked
-> List / Stats Card / Data Table / Bottom Sheet; finish with the z-index sweep + motion note for Max.
+> **Batch 6 — input molecules ✅ (Input, Textarea, Bottom Line, Select, Multiselect, Stepper,
+> Search Bar + `utils/field.ts`):** every dimension on the component's own level-4 vars
+> (Padding X/Y minus the INSIDE stroke, Inner Gap, Items Gap, Radius, Stroke Weight, Min Width /
+> Min Height, Icon Size, Stepper Hit Area / Number Min Width; Search Bar Global + Size *), all
+> drift `component` mode — clears the last input drift failures (red now only Toast + Card,
+> later batches). Max's changes: value + placeholder `fieldText` S Caption/300 · M Body/SM/300 ·
+> L Body/MD/300 (inputs + Search Bar); titles `type-body-md-700` (Stepper too, no longer per
+> size), helpers/errors `type-caption-300` → cap-trimmed 12 / 9px boxes, so wrappers measure the
+> master (Input S 12 + 8 + 40 + 8 + 9 = 77); Stepper number Caption/700 `text/primary`; chips =
+> Badge S Default on `--input-multiselect-badge-*`, Caption/300 cap-trimmed, stroke as an
+> outline (the master's OUTSIDE stroke) → field 45 as the master; Bottom Line `Padding X`.
+> Rows are Icon Size tall (the `<input>` gets `h-(icon)`), so heights no longer depend on line
+> boxes: 40 / 44 / 56, Textarea 120, Multiselect 45 / 45 / 56, Search Bar 32 / 40 / 48 (measured).
+> `fieldBorder` no longer carries a width (each component binds its Stroke Weight; `fieldSurface`
+> keeps `border`); `fieldRoot` no longer carries the gap (DatePicker adds 8 itself until its batch).
+> Left as is: Multiselect typeahead popup (own invented list, raw semantic vars) → Item List batch.
+> Contrast unchanged (11/34).
+>
+> **NEXT — Batch 7:** Toast / Dialog / Tabs / Pagination / Switcher / Item List (+ Multiselect
+> typeahead popup → Item List) — ask first. Then Dropdown / Range / Entity Item+Card / Date Picker
+> / Form Group / Card / bars / Stacked List / Stats Card / Data Table / Bottom Sheet; finish with
+> the z-index sweep + motion note for Max.
 >
 > **Per-batch loop:** read the master's bindings (`use_figma`, read-only, file `sX5tik…`) + the
 > component's tokens in `packages/tokens/dist/tokens.css` → swap to component vars + `type-*` +
@@ -857,6 +872,12 @@ The output goes to the scratchpad and fixes the exact name→path mappings below
 > - Thumbnail's status dot binds `-- Atoms/Avatar/Size */Status Dot Size` (another component's
 >   tokens) — give Thumbnail its own, or a shared Status Dot size set.
 > - Time Picker `Selector` rectangle sits at y85, but the centre row is at y67–79 — off-centre?
+> - Inputs: Bottom Line S `Input` frame is 44 tall (= M; padding 12 + icon 16 should give 40) and
+>   its wrapper 320 wide; S frame gap binds `Size S/Items Gap` and the L wrapper gap `Size L/Inner
+>   Gap` (same 8px, swapped names).
+> - Stepper S `Input` frame binds `Size S/Number Min Width` (40) as the whole frame's min width.
+> - Multiselect `Badge/Min Width` = 240 — the field's min width under a chip name; unused.
+> - Stepper number is Caption/700 at every size (12px in a 56px L field) — intended?
 **The recipe, applied per component, in tier order (Atoms → Molecules → Organisms):**
 1. **Tokens:** replace semantic refs with the component's own vars: `px-[var(--spacing-06)]` → `px-(--buttons-global-size-s-padding)`. The shared utils (`utils/field.ts`, `state-layer.ts`, `tone.ts`, `focus-ring.ts`, `tooltip-surface.ts`) take per-component vars where they size things.
 2. **Type:** replace `text-xs font-bold leading-…` with the matching `type-*` utility (cap-trim comes with it; this absorbs the old Phase 5). Re-measure padding-hugged parts against Figma (Tabs, Badge, Segmented, Toast).

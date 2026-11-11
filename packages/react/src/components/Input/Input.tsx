@@ -16,35 +16,38 @@ import {
   fieldInvalidFill,
   fieldLabel,
   fieldRoot,
+  fieldText,
 } from '../../utils/field.js';
 import { useFormGroupSize } from '../../utils/form-group-size.js';
 
 // Input frame (.Base-Input-Options → Input): owns the border, fill and focus
-// border; the <input> inside is bare. Figma strokes are INSIDE the frame, so the
-// padding gives back the 1px border (outer size = token padding + line height). Radius, Padding X and Inner Gap match
-// -- Molecule/Input/Base Input/Size */* (md / 12 / 8 at every size).
-const frameStyles = cva(
-  [
-    'flex w-full items-center gap-[var(--spacing-08)] rounded-[var(--radius-md)] px-[calc(var(--spacing-12)-var(--border-weight-thin))]',
-    fieldBorder,
-  ],
-  {
-    variants: {
-      // Padding Y, Min Width (raw px in Figma) and Icon Size per Size. Height is
-      // padding-driven: 40 / 44 / 56 with the text line height.
-      size: {
-        s: 'min-w-[160px] py-[calc(var(--spacing-12)-var(--border-weight-thin))] [&_svg]:size-[var(--size-16)]',
-        m: 'min-w-[180px] py-[calc(var(--spacing-12)-var(--border-weight-thin))] [&_svg]:size-[var(--size-20)]',
-        l: 'min-w-[200px] py-[calc(var(--spacing-16)-var(--border-weight-thin))] [&_svg]:size-[var(--size-24)]',
-      },
+// border; the <input> inside is bare. Every dimension is -- Molecule/Input/Base
+// Input/Size */*. Figma strokes are INSIDE the frame, so the padding gives back
+// the stroke; the row is Icon Size tall (the <input> gets it too), so the frame
+// is Padding Y + Icon Size + Padding Y = 40 / 44 / 56 as the master.
+const frameStyles = cva(['flex w-full items-center', fieldBorder], {
+  variants: {
+    size: {
+      s: 'min-w-(--input-base-input-size-s-min-width) gap-(--input-base-input-size-s-inner-gap) rounded-(--input-base-input-size-s-radius) border-(length:--input-base-input-size-s-stroke-weight) px-[calc(var(--input-base-input-size-s-padding-x)-var(--input-base-input-size-s-stroke-weight))] py-[calc(var(--input-base-input-size-s-padding-y)-var(--input-base-input-size-s-stroke-weight))] [&_svg]:size-(--input-base-input-size-s-icon-size)',
+      m: 'min-w-(--input-base-input-size-m-min-width) gap-(--input-base-input-size-m-inner-gap) rounded-(--input-base-input-size-m-radius) border-(length:--input-base-input-size-m-stroke-weight) px-[calc(var(--input-base-input-size-m-padding-x)-var(--input-base-input-size-m-stroke-weight))] py-[calc(var(--input-base-input-size-m-padding-y)-var(--input-base-input-size-m-stroke-weight))] [&_svg]:size-(--input-base-input-size-m-icon-size)',
+      l: 'min-w-(--input-base-input-size-l-min-width) gap-(--input-base-input-size-l-inner-gap) rounded-(--input-base-input-size-l-radius) border-(length:--input-base-input-size-l-stroke-weight) px-[calc(var(--input-base-input-size-l-padding-x)-var(--input-base-input-size-l-stroke-weight))] py-[calc(var(--input-base-input-size-l-padding-y)-var(--input-base-input-size-l-stroke-weight))] [&_svg]:size-(--input-base-input-size-l-icon-size)',
     },
-    defaultVariants: { size: 'm' },
   },
-);
+  defaultVariants: { size: 'm' },
+});
 
-// Value + placeholder text: 12 / 14 / 16 regular. The master's Caption/700 /
-// Body/MD/700 placeholder is a deliberate deviation (decision 2026-10-24).
-const textSize = { s: 'text-xs', m: 'text-sm', l: 'text-base' } as const;
+// The <input>'s height = Icon Size, so the row never depends on the text's line box.
+const inputHeight = {
+  s: 'h-(--input-base-input-size-s-icon-size)',
+  m: 'h-(--input-base-input-size-m-icon-size)',
+  l: 'h-(--input-base-input-size-l-icon-size)',
+} as const;
+
+const itemsGap = {
+  s: 'gap-(--input-base-input-size-s-items-gap)',
+  m: 'gap-(--input-base-input-size-m-items-gap)',
+  l: 'gap-(--input-base-input-size-l-items-gap)',
+} as const;
 
 export interface InputProps
   extends Omit<ComponentPropsWithoutRef<typeof BaseInput>, 'size' | 'className'>,
@@ -78,7 +81,11 @@ export function Input({
   const isInvalid = Boolean(errorMessage);
   const sizeKey = size ?? 'm';
   return (
-    <Field.Root className={cn(fieldRoot, className)} invalid={isInvalid} disabled={disabled}>
+    <Field.Root
+      className={cn(fieldRoot, itemsGap[sizeKey], className)}
+      invalid={isInvalid}
+      disabled={disabled}
+    >
       {label ? <Field.Label className={fieldLabel(isInvalid)}>{label}</Field.Label> : null}
       <div
         className={cn(
@@ -94,7 +101,8 @@ export function Input({
         <BaseInput
           className={cn(
             'min-w-0 flex-1 bg-transparent outline-none placeholder:text-[var(--text-muted)] disabled:cursor-not-allowed',
-            textSize[sizeKey],
+            fieldText[sizeKey],
+            inputHeight[sizeKey],
           )}
           {...rest}
         />

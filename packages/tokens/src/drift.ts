@@ -75,17 +75,8 @@ const SPECS: ComponentSpec[] = [
   {
     name: 'Input (Base)',
     source: 'components/Input/Input.tsx',
-    prefixes: [
-      'Molecule/Input/Global/General',
-      'Molecule/Input/Global/Size',
-      'Molecule/Input/Base Input',
-    ],
-    exempt: [
-      '--size-16', // icon size S — base Input has no icon slot
-      '--size-20', // icon size M — base Input has no icon slot
-      '--size-24', // icon size L — base Input has no icon slot
-      '--spacing-08', // General Inner/Items Gap — base field has no internal items
-    ],
+    mode: 'component', // Phase 4.7
+    prefixes: ['Molecule/Input/Base Input'],
   },
   // --- Batch 1: Button family ---
   {
@@ -246,54 +237,47 @@ const SPECS: ComponentSpec[] = [
     prefixes: ['Atoms/List Item'],
   },
   // --- Batch 4: Input molecules ---
-  // Textarea/Select/Multiselect own only raw-number tokens (min width/height),
-  // so their checked spec is empty; radius/padding come from the Input Global
-  // tokens (checked via the base Input).
   {
     name: 'Textarea',
     source: 'components/Textarea/Textarea.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Molecule/Input/Textarea'],
-    exempt: ['--spacing-08'], // Inner Gap is an icon-to-text gap — textarea has no icon slot
   },
   {
     name: 'Bottom Line Input',
     source: 'components/BottomLineInput/BottomLineInput.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Molecule/Input/Bottom Line'],
-    exempt: [
-      '--size-16', // icon size S — underline input renders no icons
-      '--size-20', // icon size M — underline input renders no icons
-      '--size-24', // icon size L — underline input renders no icons
-      '--spacing-08', // Inner Gap — no icon slot, so no internal items to space
-    ],
   },
   {
     name: 'Stepper',
     source: 'components/Stepper/Stepper.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Molecule/Input/Stepper'],
-    exempt: [
-      '--size-16', // icon size S — ± are typographic glyphs, not sized icons
-      '--size-20', // icon size M — ± are typographic glyphs, not sized icons
-      '--size-24', // icon size L — ± are typographic glyphs, not sized icons
-    ],
   },
   {
     name: 'Select Input',
     source: 'components/SelectInput/SelectInput.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Molecule/Input/Select Input'],
   },
   {
     name: 'Multiselect',
     source: 'components/Multiselect/Multiselect.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Molecule/Input/Multiselect'],
     exempt: [
-      '--size-24', // Icon Size L — single-size combobox; no L-size 24px icon
-      '--spacing-16', // Size L Padding Y — single-size component uses the M padding
+      // Badge/Min Width = 240 is the field's Min Width (bound per Size), not a chip size.
+      '--input-multiselect-badge-min-width',
     ],
   },
   {
     name: 'Search Bar',
     source: 'components/SearchBar/SearchBar.tsx',
+    mode: 'component', // Phase 4.7
+    // Global/Gap is reached through Size */Gap.
     prefixes: ['Molecule/Search Bar'],
+    exempt: ['--search-bar-global-gap'],
   },
   {
     name: 'Action Bar',

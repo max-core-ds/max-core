@@ -4,6 +4,7 @@ import { Combobox } from '@base-ui/react/combobox';
 import { Field } from '@base-ui/react/field';
 import { type VariantProps, cva } from 'class-variance-authority';
 import { type ReactNode, useRef, useState } from 'react';
+import { capTrim } from '../../utils/cap-trim.js';
 import { cn } from '../../utils/cn.js';
 import {
   type FieldVariant,
@@ -29,50 +30,52 @@ export interface MultiselectOption {
 
 // The chips row is the field frame (.Multiselect-Options → Input): border, fill
 // and focus border (focus-within, the inline search input takes focus). Open =
-// the master's State=Active → border/accent. Min Width 240 at every size (raw
-// px in Figma); Radius md, Padding X 12, Inner Gap 8 per
-// -- Molecule/Input/Multiselect/Size */*.
+// the master's State=Active → border/accent. Every dimension is
+// -- Molecule/Input/Multiselect/Size */* (Min Width 240 at every size). The
+// frame hugs its chips: Padding Y + chip (21) + Padding Y = 45 / 45, and the
+// Icon Size chevron sets L = 56, as the master.
 const chipsStyles = cva(
-  [
-    'flex min-w-[240px] items-center gap-[var(--spacing-08)]',
-    'rounded-[var(--radius-md)] px-[calc(var(--spacing-12)-var(--border-weight-thin))]',
-    fieldBorder,
-    'has-[[data-popup-open]]:border-[var(--border-accent)]',
-  ],
+  ['flex items-center', fieldBorder, 'has-[[data-popup-open]]:border-[var(--border-accent)]'],
   {
     variants: {
-      // Padding Y per size. Text 12 / 14 / 16 regular (deviation from
-      // Caption/700, as Input).
       size: {
-        s: 'py-[calc(var(--spacing-12)-var(--border-weight-thin))] text-xs',
-        m: 'py-[calc(var(--spacing-12)-var(--border-weight-thin))] text-sm',
-        l: 'py-[calc(var(--spacing-16)-var(--border-weight-thin))] text-base',
+        s: 'min-w-(--input-multiselect-size-s-min-width) gap-(--input-multiselect-size-s-inner-gap) rounded-(--input-multiselect-size-s-radius) border-(length:--input-multiselect-size-s-stroke-weight) px-[calc(var(--input-multiselect-size-s-padding-x)-var(--input-multiselect-size-s-stroke-weight))] py-[calc(var(--input-multiselect-size-s-padding-y)-var(--input-multiselect-size-s-stroke-weight))] type-caption-300',
+        m: 'min-w-(--input-multiselect-size-m-min-width) gap-(--input-multiselect-size-m-inner-gap) rounded-(--input-multiselect-size-m-radius) border-(length:--input-multiselect-size-m-stroke-weight) px-[calc(var(--input-multiselect-size-m-padding-x)-var(--input-multiselect-size-m-stroke-weight))] py-[calc(var(--input-multiselect-size-m-padding-y)-var(--input-multiselect-size-m-stroke-weight))] type-body-sm-300',
+        l: 'min-w-(--input-multiselect-size-l-min-width) gap-(--input-multiselect-size-l-inner-gap) rounded-(--input-multiselect-size-l-radius) border-(length:--input-multiselect-size-l-stroke-weight) px-[calc(var(--input-multiselect-size-l-padding-x)-var(--input-multiselect-size-l-stroke-weight))] py-[calc(var(--input-multiselect-size-l-padding-y)-var(--input-multiselect-size-l-stroke-weight))] type-body-md-300',
       },
     },
     defaultVariants: { size: 'm' },
   },
 );
 
-// Only the chips (+ the typeahead input) wrap; the chevron stays pinned at the
-// right edge, centred on the field.
-const chipRowStyles = 'flex min-w-0 flex-1 flex-wrap items-center gap-[var(--spacing-08)]';
+const itemsGap = {
+  s: 'gap-(--input-multiselect-size-s-items-gap)',
+  m: 'gap-(--input-multiselect-size-m-items-gap)',
+  l: 'gap-(--input-multiselect-size-l-items-gap)',
+} as const;
 
-// Chip = the master's Badge (Size S, Variant Default, Tone Default) per
-// -- Molecule/Input/Multiselect/Badge/*: Padding X 10 / Y 6, Radius sm, thin
-// border; accent/subtle fill + accent/active border + Caption/300 text/accent.
-// The trailing edge is tightened to sit against the remove × (not in the master,
-// but a multiselect needs a way to remove a value without opening the list).
+// Only the chips (+ the typeahead input) wrap; the chevron stays pinned at the
+// right edge, centred on the field. Chips sit Inner Gap apart.
+const chipRowStyles = 'flex min-w-0 flex-1 flex-wrap items-center gap-[inherit]';
+
+// Chip = the master's Badge (Size S, Variant Default) per
+// -- Molecule/Input/Multiselect/Badge/*: Padding X 10 / Y 6, Radius sm, Border
+// Weight thin; accent/subtle fill + accent/active stroke + Caption/300 text/accent,
+// cap-trimmed (21px). The Badge stroke is OUTSIDE, so it's an outline here: it
+// doesn't add to the chip's box, and the field stays 45 tall like the master. The
+// trailing edge is tightened to sit against the remove × (not in the master, but a
+// multiselect needs a way to remove a value without opening the list).
 const chipStyles =
-  'inline-flex items-center gap-[var(--spacing-04)] rounded-[var(--radius-sm)] ' +
-  'border border-[var(--accent-active)] bg-[var(--accent-subtle)] ' +
-  'py-[var(--spacing-06)] pl-[var(--spacing-10)] pr-[var(--spacing-06)] ' +
-  'text-xs font-light text-[var(--text-accent)] [&_svg]:size-[var(--size-12)]';
+  'inline-flex items-center gap-[var(--spacing-04)] rounded-(--input-multiselect-badge-radius) ' +
+  'outline-solid outline-(length:--input-multiselect-badge-border-weight) outline-[var(--accent-active)] ' +
+  'bg-[var(--accent-subtle)] py-(--input-multiselect-badge-padding-y) pl-(--input-multiselect-badge-padding-x) ' +
+  'pr-(--input-multiselect-badge-padding-y) type-caption-300 text-[var(--text-accent)] [&_svg]:size-[var(--size-12)]';
 
 // Chevron Icon Size per -- Molecule/Input/Multiselect/Size */Icon Size.
 const chevronSize = {
-  s: '[&_svg]:size-[var(--size-16)]',
-  m: '[&_svg]:size-[var(--size-20)]',
-  l: '[&_svg]:size-[var(--size-24)]',
+  s: '[&_svg]:size-(--input-multiselect-size-s-icon-size)',
+  m: '[&_svg]:size-(--input-multiselect-size-m-icon-size)',
+  l: '[&_svg]:size-(--input-multiselect-size-l-icon-size)',
 } as const;
 
 const popupStyles =
@@ -157,8 +160,13 @@ export function Multiselect({
   // list mode), not the inner text input, so it opens below it, as wide as it.
   const chipsRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const sizeKey = size ?? 'm';
   return (
-    <Field.Root className={cn(fieldRoot, className)} invalid={isInvalid} disabled={disabled}>
+    <Field.Root
+      className={cn(fieldRoot, itemsGap[sizeKey], className)}
+      invalid={isInvalid}
+      disabled={disabled}
+    >
       {label ? <Field.Label className={fieldLabel(isInvalid)}>{label}</Field.Label> : null}
       <Combobox.Root
         multiple
@@ -187,8 +195,11 @@ export function Multiselect({
                 {(chosen: MultiselectOption[]) =>
                   chosen.length ? (
                     chosen.map((item) => (
-                      <span key={item.value} className={cn(chipStyles, 'pr-[var(--spacing-10)]')}>
-                        {item.label}
+                      <span
+                        key={item.value}
+                        className={cn(chipStyles, 'pr-(--input-multiselect-badge-padding-x)')}
+                      >
+                        <span className={capTrim}>{item.label}</span>
                       </span>
                     ))
                   ) : (
@@ -209,7 +220,7 @@ export function Multiselect({
               aria-hidden="true"
               className={cn(
                 'inline-flex shrink-0 text-[var(--text-muted)] in-data-[popup-open]:rotate-180',
-                chevronSize[size ?? 'm'],
+                chevronSize[sizeKey],
               )}
             >
               <ChevronDown />
@@ -222,9 +233,10 @@ export function Multiselect({
                 {(selected: MultiselectOption[]) =>
                   selected.map((item) => (
                     <Combobox.Chip key={item.value} className={chipStyles}>
-                      {item.label}
+                      <span className={capTrim}>{item.label}</span>
                       <Combobox.ChipRemove
-                        className="inline-flex text-[var(--text-accent)] opacity-[var(--opacity-dim)] hover:opacity-100"
+                        // h-0: the 12px × overflows the 9px label row, so the chip keeps the Badge's 21px.
+                        className="inline-flex h-0 items-center text-[var(--text-accent)] opacity-[var(--opacity-dim)] hover:opacity-100"
                         aria-label={`Remove ${item.label}`}
                       >
                         <XIcon />
@@ -248,7 +260,7 @@ export function Multiselect({
               aria-label="Show options"
               className={cn(
                 'inline-flex shrink-0 text-[var(--text-muted)] data-[popup-open]:rotate-180',
-                chevronSize[size ?? 'm'],
+                chevronSize[sizeKey],
               )}
             >
               <ChevronDown />

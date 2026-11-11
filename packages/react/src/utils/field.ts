@@ -14,8 +14,9 @@
  */
 import { focusBorder } from './focus-ring.js';
 
-/** Border + text + placeholder + focus. Pair with a fill (`fieldFill`). */
-export const fieldBorder = `text-[var(--text-primary)] border border-[var(--border-default)] placeholder:text-[var(--text-muted)] transition-colors outline-none ${focusBorder} disabled:cursor-not-allowed has-[:disabled]:cursor-not-allowed`;
+/** Border colour + text + placeholder + focus. Pair with a fill (`fieldFill`) and the
+ * component's own Stroke Weight token (`border-(length:--…)`); `focusBorder` assumes 1px. */
+export const fieldBorder = `text-[var(--text-primary)] border-[var(--border-default)] placeholder:text-[var(--text-muted)] transition-colors outline-none ${focusBorder} disabled:cursor-not-allowed has-[:disabled]:cursor-not-allowed`;
 
 /** Hover border — apply only while the field isn't invalid. Skipped while focused,
  * disabled or open (a trigger's `data-popup-open` keeps `border/accent`). */
@@ -45,13 +46,23 @@ export type FieldVariant = keyof typeof fieldFill;
  * Legacy all-in-one surface (Primary fill + border + hover). Prefer composing
  * `fieldBorder` + `fieldFill` + `fieldHover` + `fieldInvalid`.
  */
-export const fieldSurface = `${fieldFill.primary} ${fieldBorder}`;
+export const fieldSurface = `${fieldFill.primary} border ${fieldBorder}`;
 
-/** Field.Root / wrapper column: label ↔ control ↔ helper, Items Gap (8px). Disabled
- * dims the whole field, label and helper included (master: opacity on the wrapper). */
+/** Field.Root / wrapper column: label ↔ control ↔ helper. Each component adds its
+ * own Items Gap token. Disabled dims the whole field, label and helper included
+ * (master: opacity on the wrapper). */
 export const fieldRoot =
-  'group/field flex flex-col gap-[var(--spacing-08)] ' +
-  'data-[disabled]:opacity-[var(--opacity-disabled)]';
+  'group/field flex flex-col data-[disabled]:opacity-[var(--opacity-disabled)]';
+
+/** Value + placeholder text per Size (Max, round 1): S Caption/300, M Body/SM/300,
+ * L Body/MD/300. Pair the <input> with an Icon Size height so the row matches the
+ * master (Padding Y + Icon Size + Padding Y). */
+export const fieldText = {
+  s: 'type-caption-300',
+  m: 'type-body-sm-300',
+  l: 'type-body-md-300',
+} as const;
+export type FieldSize = keyof typeof fieldText;
 
 /**
  * Title: Body/MD/700 `text/secondary`; `text/accent` while the control has focus
@@ -59,11 +70,12 @@ export const fieldRoot =
  */
 export function fieldLabel(invalid?: boolean): string {
   return invalid
-    ? 'text-base font-bold text-[var(--status-danger-default)]'
-    : 'text-base font-bold text-[var(--text-secondary)] transition-colors ' +
+    ? 'type-body-md-700 text-[var(--status-danger-default)]'
+    : 'type-body-md-700 text-[var(--text-secondary)] transition-colors ' +
         'group-focus-within/field:text-[var(--text-accent)]';
 }
 
-/** Helper / error text: Caption/300. */
-export const fieldHelper = 'text-xs font-light text-[var(--text-muted)]';
-export const fieldError = 'text-xs font-light text-[var(--status-danger-default)]';
+/** Helper / error text: Caption/300. Title and helper are flex items of the
+ * wrapper column, so the `type-*` cap trim applies as in the master (12 / 9px boxes). */
+export const fieldHelper = 'type-caption-300 text-[var(--text-muted)]';
+export const fieldError = 'type-caption-300 text-[var(--status-danger-default)]';

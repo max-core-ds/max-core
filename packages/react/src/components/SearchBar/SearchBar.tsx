@@ -7,16 +7,16 @@ import { cn } from '../../utils/cn.js';
 import { fieldBorder, fieldFill, fieldHover } from '../../utils/field.js';
 import { focusRing } from '../../utils/focus-ring.js';
 
-// Searchbar (2106:546): a pill field, -- Molecule/Search Bar/*. Fill bg/default,
-// stroke border/default (INSIDE, so the padding gives the 1px back), Radius full,
-// Min Width 180, Gap 6. Per size: Padding X/Y 10·8 / 12·10 / 14·12 and Icon Size
-// 16/20/24 (the M/L tokens; Figma binds the S token on every size, decision
-// 2026-10-24) → heights 32/40/48. Icons text/secondary. Field states follow the
-// Inputs model: hover border/hover, focus = focusBorder (border/focus 2px).
+// Searchbar (2106:546): a pill field, every dimension from -- Molecule/Search
+// Bar/*. Fill bg/default, stroke border/default (INSIDE, so the padding gives the
+// Border Weight back), Radius full, Min Width 180. Per size: Gap, Padding X/Y and
+// Icon Size; the row is Icon Size tall → 32 / 40 / 48. Placeholder Caption/300,
+// Body/SM/300, Body/MD/300 (Max, round 1). Icons text/secondary. Field states
+// follow the Inputs model: hover border/hover, focus = focusBorder (border/focus 2px).
 const rootStyles = cva(
   [
-    'inline-flex w-full items-center gap-[var(--spacing-06)]',
-    'min-w-[var(--size-180)] rounded-[var(--radius-full)]',
+    'inline-flex w-full items-center',
+    'min-w-(--search-bar-global-min-width) rounded-(--search-bar-global-radius) border-(length:--search-bar-global-border-weight)',
     fieldBorder,
     fieldFill.primary,
     fieldHover,
@@ -24,16 +24,22 @@ const rootStyles = cva(
   ],
   {
     variants: {
-      // Text 12 / 14 / 16 regular (deviation from the master's Caption/300, as Inputs).
       size: {
-        s: 'px-[calc(var(--spacing-10)-var(--border-weight-thin))] py-[calc(var(--spacing-08)-var(--border-weight-thin))] text-xs [&_svg]:size-[var(--size-16)]',
-        m: 'px-[calc(var(--spacing-12)-var(--border-weight-thin))] py-[calc(var(--spacing-10)-var(--border-weight-thin))] text-sm [&_svg]:size-[var(--size-20)]',
-        l: 'px-[calc(var(--spacing-14)-var(--border-weight-thin))] py-[calc(var(--spacing-12)-var(--border-weight-thin))] text-base [&_svg]:size-[var(--size-24)]',
+        s: 'gap-(--search-bar-size-s-gap) px-[calc(var(--search-bar-size-s-padding-x)-var(--search-bar-global-border-weight))] py-[calc(var(--search-bar-size-s-padding-y)-var(--search-bar-global-border-weight))] type-caption-300 [&_svg]:size-(--search-bar-size-s-icon-size)',
+        m: 'gap-(--search-bar-size-m-gap) px-[calc(var(--search-bar-size-m-padding-x)-var(--search-bar-global-border-weight))] py-[calc(var(--search-bar-size-m-padding-y)-var(--search-bar-global-border-weight))] type-body-sm-300 [&_svg]:size-(--search-bar-size-m-icon-size)',
+        l: 'gap-(--search-bar-size-l-gap) px-[calc(var(--search-bar-size-l-padding-x)-var(--search-bar-global-border-weight))] py-[calc(var(--search-bar-size-l-padding-y)-var(--search-bar-global-border-weight))] type-body-md-300 [&_svg]:size-(--search-bar-size-l-icon-size)',
       },
     },
     defaultVariants: { size: 'm' },
   },
 );
+
+// The <input> is Icon Size tall, so the row never depends on the text's line box.
+const inputHeight = {
+  s: 'h-(--search-bar-size-s-icon-size)',
+  m: 'h-(--search-bar-size-m-icon-size)',
+  l: 'h-(--search-bar-size-l-icon-size)',
+} as const;
 
 export interface SearchBarProps
   extends Omit<ComponentPropsWithoutRef<typeof BaseInput>, 'size' | 'className'>,
@@ -71,7 +77,10 @@ export function SearchBar({
         </span>
       ) : null}
       <BaseInput
-        className="min-w-0 flex-1 bg-transparent outline-none disabled:cursor-not-allowed"
+        className={cn(
+          'min-w-0 flex-1 bg-transparent outline-none disabled:cursor-not-allowed',
+          inputHeight[size ?? 'm'],
+        )}
         placeholder={placeholder}
         value={value}
         {...rest}
@@ -81,7 +90,7 @@ export function SearchBar({
         // full) and hand-sizes it so the label sits 16px from each side; React pads
         // instead of fixing the width (decision 2026-10-24). `!` beats the Button's
         // own classes regardless of stylesheet order.
-        <span className="inline-flex shrink-0 [&>*]:rounded-[var(--radius-full)]! [&>*]:px-[var(--spacing-16)]!">
+        <span className="inline-flex shrink-0 [&>*]:rounded-(--search-bar-global-radius)! [&>*]:px-[var(--spacing-16)]!">
           {action}
         </span>
       ) : onClear && value ? (

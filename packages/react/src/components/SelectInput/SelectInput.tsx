@@ -25,27 +25,31 @@ import { RadioMark } from '../Radio/Radio.js';
 // The trigger is the field frame (.Select-Input-Options → Input): it owns the
 // border, fill and focus border (hybrid model: no outset ring). Open = the
 // master's State=Active → border/accent. The placeholder shows in text/muted.
+// Every dimension is -- Molecule/Input/Select Input/Size */*; the chevron is
+// always there at Icon Size, so the frame is 40 / 44 / 56 as the master.
 const triggerStyles = cva(
   [
-    'inline-flex w-full items-center gap-[var(--spacing-08)]',
-    'rounded-[var(--radius-md)] px-[calc(var(--spacing-12)-var(--border-weight-thin))] text-left',
+    'inline-flex w-full items-center text-left',
     fieldBorder,
     'data-[popup-open]:border-[var(--border-accent)] data-[placeholder]:text-[var(--text-muted)]',
   ],
   {
     variants: {
-      // Padding Y, Min Width (raw px) + Icon Size per -- Molecule/Input/Select
-      // Input/Size {S,M,L} (Icon Size 16/20/24 for the leading icon and chevron).
-      // Text 12 / 14 / 16 regular (deviation from Caption/700, as Input).
       size: {
-        s: 'min-w-[160px] py-[calc(var(--spacing-12)-var(--border-weight-thin))] text-xs [&_svg]:size-[var(--size-16)]',
-        m: 'min-w-[180px] py-[calc(var(--spacing-12)-var(--border-weight-thin))] text-sm [&_svg]:size-[var(--size-20)]',
-        l: 'min-w-[200px] py-[calc(var(--spacing-16)-var(--border-weight-thin))] text-base [&_svg]:size-[var(--size-24)]',
+        s: 'min-w-(--input-select-input-size-s-min-width) gap-(--input-select-input-size-s-inner-gap) rounded-(--input-select-input-size-s-radius) border-(length:--input-select-input-size-s-stroke-weight) px-[calc(var(--input-select-input-size-s-padding-x)-var(--input-select-input-size-s-stroke-weight))] py-[calc(var(--input-select-input-size-s-padding-y)-var(--input-select-input-size-s-stroke-weight))] type-caption-300 [&_svg]:size-(--input-select-input-size-s-icon-size)',
+        m: 'min-w-(--input-select-input-size-m-min-width) gap-(--input-select-input-size-m-inner-gap) rounded-(--input-select-input-size-m-radius) border-(length:--input-select-input-size-m-stroke-weight) px-[calc(var(--input-select-input-size-m-padding-x)-var(--input-select-input-size-m-stroke-weight))] py-[calc(var(--input-select-input-size-m-padding-y)-var(--input-select-input-size-m-stroke-weight))] type-body-sm-300 [&_svg]:size-(--input-select-input-size-m-icon-size)',
+        l: 'min-w-(--input-select-input-size-l-min-width) gap-(--input-select-input-size-l-inner-gap) rounded-(--input-select-input-size-l-radius) border-(length:--input-select-input-size-l-stroke-weight) px-[calc(var(--input-select-input-size-l-padding-x)-var(--input-select-input-size-l-stroke-weight))] py-[calc(var(--input-select-input-size-l-padding-y)-var(--input-select-input-size-l-stroke-weight))] type-body-md-300 [&_svg]:size-(--input-select-input-size-l-icon-size)',
       },
     },
     defaultVariants: { size: 'm' },
   },
 );
+
+const itemsGap = {
+  s: 'gap-(--input-select-input-size-s-items-gap)',
+  m: 'gap-(--input-select-input-size-m-items-gap)',
+  l: 'gap-(--input-select-input-size-l-items-gap)',
+} as const;
 
 // Popup: the master's State=Active opens an Item List (Show search / Select all /
 // Divider off, ScrollBar on) 8px below the field (Items Gap), as wide as it, with
@@ -97,7 +101,11 @@ export function SelectInput({
   const size = useFormGroupSize(sizeProp);
   const isInvalid = Boolean(errorMessage);
   return (
-    <Field.Root className={cn(fieldRoot, className)} invalid={isInvalid} disabled={disabled}>
+    <Field.Root
+      className={cn(fieldRoot, itemsGap[size ?? 'm'], className)}
+      invalid={isInvalid}
+      disabled={disabled}
+    >
       {label ? <Field.Label className={fieldLabel(isInvalid)}>{label}</Field.Label> : null}
       <Select.Root
         // items lets Select.Value show the label (not the raw value) once chosen.

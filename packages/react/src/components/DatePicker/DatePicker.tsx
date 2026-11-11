@@ -134,6 +134,7 @@ const triggerStyles = cva(
   [
     'inline-flex w-full items-center gap-[var(--spacing-08)]',
     'rounded-[var(--radius-md)] px-[calc(var(--spacing-12)-var(--border-weight-thin))] text-left',
+    'border',
     fieldBorder,
     'data-[popup-open]:border-[var(--border-accent)]',
   ],
@@ -692,7 +693,11 @@ export function DateInput({
   const showClear = clearable && Boolean(value) && !disabled;
 
   return (
-    <Field.Root className={cn(fieldRoot, className)} invalid={isInvalid} disabled={disabled}>
+    <Field.Root
+      className={cn(fieldRoot, 'gap-[var(--spacing-08)]', className)}
+      invalid={isInvalid}
+      disabled={disabled}
+    >
       {label ? (
         <Field.Label htmlFor={triggerId} className={fieldLabel(isInvalid)}>
           {label}

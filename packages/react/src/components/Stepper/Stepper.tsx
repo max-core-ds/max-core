@@ -23,15 +23,18 @@ import { stateLayer } from '../../utils/state-layer.js';
 // pressing a ± button → accent/default (the master's State=Pressed), focus →
 // focusBorder (border/focus 2px).
 //
-// -- Molecule/Input/Stepper/Size {S,M,L}: Padding X (12) and Items Gap (8) are
-// uniform across sizes, so they bind here on the group; Radius = md. Padding X
-// insets the ± buttons from the surface edge and Items Gap separates the three
-// segments; the buttons add their own Hit Area Padding X internally
-// (glyph-to-edge = Padding X + Hit Area Padding X). Per-size tokens live on the
-// buttons (Hit Area Padding X, Icon Size) and the field (Number Min Width, Padding Y).
-const groupStyles = `inline-flex items-stretch overflow-hidden rounded-[var(--radius-md)] gap-[var(--spacing-08)] px-[calc(var(--spacing-12)-var(--border-weight-thin))] ${fieldBorder} has-[button:active]:border-[var(--accent-default)]`;
+// Every dimension is -- Molecule/Input/Stepper/Size */*. The group carries Padding
+// X (insets the ± from the edge), Inner Gap (between the three segments), Radius
+// and Stroke Weight; the buttons add Hit Area Padding X around an Icon Size icon;
+// the number carries Number Min Width and Padding Y.
+const groupBase = `inline-flex items-stretch overflow-hidden ${fieldBorder} has-[button:active]:border-[var(--accent-default)]`;
+const groupSize = {
+  s: 'gap-(--input-stepper-size-s-inner-gap) rounded-(--input-stepper-size-s-radius) border-(length:--input-stepper-size-s-stroke-weight) px-[calc(var(--input-stepper-size-s-padding-x)-var(--input-stepper-size-s-stroke-weight))]',
+  m: 'gap-(--input-stepper-size-m-inner-gap) rounded-(--input-stepper-size-m-radius) border-(length:--input-stepper-size-m-stroke-weight) px-[calc(var(--input-stepper-size-m-padding-x)-var(--input-stepper-size-m-stroke-weight))]',
+  l: 'gap-(--input-stepper-size-l-inner-gap) rounded-(--input-stepper-size-l-radius) border-(length:--input-stepper-size-l-stroke-weight) px-[calc(var(--input-stepper-size-l-padding-x)-var(--input-stepper-size-l-stroke-weight))]',
+} as const;
 
-// Hit Area Padding X (4/6/8) and Icon Size (16/20/24) per size; icons text/secondary.
+// Icons text/secondary.
 const buttonStyles = cva(
   [
     'relative isolate inline-flex select-none items-center justify-center',
@@ -42,38 +45,41 @@ const buttonStyles = cva(
   {
     variants: {
       size: {
-        s: 'px-[var(--spacing-04)] [&_svg]:size-[var(--size-16)]',
-        m: 'px-[var(--spacing-06)] [&_svg]:size-[var(--size-20)]',
-        l: 'px-[var(--spacing-08)] [&_svg]:size-[var(--size-24)]',
+        s: 'px-(--input-stepper-size-s-hit-area-padding-x) [&_svg]:size-(--input-stepper-size-s-icon-size)',
+        m: 'px-(--input-stepper-size-m-hit-area-padding-x) [&_svg]:size-(--input-stepper-size-m-icon-size)',
+        l: 'px-(--input-stepper-size-l-hit-area-padding-x) [&_svg]:size-(--input-stepper-size-l-icon-size)',
       },
     },
     defaultVariants: { size: 'm' },
   },
 );
 
-// Number Min Width (40/48/56) and Padding Y (12/12/16) per size — the group's
-// vertical extent follows the field (the ± buttons stretch to match).
+// The number is Caption/700 text/primary at every size (the master). Its content
+// box is Icon Size tall + Padding Y each side, so the group is 40 / 44 / 56 and the
+// ± buttons stretch to match.
 const inputStyles = cva(
   // field-sizing-content hugs the value (the master's Number-Width hugs above its
   // min width); browsers without it fall back to the default input width.
   [
-    'field-sizing-content bg-transparent text-center tabular-nums text-[var(--text-primary)] outline-none',
+    'box-content field-sizing-content bg-transparent text-center tabular-nums type-caption-700 text-[var(--text-primary)] outline-none',
   ],
   {
     variants: {
       size: {
-        s: 'min-w-[var(--size-40)] py-[calc(var(--spacing-12)-var(--border-weight-thin))] text-xs',
-        m: 'min-w-[var(--size-48)] py-[calc(var(--spacing-12)-var(--border-weight-thin))] text-sm',
-        l: 'min-w-[var(--size-56)] py-[calc(var(--spacing-16)-var(--border-weight-thin))] text-base',
+        s: 'min-w-(--input-stepper-size-s-number-min-width) h-(--input-stepper-size-s-icon-size) py-[calc(var(--input-stepper-size-s-padding-y)-var(--input-stepper-size-s-stroke-weight))]',
+        m: 'min-w-(--input-stepper-size-m-number-min-width) h-(--input-stepper-size-m-icon-size) py-[calc(var(--input-stepper-size-m-padding-y)-var(--input-stepper-size-m-stroke-weight))]',
+        l: 'min-w-(--input-stepper-size-l-number-min-width) h-(--input-stepper-size-l-icon-size) py-[calc(var(--input-stepper-size-l-padding-y)-var(--input-stepper-size-l-stroke-weight))]',
       },
     },
     defaultVariants: { size: 'm' },
   },
 );
 
-// The Stepper title scales with Size (unlike the other inputs' Body/MD/700):
-// S Caption/700, M Body/SM/700, L Body/MD/700.
-const labelSize = { s: 'text-xs', m: 'text-sm', l: 'text-base' } as const;
+const itemsGap = {
+  s: 'gap-(--input-stepper-size-s-items-gap)',
+  m: 'gap-(--input-stepper-size-m-items-gap)',
+  l: 'gap-(--input-stepper-size-l-items-gap)',
+} as const;
 
 export interface StepperProps
   extends Omit<ComponentPropsWithoutRef<typeof NumberField.Root>, 'className'>,
@@ -99,17 +105,16 @@ export function Stepper({
   const sizeKey = size ?? 'm';
   return (
     <Field.Root
-      className={cn(fieldRoot, 'inline-flex', className)}
+      className={cn(fieldRoot, 'inline-flex', itemsGap[sizeKey], className)}
       invalid={isInvalid}
       disabled={disabled}
     >
-      {label ? (
-        <Field.Label className={cn(fieldLabel(isInvalid), labelSize[sizeKey])}>{label}</Field.Label>
-      ) : null}
+      {label ? <Field.Label className={fieldLabel(isInvalid)}>{label}</Field.Label> : null}
       <NumberField.Root disabled={disabled} {...rest}>
         <NumberField.Group
           className={cn(
-            groupStyles,
+            groupBase,
+            groupSize[sizeKey],
             isInvalid
               ? [fieldInvalid, 'bg-[var(--status-danger-subtle)]']
               : ['bg-[var(--bg-surface)]', fieldHover],
