@@ -8,11 +8,12 @@ import { cn } from '../../utils/cn.js';
 // Horizontal is a grid of equal columns: `flex: 1` left a bordered (secondary)
 // button 2px wider than a borderless one. Override the minimum with
 // `auto-cols-[minmax(0,1fr)]` where the buttons must share a narrow width.
-const actionBarStyles = cva('gap-[var(--spacing-08)]', {
+const actionBarStyles = cva('gap-(--action-bar-global-gap)', {
   variants: {
     direction: {
-      horizontal: 'grid grid-flow-col auto-cols-[minmax(var(--size-160),1fr)]',
-      vertical: 'flex flex-col [&>*]:min-w-[var(--size-160)] [&>*]:w-full',
+      horizontal:
+        'grid grid-flow-col auto-cols-[minmax(var(--action-bar-global-button-min-width),1fr)]',
+      vertical: 'flex flex-col [&>*]:min-w-(--action-bar-global-button-min-width) [&>*]:w-full',
     },
   },
   defaultVariants: { direction: 'horizontal' },

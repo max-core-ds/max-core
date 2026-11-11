@@ -14,7 +14,8 @@ const tileStyles = cva(
   {
     variants: {
       tone: {
-        default: 'bg-[var(--accent-subtle)] text-[var(--accent-default)]',
+        // Icon text/accent (round-1 sweep of accent/* icons → text/accent).
+        default: 'bg-[var(--accent-subtle)] text-[var(--text-accent)]',
         success: 'bg-[var(--status-success-subtle)] text-[var(--status-success-default)]',
         warning: 'bg-[var(--status-warning-subtle)] text-[var(--status-warning-default)]',
         danger: 'bg-[var(--status-danger-subtle)] text-[var(--status-danger-default)]',
@@ -24,8 +25,8 @@ const tileStyles = cva(
   },
 );
 
-// Caption is Caption/700 (12 / 130% / +0.5%, Bold); its color follows the tone (default = secondary).
-const labelStyles = cva('text-xs leading-[1.3] font-bold tracking-[0.005em]', {
+// Caption is Caption/700; its color follows the tone (default = secondary).
+const labelStyles = cva('type-caption-700', {
   variants: {
     tone: {
       default: 'text-[var(--text-secondary)]',

@@ -27,35 +27,39 @@ export const chartTheme = {
   ],
   /** Grid lines (border/muted at Chart/Grid Stroke). */
   grid: 'var(--border-muted)',
-  gridWidth: 'var(--border-weight-thin)',
+  gridWidth: 'var(--stats-card-chart-grid-stroke)',
   /** Axis labels (text/muted, Caption/300). */
   axis: 'var(--text-muted)',
   /** Gap between the plot and its axis labels (Chart/Axis Gap). */
-  axisGap: 'var(--spacing-06)',
+  axisGap: 'var(--stats-card-chart-axis-gap)',
   /** Line / spark-line stroke (Chart/Line Stroke). */
-  lineWidth: 'var(--border-weight-thick)',
+  lineWidth: 'var(--stats-card-chart-line-stroke)',
 } as const;
 
+// Shell: Global Radius + Border Weight (border/muted), bg/surface, shadow/down/sm;
+// Global Padding + Item Spacing (big / small) or Compact Padding + Item Spacing.
+// Figma strokes sit inside, so the padding gives the stroke back.
+// -- Organism/Stats card/*.
 const cardStyles = cva(
   [
-    'flex flex-col rounded-[var(--radius-md)] bg-[var(--bg-surface)] text-[var(--text-primary)]',
-    'border-[length:var(--border-weight-thin)] border-[var(--border-muted)] shadow-[var(--effect-shadow-down-sm)]',
+    'flex flex-col rounded-(--stats-card-global-radius) bg-[var(--bg-surface)] text-[var(--text-primary)]',
+    'border-solid border-(length:--stats-card-global-border-weight) border-[var(--border-muted)] shadow-[var(--effect-shadow-down-sm)]',
   ],
   {
     variants: {
       variant: {
-        big: 'h-[480px] gap-[var(--spacing-16)] p-[var(--spacing-16)]',
-        small: 'h-[350px] gap-[var(--spacing-16)] p-[var(--spacing-16)]',
-        compact: 'gap-[var(--spacing-12)] p-[var(--spacing-12)]',
+        big: 'h-[480px] gap-(--stats-card-global-item-spacing) p-[calc(var(--stats-card-global-padding)-var(--stats-card-global-border-weight))]',
+        small:
+          'h-[350px] gap-(--stats-card-global-item-spacing) p-[calc(var(--stats-card-global-padding)-var(--stats-card-global-border-weight))]',
+        compact:
+          'gap-(--stats-card-compact-item-spacing) p-[calc(var(--stats-card-compact-padding)-var(--stats-card-global-border-weight))]',
       },
     },
     defaultVariants: { variant: 'small' },
   },
 );
 
-const rule = 'h-[var(--border-weight-thin)] w-full shrink-0 bg-[var(--border-muted)]';
-// Caption/XS: 10 / 120% / +0.5%, light.
-const captionXs = 'text-[10px] leading-[1.2] font-light tracking-[0.005em]';
+const rule = 'h-(--stats-card-global-border-weight) w-full shrink-0 bg-[var(--border-muted)]';
 
 export interface StatsCardProps
   extends Omit<ComponentPropsWithoutRef<'div'>, 'title'>,
@@ -157,8 +161,8 @@ export function StatsCard({
     const level2 = tabs || filter;
     body = (
       <>
-        <div className="flex flex-col gap-[var(--spacing-12)]">
-          <div className="flex items-center gap-[var(--spacing-12)]">
+        <div className="flex flex-col gap-(--stats-card-global-header-item-spacing)">
+          <div className="flex items-center gap-(--stats-card-global-header-item-spacing)">
             <div className="min-w-0 flex-1">{heading}</div>
             {actions ? (
               <div
@@ -175,12 +179,12 @@ export function StatsCard({
             <>
               <div className={rule} />
               {mobile ? (
-                <div className="flex flex-col gap-[var(--spacing-12)]">
+                <div className="flex flex-col gap-(--stats-card-global-header-item-spacing)">
                   {filter}
                   {tabs}
                 </div>
               ) : (
-                <div className="flex items-center justify-between gap-[var(--spacing-12)]">
+                <div className="flex items-center justify-between gap-(--stats-card-global-header-item-spacing)">
                   {tabs}
                   {filter}
                 </div>
@@ -188,7 +192,9 @@ export function StatsCard({
             </>
           ) : null}
         </div>
-        {legend ? <div className="pb-[var(--spacing-08)]">{legend}</div> : null}
+        {legend ? (
+          <div className="pb-(--stats-card-global-legend-bottom-padding)">{legend}</div>
+        ) : null}
         {chartBox('flex-1')}
         {info || footer ? (
           <>
@@ -197,12 +203,11 @@ export function StatsCard({
               {info ? (
                 <span
                   className={cn(
-                    'flex items-center gap-[var(--spacing-06)] text-[var(--text-secondary)]',
-                    captionXs,
+                    'flex items-center gap-(--stats-card-global-info-group-gap) text-[var(--text-secondary)]',
                   )}
                 >
                   <InfoIcon className="size-[var(--size-24)] shrink-0 text-[var(--text-primary)]" />
-                  {info}
+                  <span className="type-caption-xs">{info}</span>
                 </span>
               ) : (
                 <span />

@@ -8,3 +8,10 @@
  * Browsers without `text-box` keep the full line box.
  */
 export const capTrim = '[text-box:trim-both_cap_alphabetic]';
+
+/**
+ * `truncate` for cap-trimmed text. `overflow: hidden` would clip the descenders
+ * that hang below a trimmed box; `overflow-x: clip` cuts only the inline axis and
+ * leaves the block axis visible, and text-overflow still draws the ellipsis.
+ */
+export const truncateTrimmed = 'min-w-0 overflow-x-clip text-ellipsis whitespace-nowrap';

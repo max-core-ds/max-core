@@ -37,7 +37,9 @@ export function Table({ className, children, ...rest }: TableProps) {
   return (
     <table
       className={cn(
-        'w-full border-collapse text-base leading-[1.4] font-light text-[var(--text-primary)]',
+        // Cells default to Body/MD/300 (Phase 4.5); the bare _Cell Item master is
+        // Caption/300 — flagged to Max.
+        'w-full border-collapse type-body-md-300 text-[var(--text-primary)]',
         className,
       )}
       {...rest}
@@ -68,9 +70,12 @@ export function HeaderCell({
   ...rest
 }: HeaderCellProps) {
   const base = cn(
-    'h-[var(--size-40)] min-w-[93px] border-b border-[var(--border-muted)] bg-[var(--bg-default)]',
-    'px-[var(--spacing-16)] py-[var(--spacing-08)]',
-    'text-sm leading-[1.3] font-bold text-[var(--text-secondary)]',
+    // _Header Cell: Height, Min Width, Global Padding × Padding Y, a bottom Border
+    // Weight border/muted line; label Body/SM/700 text/secondary.
+    'h-(--data-table-header-cell-height) min-w-(--data-table-header-cell-min-width) bg-[var(--bg-default)]',
+    'border-0 border-b-(length:--data-table-header-cell-border-weight) border-solid border-[var(--border-muted)]',
+    'px-(--data-table-global-padding) py-(--data-table-header-cell-padding-y)',
+    'type-body-sm-700 text-[var(--text-secondary)]',
     alignClass[align],
     className,
   );
@@ -94,7 +99,7 @@ export function HeaderCell({
         type="button"
         onClick={onSort}
         className={cn(
-          'inline-flex items-center gap-[var(--spacing-04)] rounded-[var(--radius-sm)]',
+          'inline-flex items-center gap-(--data-table-header-cell-label-gap) rounded-[var(--radius-sm)]',
           'transition-colors hover:text-[var(--text-primary)]',
           focusRing,
           align === 'right' && 'flex-row-reverse',
@@ -139,8 +144,11 @@ export function TableCell({ align = 'left', className, children, ...rest }: Tabl
   return (
     <td
       className={cn(
-        'h-[var(--size-56)] min-w-[93px] border-b border-[var(--border-default)]',
-        'px-[var(--spacing-16)] align-middle',
+        // _Table Cell: Height, Min Width, Global Padding X, a bottom Border Weight
+        // line in border/muted (the master's colour since round 1; was border/default).
+        'h-(--data-table-table-cell-height) min-w-(--data-table-table-cell-min-width) align-middle',
+        'border-0 border-b-(length:--data-table-table-cell-border-weight) border-solid border-[var(--border-muted)]',
+        'px-(--data-table-global-padding)',
         alignClass[align],
         className,
       )}
@@ -148,7 +156,8 @@ export function TableCell({ align = 'left', className, children, ...rest }: Tabl
     >
       <div
         className={cn(
-          'flex items-center gap-[var(--spacing-10)]',
+          // Gap between a cell's items (the master's Empty Gap, 10).
+          'flex items-center gap-(--data-table-table-cell-empty-gap)',
           align === 'center' && 'justify-center',
           align === 'right' && 'justify-end',
         )}
@@ -292,11 +301,16 @@ export function DataTable<Row>({
 
   return (
     <div
-      className={cn('overflow-hidden rounded-[var(--radius-xl)] bg-[var(--bg-surface)]', className)}
+      className={cn(
+        'overflow-hidden rounded-(--data-table-global-radius) bg-[var(--bg-surface)]',
+        className,
+      )}
       {...rest}
     >
       {header != null ? (
-        <div className="px-[var(--spacing-16)] py-[var(--spacing-16)]">{header}</div>
+        <div className="px-(--data-table-global-padding) py-(--data-table-global-padding-y)">
+          {header}
+        </div>
       ) : null}
       <div className="overflow-x-auto">
         <Table>
@@ -369,10 +383,10 @@ export function DataTable<Row>({
         </Table>
       </div>
       {footer != null || footerInfo != null ? (
-        <div className="flex items-center justify-between gap-[var(--spacing-10)] px-[var(--spacing-16)] py-[var(--spacing-16)]">
-          <span className="text-sm leading-[1.3] font-light text-[var(--text-primary)]">
-            {footerInfo}
-          </span>
+        // _Table Footer (Desktop): Padding X / Y, Desktop Gap; the info text is the
+        // master's 12px light (unstyled there) → Caption/300.
+        <div className="flex items-center justify-between gap-(--data-table-footer-desktop-gap) px-(--data-table-footer-padding-x) py-(--data-table-footer-padding-y)">
+          <span className="type-caption-300 text-[var(--text-primary)]">{footerInfo}</span>
           {footer}
         </div>
       ) : null}
@@ -391,14 +405,17 @@ export interface RatingStarsProps extends Omit<ComponentPropsWithoutRef<'span'>,
 
 /**
  * Read-only star rating (_Cell Item / Rating Group): lucide outline stars in
- * text/secondary, rounded to halves — Full, Half (star-half) and Empty (the
- * master's 30% opacity, unbound).
+ * text/secondary, rounded to halves — Full, Half (star-half) and Empty
+ * (`- opacity -/faint`, bound in round 1). Rating Group Gap + Stars Icon Size.
  */
 export function RatingStars({ value, max = 5, className, ...rest }: RatingStarsProps) {
   const halves = Math.round(value * 2);
   return (
     <span
-      className={cn('inline-flex items-center gap-[var(--spacing-04)]', className)}
+      className={cn(
+        'inline-flex items-center gap-(--data-table-table-cell-cell-item-rating-group-gap)',
+        className,
+      )}
       role="img"
       aria-label={`${value} out of ${max}`}
       {...rest}
@@ -422,7 +439,7 @@ export function RatingStars({ value, max = 5, className, ...rest }: RatingStarsP
 function SortIcon({ direction }: { direction: SortDirection | null }) {
   return (
     <svg
-      className="size-[var(--size-12)] shrink-0 text-[var(--text-muted)]"
+      className="size-(--data-table-header-cell-sort-icon-size) shrink-0 text-[var(--text-muted)]"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -447,8 +464,8 @@ function Star({ fill }: { fill: 'full' | 'half' | 'empty' }) {
   return (
     <svg
       className={cn(
-        'size-[var(--size-20)] shrink-0 text-[var(--text-secondary)]',
-        fill === 'empty' && 'opacity-30',
+        'size-(--data-table-table-cell-cell-item-stars-icon-size) shrink-0 text-[var(--text-secondary)]',
+        fill === 'empty' && 'opacity-[var(--opacity-faint)]',
       )}
       viewBox="0 0 24 24"
       fill="none"

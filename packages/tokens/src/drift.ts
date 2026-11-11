@@ -282,6 +282,7 @@ const SPECS: ComponentSpec[] = [
   {
     name: 'Action Bar',
     source: 'components/ActionBar/ActionBar.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Molecule/Action Bar'],
   },
   // --- Batch 5: Composition I ---
@@ -420,20 +421,27 @@ const SPECS: ComponentSpec[] = [
   {
     name: 'Stats Card',
     source: 'components/StatsCard/StatsCard.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Organism/Stats card'],
   },
   // --- Batch 8: mega-systems (lean v1) ---
   {
     name: 'Stacked List',
     source: 'components/StackedList/StackedList.tsx',
+    mode: 'component', // Phase 4.7
     // Only the row variants built in the lean v1; the rest (Ride/Delivery/
-    // Booking/Item Grid/Transport) land when their variants do.
+    // Booking/Item Grid/Transport) land when their variants do. Global/* is
+    // reached through the per-row aliases.
     prefixes: [
-      'Organism/Stacked List/Global',
       'Organism/Stacked List/Default',
       'Organism/Stacked List/Social',
       'Organism/Stacked List/Media Row',
       'Organism/Stacked List/Product',
+    ],
+    exempt: [
+      // Both size the caller's trailing button (an Icon Only S is already 32).
+      '--stacked-list-default-item-size',
+      '--stacked-list-social-icon-size',
     ],
   },
   // --- Batch 10: Card system ---
@@ -454,14 +462,13 @@ const SPECS: ComponentSpec[] = [
   {
     name: 'Bottom Sheet',
     source: 'components/BottomSheet/BottomSheet.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Organism/Bottom Sheet'],
-    exempt: [
-      '--spacing-24', // General Gap — bound nowhere on the builder master
-    ],
   },
   {
     name: 'Data Table',
     source: 'components/DataTable/DataTable.tsx',
+    mode: 'component', // Phase 4.7
     // Table Header (slot-heavy) and Table Builder (mobile) are out of the v1;
     // their prefixes are simply not listed. Cell-item content is caller-composed.
     prefixes: [
@@ -472,7 +479,20 @@ const SPECS: ComponentSpec[] = [
       'Organism/Data Table/Footer',
     ],
     exempt: [
-      '--spacing-06', // Table Cell/Cell Item/Simple Text Gap — no Simple Text cell-item in v1; text cells render plain content
+      // No Simple Text / Flags / Product Info cell items in v1; text cells render plain content.
+      '--data-table-table-cell-cell-item-simple-text-gap',
+      '--data-table-table-cell-cell-item-flags-gap',
+      '--data-table-table-cell-cell-item-product-info-gap',
+      '--data-table-table-cell-cell-item-product-info-title-subtitle-gap',
+      // Header cells hold one label (Label Gap spaces it from the sort icon).
+      '--data-table-header-cell-gap',
+      // Table Row Gap spaces the row's single slot frame — nothing to space in a <tr>.
+      '--data-table-table-row-gap',
+      // Global/Min Width is reached via Header Cell / Table Cell Min Width.
+      '--data-table-global-min-width',
+      '--data-table-global-border-weight',
+      // The mobile footer layout is out of the v1.
+      '--data-table-footer-mobile-gap',
     ],
   },
   {

@@ -1,4 +1,5 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import { capTrim } from '../../utils/cap-trim.js';
 import { cn } from '../../utils/cn.js';
 import { focusRing } from '../../utils/focus-ring.js';
 import { Tooltip } from '../Tooltip/Tooltip.js';
@@ -8,8 +9,7 @@ import { InfoIcon, chartTheme } from './StatsCard.js';
 // _Comparison Metric and _Chart Legend. Labels are Caption/700 text/secondary;
 // the optional info icon (16, text/primary) is a focusable Tooltip trigger.
 
-const captionBold =
-  'text-xs leading-[1.3] font-bold tracking-[0.005em] text-[var(--text-secondary)]';
+const captionBold = 'type-caption-700 text-[var(--text-secondary)]';
 
 function LabelRow({ label, info }: { label: ReactNode; info?: ReactNode }) {
   return (
@@ -66,9 +66,7 @@ export function StatsMetric({
                 {icon}
               </span>
             ) : null}
-            <span className="text-2xl leading-[1.2] font-bold tracking-[-0.005em] text-[var(--text-primary)]">
-              {value}
-            </span>
+            <span className="type-h5 text-[var(--text-primary)]">{value}</span>
           </div>
         ) : null)}
     </div>
@@ -100,13 +98,11 @@ export function StatsComparison({
     <div className={cn('flex flex-col gap-[var(--spacing-04)]', className)} {...rest}>
       <LabelRow label={label} info={info} />
       <div className="flex items-center gap-[var(--spacing-06)]">
-        <span className="text-xl leading-[1.3] font-bold tracking-[-0.005em] text-[var(--text-primary)]">
-          {value}
-        </span>
+        <span className="type-h6 text-[var(--text-primary)]">{value}</span>
         {delta != null ? (
           <span
             className={cn(
-              'flex items-center gap-[var(--spacing-02)] text-base leading-[1.4] font-light',
+              'flex items-center gap-[var(--spacing-02)] type-body-md-300',
               trend === 'up'
                 ? 'text-[var(--status-success-default)]'
                 : 'text-[var(--status-danger-default)]',
@@ -163,14 +159,14 @@ export function ChartLegend({ items, className, ...rest }: ChartLegendProps) {
         <li
           // biome-ignore lint/suspicious/noArrayIndexKey: legend order is the series order
           key={i}
-          className="flex items-center gap-[var(--spacing-06)] text-[10px] leading-[1.2] font-light tracking-[0.005em] text-[var(--text-secondary)]"
+          className="flex items-center gap-[var(--spacing-06)] type-caption-xs text-[var(--text-secondary)]"
         >
           <span
             aria-hidden="true"
             className="size-[var(--size-8)] shrink-0 rounded-[var(--radius-full)]"
             style={{ background: item.color ?? chartTheme.series[i % chartTheme.series.length] }}
           />
-          {item.label}
+          <span className={capTrim}>{item.label}</span>
         </li>
       ))}
     </ul>

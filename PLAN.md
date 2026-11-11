@@ -915,9 +915,29 @@ The output goes to the scratchpad and fixes the exact name→path mappings below
 > Global Padding / Item Gap (reached via the Desktop / Mobile aliases) and Desktop / Mobile
 > Border Weight (alias Global, which the stroke binds).
 >
-> **NEXT — Batch 11:** Stacked List / Stats Card / Data Table / Bottom Sheet — ask first; then
-> the z-index sweep + motion note for Max. Per batch: re-read `docs/figma-answers-round-1.md`
-> for its components.
+> **Batch 11 — Stacked List, Stats Card, Data Table, Bottom Sheet (+ Action Bar, Share Item) ✅:**
+> every mapped drift spec is now `component` mode. Bottom Sheet on `--bottom-sheet-*`; round 1:
+> parts General Gap (24, was 16) apart, header Header Gap, and the master's Divider above the
+> footer; title `type-h6`. Stacked List: per-row-type tokens (Padding, Gap, Inner Gap, Border
+> Weight — stroke kept at none as Max asked —, Item Size / Radius, Media Icon Size); Default's
+> leading icon is now the bare 24 icon as the master (was a 32 box); title `type-body-md-700`,
+> subtitle `type-caption-300`, price `type-h6` → rows 56 / 80 measured. New `truncateTrimmed`
+> (`utils/cap-trim.ts`): `overflow-x: clip` + ellipsis, because `truncate`'s overflow hidden
+> clipped descenders under the cap trim. Stats Card: Global / Compact Padding + Item Spacing,
+> Radius, Border Weight, Header Item Spacing, Legend Bottom Padding, Info Group Gap; chartTheme
+> on Chart Line / Grid Stroke + Axis Gap; text `type-caption-700` / `-xs`, `type-h5` / `-h6`,
+> `type-body-md-300`. Data Table: Header Cell Height / Min Width / Padding Y / Border Weight /
+> Label Gap / Sort Icon Size, Table Cell Height / Min Width / Border Weight, Global Padding /
+> Radius, Footer Padding + Desktop Gap, Rating Group Gap + Stars Icon Size, empty star
+> `opacity/faint`; body cell lines `border/muted` (the master's, was `border/default`); header
+> `type-body-sm-700`, footer info `type-caption-300` (the master's raw 12px light). Action Bar
+> Global Gap + Button Min Width. Share Item default icon `text/accent` (round-1 sweep) →
+> contrast **9/34**. Exempt (reasons in `drift.ts`): Stacked List Default Item Size + Social
+> Icon Size (size the caller's trailing button), Data Table cell items not in v1, Header Cell
+> Gap, Table Row Gap, Global Min Width / Border Weight (via aliases), mobile footer gap.
+>
+> **NEXT — close 4.7:** the z-index sweep (`z-50` / `z-[…]` → `z-(--z-index-*)`) + the motion
+> note for Max — ask first. Then 4.8 publishing pipeline.
 >
 > **Per-batch loop:** read the master's bindings (`use_figma`, read-only, file `sX5tik…`) + the
 > component's tokens in `packages/tokens/dist/tokens.css` → swap to component vars + `type-*` +
@@ -928,6 +948,10 @@ The output goes to the scratchpad and fixes the exact name→path mappings below
 > wait for the user's go-ahead (commit only when asked).
 
 > **Notes for Max — round 2 (collected during 4.7):**
+> - Data Table cell text: the `_Cell Item / Simple Text` master is Caption/300, but the page's
+>   tables mix it with Body/MD/300 (167 vs 64 cells). React keeps Body/MD/300 — which is meant?
+>   The footer's "Showing 1–5" text has no text style (raw 12px light).
+> - Stacked List Social: `Icon Size` (24) is bound to the trailing button's width (32 on canvas).
 > - Switcher Item: with Show Icon off the item hugs to 26 (8 + 10 + 8); React keeps 32 — add a
 >   Min Height, or is 26 intended? Hover fill `neutral/subtle` equals the container's `bg/subtle`
 >   in dark mode, so dark hover is invisible.

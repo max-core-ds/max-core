@@ -4,22 +4,24 @@ import { Drawer } from '@base-ui/react/drawer';
 import type { ReactElement, ReactNode } from 'react';
 import { CloseIcon } from '../../utils/close-button.js';
 import { cn } from '../../utils/cn.js';
+import { Divider } from '../Divider/Divider.js';
 import { IconOnlyButton } from '../IconOnlyButton/IconOnlyButton.js';
 
 // Bottom Sheet — the Figma "Bottom Sheet Builder" master (page "Bottom sheet"), on
 // Base UI's Drawer (modal, focus trap, Esc / outside press, swipe down to dismiss).
-// Shell: bg/surface, top corners Radius 2xl, effect/shadow/up/md; parts stacked
-// Content Gap 16 apart, Footer Padding Bottom 32 (or the device's safe area).
-// Handle: a 40 × 4 bg/subtle grabber with Handle Padding 8 above / below.
-// Header: Heading/H6 title + ✕, Padding X 16. Body has no padding: its rows
-// (Stacked List, inputs in a 16px frame…) bring their own, as in the master.
-// Footer: Padding X 16, items Content Gap 16 apart, equal widths (the master's
-// buttons FILL). Tokens: -- Organism/Bottom Sheet/*.
+// Shell: bg/surface, top corners Radius, effect/shadow/up/md; parts stacked General
+// Gap apart (24 — bound on the builder in round 1), Footer Padding Bottom (or the
+// device's safe area). Handle: a Handle Width × Height bg/subtle grabber with Handle
+// Padding above / below. Header: Heading/H6 title + ✕ (Ghost S Icon Only), Padding X,
+// Header Gap. Body has no padding: its rows (Stacked List, inputs in a 16px frame…)
+// bring their own, as in the master; its items sit Content Gap apart. A Divider
+// tops the footer, as in the master. Footer: Padding X, items Content Gap apart,
+// equal widths (the master's buttons FILL). Tokens: -- Organism/Bottom Sheet/*.
 
 const popupStyles = cn(
-  'relative flex max-h-[calc(100dvh-var(--spacing-48))] w-full max-w-lg flex-col gap-[var(--spacing-16)]',
-  'rounded-t-[var(--radius-2xl)] bg-[var(--bg-surface)] text-[var(--text-primary)] outline-none',
-  'pb-[max(var(--spacing-32),env(safe-area-inset-bottom))] shadow-[var(--effect-shadow-up-md)]',
+  'relative flex max-h-[calc(100dvh-var(--spacing-48))] w-full max-w-lg flex-col gap-(--bottom-sheet-general-gap)',
+  'rounded-t-(--bottom-sheet-radius) bg-[var(--bg-surface)] text-[var(--text-primary)] outline-none',
+  'pb-[max(var(--bottom-sheet-footer-padding-bottom),env(safe-area-inset-bottom))] shadow-[var(--effect-shadow-up-md)]',
   // Slide in / out from below and follow the finger while swiping (Base UI sets
   // --drawer-swipe-movement-y and data-swiping).
   '[transform:translateY(var(--drawer-swipe-movement-y,0px))] transition-transform duration-[450ms] ease-[cubic-bezier(0.32,0.72,0,1)]',
@@ -83,21 +85,21 @@ export function BottomSheet({
             className={cn(
               popupStyles,
               // Without the handle the master starts flush at the top edge; keep Padding Y.
-              !handle && 'pt-[var(--spacing-16)]',
+              !handle && 'pt-(--bottom-sheet-padding-y)',
               className,
             )}
           >
             {handle ? (
               <div
                 aria-hidden="true"
-                className="flex shrink-0 justify-center py-[var(--spacing-08)]"
+                className="flex shrink-0 justify-center py-(--bottom-sheet-handle-padding)"
               >
-                <div className="h-[var(--size-4)] w-[var(--size-40)] rounded-[var(--radius-full)] bg-[var(--bg-subtle)]" />
+                <div className="h-(--bottom-sheet-handle-height) w-(--bottom-sheet-handle-width) rounded-(--bottom-sheet-handle-radius) bg-[var(--bg-subtle)]" />
               </div>
             ) : null}
             {title != null ? (
-              <div className="flex shrink-0 items-center justify-between gap-[var(--spacing-12)] px-[var(--spacing-16)]">
-                <Drawer.Title className="min-w-0 flex-1 text-xl leading-[1.3] font-bold tracking-[-0.005em] text-[var(--text-primary)]">
+              <div className="flex shrink-0 items-center justify-between gap-(--bottom-sheet-header-gap) px-(--bottom-sheet-padding-x)">
+                <Drawer.Title className="min-w-0 flex-1 type-h6 text-[var(--text-primary)]">
                   {title}
                 </Drawer.Title>
                 {showClose ? (
@@ -116,12 +118,13 @@ export function BottomSheet({
               </div>
             ) : null}
             {children != null ? (
-              <Drawer.Content className="flex min-h-0 flex-1 flex-col gap-[var(--spacing-16)] overflow-y-auto">
+              <Drawer.Content className="flex min-h-0 flex-1 flex-col gap-(--bottom-sheet-content-gap) overflow-y-auto">
                 {children}
               </Drawer.Content>
             ) : null}
+            {footer != null ? <Divider className="shrink-0" /> : null}
             {footer != null ? (
-              <div className="grid shrink-0 grid-flow-col auto-cols-[minmax(0,1fr)] items-center gap-[var(--spacing-16)] px-[var(--spacing-16)]">
+              <div className="grid shrink-0 grid-flow-col auto-cols-[minmax(0,1fr)] items-center gap-(--bottom-sheet-content-gap) px-(--bottom-sheet-padding-x)">
                 {footer}
               </div>
             ) : null}
