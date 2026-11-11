@@ -842,10 +842,28 @@ The output goes to the scratchpad and fixes the exact name→path mappings below
 > Left as is: Multiselect typeahead popup (own invented list, raw semantic vars) → Item List batch.
 > Contrast unchanged (11/34).
 >
-> **NEXT — Batch 7:** Toast / Dialog / Tabs / Pagination / Switcher / Item List (+ Multiselect
-> typeahead popup → Item List) — ask first. Then Dropdown / Range / Entity Item+Card / Date Picker
-> / Form Group / Card / bars / Stacked List / Stats Card / Data Table / Bottom Sheet; finish with
-> the z-index sweep + motion note for Max.
+> **Batch 7 — overlay + navigation molecules ✅ (Toast, Dialog, Tabs, Pagination, Switcher, Item
+> List + Multiselect typeahead popup):** all on their own `--toast-snackbar-*` / `--dialogs-*` /
+> `--tabs-*` / `--pagination-*` / `--switcher-*` / `--item-list-*` vars, drift `component` mode —
+> Toast's missing Content Gap (10) is now bound, so drift is red only on Card. Text: Toast title
+> `type-h5` + body `type-body-sm-300`, Dialog `type-h4` + `type-body-sm-300`, Tabs / Switcher
+> labels `type-body-sm-300` (Switcher active 700), Pagination numbers `type-body-sm-700`, Select
+> all `type-caption-700` — all cap-trimmed. Followed the master where it moved since 4.5: Tabs
+> Active = `text/primary` label + `- Border Weight -/thick` `border/accent` underline (bottom
+> padding gives the stroke back → 34 tall); Switcher Hover / Pressed fill `neutral/subtle`
+> (label stays `text/secondary` on hover); Pagination ellipsis = the button box (Type=Ellipsis,
+> `text/muted`, not interactive); Toast Dismiss = `IconOnlyButton` Ghost / Default / S (was a
+> bare ×, no focus ring); per-tone Toast strokes bound (Border Weight is none, so invisible).
+> Switcher items keep a min height of Icon Size + padding so icon-less items stay 32 (a hugging
+> Figma item drops to 26). Multiselect typeahead popup now = header-less Item List with Checkbox
+> List Item rows, 8px below (same as list mode); its invented list + CheckIcon removed. Kept:
+> Item List no shadow (2026-10-24 decision) and its 4px inset (now the Gap token). Measured:
+> Tabs 34, Pagination 32, Switcher 32 / 40, Toast title 18, Dialog title 22 / body 10.
+> Contrast unchanged (11/34).
+>
+> **NEXT — Batch 8:** Dropdown / Range / Entity Item + Entity Card / Form Group — ask first.
+> Then Date Picker / Card / bars / Stacked List / Stats Card / Data Table / Bottom Sheet; finish
+> with the z-index sweep + motion note for Max.
 >
 > **Per-batch loop:** read the master's bindings (`use_figma`, read-only, file `sX5tik…`) + the
 > component's tokens in `packages/tokens/dist/tokens.css` → swap to component vars + `type-*` +
@@ -856,6 +874,9 @@ The output goes to the scratchpad and fixes the exact name→path mappings below
 > wait for the user's go-ahead (commit only when asked).
 
 > **Notes for Max — round 2 (collected during 4.7):**
+> - Switcher Item: with Show Icon off the item hugs to 26 (8 + 10 + 8); React keeps 32 — add a
+>   Min Height, or is 26 intended? Hover fill `neutral/subtle` equals the container's `bg/subtle`
+>   in dark mode, so dark hover is invisible.
 > - Form Group premade: `Size L/Padding` → `- Spacing -/40` and `Size S/M/L/Content Width` →
 >   `- Size -/288/392/480` alias variables that are in no collection (deleted?) — recreate or rebind.
 > - `radius/focus/3xl` = 24 is smaller than `2xl` = 26 — typo?

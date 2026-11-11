@@ -3,20 +3,22 @@
 import { Tabs as BaseTabs } from '@base-ui/react/tabs';
 import { type VariantProps, cva } from 'class-variance-authority';
 import type { ReactNode } from 'react';
+import { capTrim } from '../../utils/cap-trim.js';
 import { cn } from '../../utils/cn.js';
 import { focusRing } from '../../utils/focus-ring.js';
 
-// Tab padding, radius and underline weight match -- Molecule/Tabs/*. Label
-// Body/SM/300 text/secondary in every state (the master doesn't recolour the
-// active label — the underline / accent/surface fill marks it). Radius rounds
-// only the outer corners (Figma's Start / End, derived from position here).
-// Hover / pressed use the List Item states instead of Figma's overlay/hover +
-// white (1.91:1 light) and accent/default + white (2.85:1 dark) — Phase 4.5 decision.
+// Tab Padding X/Y, Radius and Underline Border Weight are -- Molecule/Tabs/*.
+// Label Body/SM/300 (cap-trimmed, so a tab is 12 + 10 + 12 = 34 like the master):
+// text/secondary, text/primary on the active tab. Radius rounds only the outer
+// corners (Figma's Start / End, derived from position here). The icon slot
+// (gap 8, 20px) is React-only — Tab Item has none. Hover / pressed use the List
+// Item states instead of Figma's overlay/hover + white (1.91:1 light) and
+// accent/default + white (2.85:1 dark) — Phase 4.5 decision.
 const tabStyles = cva(
   cn(
-    'inline-flex items-center gap-[var(--spacing-08)] px-[var(--spacing-16)] py-[var(--spacing-12)] ' +
-      'text-sm font-light text-[var(--text-secondary)] transition-colors ' +
-      'first:rounded-l-[var(--radius-sm)] last:rounded-r-[var(--radius-sm)] [&_svg]:size-[var(--size-20)] ' +
+    'inline-flex items-center gap-[var(--spacing-08)] px-(--tabs-padding-x) py-(--tabs-padding-y) ' +
+      'type-body-sm-300 text-[var(--text-secondary)] data-[active]:text-[var(--text-primary)] transition-colors ' +
+      'first:rounded-l-(--tabs-radius) last:rounded-r-(--tabs-radius) [&_svg]:size-[var(--size-20)] ' +
       'not-data-[active]:hover:bg-[var(--accent-subtle)] not-data-[active]:hover:text-[var(--text-primary)] ' +
       'active:bg-[var(--accent-active)] active:text-[var(--text-on-accent)] ' +
       // Base UI marks a disabled tab with data-disabled, not the disabled attribute.
@@ -26,10 +28,15 @@ const tabStyles = cva(
   {
     variants: {
       fill: {
-        // Each tab carries its own bottom line; the active one turns accent.
+        // Each tab carries its own bottom line (Underline Border Weight, border/muted);
+        // the active one is - Border Weight -/thick border/accent, as the master's
+        // Active variant. Figma strokes sit inside, so the bottom padding gives the
+        // line's weight back and the tab stays 34 tall.
         underline:
-          'border-0 border-b-[length:var(--border-weight-thin)] border-solid border-[var(--border-muted)] ' +
-          'data-[active]:border-[var(--accent-default)]',
+          'border-0 border-solid border-[var(--border-muted)] ' +
+          'border-b-(length:--tabs-underline-border-weight) pb-[calc(var(--tabs-padding-y)-var(--tabs-underline-border-weight))] ' +
+          'data-[active]:border-b-(length:--border-weight-thick) data-[active]:pb-[calc(var(--tabs-padding-y)-var(--border-weight-thick))] ' +
+          'data-[active]:border-[var(--border-accent)]',
         full: 'bg-[var(--bg-default)] data-[active]:bg-[var(--accent-surface)]',
       },
     },
@@ -71,7 +78,7 @@ export function Tabs({ items, fill, value, defaultValue, onValueChange, classNam
             className={tabStyles({ fill })}
           >
             {item.icon}
-            {item.label}
+            <span className={capTrim}>{item.label}</span>
           </BaseTabs.Tab>
         ))}
       </BaseTabs.List>

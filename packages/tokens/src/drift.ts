@@ -288,9 +288,13 @@ const SPECS: ComponentSpec[] = [
   {
     name: 'Item List',
     source: 'components/ItemList/ItemList.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Molecule/Item List'],
     exempt: [
-      '--spacing-04', // Label Helper Gap — bound inside the List Item rows (label ↔ support text), lives in ListItem.tsx
+      // Label Helper Gap is bound inside the List Item rows (label ↔ support text) — ListItem.tsx.
+      '--item-list-label-helper-gap',
+      // Divider Stroke is the composed Divider's own weight.
+      '--item-list-divider-stroke',
     ],
   },
   {
@@ -306,11 +310,13 @@ const SPECS: ComponentSpec[] = [
   {
     name: 'Tabs',
     source: 'components/Tabs/Tabs.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Molecule/Tabs'],
   },
   {
     name: 'Pagination',
     source: 'components/Pagination/Pagination.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Molecule/Pagination'],
   },
   {
@@ -333,6 +339,7 @@ const SPECS: ComponentSpec[] = [
   {
     name: 'Switcher',
     source: 'components/Switcher/Switcher.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Molecule/Switcher'],
   },
   // --- Batch 6: Entity & overlay ---
@@ -355,11 +362,13 @@ const SPECS: ComponentSpec[] = [
   {
     name: 'Toast',
     source: 'components/Toast/Toast.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Molecule/Toast Snackbar'],
   },
   {
     name: 'Dialog',
     source: 'components/Dialog/Dialog.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Molecule/Dialogs'],
   },
   // --- Batch 7: Organisms (Share Item has no tokens; Stacked List → Batch 8) ---

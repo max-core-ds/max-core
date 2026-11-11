@@ -5,12 +5,13 @@ import type { ReactElement, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
 import { ActionBar } from '../ActionBar/ActionBar.js';
 
-// Padding and Radius match -- Molecule/Dialogs/*; flat bg/surface, no shadow or
-// stroke (as the master). The master is a fixed 347 × 327 card with its parts
-// spread apart; React hugs its content with a 20px gap so any copy fits.
+// Padding, Radius and Text Gap are -- Molecule/Dialogs/*; flat bg/surface, no
+// shadow or stroke (as the master). The master is a fixed 347 × 327 card with
+// its parts spread apart (unbound); React hugs its content with a 20px gap so any
+// copy fits.
 const popupStyles = cn(
   'fixed left-1/2 top-1/2 z-50 flex w-full max-w-md -translate-x-1/2 -translate-y-1/2 flex-col',
-  'gap-[var(--spacing-20)] rounded-[var(--radius-l)] bg-[var(--bg-surface)] p-[var(--spacing-20)]',
+  'gap-[var(--spacing-20)] rounded-(--dialogs-radius) bg-[var(--bg-surface)] p-(--dialogs-padding)',
   'text-[var(--text-primary)] outline-none',
 );
 
@@ -91,12 +92,14 @@ export function Dialog({
             </span>
           ) : null}
           {title || description ? (
-            // Text Gap between title (Heading/H4) and body (Body/SM/300).
-            <div className={cn('flex flex-col gap-[var(--spacing-20)]', centered && 'text-center')}>
+            // Text Gap between title (Heading/H4) and body (Body/SM/300), both cap-trimmed.
+            <div
+              className={cn('flex flex-col gap-(--dialogs-text-gap)', centered && 'text-center')}
+            >
               {title ? (
                 <BaseDialog.Title
                   className={cn(
-                    'text-3xl leading-[1.2] font-bold tracking-[-0.005em]',
+                    'type-h4',
                     tone === 'danger'
                       ? 'text-[var(--status-danger-default)]'
                       : 'text-[var(--text-primary)]',
@@ -106,7 +109,7 @@ export function Dialog({
                 </BaseDialog.Title>
               ) : null}
               {description ? (
-                <BaseDialog.Description className="text-sm font-light text-[var(--text-secondary)]">
+                <BaseDialog.Description className="type-body-sm-300 text-[var(--text-secondary)]">
                   {description}
                 </BaseDialog.Description>
               ) : null}

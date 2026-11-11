@@ -1,6 +1,7 @@
 'use client';
 
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import { capTrim } from '../../utils/cap-trim.js';
 import { cn } from '../../utils/cn.js';
 import { Checkbox, type CheckboxProps } from '../Checkbox/Checkbox.js';
 import { Divider } from '../Divider/Divider.js';
@@ -10,22 +11,22 @@ import { SearchBar, type SearchBarProps } from '../SearchBar/SearchBar.js';
 // Scrollable list container matching the Figma Item List master (2344:4399):
 // an optional size-S Searchbar, an optional "Select all" row, an optional
 // Divider, then the content slot (List Item rows) with an optional ScrollBar
-// rail. Container Padding Y/Radius/Border Weight/Min Width and Search Padding X
-// match -- Molecule/Item List/*; the surface is bg/surface + border/default.
+// rail. Min Width, Radius, Border Weight, Container Padding Y, Search Padding X
+// and Gap are -- Molecule/Item List/*; the surface is bg/surface + border/default.
 // The rail sits flush at the right edge like the master's absolute ScrollBar.
+// No shadow, unlike the master (decision 2026-10-24).
 //
-// Deliberate deviations from the master (user request, 2026-10-24): rows are
-// 4px apart (the master stacks them flush) with an even 4px inset on every
-// side of the options area; that padding lives inside the scroll content, so
-// rows scroll down to the border instead of being cut above it, and a fade
-// marks more rows below. Container Padding Y (12) only tops the header
-// (search / Select all).
+// Deliberate deviations from the master (user request, 2026-10-24): the rows'
+// Gap (4) also insets the options area evenly on every side; that padding lives
+// inside the scroll content, so rows scroll down to the border instead of being
+// cut above it, and a fade marks more rows below. Container Padding Y (12) only
+// tops the header (search / Select all).
 const containerStyles = cn(
-  'flex min-w-[var(--size-120)] flex-col overflow-hidden',
-  'rounded-[var(--radius-sm)] border border-[var(--border-default)] bg-[var(--bg-surface)]',
+  'flex min-w-(--item-list-min-width) flex-col overflow-hidden',
+  'rounded-(--item-list-radius) border-solid border-(length:--item-list-border-weight) border-[var(--border-default)] bg-[var(--bg-surface)]',
 );
 
-const contentStyles = 'flex flex-col gap-[var(--spacing-04)] p-[var(--spacing-04)]';
+const contentStyles = 'flex flex-col gap-(--item-list-gap) p-(--item-list-gap)';
 
 // Fade the last 24px while more rows sit below the fold.
 const fadeEnd =
@@ -33,11 +34,11 @@ const fadeEnd =
 
 // The "Select all" row is a List Item in Figma with a size-S Checkbox in the
 // leading slot. It's a <label> here (not a ListItem <button>) so the checkbox
-// isn't nested inside another interactive element; the padding, gap, radius
-// and hover fill mirror ListItem; it shares the rows' 4px side inset.
+// isn't nested inside another interactive element; it takes the List Item's
+// own tokens, Caption/700 label and hover fill, and shares the rows' side inset.
 const selectAllStyles = cn(
-  'mx-[var(--spacing-04)] flex cursor-pointer items-center gap-[var(--spacing-08)] rounded-[var(--radius-l)]',
-  'px-[var(--spacing-12)] py-[var(--spacing-12)] text-xs font-bold text-[var(--text-primary)]',
+  'mx-(--item-list-gap) flex cursor-pointer items-center gap-(--list-item-gap) rounded-(--list-item-radius)',
+  'px-(--list-item-padding-x) py-(--list-item-padding-y) type-caption-700 text-[var(--text-primary)]',
   'transition-colors hover:bg-[var(--accent-subtle)]',
 );
 
@@ -80,9 +81,9 @@ export function ItemList({
   return (
     <div className={cn(containerStyles, className)} {...rest}>
       {hasHeader ? (
-        <div className="flex shrink-0 flex-col pt-[var(--spacing-12)]">
+        <div className="flex shrink-0 flex-col pt-(--item-list-container-padding-y)">
           {search ? (
-            <div className="px-[var(--spacing-12)]">
+            <div className="px-(--item-list-search-padding-x)">
               <SearchBar size="s" {...search} />
             </div>
           ) : null}
@@ -108,7 +109,7 @@ function SelectAllRow({ label = 'Select all', ...checkbox }: ItemListSelectAllPr
     // biome-ignore lint/a11y/noLabelWithoutControl: wraps the Base UI checkbox button (a labelable control)
     <label className={cn(selectAllStyles, 'shrink-0')}>
       <Checkbox size="s" {...checkbox} />
-      <span className="flex-1">{label}</span>
+      <span className={cn(capTrim, 'flex-1')}>{label}</span>
     </label>
   );
 }

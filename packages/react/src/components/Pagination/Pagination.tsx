@@ -1,25 +1,34 @@
 'use client';
 
 import type { ComponentPropsWithoutRef } from 'react';
+import { capTrim } from '../../utils/cap-trim.js';
 import { cn } from '../../utils/cn.js';
 import { focusRing } from '../../utils/focus-ring.js';
 
-// Button min-width/icon size/padding/gap/radius match -- Molecule/Pagination/*.
-// Figma wraps a fixed 24x24 content box (Min Width = Icon Size = 24) in 4px padding,
-// so every button — number or icon — is a 32x32 square that grows only for multi-digit
-// pages. Fix h + min-w to size-32 (= content 24 + padding 8) so numbers and arrows match.
-// Hover = bg/subtle + text/accent (Phase 4.5 decision: Figma's overlay/hover +
+// Every value is -- Molecule/Pagination/*: a content box Min Width wide and Icon
+// Size tall (24 × 24) inside Button Padding, a Border Weight stroke and Radius —
+// so number and icon buttons are 32 × 32 and grow only for multi-digit pages.
+// Figma strokes sit inside, so the padding gives the stroke back. Numbers are
+// Body/SM/700 text/secondary (cap-trimmed). Hover = bg/subtle + text/accent (Phase 4.5 decision: Figma's overlay/hover +
 // text/accent is 3.15 light / 3.96 dark); the current page skips it. Pressed =
 // Figma's overlay/pressed + text/on-accent (1.91 in dark — the dark accent ramp).
+const boxStyles = cn(
+  'inline-flex items-center justify-center rounded-(--pagination-radius)',
+  'border-solid border-(length:--pagination-border-weight) border-[var(--border-default)] bg-[var(--bg-default)]',
+  'p-[calc(var(--pagination-button-padding)-var(--pagination-border-weight))] type-body-sm-700',
+);
+
+// The 24 × 24 content box (Figma's Content frame / icon).
+const contentStyles =
+  'inline-flex h-(--pagination-icon-size) min-w-(--pagination-min-width) items-center justify-center';
+
 const buttonStyles = cn(
-  'inline-flex h-[var(--size-32)] min-w-[var(--size-32)] items-center justify-center rounded-[var(--radius-sm)]',
-  // Figma strokes sit inside: give the 1px border back so icon buttons stay 32 wide.
-  'border border-[var(--border-default)] bg-[var(--bg-default)] p-[calc(var(--spacing-04)-var(--border-weight-thin))] text-sm font-bold',
+  boxStyles,
   'text-[var(--text-secondary)] transition-colors',
   // not-active: so the hover rule doesn't outrank the pressed one.
   'not-aria-[current=page]:not-active:hover:bg-[var(--bg-subtle)] not-aria-[current=page]:not-active:hover:text-[var(--text-accent)]',
   'active:bg-[var(--overlay-pressed)] active:text-[var(--text-on-accent)]',
-  '[&_svg]:size-[var(--size-24)] disabled:pointer-events-none disabled:opacity-[var(--opacity-disabled)]',
+  '[&_svg]:size-(--pagination-icon-size) disabled:pointer-events-none disabled:opacity-[var(--opacity-disabled)]',
   focusRing,
 );
 
@@ -48,7 +57,7 @@ export function Pagination({
   return (
     <nav
       aria-label="Pagination"
-      className={cn('flex items-center gap-[var(--spacing-04)]', className)}
+      className={cn('flex items-center gap-(--pagination-buttons-gap)', className)}
       {...rest}
     >
       <button
@@ -58,17 +67,22 @@ export function Pagination({
         disabled={page <= 1}
         onClick={() => onPageChange?.(page - 1)}
       >
-        <ChevronLeft />
+        <span className={contentStyles}>
+          <ChevronLeft />
+        </span>
       </button>
       {pages.map((p, i) =>
         p === 'ellipsis' ? (
           <span
             // biome-ignore lint/suspicious/noArrayIndexKey: ellipsis positions are stable within a render
             key={`e${i}`}
-            // A button-sized slot (React-only; the master has no ellipsis) keeps the bar's width.
-            className="inline-flex min-w-[var(--size-32)] justify-center text-[var(--text-muted)]"
+            // Figma's Type=Ellipsis: the button box, text/muted, not interactive.
+            className={cn(boxStyles, 'text-[var(--text-muted)]')}
+            aria-hidden="true"
           >
-            …
+            <span className={contentStyles}>
+              <span className={capTrim}>…</span>
+            </span>
           </span>
         ) : (
           <button
@@ -78,7 +92,9 @@ export function Pagination({
             aria-current={p === page ? 'page' : undefined}
             onClick={() => onPageChange?.(p)}
           >
-            {p}
+            <span className={contentStyles}>
+              <span className={capTrim}>{p}</span>
+            </span>
           </button>
         ),
       )}
@@ -89,7 +105,9 @@ export function Pagination({
         disabled={page >= count}
         onClick={() => onPageChange?.(page + 1)}
       >
-        <ChevronRight />
+        <span className={contentStyles}>
+          <ChevronRight />
+        </span>
       </button>
     </nav>
   );

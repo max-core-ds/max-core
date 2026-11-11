@@ -78,19 +78,10 @@ const chevronSize = {
   l: '[&_svg]:size-(--input-multiselect-size-l-icon-size)',
 } as const;
 
-const popupStyles =
-  'w-[var(--anchor-width)] min-w-[240px] rounded-[var(--radius-md)] border border-[var(--border-default)] ' +
-  'bg-[var(--bg-surface)] p-[var(--spacing-04)] text-[var(--text-primary)] ' +
-  'shadow-[var(--effect-shadow-down-md)] outline-none';
-
-const itemStyles =
-  'flex cursor-default items-center justify-between gap-[var(--spacing-08)] ' +
-  'rounded-[var(--radius-sm)] px-[var(--spacing-08)] py-[var(--spacing-06)] text-sm outline-none ' +
-  'data-[highlighted]:bg-[var(--bg-subtle)] [&_svg]:size-[var(--size-20)]';
-
-// mode="list" (the master's State=Active): an Item List with Searchbar, Select
-// all, Divider and ScrollBar, 8px below the field (Items Gap), as wide as it, no
-// shadow. Rows are List Items with a leading Checkbox S.
+// The popup is an Item List 8px below the field (Items Gap), as wide as it, no
+// shadow; rows are List Items with a leading Checkbox S. mode="list" (the
+// master's State=Active) adds the Searchbar, Select all and Divider header;
+// typeahead filters from the field, so its list has no header.
 const listStyles =
   'w-[var(--anchor-width)] max-h-[min(var(--available-height),calc(var(--size-40)*8+var(--spacing-12)*2))]';
 
@@ -268,48 +259,37 @@ export function Multiselect({
           </Combobox.Chips>
         )}
         <Combobox.Portal>
-          {isList ? (
-            <Combobox.Positioner anchor={triggerRef} sideOffset={8}>
-              <Combobox.Popup className="outline-none">
-                <ItemList
-                  className={listStyles}
-                  search={{ placeholder: searchPlaceholder, render: <Combobox.Input /> }}
-                  selectAll={{
-                    checked: allVisibleSelected,
-                    indeterminate: selectedVisible.length > 0 && !allVisibleSelected,
-                    onCheckedChange: toggleVisible,
-                  }}
-                >
-                  <Combobox.Empty className="px-[var(--spacing-12)] py-[var(--spacing-12)] text-xs font-light text-[var(--text-muted)] empty:hidden">
-                    No matches
-                  </Combobox.Empty>
-                  <Combobox.List>
-                    {(item: MultiselectOption) => (
-                      <Combobox.Item key={item.value} value={item} className={listItemOption}>
-                        <CheckboxMark />
-                        <span className="flex-1">{item.label}</span>
-                      </Combobox.Item>
-                    )}
-                  </Combobox.List>
-                </ItemList>
-              </Combobox.Popup>
-            </Combobox.Positioner>
-          ) : (
-            <Combobox.Positioner anchor={chipsRef} sideOffset={4}>
-              <Combobox.Popup className={popupStyles}>
+          {/* Both modes open an Item List 8px below the field (Items Gap); the
+              typeahead one has no header — the field itself is the search. */}
+          <Combobox.Positioner anchor={isList ? triggerRef : chipsRef} sideOffset={8}>
+            <Combobox.Popup className="outline-none">
+              <ItemList
+                className={listStyles}
+                {...(isList
+                  ? {
+                      search: { placeholder: searchPlaceholder, render: <Combobox.Input /> },
+                      selectAll: {
+                        checked: allVisibleSelected,
+                        indeterminate: selectedVisible.length > 0 && !allVisibleSelected,
+                        onCheckedChange: toggleVisible,
+                      },
+                    }
+                  : {})}
+              >
+                <Combobox.Empty className="px-(--list-item-padding-x) py-(--list-item-padding-y) type-caption-300 text-[var(--text-muted)] empty:hidden">
+                  No matches
+                </Combobox.Empty>
                 <Combobox.List>
                   {(item: MultiselectOption) => (
-                    <Combobox.Item key={item.value} value={item} className={itemStyles}>
-                      {item.label}
-                      <Combobox.ItemIndicator>
-                        <CheckIcon />
-                      </Combobox.ItemIndicator>
+                    <Combobox.Item key={item.value} value={item} className={listItemOption}>
+                      <CheckboxMark />
+                      <span className="flex-1">{item.label}</span>
                     </Combobox.Item>
                   )}
                 </Combobox.List>
-              </Combobox.Popup>
-            </Combobox.Positioner>
-          )}
+              </ItemList>
+            </Combobox.Popup>
+          </Combobox.Positioner>
         </Combobox.Portal>
       </Combobox.Root>
       {errorMessage ? (
@@ -334,21 +314,6 @@ function XIcon() {
       focusable="false"
     >
       <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function CheckIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      aria-hidden="true"
-      focusable="false"
-    >
-      <path d="M20 6 9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }

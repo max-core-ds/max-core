@@ -3,16 +3,18 @@
 import { Toast as BaseToast } from '@base-ui/react/toast';
 import type { ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
+import { IconOnlyButton } from '../IconOnlyButton/IconOnlyButton.js';
 import { LinkButton } from '../LinkButton/LinkButton.js';
 import { Spinner } from '../Spinner/Spinner.js';
 
-// Padding X/Y, Gap, Icon Size and Radius match -- Molecule/Toast Snackbar/*. No border
-// (Border Weight none); the surface is the tone's subtle fill. Icon, content and
-// action are centred on the row (Figma counter-axis CENTER).
+// Padding X/Y, Gap, Radius, Border Weight and Icon Size are -- Molecule/Toast Snackbar/*.
+// Border Weight is none today, so the per-tone stroke (as bound in the master)
+// only shows if Max raises it. Icon, content and action are centred on the row
+// (Figma counter-axis CENTER).
 const toastStyles = cn(
-  'pointer-events-auto flex items-center gap-[var(--spacing-16)]',
-  'rounded-[var(--radius-l)] text-[var(--text-primary)]',
-  'px-[var(--spacing-16)] py-[var(--spacing-12)]',
+  'pointer-events-auto flex items-center gap-(--toast-snackbar-gap)',
+  'rounded-(--toast-snackbar-radius) border-solid border-(length:--toast-snackbar-border-weight) text-[var(--text-primary)]',
+  'px-[calc(var(--toast-snackbar-padding-x)-var(--toast-snackbar-border-weight))] py-[calc(var(--toast-snackbar-padding-y)-var(--toast-snackbar-border-weight))]',
   'shadow-[var(--effect-shadow-down-md)]',
 );
 
@@ -27,11 +29,11 @@ function toneOf(type: string | undefined): Tone {
 }
 
 const toneBg: Record<Tone, string> = {
-  success: 'bg-[var(--status-success-subtle)]',
-  danger: 'bg-[var(--status-danger-subtle)]',
-  warning: 'bg-[var(--status-warning-subtle)]',
-  default: 'bg-[var(--bg-surface)]',
-  loading: 'bg-[var(--bg-surface)]',
+  success: 'bg-[var(--status-success-subtle)] border-[var(--border-default)]',
+  danger: 'bg-[var(--status-danger-subtle)] border-[var(--status-danger-default)]',
+  warning: 'bg-[var(--status-warning-subtle)] border-[var(--status-warning-border)]',
+  default: 'bg-[var(--bg-surface)] border-[var(--border-default)]',
+  loading: 'bg-[var(--bg-surface)] border-[var(--border-default)]',
 };
 
 // Status tones colour the icon, title and body with the tone's default; the
@@ -95,25 +97,22 @@ function ToastList() {
         ) : (
           <span
             data-toast-icon
-            className={cn('shrink-0 [&_svg]:size-[var(--size-32)]', toneText[tone])}
+            className={cn('shrink-0 [&_svg]:size-(--toast-snackbar-icon-size)', toneText[tone])}
           >
             <ToneIcon tone={tone} />
           </span>
         )}
-        {/* No gap: the untrimmed line boxes already give the ~10px cap-to-cap space Figma shows. */}
-        <div className="flex min-w-0 flex-1 flex-col">
-          <BaseToast.Title
-            className={cn('text-2xl leading-[1.2] font-bold tracking-[-0.005em]', toneText[tone])}
-          />
-          <BaseToast.Description className={cn('text-sm font-light', toneBody[tone])} />
+        {/* Title Heading/H5, body Body/SM/300, Content Gap apart (both cap-trimmed). */}
+        <div className="flex min-w-0 flex-1 flex-col gap-(--toast-snackbar-content-gap)">
+          <BaseToast.Title className={cn('type-h5', toneText[tone])} />
+          <BaseToast.Description className={cn('type-body-sm-300', toneBody[tone])} />
         </div>
         <BaseToast.Action render={<LinkButton tone={actionTone[tone]} />} className="shrink-0" />
+        {/* Dismiss = Icon Only Button, Ghost / Default / S, as in the master. */}
         <BaseToast.Close
-          aria-label="Close"
-          className="shrink-0 text-[var(--text-muted)] hover:text-[var(--text-primary)] [&_svg]:size-[var(--size-20)]"
-        >
-          <XIcon />
-        </BaseToast.Close>
+          className="shrink-0"
+          render={<IconOnlyButton aria-label="Close" variant="ghost" size="s" icon={<XIcon />} />}
+        />
       </BaseToast.Root>
     );
   });
