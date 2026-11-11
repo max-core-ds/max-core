@@ -55,12 +55,8 @@ const SPECS: ComponentSpec[] = [
   {
     name: 'Avatar',
     source: 'components/Avatar/Avatar.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Atoms/Avatar'],
-    exempt: [
-      '--size-8', // status dot (XS/S) — status dot not implemented yet
-      '--size-20', // status dot (XL) — status dot not implemented yet
-      '--size-16', // status dot (M/L) — status dot not implemented yet
-    ],
   },
   {
     name: 'Tag',
@@ -174,6 +170,7 @@ const SPECS: ComponentSpec[] = [
   {
     name: 'Thumbnail',
     source: 'components/Thumbnail/Thumbnail.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Atoms/Thumbnail'],
   },
   {
@@ -185,10 +182,11 @@ const SPECS: ComponentSpec[] = [
   {
     name: 'Time Picker',
     source: 'components/TimePicker/TimePicker.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Atoms/Time Picker'],
     exempt: [
       // Period column centers AM/PM with spacer rows instead of a bottom padding.
-      '--spacing-28',
+      '--time-picker-period-bottom-padding',
     ],
   },
   {
@@ -200,6 +198,7 @@ const SPECS: ComponentSpec[] = [
   {
     name: 'Content Blocks',
     source: 'components/ContentBlocks/ContentBlocks.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Atoms/Content Blocks'],
   },
   // --- Batch 3: Selection & interaction ---
@@ -243,6 +242,7 @@ const SPECS: ComponentSpec[] = [
   {
     name: 'List Item',
     source: 'components/ListItem/ListItem.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Atoms/List Item'],
   },
   // --- Batch 4: Input molecules ---
@@ -332,8 +332,8 @@ const SPECS: ComponentSpec[] = [
   {
     name: 'Avatar Group',
     source: 'components/AvatarGroup/AvatarGroup.tsx',
-    prefixes: ['Molecule/Avatar Group'], // Gap is a raw negative overlap — nothing dimensional to check
-    exempt: ['--size-24'], // avatar/counter dimensions come from the composed Avatar (see Avatar spec)
+    mode: 'component', // Phase 4.7
+    prefixes: ['Molecule/Avatar Group'],
   },
   {
     name: 'Range',
@@ -343,6 +343,7 @@ const SPECS: ComponentSpec[] = [
   {
     name: 'Pin',
     source: 'components/Pin/Pin.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Molecule/Pin'],
   },
   {

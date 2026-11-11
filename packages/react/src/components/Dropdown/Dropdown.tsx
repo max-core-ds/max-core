@@ -60,7 +60,7 @@ export function DropdownMenu({
                 onClick={item.onClick}
               >
                 {item.icon}
-                {item.label}
+                <span>{item.label}</span>
               </Menu.Item>
             ))}
           </ItemList>

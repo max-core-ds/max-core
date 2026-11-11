@@ -6,9 +6,9 @@ import { focusRing } from '../../utils/focus-ring.js';
 import { useRailCollapsed } from '../../utils/rail-context.js';
 
 // The interactive row primitive for Item List / Dropdown / Stacked List menus.
-// Padding/gap/icon size/radius match -- Atoms/List Item/*. The label is
-// Caption/700 and the optional support text Caption/300, 4px apart (Label Helper
-// Gap) — with the 20px icons that gives the master's 44px row. Interactive states
+// Padding/gap/icon size/radius are -- Atoms/List Item/*. The label is
+// Caption/700 and the optional support text Caption/300, Label Helper Gap (4)
+// apart, both cap-trimmed — with the 20px icons that gives the master's 44px row. Interactive states
 // follow the Figma showcase: Hover=accent/subtle (a wash — text stays
 // text/primary; accent/subtle is a pale fill in light mode, so white on-accent
 // text would be unreadable), Pressed=accent/active and Active (selected)=
@@ -24,30 +24,30 @@ import { useRailCollapsed } from '../../utils/rail-context.js';
 // on-accent-muted there is 1.1:1, text/secondary 3.9:1), text/on-accent-muted on
 // the pressed/selected accent fills.
 const base = cn(
-  'group/list-item relative flex w-full items-center gap-[var(--spacing-08)] rounded-[var(--radius-l)]',
-  'px-[var(--spacing-12)] py-[var(--spacing-12)] text-left text-xs text-[var(--text-primary)]',
-  '[&_svg]:size-[var(--size-20)] transition-colors',
+  'group/list-item relative flex w-full items-center gap-(--list-item-gap) rounded-(--list-item-radius)',
+  'px-(--list-item-padding-x) py-(--list-item-padding-y) text-left text-(--text-primary)',
+  '[&_svg]:size-(--list-item-icon-size) transition-colors',
   focusRing,
-  'disabled:pointer-events-none disabled:opacity-[var(--opacity-disabled)]',
+  'disabled:pointer-events-none disabled:opacity-(--opacity-disabled)',
 );
 
 // Hover + pressed feedback (pseudo-states). Applied unless the row is selected,
 // which owns the fill via `activeStyles`.
 const interactive = cn(
-  'hover:bg-[var(--accent-subtle)]',
-  'active:bg-[var(--accent-active)] active:text-[var(--text-on-accent)]',
+  'hover:bg-(--accent-subtle)',
+  'active:bg-(--accent-active) active:text-(--text-on-accent)',
 );
 
 // Selected/current row — persistent accent/default fill.
-const activeStyles = 'bg-[var(--accent-default)] text-[var(--text-on-accent)]';
+const activeStyles = 'bg-(--accent-default) text-(--text-on-accent)';
 
 // Support text tracks the row state: secondary at rest, primary on hover,
 // on-accent-muted on the pressed and selected accent fills.
 const supportTextStyles = cn(
-  'font-light text-[var(--text-secondary)] group-hover/list-item:text-[var(--text-primary)]',
-  'group-active/list-item:text-[var(--text-on-accent-muted)]',
+  'type-caption-300 text-(--text-secondary) group-hover/list-item:text-(--text-primary)',
+  'group-active/list-item:text-(--text-on-accent-muted)',
 );
-const supportTextActiveStyles = 'font-light text-[var(--text-on-accent-muted)]';
+const supportTextActiveStyles = 'type-caption-300 text-(--text-on-accent-muted)';
 
 /**
  * List Item look for listbox options (Select / Combobox items inside an Item
@@ -57,18 +57,20 @@ const supportTextActiveStyles = 'font-light text-[var(--text-on-accent-muted)]';
  * CheckboxMark / RadioMark follow the row's `data-selected`.
  */
 export const listItemOption = cn(
-  'group/option flex w-full cursor-default select-none items-center gap-[var(--spacing-08)]',
-  'rounded-[var(--radius-l)] px-[var(--spacing-12)] py-[var(--spacing-12)]',
-  'text-xs font-bold text-[var(--text-primary)] outline-none transition-colors',
-  'data-[highlighted]:bg-[var(--accent-subtle)]',
-  'active:bg-[var(--accent-active)] active:text-[var(--text-on-accent)]',
-  'data-[disabled]:pointer-events-none data-[disabled]:opacity-[var(--opacity-disabled)]',
+  'group/option flex w-full cursor-default select-none items-center gap-(--list-item-gap)',
+  'rounded-(--list-item-radius) px-(--list-item-padding-x) py-(--list-item-padding-y)',
+  'type-caption-700 text-(--text-primary) outline-none transition-colors',
+  // text-box-trim isn't inherited: trim the label span (a blockified flex item).
+  '*:[text-box:trim-both_cap_alphabetic]',
+  'data-[highlighted]:bg-(--accent-subtle)',
+  'active:bg-(--accent-active) active:text-(--text-on-accent)',
+  'data-[disabled]:pointer-events-none data-[disabled]:opacity-(--opacity-disabled)',
 );
 
 // Nested-row indent spacers (Level 1 / Level 2 on the master).
 const levelSpacer = {
-  1: 'w-[var(--spacing-12)]',
-  2: 'w-[var(--spacing-24)]',
+  1: 'w-(--spacing-12)',
+  2: 'w-(--spacing-24)',
 } as const;
 
 export interface ListItemProps extends ComponentPropsWithoutRef<'button'> {
@@ -116,8 +118,8 @@ export function ListItem({
       {level ? <span aria-hidden="true" className={cn('shrink-0', levelSpacer[level])} /> : null}
       {leftIcon}
       {!isCollapsed && (
-        <span className="flex flex-1 flex-col gap-[var(--spacing-04)]">
-          <span className="font-bold">{children}</span>
+        <span className="flex flex-1 flex-col gap-(--list-item-label-helper-gap)">
+          <span className="type-caption-700">{children}</span>
           {supportText ? (
             <span className={active ? supportTextActiveStyles : supportTextStyles}>
               {supportText}

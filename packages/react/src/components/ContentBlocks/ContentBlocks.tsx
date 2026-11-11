@@ -2,7 +2,8 @@ import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
 
 // Draggable placeholder blocks for composing slot content (headings, body copy,
-// media). Padding X matches -- Atoms/Content Blocks/Padding X (2px).
+// media). Padding X is -- Atoms/Content Blocks/Padding X (2px) each side
+// (276 text in the 280 master). Heading = Heading/H6, body = Body/SM/300 (cap-trimmed).
 
 export interface HeadingBlockProps extends ComponentPropsWithoutRef<'div'> {
   children?: ReactNode;
@@ -11,10 +12,7 @@ export interface HeadingBlockProps extends ComponentPropsWithoutRef<'div'> {
 export function HeadingBlock({ children = 'Heading', className, ...rest }: HeadingBlockProps) {
   return (
     <div
-      className={cn(
-        'px-[var(--spacing-02)] text-xl font-bold text-[var(--text-primary)]',
-        className,
-      )}
+      className={cn('px-(--content-blocks-padding-x) type-h6 text-(--text-primary)', className)}
       {...rest}
     >
       {children}
@@ -34,7 +32,7 @@ export function TextBlock({
   return (
     <p
       className={cn(
-        'px-[var(--spacing-02)] text-sm font-light text-[var(--text-secondary)]',
+        'px-(--content-blocks-padding-x) type-body-sm-300 text-(--text-secondary)',
         className,
       )}
       {...rest}
@@ -53,14 +51,14 @@ export function ImagePlaceholder({ className, ...rest }: ImagePlaceholderProps) 
   return (
     <div
       className={cn(
-        'flex aspect-video w-full flex-col items-center justify-center gap-[var(--spacing-08)]',
-        'bg-[var(--bg-subtle)] text-[var(--text-muted)]',
+        'flex aspect-video w-full flex-col items-center justify-center gap-(--spacing-08)',
+        'bg-(--bg-subtle) text-(--text-muted)',
         className,
       )}
       {...rest}
     >
       <ImageIcon />
-      <span className="text-xs font-light">Image</span>
+      <span className="type-caption-300">Image</span>
     </div>
   );
 }
@@ -72,7 +70,7 @@ function ImageIcon() {
       fill="none"
       stroke="currentColor"
       strokeWidth={1.5}
-      className="size-[var(--size-48)]"
+      className="size-(--size-48)"
       aria-hidden="true"
       focusable="false"
     >

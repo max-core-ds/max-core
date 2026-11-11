@@ -2,16 +2,17 @@ import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { cn } from '../../utils/cn.js';
 import { Avatar } from '../Avatar/Avatar.js';
 
-// Overlapping avatars. Gap = -12 (raw negative overlap, -- Molecule/Avatar Group/Gap).
+// Overlapping avatars. -- Molecule/Avatar Group/Gap = -12 (a raw negative overlap).
 // Each avatar gets an inside 1px `border/surface` stroke (Border Weight token) to
 // separate it — an inset outline, so it draws over the image like Figma's INSIDE
 // stroke and doesn't grow the circle. Later avatars sit on top (DOM order), as in
-// the master. The +N counter is the Avatar Text type (accent/default + Caption/700).
+// the master. The +N counter is the Avatar Text type (accent/default + Caption/700),
+// Counter Size square at the default XS size (larger groups size it like the avatars).
 const overlapItem = cn(
   // Avatars Radius (full) — the outline follows it.
-  'rounded-[var(--radius-full)]',
-  'outline-solid outline-[length:var(--border-weight-thin)] outline-[var(--border-surface)]',
-  'outline-offset-[calc(-1*var(--border-weight-thin))]',
+  'rounded-(--avatar-group-avatars-radius)',
+  'outline-solid outline-(length:--avatar-group-border-weight) outline-(--border-surface)',
+  'outline-offset-[calc(-1*var(--avatar-group-border-weight))]',
 );
 
 export interface AvatarGroupItem {
@@ -42,13 +43,17 @@ export function AvatarGroup({ avatars, max, size = 'xs', className, ...rest }: A
           src={avatar.src}
           fallback={avatar.fallback}
           alt={avatar.alt}
-          className={cn(overlapItem, i > 0 && 'ml-[-12px]')}
+          className={cn(overlapItem, i > 0 && 'ml-(--avatar-group-gap)')}
         />
       ))}
       {overflow > 0 ? (
         <Avatar
           size={size}
-          className={cn(overlapItem, shown.length > 0 && 'ml-[-12px]')}
+          className={cn(
+            overlapItem,
+            size === 'xs' && 'size-(--avatar-group-counter-size)',
+            shown.length > 0 && 'ml-(--avatar-group-gap)',
+          )}
           fallback={
             <>
               <span aria-hidden="true">+{overflow}</span>

@@ -12,6 +12,10 @@ const meta = {
   argTypes: {
     shape: { control: 'inline-radio', options: ['rounded', 'square', 'circle'] },
     size: { control: 'select', options: ['xs', 's', 'm', 'l', 'xl'] },
+    status: {
+      control: 'select',
+      options: [undefined, 'default', 'busy', 'away', 'dnd', 'offline'],
+    },
   },
 } satisfies Meta<typeof Thumbnail>;
 
@@ -41,6 +45,25 @@ export const Sizes: Story = {
     <div className="flex items-end gap-[var(--spacing-16)]">
       {(['xs', 's', 'm', 'l', 'xl'] as const).map((size) => (
         <Thumbnail key={size} size={size} src={SAMPLE} />
+      ))}
+    </div>
+  ),
+};
+
+// Figma "Show Status": the dot sits on the bounding-box corner (outside a circle).
+export const WithStatus: Story = {
+  parameters: { layout: 'padded' },
+  render: () => (
+    <div className="flex items-end gap-(--spacing-16)">
+      {(['xs', 's', 'm', 'l', 'xl'] as const).map((size) => (
+        <Thumbnail
+          key={size}
+          size={size}
+          shape="circle"
+          src={SAMPLE}
+          status="default"
+          statusLabel="Online"
+        />
       ))}
     </div>
   ),

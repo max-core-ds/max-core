@@ -3,6 +3,7 @@
 import { Field } from '@base-ui/react/field';
 import { Popover } from '@base-ui/react/popover';
 import { type ReactNode, useCallback, useEffect, useId, useRef, useState } from 'react';
+import { capTrim } from '../../utils/cap-trim.js';
 import { cn } from '../../utils/cn.js';
 import { fieldHover, fieldSurface } from '../../utils/field.js';
 import { focusRing } from '../../utils/focus-ring.js';
@@ -63,31 +64,33 @@ const WHEEL_OFFSETS = [-2, -1, 0, 1, 2] as const;
 const WHEEL_STEP_THRESHOLD = 40;
 
 // Row treatment by distance from the centre (selected) row, per the master: the
-// centre is Body/MD/700 in accent/default on the accent/subtle bar; ±1 rows are
+// centre is Body/MD/700 in text/accent on the accent/subtle bar; ±1 rows are
 // Body/SM/300 text/secondary @ opacity/dim; ±2 rows Caption/300 @ opacity/disabled.
-// Row heights are the text line heights (16 / 20 / 24), stacked with Items Gap
-// (16). The AM/PM column uses the same ramp — Figma binds its unselected period
-// to accent/subtle (~1.2:1, invisible), so it follows the ±1 neighbours instead.
+// The AM/PM column uses the same ramp (as the master now does).
+// Deliberate deviation: the master stacks cap-trimmed text (9 / 10 / 12 tall),
+// which would make 9px-tall click targets. Rows keep line-box heights
+// (16 / 20 / 24) as tap targets, with the label cap-trimmed and centred inside.
 const rowByDistance = [
-  'h-[var(--size-24)] text-base font-bold text-[var(--accent-default)]',
-  'h-[var(--size-20)] text-sm font-light text-[var(--text-secondary)] opacity-[var(--opacity-dim)]',
-  'h-[var(--size-16)] text-xs font-light text-[var(--text-secondary)] opacity-[var(--opacity-disabled)]',
+  'h-(--size-24) type-body-md-700 text-(--text-accent)',
+  'h-(--size-20) type-body-sm-300 text-(--text-secondary) opacity-(--opacity-dim)',
+  'h-(--size-16) type-caption-300 text-(--text-secondary) opacity-(--opacity-disabled)',
 ];
-const spacerByDistance = ['h-[var(--size-24)]', 'h-[var(--size-20)]', 'h-[var(--size-16)]'];
+const spacerByDistance = ['h-(--size-24)', 'h-(--size-20)', 'h-(--size-16)'];
 
 // Hover on a non-selected row (not in Figma): text/accent at full opacity, so the
 // faded row lights up without looking selected (no bar, no bold). text/accent is
 // the text-role accent — 6.29 light / 7.34 dark on bg/surface (accent/hover is a
 // pale fill, ~2:1 as text).
 const rowHover =
-  'transition-[color,opacity] enabled:hover:text-[var(--text-accent)] enabled:hover:opacity-100';
+  'transition-[color,opacity] enabled:hover:text-(--text-accent) enabled:hover:opacity-100';
 
-// -- Atoms/Time Picker component tokens (referenced via the semantics they alias):
-// Radius = radius.l, Border Weight = none, Container Padding X/Y = spacing 24/16,
-// Gap = spacing.16, Items Gap = spacing.16. The selector bar is full-bleed via a
-// negative inset matching Container Padding X.
+// -- Atoms/Time Picker/*: Radius, Container Padding X/Y, Gap (between columns),
+// Items Gap (between rows), Border Weight (`none` — kept so a theme can switch the
+// border/default stroke on). The selector bar is full-bleed via a negative inset
+// matching Container Padding X.
 const surfaceStyles =
-  'rounded-[var(--radius-l)] bg-[var(--bg-surface)] px-[var(--spacing-24)] py-[var(--spacing-16)]';
+  'rounded-(--time-picker-radius) bg-(--bg-surface) px-(--time-picker-container-padding-x) py-(--time-picker-container-padding-y) ' +
+  'border-solid border-(length:--time-picker-border-weight) border-(--border-default)';
 
 // Next enabled option in `direction`, wrapping; undefined if none available.
 function nextWheelValue<T>(
@@ -191,7 +194,7 @@ function WheelColumn<T>({
       className={cn(
         // Columns hug their values like the master; min 2ch keeps a 12h hour
         // column from narrowing when every visible hour is one digit.
-        'relative z-[1] flex min-w-[2ch] flex-col items-center gap-[var(--spacing-16)]',
+        'relative z-[1] flex min-w-[2ch] flex-col items-center gap-(--time-picker-items-gap)',
         'rounded-[var(--radius-sm)]',
         focusRing,
       )}
@@ -228,7 +231,7 @@ function WheelColumn<T>({
               !isCentre && rowHover,
             )}
           >
-            {render(value)}
+            <span className={capTrim}>{render(value)}</span>
           </button>
         );
       })}
@@ -256,16 +259,16 @@ function Wheel({ model, className }: { model: WheelModel; className?: string }) 
   return (
     <div
       data-time-wheel
-      className={cn('relative flex justify-center gap-[var(--spacing-16)]', className)}
+      className={cn('relative flex justify-center gap-(--time-picker-gap)', className)}
     >
       {/* Full-bleed selector bar behind the centre row (bleeds past Container
           Padding X); it sits below the ±2 (16) and ±1 (20) rows and two Items Gaps. */}
       <span
         aria-hidden="true"
         className={cn(
-          'pointer-events-none absolute z-0 h-[var(--size-24)] bg-[var(--accent-subtle)]',
-          'left-[calc(-1*var(--spacing-24))] right-[calc(-1*var(--spacing-24))]',
-          'top-[calc(var(--size-16)+var(--size-20)+2*var(--spacing-16))]',
+          'pointer-events-none absolute z-0 h-(--size-24) bg-(--accent-subtle)',
+          'left-[calc(-1*var(--time-picker-container-padding-x))] right-[calc(-1*var(--time-picker-container-padding-x))]',
+          'top-[calc(var(--size-16)+var(--size-20)+2*var(--time-picker-items-gap))]',
         )}
       />
       <WheelColumn

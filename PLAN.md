@@ -810,6 +810,20 @@ The output goes to the scratchpad and fixes the exact name→path mappings below
 > reasons: Spinner Track/Indicator Stroke (never render), Progress Global Border Weight (none) +
 > Global Radius (reached via Size */Radius). Contrast unchanged (12/34, none in this batch).
 
+> **Batch 5 — remaining atoms ✅:** Avatar, Avatar Group, Thumbnail, List Item, Pin, Time Picker,
+> Content Blocks on own component vars, all drift `component` mode. Avatar initials → `type-*`
+> per size (Caption/700, Body/MD/700, H6, H5) cap-trimmed; status dot → Avatar Size */Status Dot
+> Size + Global/Status Dot Border Weight. **Thumbnail `status` prop** (Figma `Show Status`) —
+> no longer clips (image rounds itself) so the dot can sit on the box corner; binds the Avatar dot
+> tokens like the master. Avatar Group: Gap / Avatars Radius / Border Weight / Counter Size (at XS).
+> List Item + `listItemOption` (Select / Multiselect / Dropdown rows): `type-caption-700/300`
+> cap-trimmed → rows measure the master's 44px; Dropdown label wrapped in a span so it trims.
+> Pin tail → `text/accent` (as the master). Time Picker: centre value → `text/accent` (Max), Gap /
+> Items Gap / Container Padding / Radius / Border Weight tokens; rows keep line-box heights as tap
+> targets (master stacks cap-trimmed 9–12px rows) with the label trimmed and centred — deliberate.
+> Content Blocks: H6 / Body/SM/300. Contrast 12 → 11 (Time Picker selected now `text/accent`).
+> z-index tokens: sweep all `z-50` / `z-[…]` once at the end of 4.7 (9 sites).
+
 > **Notes for Max — round 2 (collected during 4.7):**
 > - Form Group premade: `Size L/Padding` → `- Spacing -/40` and `Size S/M/L/Content Width` →
 >   `- Size -/288/392/480` alias variables that are in no collection (deleted?) — recreate or rebind.
@@ -824,6 +838,9 @@ The output goes to the scratchpad and fixes the exact name→path mappings below
 >   checked); round-1 rule says `accent/surface`. Code follows the rule.
 > - Radio dot `accent/default` on dark `bg/surface` = 2.33:1 (non-text needs 3:1) since dark
 >   `accent/default` moved to primary/600.
+> - Thumbnail's status dot binds `-- Atoms/Avatar/Size */Status Dot Size` (another component's
+>   tokens) — give Thumbnail its own, or a shared Status Dot size set.
+> - Time Picker `Selector` rectangle sits at y85, but the centre row is at y67–79 — off-centre?
 **The recipe, applied per component, in tier order (Atoms → Molecules → Organisms):**
 1. **Tokens:** replace semantic refs with the component's own vars: `px-[var(--spacing-06)]` → `px-(--buttons-global-size-s-padding)`. The shared utils (`utils/field.ts`, `state-layer.ts`, `tone.ts`, `focus-ring.ts`, `tooltip-surface.ts`) take per-component vars where they size things.
 2. **Type:** replace `text-xs font-bold leading-…` with the matching `type-*` utility (cap-trim comes with it; this absorbs the old Phase 5). Re-measure padding-hugged parts against Figma (Tabs, Badge, Segmented, Toast).
