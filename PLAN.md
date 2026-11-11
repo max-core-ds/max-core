@@ -882,9 +882,26 @@ The output goes to the scratchpad and fixes the exact name→path mappings below
 > false }` (exported `ToastData`). Lesson: re-read `docs/figma-answers-round-1.md` for each
 > batch's components before closing it.
 >
-> **NEXT — Batch 9:** Date Picker / Card (clears the last drift red) — ask first. Then bars
-> (Top Bar / Side Bar / Bottom Navigation) / Stacked List / Stats Card / Data Table / Bottom
-> Sheet; finish with the z-index sweep + motion note for Max.
+> **Batch 9 — Date Picker + Card ✅ (drift now fully green, exit 0):** Card on `--card-base-*` /
+> `--card-media-*` (Padding, Items / Header / Body Gap, Radius, the new Border Weight on the
+> overlay stroke; Media Image Height, Min Width, Content Gap, Footer Gap), H6 / Body/SM/300 /
+> Caption/300 meta via `type-*`; exempt Base Footer Gap (the Action Bar's own gap) + Action
+> Radius / Padding X (bound nowhere). Round 1: the Card and Bottom Sheet ✕ are now Ghost S
+> `IconOnlyButton`s (`utils/close-button.tsx` keeps only the icon). Date Picker on
+> `--date-picker-*` (Container Radius, One Calendar Min Width, Day Item Padding / Radius /
+> Today Radius / Today Item Size / Border Weight, Header Padding X/Y + Month Year Action Gap,
+> Footer Padding X/Y (bound since round 1 — was 12 all round, now 16 / 12) + Gap, Picker Grid
+> Rows Gap, Today Padding), Today ring `border/accent` (round-1 sweep); days / labels
+> `type-caption-700`, weekdays `type-caption-300` (29 tall). DateInput's trigger is now the Base
+> Input frame itself (`baseInputFrame` / `baseInputItemsGap` exported from Input.tsx, not public)
+> + `fieldText` → 40 / 44 / 56 like the other fields. Exempt: Container Border Weight (pane keeps
+> its 1px border pending round 1's "Input pane border"), Input Date Picker Gap (numeric
+> sideOffset), Container Padding (weekday cells share the column), Sub Text Gap (no price label).
+> Contrast unchanged (11/34).
+>
+> **NEXT — Batch 10:** bars (Top Bar / Side Bar / Bottom Navigation) — ask first. Then Stacked
+> List / Stats Card / Data Table / Bottom Sheet; finish with the z-index sweep + motion note for
+> Max. Per batch: re-read `docs/figma-answers-round-1.md` for its components.
 >
 > **Per-batch loop:** read the master's bindings (`use_figma`, read-only, file `sX5tik…`) + the
 > component's tokens in `packages/tokens/dist/tokens.css` → swap to component vars + `type-*` +

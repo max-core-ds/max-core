@@ -428,7 +428,15 @@ const SPECS: ComponentSpec[] = [
   {
     name: 'Card',
     source: 'components/Card/Card.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Organism/Card/Base', 'Organism/Card/Media'],
+    exempt: [
+      // The footer is an Action Bar, spaced by its own Global/Gap.
+      '--card-base-footer-gap',
+      // Bound nowhere on the masters (left from the pre-Action-Bar footer buttons).
+      '--card-base-action-radius',
+      '--card-base-action-padding-x',
+    ],
   },
   // --- Batch 11: Bottom Sheet ---
   {
@@ -458,9 +466,21 @@ const SPECS: ComponentSpec[] = [
   {
     name: 'Date Picker',
     source: 'components/DatePicker/DatePicker.tsx',
+    mode: 'component', // Phase 4.7
     // One class of tokens under one prefix; the day-grid is rendered by
     // react-day-picker but restyled entirely via our token-bound `classNames`.
     prefixes: ['Molecule/Date Picker'],
+    exempt: [
+      // none in Figma; the floating pane keeps a 1px border until Max settles
+      // round 1's "Input pane border".
+      '--date-picker-general-container-border-weight',
+      // Trigger ↔ pane gap is the positioner's numeric sideOffset (px).
+      '--date-picker-general-input-date-picker-gap',
+      // Weekday cells share the table's column width; only their 10px top/bottom applies.
+      '--date-picker-general-container-padding',
+      // Sub Text Gap spaces the day's price label (Day Price), not built in React.
+      '--date-picker-day-item-sub-text-gap',
+    ],
   },
 ];
 

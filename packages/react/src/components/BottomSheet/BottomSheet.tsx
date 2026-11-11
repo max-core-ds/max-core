@@ -2,8 +2,9 @@
 
 import { Drawer } from '@base-ui/react/drawer';
 import type { ReactElement, ReactNode } from 'react';
-import { CloseIcon, closeButtonStyles } from '../../utils/close-button.js';
+import { CloseIcon } from '../../utils/close-button.js';
 import { cn } from '../../utils/cn.js';
+import { IconOnlyButton } from '../IconOnlyButton/IconOnlyButton.js';
 
 // Bottom Sheet — the Figma "Bottom Sheet Builder" master (page "Bottom sheet"), on
 // Base UI's Drawer (modal, focus trap, Esc / outside press, swipe down to dismiss).
@@ -100,9 +101,17 @@ export function BottomSheet({
                   {title}
                 </Drawer.Title>
                 {showClose ? (
-                  <Drawer.Close aria-label={closeLabel} className={closeButtonStyles}>
-                    <CloseIcon />
-                  </Drawer.Close>
+                  // Ghost S Icon Only Button, as the master (round 1).
+                  <Drawer.Close
+                    render={
+                      <IconOnlyButton
+                        aria-label={closeLabel}
+                        variant="ghost"
+                        size="s"
+                        icon={<CloseIcon />}
+                      />
+                    }
+                  />
                 ) : null}
               </div>
             ) : null}

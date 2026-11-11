@@ -49,6 +49,9 @@ const itemsGap = {
   l: 'gap-(--input-base-input-size-l-items-gap)',
 } as const;
 
+// Shared with fields built on a Base Input frame (Date Input's trigger). Not public.
+export { frameStyles as baseInputFrame, itemsGap as baseInputItemsGap };
+
 export interface InputProps
   extends Omit<ComponentPropsWithoutRef<typeof BaseInput>, 'size' | 'className'>,
     VariantProps<typeof frameStyles> {

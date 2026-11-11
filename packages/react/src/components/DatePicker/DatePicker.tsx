@@ -2,7 +2,6 @@
 
 import { Field } from '@base-ui/react/field';
 import { Popover } from '@base-ui/react/popover';
-import { type VariantProps, cva } from 'class-variance-authority';
 import { type ReactNode, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import {
   type ClassNames,
@@ -13,7 +12,7 @@ import {
 } from 'react-day-picker';
 import { cn } from '../../utils/cn.js';
 import {
-  fieldBorder,
+  type FieldSize,
   fieldError,
   fieldFill,
   fieldHelper,
@@ -21,6 +20,7 @@ import {
   fieldInvalidFill,
   fieldLabel,
   fieldRoot,
+  fieldText,
 } from '../../utils/field.js';
 import { focusRing } from '../../utils/focus-ring.js';
 import { useFormGroupSize } from '../../utils/form-group-size.js';
@@ -28,6 +28,7 @@ import { useControllableState } from '../../utils/use-controllable-state.js';
 import { ActionBar } from '../ActionBar/ActionBar.js';
 import { Button } from '../Button/Button.js';
 import { IconOnlyButton } from '../IconOnlyButton/IconOnlyButton.js';
+import { baseInputFrame, baseInputItemsGap } from '../Input/Input.js';
 import {
   type DateGranularity,
   type DateMatcher,
@@ -83,7 +84,9 @@ export interface DualDatePickerProps extends CalendarBaseProps {
   onClear?: () => void;
 }
 
-export interface DateInputProps extends DatePickerProps, VariantProps<typeof triggerStyles> {
+export interface DateInputProps extends DatePickerProps {
+  /** Field size (S / M / L), as the other inputs; defaults to the Form Group's size, then M. */
+  size?: FieldSize | null;
   /** Label above the trigger field. */
   label?: string;
   /** Helper text shown below the trigger when there is no error. */
@@ -99,10 +102,13 @@ export interface DateInputProps extends DatePickerProps, VariantProps<typeof tri
 
 // ── token-bound styling ─────────────────────────────────────────────────────
 
-// Figma Date Picker (2486:6242): Container Radius (radius.md), bg/surface, no
-// border (Container Border Weight = none) and no padding — the header, weekday
-// row, day grid and footer run edge to edge and carry their own padding.
-const paneSurface = 'rounded-[var(--radius-md)] bg-[var(--bg-surface)] text-[var(--text-primary)]';
+// Figma Date Picker (2486:6242): Container Radius, bg/surface, no border
+// (Container Border Weight = none) and no padding — the header, weekday row, day
+// grid and footer run edge to edge and carry their own padding. Every dimension
+// is -- Molecule/Date Picker/*; text is Caption/700 (days, labels) and Caption/300
+// (weekdays).
+const paneSurface =
+  'rounded-(--date-picker-general-container-radius) bg-[var(--bg-surface)] text-[var(--text-primary)]';
 
 // rdp restyle: element keys → Max Core token utilities. The header (caption + nav)
 // is a custom MonthCaption override (below) — rdp's default Nav renders as a sibling
@@ -116,39 +122,28 @@ const calendarClassNames: Partial<ClassNames> = {
   months: 'flex flex-col gap-[var(--spacing-08)] sm:flex-row',
   // One Calendar Min Width (308 = 7 × 44): range cells stretch to their column,
   // so without it a month that's mostly in range collapses.
-  month: 'flex min-w-[308px] flex-col',
+  month: 'flex min-w-(--date-picker-general-one-calendar-min-width) flex-col',
   month_grid: 'w-full border-collapse',
-  // _Weekday Header cell: Caption/300 text/secondary, 10px top/bottom.
-  weekday: 'py-[var(--spacing-10)] text-xs font-light text-[var(--text-secondary)]',
-  day: 'p-[var(--spacing-02)] text-center align-middle',
+  // _Weekday Header cell: Caption/300 text/secondary (cap-trimmed: a table cell is a
+  // block container), 10px top/bottom → 29 tall as the master.
+  weekday: 'py-[var(--spacing-10)] type-caption-300 text-[var(--text-secondary)]',
+  day: 'p-(--date-picker-day-item-padding) text-center align-middle',
   range_start: 'pr-0',
   range_end: 'pl-0',
   range_middle: 'px-0',
 };
 
-// Input Date Picker's field: a Base Input frame (Select-style trigger) with a
-// leading calendar icon. Padding Y, Min Width and Icon Size per
-// -- Molecule/Input/Base Input/Size {S,M,L}; text 12 / 14 / 16 regular, as the
-// other fields. Open = border/accent (the popup's anchor).
-const triggerStyles = cva(
-  [
-    'inline-flex w-full items-center gap-[var(--spacing-08)]',
-    'rounded-[var(--radius-md)] px-[calc(var(--spacing-12)-var(--border-weight-thin))] text-left',
-    'border',
-    fieldBorder,
-    'data-[popup-open]:border-[var(--border-accent)]',
-  ],
-  {
-    variants: {
-      size: {
-        s: 'min-w-[160px] py-[calc(var(--spacing-12)-var(--border-weight-thin))] text-xs [&_svg]:size-[var(--size-16)]',
-        m: 'min-w-[180px] py-[calc(var(--spacing-12)-var(--border-weight-thin))] text-sm [&_svg]:size-[var(--size-20)]',
-        l: 'min-w-[200px] py-[calc(var(--spacing-16)-var(--border-weight-thin))] text-base [&_svg]:size-[var(--size-24)]',
-      },
-    },
-    defaultVariants: { size: 'm' },
-  },
-);
+// Input Date Picker's field: the master's Base Input (Select-style trigger) with a
+// leading calendar icon — the Input frame itself (-- Molecule/Input/Base Input/
+// Size */*: padding minus the INSIDE stroke, Inner Gap, Radius, Stroke Weight, Min
+// Width, Icon Size → 40 / 44 / 56) and the field value text. Open = border/accent
+// (the popup's anchor).
+const triggerStyles = (size: FieldSize) =>
+  cn(
+    baseInputFrame({ size }),
+    'text-left data-[popup-open]:border-[var(--border-accent)]',
+    fieldText[size],
+  );
 
 // Reserve room for the clear button so the value never runs under it.
 const clearPad = { s: 'pr-[var(--size-32)]', m: 'pr-[var(--size-40)]', l: 'pr-[var(--size-48)]' };
@@ -182,11 +177,11 @@ function DayItem(props: DayButtonProps) {
       ref={ref}
       {...buttonProps}
       className={cn(
-        'relative grid h-[var(--size-40)] place-items-center text-xs font-bold tabular-nums transition-colors',
+        'relative grid h-(--date-picker-day-item-today-item-size) place-items-center type-caption-700 tabular-nums transition-colors',
         focusRing,
         (isStart || isEnd || isMiddle) && !isSingleCap
           ? 'w-full'
-          : 'mx-auto w-[var(--size-40)] rounded-[var(--radius-sm)]',
+          : 'mx-auto w-(--date-picker-day-item-today-item-size) rounded-(--date-picker-day-item-radius)',
         // Hover = the List Item wash (accent/subtle + text/primary), not the master's
         // accent/hover + white (1.91:1 in light) — decision, flagged. Pressed keeps
         // the master's accent/active. The selected fill doesn't react to hover.
@@ -196,10 +191,10 @@ function DayItem(props: DayButtonProps) {
             'active:bg-[var(--accent-active)] active:text-[var(--text-on-accent)]',
           ],
         isToday &&
-          'rounded-[var(--radius-full)] text-[var(--text-accent)] ring-1 ring-[var(--accent-default)] ring-inset',
+          'rounded-(--date-picker-day-item-today-radius) text-[var(--text-accent)] ring-[length:var(--date-picker-day-item-border-weight)] ring-[var(--border-accent)] ring-inset',
         isSelected && 'bg-[var(--accent-default)] text-[var(--text-on-accent)]',
-        isStart && !isSingleCap && 'rounded-l-[var(--radius-sm)]',
-        isEnd && !isSingleCap && 'rounded-r-[var(--radius-sm)]',
+        isStart && !isSingleCap && 'rounded-l-(--date-picker-day-item-radius)',
+        isEnd && !isSingleCap && 'rounded-r-(--date-picker-day-item-radius)',
         isMiddle && 'bg-[var(--accent-surface)] text-[var(--text-accent)]',
         modifiers.disabled && 'pointer-events-none opacity-[var(--opacity-disabled)]',
         className,
@@ -282,12 +277,12 @@ function CalendarCaption({
   return (
     <div
       className={cn(
-        'flex items-center justify-between px-[var(--spacing-16)] py-[var(--spacing-12)]',
+        'flex items-center justify-between px-(--date-picker-header-padding-x) py-(--date-picker-header-padding-y)',
         className,
       )}
     >
       {onOpenView ? (
-        <span className="flex items-center gap-[var(--spacing-04)]">
+        <span className="flex items-center gap-(--date-picker-header-month-year-action-gap)">
           <Button
             variant="ghost"
             size="s"
@@ -308,7 +303,7 @@ function CalendarCaption({
           </Button>
         </span>
       ) : (
-        <span className="text-xs font-bold text-[var(--text-primary)]">
+        <span className="type-caption-700 text-[var(--text-primary)]">
           {monthLabel} {yearLabel}
         </span>
       )}
@@ -337,15 +332,15 @@ function useCalendarComponents(locale?: string, onOpenView?: (view: 'month' | 'y
 
 /**
  * Clear / Apply footer — the master's _Date Picker Footer: an Action Bar of S
- * buttons (Ghost Clear, Primary Apply) with 12px padding (as rendered; the
- * Footer Padding X/Y tokens are unbound) and Footer Gap (spacing.08). The
- * buttons share the width, so the Action Bar's 160px minimum is lifted.
+ * buttons (Ghost Clear, Primary Apply) with Footer Padding X / Y (16 / 12, bound
+ * since round 1) and Footer Gap. The buttons share the width, so the Action
+ * Bar's 160px minimum is lifted.
  */
 function DatePickerFooter({ onClear, onApply }: { onClear: () => void; onApply: () => void }) {
   return (
     <ActionBar
       direction="horizontal"
-      className="auto-cols-[minmax(0,1fr)] gap-[var(--spacing-08)] p-[var(--spacing-12)]"
+      className="auto-cols-[minmax(0,1fr)] gap-(--date-picker-footer-gap) px-(--date-picker-footer-padding-x) py-(--date-picker-footer-padding-y)"
     >
       <Button variant="ghost" size="s" onClick={onClear}>
         Clear
@@ -403,7 +398,7 @@ function MonthYearGrid({
 
   return (
     <div className="flex flex-col">
-      <div className="flex items-center justify-between px-[var(--spacing-16)] py-[var(--spacing-12)]">
+      <div className="flex items-center justify-between px-(--date-picker-header-padding-x) py-(--date-picker-header-padding-y)">
         {onOpenYear ? (
           <Button
             variant="ghost"
@@ -415,7 +410,7 @@ function MonthYearGrid({
             {label}
           </Button>
         ) : (
-          <span className="text-xs font-bold text-[var(--text-primary)]">{label}</span>
+          <span className="type-caption-700 text-[var(--text-primary)]">{label}</span>
         )}
         <NavButtons
           onPrev={() => onPageYear(displayYear - step)}
@@ -424,8 +419,8 @@ function MonthYearGrid({
           nextLabel="Next"
         />
       </div>
-      {/* Picker Grid Rows Gap (spacing.08). */}
-      <div className="grid grid-cols-3 gap-[var(--spacing-08)] px-[var(--spacing-16)] pb-[var(--spacing-12)]">
+      {/* Picker Grid Rows Gap; the header's padding frames the grid. */}
+      <div className="grid grid-cols-3 gap-(--date-picker-picker-grid-rows-gap) px-(--date-picker-header-padding-x) pb-(--date-picker-header-padding-y)">
         {cells.map((cell) => {
           const key = cell.value.slice(0, sliceEnd);
           const selected = value != null && value.slice(0, sliceEnd) === key;
@@ -442,8 +437,8 @@ function MonthYearGrid({
               className={cn(
                 // Today Padding (spacing.06) as the cell's internal padding; the
                 // day-item look (Caption/700, wash hover, accent pressed / selected).
-                'grid place-items-center rounded-[var(--radius-sm)] p-[var(--spacing-06)]',
-                'text-xs font-bold transition-colors',
+                'grid place-items-center rounded-(--date-picker-day-item-radius) p-(--date-picker-day-item-today-padding)',
+                'type-caption-700 transition-colors',
                 focusRing,
                 selected
                   ? 'bg-[var(--accent-default)] text-[var(--text-on-accent)]'
@@ -556,7 +551,7 @@ export function DatePicker({
     <div
       aria-label={ariaLabel}
       className={cn(
-        'inline-flex min-w-[308px] flex-col',
+        'inline-flex min-w-(--date-picker-general-one-calendar-min-width) flex-col',
         paneSurface,
         disabled && 'pointer-events-none opacity-[var(--opacity-disabled)]',
         className,
@@ -694,7 +689,7 @@ export function DateInput({
 
   return (
     <Field.Root
-      className={cn(fieldRoot, 'gap-[var(--spacing-08)]', className)}
+      className={cn(fieldRoot, baseInputItemsGap[size], className)}
       invalid={isInvalid}
       disabled={disabled}
     >
@@ -710,7 +705,7 @@ export function DateInput({
             disabled={disabled}
             aria-label={ariaLabel ?? label ?? 'Select date'}
             className={cn(
-              triggerStyles({ size }),
+              triggerStyles(size),
               showClear && clearPad[size],
               isInvalid
                 ? ['border-[var(--status-danger-border)]', fieldInvalidFill.primary]
@@ -754,6 +749,7 @@ export function DateInput({
             <Popover.Positioner
               side="bottom"
               align="start"
+              // Input Date Picker Gap (12) — the positioner takes px.
               sideOffset={12}
               className="isolate z-50"
             >
@@ -771,7 +767,9 @@ export function DateInput({
                   weekStartsOn={weekStartsOn}
                   showFooter={showFooter}
                   locale={locale}
-                  className="min-w-[max(308px,var(--anchor-width))] border border-[var(--border-default)]"
+                  // Container Border Weight is none in Figma; the floating pane keeps a
+                  // 1px border/default until Max settles it (round 1 "Input pane border").
+                  className="min-w-[max(var(--date-picker-general-one-calendar-min-width),var(--anchor-width))] border border-[var(--border-default)]"
                 />
               </Popover.Popup>
             </Popover.Positioner>

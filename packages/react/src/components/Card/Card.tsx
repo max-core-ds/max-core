@@ -1,20 +1,23 @@
 import { type VariantProps, cva } from 'class-variance-authority';
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
-import { CloseIcon, closeButtonStyles } from '../../utils/close-button.js';
+import { CloseIcon } from '../../utils/close-button.js';
 import { cn } from '../../utils/cn.js';
 import { ActionBar } from '../ActionBar/ActionBar.js';
+import { IconOnlyButton } from '../IconOnlyButton/IconOnlyButton.js';
 
 // Widget cards — the Figma "_Card" and "_Media Card" masters (page "widget card").
-// Shared shell: bg/surface, 1px border/muted stroke (drawn over the content), radius md, clipped. Elevation
-// None / Low / High = no shadow / effect/shadow/down/sm / effect/shadow/down/md.
-// Titles are Heading/H6 (text/primary), body copy Body/SM/300 (text/secondary).
+// Shared shell: bg/surface, Card/Base/Border Weight border/muted stroke (drawn over the
+// content), clipped; Radius per card (Base / Media). Elevation None / Low / High = no
+// shadow / effect/shadow/down/sm / effect/shadow/down/md. Titles are Heading/H6
+// (text/primary), body copy Body/SM/300 (text/secondary), meta Caption/300 — all
+// cap-trimmed. -- Organism/Card/Base|Media/* throughout.
 
 const elevationStyles = cva(
   [
-    'relative flex flex-col overflow-hidden rounded-[var(--radius-md)] bg-[var(--bg-surface)] text-[var(--text-primary)]',
+    'relative flex flex-col overflow-hidden bg-[var(--bg-surface)] text-[var(--text-primary)]',
     // Figma's INSIDE stroke sits on top of the content and takes no space: an overlay,
     // not a CSS border (which would shrink the 272 / 280 content box and cover nothing).
-    "after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:border-[length:var(--border-weight-thin)] after:border-[var(--border-muted)] after:content-['']",
+    "after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:border-(length:--card-base-border-weight) after:border-[var(--border-muted)] after:content-['']",
   ],
   {
     variants: {
@@ -28,9 +31,8 @@ const elevationStyles = cva(
   },
 );
 
-const titleStyles =
-  'text-xl leading-[1.3] font-bold tracking-[-0.005em] text-[var(--text-primary)]';
-const bodyText = 'text-sm leading-[1.3] font-light text-[var(--text-secondary)]';
+const titleStyles = 'type-h6 text-[var(--text-primary)]';
+const bodyText = 'type-body-sm-300 text-[var(--text-secondary)]';
 
 export type CardElevation = NonNullable<VariantProps<typeof elevationStyles>['elevation']>;
 
@@ -50,8 +52,9 @@ export interface CardProps
 }
 
 /**
- * _Card: header (title + close) → Body Content → Action Bar, Padding 24 and
- * Items Gap 24 (-- Organism/Card/Base/*). Body items sit 16 apart (Body Gap).
+ * _Card: header (title + close, Header Gap) → Body Content (Body Gap) → Action Bar,
+ * Padding and Items Gap apart (-- Organism/Card/Base/*). The close is a Ghost S Icon
+ * Only Button, as the master.
  */
 export function Card({
   elevation,
@@ -67,28 +70,27 @@ export function Card({
     <div
       className={cn(
         elevationStyles({ elevation }),
-        'gap-[var(--spacing-24)] p-[var(--spacing-24)]',
+        'rounded-(--card-base-radius) gap-(--card-base-items-gap) p-(--card-base-padding)',
         className,
       )}
       {...rest}
     >
       {title != null || onClose ? (
-        <div className="flex items-center justify-between gap-[var(--spacing-12)]">
+        <div className="flex items-center justify-between gap-(--card-base-header-gap)">
           <div className={cn('min-w-0 flex-1', titleStyles)}>{title}</div>
           {onClose ? (
-            <button
-              type="button"
+            <IconOnlyButton
               aria-label={closeLabel}
               onClick={onClose}
-              className={closeButtonStyles}
-            >
-              <CloseIcon />
-            </button>
+              variant="ghost"
+              size="s"
+              icon={<CloseIcon />}
+            />
           ) : null}
         </div>
       ) : null}
       {children != null ? (
-        <div className={cn('flex flex-col gap-[var(--spacing-16)]', bodyText)}>{children}</div>
+        <div className={cn('flex flex-col gap-(--card-base-body-gap)', bodyText)}>{children}</div>
       ) : null}
       {actions != null ? (
         // The master's buttons share the 272 content width (132 each), under the
@@ -118,8 +120,8 @@ export interface MediaCardProps
 }
 
 /**
- * _Media Card: Media Slot (240 tall, Image Height) over a Content Slot (Padding 16,
- * Content Gap 12; -- Organism/Card/Media/*), at least 280 wide (Min Width).
+ * _Media Card: Media Slot (Image Height) over a Content Slot (Padding, Content Gap;
+ * -- Organism/Card/Media/*), at least Min Width wide.
  */
 export function MediaCard({
   elevation,
@@ -134,24 +136,29 @@ export function MediaCard({
   ...rest
 }: MediaCardProps) {
   return (
-    <div className={cn(elevationStyles({ elevation }), 'min-w-[280px]', className)} {...rest}>
-      <div className="relative flex h-[240px] shrink-0 items-center justify-center overflow-hidden bg-[var(--bg-subtle)] [&>img]:size-full [&>img]:object-cover [&>video]:size-full [&>video]:object-cover">
+    <div
+      className={cn(
+        elevationStyles({ elevation }),
+        'min-w-(--card-media-min-width) rounded-(--card-media-radius)',
+        className,
+      )}
+      {...rest}
+    >
+      <div className="relative flex h-(--card-media-image-height) shrink-0 items-center justify-center overflow-hidden bg-[var(--bg-subtle)] [&>img]:size-full [&>img]:object-cover [&>video]:size-full [&>video]:object-cover">
         {media}
         {badge != null ? (
           <div className="absolute top-[var(--spacing-12)] left-[var(--spacing-12)]">{badge}</div>
         ) : null}
       </div>
-      <div className="flex flex-col gap-[var(--spacing-12)] p-[var(--spacing-16)]">
+      <div className="flex flex-col gap-(--card-media-content-gap) p-(--card-media-padding)">
         {title != null ? <div className={titleStyles}>{title}</div> : null}
         {meta != null ? (
-          <div className="text-xs leading-[1.3] font-light tracking-[0.005em] text-[var(--text-accent)]">
-            {meta}
-          </div>
+          <div className="type-caption-300 text-[var(--text-accent)]">{meta}</div>
         ) : null}
         {description != null ? <div className={bodyText}>{description}</div> : null}
         {children}
         {action != null ? (
-          <div className="flex justify-end gap-[var(--spacing-08)]">{action}</div>
+          <div className="flex justify-end gap-(--card-media-footer-gap)">{action}</div>
         ) : null}
       </div>
     </div>
