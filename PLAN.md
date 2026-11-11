@@ -861,9 +861,23 @@ The output goes to the scratchpad and fixes the exact name→path mappings below
 > Tabs 34, Pagination 32, Switcher 32 / 40, Toast title 18, Dialog title 22 / body 10.
 > Contrast unchanged (11/34).
 >
-> **NEXT — Batch 8:** Dropdown / Range / Entity Item + Entity Card / Form Group — ask first.
-> Then Date Picker / Card / bars / Stacked List / Stats Card / Data Table / Bottom Sheet; finish
-> with the z-index sweep + motion note for Max.
+> **Batch 8 — Dropdown, Range, Entity Item, Entity Card, Form Group ✅:** all drift `component`
+> mode with zero leftover semantic vars. Entity Item Gap / Label Gap; titles `type-body-md-700`
+> (User) / `type-body-lg-700` (Workspace), subtitle `type-caption-300` → 12 / 13 / 9 as the
+> master; Entity Card Padding X/Y, General Gap, Radius, nested User title `type-body-sm-700`,
+> chevron box on the Icon Only S tokens (56 tall, measured). Dropdown rows' icon on
+> `--list-item-icon-size`; Gap + Item List Padding exempt (numeric sideOffset / left-only slip).
+> Range on Knob Size / Radius, Progress Bar Item Gaps + S Height, Tooltip Knob Gap; bound labels
+> Caption/300 cap-trimmed → 31 tall (was 37.6). Form Group Size */Gap + Items Gap (S = Global),
+> Headline Gap, Action Buttons Gap; title `type-h5` / `type-h4`, description `type-body-sm-300`;
+> premade = Premade/Global Size */Padding (L now 40 — the token is in the export), Radius,
+> Border Weight (none) + `border/default` stroke as the master; per-type premade tokens alias
+> Global (spec takes Global/Size/Premade-Global prefixes; Content Width exempt). Contrast
+> unchanged (11/34).
+>
+> **NEXT — Batch 9:** Date Picker / Card (clears the last drift red) — ask first. Then bars
+> (Top Bar / Side Bar / Bottom Navigation) / Stacked List / Stats Card / Data Table / Bottom
+> Sheet; finish with the z-index sweep + motion note for Max.
 >
 > **Per-batch loop:** read the master's bindings (`use_figma`, read-only, file `sX5tik…`) + the
 > component's tokens in `packages/tokens/dist/tokens.css` → swap to component vars + `type-*` +

@@ -300,11 +300,13 @@ const SPECS: ComponentSpec[] = [
   {
     name: 'Dropdown',
     source: 'components/Dropdown/Dropdown.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Molecule/Dropdown'],
     exempt: [
-      // Gap (trigger ↔ list) is the positioner's numeric sideOffset; Item List
-      // Padding (left-only in the master) isn't applied — the list matches the trigger width.
-      '--spacing-04',
+      // Gap (trigger ↔ list) is the positioner's numeric sideOffset (px).
+      '--dropdown-gap',
+      // Item List Padding is left-only in the master — the list matches the trigger width.
+      '--dropdown-item-list-padding',
     ],
   },
   {
@@ -328,6 +330,7 @@ const SPECS: ComponentSpec[] = [
   {
     name: 'Range',
     source: 'components/Range/Range.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Molecule/Range'],
   },
   {
@@ -346,18 +349,33 @@ const SPECS: ComponentSpec[] = [
   {
     name: 'Entity Item',
     source: 'components/EntityItem/EntityItem.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Molecule/Entity Item'],
-    exempt: ['--radius-full'], // avatar radius is applied by the composed Avatar (leading slot)
+    // Avatar radius / border are applied by the composed Avatar (leading slot).
+    exempt: ['--entity-item-avatar-radius', '--entity-item-avatar-border'],
   },
   {
     name: 'Entity Card',
     source: 'components/EntityCard/EntityCard.tsx',
+    mode: 'component', // Phase 4.7
     prefixes: ['Molecule/Entity Card'],
   },
   {
     name: 'Form Group',
     source: 'components/FormGroup/FormGroup.tsx',
-    prefixes: ['Molecule/Form Group'],
+    mode: 'component', // Phase 4.7
+    // The per-type premade tokens (Log in, Sign up, …) alias Premade/Global.
+    prefixes: [
+      'Molecule/Form Group/Global',
+      'Molecule/Form Group/Size',
+      'Molecule/Form Group/Premade/Global',
+    ],
+    exempt: [
+      // Content Width is the premade recipes' column width — a story/recipe concern.
+      '--form-group-premade-global-size-s-content-width',
+      '--form-group-premade-global-size-m-content-width',
+      '--form-group-premade-global-size-l-content-width',
+    ],
   },
   {
     name: 'Toast',

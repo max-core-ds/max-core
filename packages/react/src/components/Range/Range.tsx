@@ -2,6 +2,7 @@
 
 import { Slider } from '@base-ui/react/slider';
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import { capTrim } from '../../utils/cap-trim.js';
 import { cn } from '../../utils/cn.js';
 import { focusRingWithin } from '../../utils/focus-ring.js';
 import { progressFill, progressTrack } from '../../utils/progress.js';
@@ -15,10 +16,11 @@ import { Knob } from '../Knob/Knob.js';
 
 // Composed from the Progress Bar (track + fill), Knob (thumb) and Tooltip (value
 // bubble) atoms, per the Figma Range page. A thumb is rendered per value, so a
-// range (array value) shows two knobs. Tooltip Knob Gap (16) spaces each bubble
-// above its thumb. The control is knob-tall (track centred, 10px knob overhang each
-// side); the bound labels sit Progress Bar Item Gaps (8) below the *track*, as in
-// the master, so they pull up by that overhang. Disabled dims the whole slider
+// range (array value) shows two knobs. Tooltip Knob Gap (-- Molecule/Range/*, 16)
+// spaces each bubble above its thumb. The control is Knob Size tall (track centred,
+// (Knob Size − Progress Bar S Height) / 2 = 10px knob overhang each side); the bound
+// labels (Caption/300, cap-trimmed) sit Progress Bar Item Gaps (8) below the
+// *track*, as in the master, so they pull up by that overhang. Disabled dims the whole slider
 // once (the knob keeps its default handle, no second opacity).
 export interface RangeProps
   extends Omit<ComponentPropsWithoutRef<typeof Slider.Root>, 'className'> {
@@ -64,7 +66,7 @@ export function Range({
       )}
       {...rest}
     >
-      <Slider.Control className="flex h-[var(--size-24)] w-full items-center data-[disabled]:pointer-events-none">
+      <Slider.Control className="flex h-(--knob-size) w-full items-center data-[disabled]:pointer-events-none">
         <Slider.Track className={progressTrack('s')}>
           {/* No width transition: the fill must track the thumb while dragging. */}
           <Slider.Indicator className={cn(progressFill, 'transition-none')} />
@@ -73,11 +75,11 @@ export function Range({
               // biome-ignore lint/suspicious/noArrayIndexKey: thumbs are a fixed, ordered set
               key={i}
               index={i}
-              className={cn('relative flex rounded-[var(--radius-full)]', focusRingWithin)}
+              className={cn('relative flex rounded-(--knob-radius)', focusRingWithin)}
             >
               <Knob state={disabled ? 'default' : undefined} />
               {showTooltip ? (
-                <div className="pointer-events-none absolute bottom-full left-1/2 mb-[var(--spacing-16)] -translate-x-1/2">
+                <div className="pointer-events-none absolute bottom-full left-1/2 mb-(--range-tooltip-knob-gap) -translate-x-1/2">
                   <div className={cn('relative', tooltipBubble)}>
                     <Slider.Value>{(_, v) => (Array.isArray(v) ? v[i] : v)}</Slider.Value>
                     <svg
@@ -98,9 +100,9 @@ export function Range({
         </Slider.Track>
       </Slider.Control>
       {showLabels ? (
-        <div className="mt-[calc(var(--spacing-08)-(var(--size-24)-var(--size-4))/2)] flex justify-between text-xs font-light text-[var(--text-primary)]">
-          <span>{formatLabel(min)}</span>
-          <span>{formatLabel(max)}</span>
+        <div className="mt-[calc(var(--progress-bar-global-item-gaps)-(var(--knob-size)-var(--progress-bar-size-s-height))/2)] flex justify-between type-caption-300 text-[var(--text-primary)]">
+          <span className={capTrim}>{formatLabel(min)}</span>
+          <span className={capTrim}>{formatLabel(max)}</span>
         </div>
       ) : null}
     </Slider.Root>

@@ -6,7 +6,7 @@ import { focusRing } from '../../utils/focus-ring.js';
 import { RailContext, useRail, useRailCollapsed } from '../../utils/rail-context.js';
 
 // Interactive card wrapping Entity Item content (a workspace/user switcher
-// trigger). Padding/gap/radius match -- Molecule/Entity Card/*; the interaction
+// trigger). Padding X/Y, General Gap and Radius are -- Molecule/Entity Card/*; the interaction
 // states (hover/pressed/active/focus) are expressed in CSS. Radius is none (square).
 // Interaction states are accent-based per the Figma master: Hover = overlay/hover,
 // Pressed = overlay/pressed, Active = accent/subtle. Hover and active are pale
@@ -16,9 +16,9 @@ import { RailContext, useRail, useRailCollapsed } from '../../utils/rail-context
 // card's state colour; the subtitle and the accent chevron follow it on hover /
 // pressed (text/secondary and accent/default on the overlay washes are below AA).
 const cardStyles = cn(
-  'flex w-full items-center justify-between gap-[var(--spacing-08)] text-left text-[var(--text-primary)]',
-  'rounded-[var(--radius-none)] px-[var(--spacing-12)] py-[var(--spacing-12)] transition-colors',
-  '[&_[data-entity-title=user]]:text-sm [&_[data-entity-title]]:[color:inherit]',
+  'flex w-full items-center justify-between gap-(--entity-card-general-gap) text-left text-[var(--text-primary)]',
+  'rounded-(--entity-card-radius) px-(--entity-card-padding-x) py-(--entity-card-padding-y) transition-colors',
+  '[&_[data-entity-title=user]]:type-body-sm-700 [&_[data-entity-title]]:[color:inherit]',
   'hover:bg-[var(--overlay-hover)]',
   'active:bg-[var(--overlay-pressed)] active:text-[var(--text-on-accent-muted)]',
   'hover:[&_[data-entity-subtitle]]:[color:inherit] active:[&_[data-entity-subtitle]]:[color:inherit]',
@@ -71,21 +71,21 @@ export function EntityCard({
   );
 }
 
-// The master's Icon Only Button (Ghost, S): a 32px box with a 20px accent chevron.
-// Decorative here — a button can't nest a button, and the whole card is the trigger.
+// The master's Icon Only Button (Ghost, S): its S box and icon size with an accent
+// chevron. Decorative here — a button can't nest a button, and the whole card is
+// the trigger.
 function ChevronDown() {
   return (
     <span
       aria-hidden="true"
       data-entity-chevron=""
-      className="inline-flex size-[var(--size-32)] shrink-0 items-center justify-center text-[var(--accent-default)]"
+      className="inline-flex size-(--buttons-icon-only-s-height) shrink-0 items-center justify-center text-[var(--accent-default)] [&_svg]:size-(--buttons-icon-only-s-icon-size)"
     >
       <svg
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
         strokeWidth={2}
-        className="size-[var(--size-20)]"
         aria-hidden="true"
         focusable="false"
       >

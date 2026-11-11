@@ -7,7 +7,8 @@ import { ItemList } from '../ItemList/ItemList.js';
 import { listItemOption } from '../ListItem/ListItem.js';
 
 // Figma Dropdown master (2380:9128): a Trigger (instance swap, Entity Card by
-// default) with an Item List 4px below it (-- Molecule/Dropdown/Gap), shown
+// default) with an Item List 4px below it (-- Molecule/Dropdown/Gap — a numeric
+// sideOffset, since the positioner takes px), shown
 // while Active. The list is the Item List master (no search / Select all /
 // divider, ScrollBar on) holding List Item rows with a leading icon, so the
 // popup renders ItemList + the List Item row look (`listItemOption`); like the
@@ -16,7 +17,7 @@ import { listItemOption } from '../ListItem/ListItem.js';
 const listStyles =
   'min-w-[var(--anchor-width)] max-h-[var(--available-height)] text-[var(--text-primary)]';
 
-const itemStyles = cn(listItemOption, '[&_svg]:size-[var(--size-20)]');
+const itemStyles = cn(listItemOption, '[&_svg]:size-(--list-item-icon-size)');
 
 export interface DropdownItem {
   label: ReactNode;

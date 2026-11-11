@@ -7,51 +7,66 @@ import { cn } from '../../utils/cn.js';
 import { FormGroupSizeContext } from '../../utils/form-group-size.js';
 
 // Figma Form Group set (4011:1119): Headline (Title + Description) → Items slot
-// → Action slot (an Action Bar). Per-size outer Gap and Items Gap, plus
-// Headline/Action gaps and (in premade mode) padding/radius, match
-// -- Molecule/Form Group/*. Title is Heading/H5 (S, M) or H4 (L), Description
-// Body/SM/300 text/muted. Size also sizes the content: fields and buttons inside
-// take the group's S/M/L unless they set their own `size`, as the master's Base
-// Inputs and Action Bar Buttons follow its Size. Premade = the Premades Form
-// Group surface (bg/surface, no border, radius md). Its Size L padding is 40 in
-// Figma, but that token isn't in the export yet, so L keeps M's 24 until the
-// re-export.
+// → Action slot (an Action Bar). Size */Gap, Size */Items Gap (S = Global/Items
+// Gap), Global/Headline Gap + Action Buttons Gap and — premade — Premade/Global
+// Size */Padding, Radius, Border Weight are -- Molecule/Form Group/*. Title is
+// Heading/H5 (S, M) or H4 (L), Description Body/SM/300 text/muted, both cap-trimmed.
+// Size also sizes the content: fields and buttons inside take the group's S/M/L
+// unless they set their own `size`, as the master's Base Inputs and Action Bar
+// Buttons follow its Size. Premade = the Premades Form Group surface (bg/surface,
+// border/default stroke at Border Weight none). The per-type premade tokens
+// (Log in, Sign up, …) all alias Premade/Global, so React binds the Global ones.
 const rootStyles = cva(['flex flex-col'], {
   variants: {
     size: {
-      s: 'gap-[var(--spacing-20)]',
-      m: 'gap-[var(--spacing-24)]',
-      l: 'gap-[var(--spacing-28)]',
+      s: 'gap-(--form-group-size-s-gap)',
+      m: 'gap-(--form-group-size-m-gap)',
+      l: 'gap-(--form-group-size-l-gap)',
     },
     premade: {
-      true: 'rounded-[var(--radius-md)] bg-[var(--bg-surface)]',
+      true:
+        'rounded-(--form-group-premade-global-radius) border-solid border-(length:--form-group-premade-global-border-weight) ' +
+        'border-[var(--border-default)] bg-[var(--bg-surface)]',
       false: '',
     },
   },
   compoundVariants: [
-    { premade: true, size: 's', class: 'p-[var(--spacing-16)]' },
-    { premade: true, size: 'm', class: 'p-[var(--spacing-24)]' },
-    { premade: true, size: 'l', class: 'p-[var(--spacing-24)]' },
+    // Figma strokes sit inside: the padding gives the stroke back.
+    {
+      premade: true,
+      size: 's',
+      class:
+        'p-[calc(var(--form-group-premade-global-size-s-padding)-var(--form-group-premade-global-border-weight))]',
+    },
+    {
+      premade: true,
+      size: 'm',
+      class:
+        'p-[calc(var(--form-group-premade-global-size-m-padding)-var(--form-group-premade-global-border-weight))]',
+    },
+    {
+      premade: true,
+      size: 'l',
+      class:
+        'p-[calc(var(--form-group-premade-global-size-l-padding)-var(--form-group-premade-global-border-weight))]',
+    },
   ],
   defaultVariants: { size: 'm', premade: false },
 });
 
-const titleStyles = cva(
-  ['font-bold leading-[1.2] tracking-[-0.005em] text-[var(--text-primary)]'],
-  {
-    variants: {
-      size: { s: 'text-2xl', m: 'text-2xl', l: 'text-3xl' },
-    },
-    defaultVariants: { size: 'm' },
+const titleStyles = cva(['text-[var(--text-primary)]'], {
+  variants: {
+    size: { s: 'type-h5', m: 'type-h5', l: 'type-h4' },
   },
-);
+  defaultVariants: { size: 'm' },
+});
 
 const itemsStyles = cva(['flex flex-col'], {
   variants: {
     size: {
-      s: 'gap-[var(--spacing-12)]',
-      m: 'gap-[var(--spacing-16)]',
-      l: 'gap-[var(--spacing-20)]',
+      s: 'gap-(--form-group-global-items-gap)',
+      m: 'gap-(--form-group-size-m-items-gap)',
+      l: 'gap-(--form-group-size-l-items-gap)',
     },
   },
   defaultVariants: { size: 'm' },
@@ -82,19 +97,21 @@ export function FormGroup({
     <FormGroupSizeContext.Provider value={size ?? 'm'}>
       <Fieldset.Root className={cn(rootStyles({ size, premade }), className)} {...rest}>
         {headline || description ? (
-          <div className="flex flex-col gap-[var(--spacing-12)]">
+          <div className="flex flex-col gap-(--form-group-global-headline-gap)">
             {headline ? (
               <Fieldset.Legend className={titleStyles({ size })}>{headline}</Fieldset.Legend>
             ) : null}
             {description ? (
-              <p className="text-sm font-light text-[var(--text-muted)]">{description}</p>
+              <p className="type-body-sm-300 text-[var(--text-muted)]">{description}</p>
             ) : null}
           </div>
         ) : null}
         <div className={itemsStyles({ size })}>{children}</div>
         {action ? (
           // Children fill the width, like the master's Action Bar (FILL).
-          <div className="flex gap-[var(--spacing-08)] [&>*]:flex-1">{action}</div>
+          <div className="flex gap-(--form-group-global-action-buttons-gap) [&>*]:flex-1">
+            {action}
+          </div>
         ) : null}
       </Fieldset.Root>
     </FormGroupSizeContext.Provider>
