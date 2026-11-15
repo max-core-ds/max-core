@@ -1091,7 +1091,15 @@ upgrade (react-forms first).
 - New `packages/tokens/src/diff.ts` (extracted from `sync.ts`), sticky PR comment with the token
   diff on PRs touching `tokens.json`. Warn when `packages/*/src` changes with no changeset.
 
-## 4.8.4 Release (manual first)
+## 4.8.4 Release (manual first) — script ready (2026-11-15), first publish pending
+> `pnpm release` (`scripts/release.mjs`): preflight (main, clean, in sync with origin, pending
+> changesets, `GITHUB_PACKAGES_TOKEN` set) → `changeset version` → same gate as CI → commit
+> `chore(release): vX` → `changeset publish` with a temporary npmrc (token never in the repo) →
+> annotated tag `vX`. `--publish-only` retries a failed publish. Push stays manual
+> (`git push --follow-tags origin main`, admin bypass on the ruleset). The GitHub Release with
+> tgz files moves to the later `release.yml` (it needs a repo-scoped token; the registry already
+> holds the tarballs). Repo went **public** (2026-11-15) so the free plan enforces the `main`
+> ruleset; fork PRs skip the diff comment (read-only token).
 - Root `pnpm release` = `changeset version` → build → `changeset publish` → tags → `gh release`
   with the `.tgz` files (+ the plugin zip). `release.yml` later.
 

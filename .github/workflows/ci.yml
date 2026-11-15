@@ -105,6 +105,7 @@ jobs:
         if: steps.changed.outputs.tokens == 'true'
         run: pnpm install --frozen-lockfile
 
+      # Fork PRs get a read-only token (public repo), so they only get the job summary.
       - name: Comment the token diff (one comment, updated on each push)
         if: steps.changed.outputs.tokens == 'true'
         run: |
@@ -112,4 +113,6 @@ jobs:
           pnpm -s -F @max-core-ds/tokens diff --base "$RUNNER_TEMP/base-tokens.json" --format md > "$RUNNER_TEMP/diff.md"
           printf '\n\n<sub>Updated for %s · base %s</sub>\n' "${HEAD_SHA::7}" "$BASE" >> "$RUNNER_TEMP/diff.md"
           cat "$RUNNER_TEMP/diff.md" >> "$GITHUB_STEP_SUMMARY"
-          gh pr comment "$PR" --body-file "$RUNNER_TEMP/diff.md" --edit-last --create-if-none
+          if [ "${{ github.event.pull_request.head.repo.full_name }}" = "${{ github.repository }}" ]; then
+            gh pr comment "$PR" --body-file "$RUNNER_TEMP/diff.md" --edit-last --create-if-none
+          fi

@@ -17,7 +17,8 @@
     "test": "turbo run test",
     "storybook": "pnpm --filter @max-core-ds/storybook dev",
     "showcase": "pnpm --filter @max-core-ds/showcase dev",
-    "changeset": "changeset"
+    "changeset": "changeset",
+    "release": "node scripts/release.mjs"
   },
   "packageManager": "pnpm@11.2.2",
   "devDependencies": {
