@@ -13,6 +13,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { diffTokens, formatDiffText } from './diff.js';
 import type { TokensFile } from './types.js';
 
 // ---- arg parsing ----
@@ -70,90 +71,25 @@ try {
   process.exit(1);
 }
 
-// ---- collect paths for diff ----
-function collectPaths(node: unknown, prefix = ''): Set<string> {
-  const out = new Set<string>();
-  if (!isObject(node)) {
-    if (prefix) out.add(prefix);
-    return out;
-  }
-  for (const [k, v] of Object.entries(node)) {
-    if (k.startsWith('$')) continue; // skip metadata
-    const path = prefix ? `${prefix}.${k}` : k;
-    if (isObject(v)) {
-      for (const p of collectPaths(v, path)) out.add(p);
-    } else {
-      out.add(path);
-    }
-  }
-  return out;
-}
-
+// ---- diff ----
 const existing: TokensFile | null = existsSync(targetPath)
   ? (JSON.parse(readFileSync(targetPath, 'utf8')) as TokensFile)
   : null;
-
-const incomingPaths = collectPaths(incoming);
-const existingPaths = existing ? collectPaths(existing) : new Set<string>();
-
-const added = [...incomingPaths].filter((p) => !existingPaths.has(p));
-const removed = [...existingPaths].filter((p) => !incomingPaths.has(p));
-
-// Detect changes (path in both but different value)
-function leafByPath(node: unknown, path: string): unknown {
-  let cur: unknown = node;
-  for (const seg of path.split('.')) {
-    if (!isObject(cur)) return undefined;
-    cur = cur[seg];
-  }
-  return cur;
-}
-
-const changed: string[] = [];
-if (existing) {
-  for (const p of incomingPaths) {
-    if (!existingPaths.has(p)) continue;
-    const before = leafByPath(existing, p);
-    const after = leafByPath(incoming, p);
-    // Arrays (effect layers) are leaves: compare by value, not reference.
-    if (JSON.stringify(before) !== JSON.stringify(after)) changed.push(p);
-  }
-}
+const diff = diffTokens(existing ?? {}, incoming);
+const leafCount = (t: unknown): number => diffTokens({}, t).added.length;
 
 // ---- report ----
 console.log(`Source: ${inputPath}`);
 console.log(`Target: ${targetPath}`);
 console.log('');
 console.log(
-  `Incoming: ${incomingPaths.size} tokens · ${Object.keys((incoming.colors as { light: object }).light).length} light · ${Object.keys((incoming.colors as { dark: object }).dark).length} dark`,
+  `Incoming: ${leafCount(incoming)} tokens · ${Object.keys(incoming.colors.light).length} light · ${Object.keys(incoming.colors.dark).length} dark`,
 );
-console.log(`Existing: ${existingPaths.size} tokens${existing ? '' : ' (no current tokens.json)'}`);
+console.log(
+  `Existing: ${existing ? leafCount(existing) : 0} tokens${existing ? '' : ' (no current tokens.json)'}`,
+);
 console.log('');
-console.log(`+ ${added.length} added   - ${removed.length} removed   ~ ${changed.length} changed`);
-
-function sample(arr: string[], n: number): string[] {
-  return arr.slice(0, n);
-}
-
-if (added.length) {
-  console.log('\nAdded (showing first 10):');
-  for (const p of sample(added, 10)) console.log(`  + ${p}`);
-  if (added.length > 10) console.log(`  … and ${added.length - 10} more`);
-}
-if (removed.length) {
-  console.log('\nRemoved (showing first 10):');
-  for (const p of sample(removed, 10)) console.log(`  - ${p}`);
-  if (removed.length > 10) console.log(`  … and ${removed.length - 10} more`);
-}
-if (changed.length) {
-  console.log('\nChanged (showing first 10):');
-  for (const p of sample(changed, 10)) {
-    const before = leafByPath(existing!, p);
-    const after = leafByPath(incoming, p);
-    console.log(`  ~ ${p}: ${JSON.stringify(before)} → ${JSON.stringify(after)}`);
-  }
-  if (changed.length > 10) console.log(`  … and ${changed.length - 10} more`);
-}
+console.log(formatDiffText(diff));
 
 // ---- write ----
 if (dryRun) {

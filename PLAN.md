@@ -1078,7 +1078,15 @@ upgrade (react-forms first).
 - `@changesets/cli` + `changelog-github`, `fixed: [["@max-core-ds/tokens","@max-core-ds/react"]]`,
   apps + plugin ignored. Seed changeset for 0.1.0. Changeset entries name added/renamed tokens.
 
-## 4.8.3 CI — `.github/workflows/ci.yml`
+## 4.8.3 CI — `.github/workflows/ci.yml` — ✅ built (2026-11-15), live test pending a push
+> Done: job **`ci`** (required check): install (frozen) → build → typecheck → lint → drift;
+> contrast reports to the job summary + a warning, never blocks. Job `token diff` (PRs): sticky
+> comment (`gh pr comment --edit-last --create-if-none`) when `tokens.json` changed, and a warning
+> when `packages/{react,tokens}/src` change without a changeset. New pure `src/diff.ts`
+> (`diffTokens`, text + markdown, suggested bump; bundled into the plugin in 4.8.5), `sync` uses
+> it, new `pnpm -F @max-core-ds/tokens diff --base <file>`. actionlint clean; CI steps rehearsed
+> in a clean copy (no node_modules/dist/cache): all green. Bin is a committed stub
+> (`bin/max-core-tokens.js` → `dist/cli.js`) so clean installs link it without warnings.
 - build → typecheck → lint → drift (blocking) → contrast (reported, job summary).
 - New `packages/tokens/src/diff.ts` (extracted from `sync.ts`), sticky PR comment with the token
   diff on PRs touching `tokens.json`. Warn when `packages/*/src` changes with no changeset.

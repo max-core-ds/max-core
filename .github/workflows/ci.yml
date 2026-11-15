@@ -1,0 +1,115 @@
+# CI for every PR (including the token PRs the Figma plugin opens) and for main.
+# Branch protection requires the `ci` job. `token-diff` only comments.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: ci
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4 # version from package.json "packageManager"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build (tokens, react, plugin, Storybook, showcase)
+        run: pnpm build
+
+      - run: pnpm typecheck
+
+      - run: pnpm lint
+
+      - name: Token drift (react ↔ Figma tokens)
+        run: pnpm -F @max-core-ds/tokens drift
+
+      # Known findings are Figma-side (dark status/accent ramps), so this reports, never blocks.
+      - name: Contrast (WCAG AA, report only)
+        if: ${{ !cancelled() }}
+        run: |
+          set +e
+          pnpm -s -F @max-core-ds/tokens contrast > contrast.txt 2>&1
+          code=$?
+          {
+            echo "## Contrast (WCAG AA)"
+            echo
+            tail -n 1 contrast.txt
+            echo
+            echo '<details><summary>Full report</summary>'
+            echo
+            echo '```'
+            cat contrast.txt
+            echo '```'
+            echo '</details>'
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$code" -ne 0 ]; then echo "::warning title=Contrast::$(tail -n 1 contrast.txt)"; fi
+          exit 0
+
+  token-diff:
+    name: token diff
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    env:
+      BASE: ${{ github.event.pull_request.base.ref }}
+      PR: ${{ github.event.pull_request.number }}
+      GH_TOKEN: ${{ github.token }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Changed files
+        id: changed
+        run: |
+          files=$(git diff --name-only "origin/$BASE...HEAD")
+          echo "$files"
+          if echo "$files" | grep -qx 'packages/tokens/src/tokens.json'; then echo "tokens=true" >> "$GITHUB_OUTPUT"; fi
+          if echo "$files" | grep -qE '^packages/(react|tokens)/src/'; then echo "packages=true" >> "$GITHUB_OUTPUT"; fi
+          if echo "$files" | grep -qE '^\.changeset/.+\.md$' ; then echo "changeset=true" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Changeset reminder
+        if: steps.changed.outputs.packages == 'true' && steps.changed.outputs.changeset != 'true'
+        run: echo "::warning title=No changeset::This PR changes @max-core-ds/react or @max-core-ds/tokens but adds no .changeset/*.md. Run 'pnpm changeset' unless it is release-neutral."
+
+      - uses: pnpm/action-setup@v4
+        if: steps.changed.outputs.tokens == 'true'
+
+      - uses: actions/setup-node@v4
+        if: steps.changed.outputs.tokens == 'true'
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        if: steps.changed.outputs.tokens == 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Comment the token diff (one comment, updated on each push)
+        if: steps.changed.outputs.tokens == 'true'
+        run: |
+          git show "origin/$BASE:packages/tokens/src/tokens.json" > "$RUNNER_TEMP/base-tokens.json"
+          pnpm -s -F @max-core-ds/tokens diff --base "$RUNNER_TEMP/base-tokens.json" --format md > "$RUNNER_TEMP/diff.md"
+          printf '\n\n<sub>Updated for %s · base %s</sub>\n' "${HEAD_SHA::7}" "$BASE" >> "$RUNNER_TEMP/diff.md"
+          cat "$RUNNER_TEMP/diff.md" >> "$GITHUB_STEP_SUMMARY"
+          gh pr comment "$PR" --body-file "$RUNNER_TEMP/diff.md" --edit-last --create-if-none

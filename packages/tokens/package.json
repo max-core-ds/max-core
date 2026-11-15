@@ -9,7 +9,7 @@
   },
   "type": "module",
   "bin": {
-    "max-core-tokens": "./dist/cli.js"
+    "max-core-tokens": "./bin/max-core-tokens.js"
   },
   "exports": {
     "./tokens.css": "./dist/tokens.css",
@@ -22,7 +22,7 @@
     },
     "./package.json": "./package.json"
   },
-  "files": ["dist"],
+  "files": ["bin", "dist"],
   "sideEffects": ["**/*.css"],
   "engines": {
     "node": ">=20"
@@ -35,7 +35,8 @@
     "sync": "tsx src/sync.ts",
     "drift": "tsx src/drift.ts",
     "contrast": "tsx src/contrast-audit.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "diff": "tsx src/diff-cli.ts"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
