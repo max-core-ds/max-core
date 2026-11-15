@@ -1,4 +1,4 @@
-import { Avatar, Badge, Button, Input, Tag } from '@max-core/react';
+import { Avatar, Badge, Button, Input, Tag } from '@max-core-ds/react';
 import { ArrowRight, Hash, Moon, Plus, Search, Star, Sun, Trash2, X } from 'lucide-react';
 import { type ReactNode, useEffect, useState } from 'react';
 
@@ -46,7 +46,7 @@ export function App() {
             Reference consumer app
           </p>
           <h2 className="text-3xl font-bold text-[var(--text-primary)]">
-            How to use @max-core/react in your project
+            How to use @max-core-ds/react in your project
           </h2>
           <p className="max-w-2xl text-[var(--text-secondary)]">
             This is the smallest possible Vite + React + Tailwind&nbsp;v4 app that consumes the Max
@@ -209,7 +209,7 @@ export function App() {
 
       <footer className="border-t border-[var(--border-muted)] px-8 py-6">
         <div className="mx-auto max-w-5xl text-xs text-[var(--text-muted)]">
-          Built with <code>@max-core/react</code>. See <code>README.md</code> for setup details.
+          Built with <code>@max-core-ds/react</code>. See <code>README.md</code> for setup details.
         </div>
       </footer>
     </div>

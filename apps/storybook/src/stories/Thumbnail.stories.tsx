@@ -1,4 +1,4 @@
-import { Thumbnail } from '@max-core/react';
+import { Thumbnail } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ImageIcon } from 'lucide-react';
 

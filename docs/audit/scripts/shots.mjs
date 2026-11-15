@@ -10,7 +10,9 @@ const b = await chromium.launch();
 const pg = await b.newPage({ viewport: { width: 900, height: 500 }, deviceScaleFactor: 2 });
 for (const id of ids)
   for (const theme of ['light', 'dark']) {
-    await pg.goto(`http://localhost:6123/iframe.html?id=${id}&viewMode=story&globals=theme:${theme}`);
+    await pg.goto(
+      `http://localhost:6123/iframe.html?id=${id}&viewMode=story&globals=theme:${theme}`,
+    );
     await pg.waitForTimeout(800);
     await pg.screenshot({ path: `${out}/${id}-${theme}.png` });
   }

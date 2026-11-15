@@ -1,4 +1,4 @@
-import { Avatar, type BottomNavItem, BottomNavigation } from '@max-core/react';
+import { Avatar, type BottomNavItem, BottomNavigation } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Ellipsis, FolderOpen, Heart, House, Mail, Search, Settings } from 'lucide-react';
 import { useState } from 'react';

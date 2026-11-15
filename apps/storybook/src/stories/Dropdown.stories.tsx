@@ -1,4 +1,4 @@
-import { Button, Dropdown } from '@max-core/react';
+import { Button, Dropdown } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Copy, Pencil, Share2, Trash2 } from 'lucide-react';
 

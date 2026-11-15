@@ -9,7 +9,7 @@ import {
   Table,
   TableCell,
   TableRow,
-} from '@max-core/react';
+} from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 

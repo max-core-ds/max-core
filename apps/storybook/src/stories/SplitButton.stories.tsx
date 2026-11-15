@@ -1,4 +1,4 @@
-import { SplitButton } from '@max-core/react';
+import { SplitButton } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Copy, Save, Share2, Trash2 } from 'lucide-react';
 

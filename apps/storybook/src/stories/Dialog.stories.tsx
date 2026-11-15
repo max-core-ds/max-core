@@ -1,4 +1,4 @@
-import { Button, Dialog } from '@max-core/react';
+import { Button, Dialog } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {

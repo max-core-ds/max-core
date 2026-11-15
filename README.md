@@ -20,7 +20,7 @@ the change.** No code edits required for token updates.
 pnpm install
 
 # Generate tokens.css from tokens.json
-pnpm -F @max-core/tokens build
+pnpm -F @max-core-ds/tokens build
 
 # Open Storybook (component workshop)
 pnpm storybook
@@ -46,9 +46,9 @@ max-core/
 │   ├── component-audit.md            # Continue the Figma component audit
 │   └── implement-component.md        # Build a new component + story
 ├── packages/
-│   ├── tokens/                       # @max-core/tokens
-│   ├── react/                        # @max-core/react
-│   └── figma-plugin/                 # @max-core/figma-plugin
+│   ├── tokens/                       # @max-core-ds/tokens
+│   ├── react/                        # @max-core-ds/react
+│   └── figma-plugin/                 # @max-core-ds/figma-plugin
 ├── apps/
 │   └── storybook/                    # Storybook 10 component workshop
 ├── package.json                      # Workspace root scripts
@@ -62,7 +62,7 @@ max-core/
 
 ## Packages
 
-### `@max-core/tokens`
+### `@max-core-ds/tokens`
 
 **What it is.** The token source of truth + the build pipeline that turns it
 into something usable.
@@ -84,14 +84,14 @@ into something usable.
 
 ```bash
 # Build CSS variables from the current tokens.json
-pnpm -F @max-core/tokens build
+pnpm -F @max-core-ds/tokens build
 
 # Sync from a fresh plugin export (preview first)
-pnpm -F @max-core/tokens sync --dry-run
-pnpm -F @max-core/tokens sync
+pnpm -F @max-core-ds/tokens sync --dry-run
+pnpm -F @max-core-ds/tokens sync
 
 # Sync from a custom location
-pnpm -F @max-core/tokens sync --input /path/to/tokens.json
+pnpm -F @max-core-ds/tokens sync --input /path/to/tokens.json
 ```
 
 **What it produces.**
@@ -117,7 +117,7 @@ without needing Figma access.
 
 ---
 
-### `@max-core/react`
+### `@max-core-ds/react`
 
 **What it is.** The React component library — 45 components across atoms,
 molecules, and organisms. All are typed, built (tsup), and drift-green against
@@ -141,7 +141,7 @@ their Figma token spec.
 **How consumers use it.**
 
 ```tsx
-import { Button, Avatar, Input } from '@max-core/react';
+import { Button, Avatar, Input } from '@max-core-ds/react';
 import { Plus } from 'lucide-react';
 
 <Button variant="primary" tone="danger" size="l" leftIcon={<Plus size={20} />}>
@@ -160,13 +160,13 @@ import { Plus } from 'lucide-react';
 
    ```css
    @import 'tailwindcss';
-   @source '../node_modules/@max-core/react/dist/**/*.js';
-   @import '@max-core/tokens/tokens.css';   /* after Tailwind — see below */
+   @source '../node_modules/@max-core-ds/react/dist/**/*.js';
+   @import '@max-core-ds/tokens/tokens.css';   /* after Tailwind — see below */
    ```
 
    Tailwind isn't optional: `var()` support resolves the token *values*, but
    something still has to generate the utility classes that reference them.
-2. **Import `@max-core/tokens/tokens.css`** in your global CSS entry, *after*
+2. **Import `@max-core-ds/tokens/tokens.css`** in your global CSS entry, *after*
    Tailwind, so its `:root` definitions win on any shared variable names
    (e.g. `--radius-md`). Without this import the `var(--…)` references resolve
    to nothing and components render unstyled.
@@ -195,16 +195,16 @@ public `npm install`.
 **Build.**
 
 ```bash
-pnpm -F @max-core/react build
+pnpm -F @max-core-ds/react build
 # → dist/index.js (ESM), dist/index.cjs (CJS), dist/index.d.ts (types)
 ```
 
 ---
 
-### `@max-core/figma-plugin`
+### `@max-core-ds/figma-plugin`
 
 **What it is.** A Figma Desktop plugin that reads the Max Core file's
-variables and exports a `tokens.json` matching `@max-core/tokens`'s contract.
+variables and exports a `tokens.json` matching `@max-core-ds/tokens`'s contract.
 
 **Why it exists.** The Figma REST API for variables requires an Enterprise
 plan. The Plugin API works on any tier. This is the "any tier" bridge.
@@ -227,7 +227,7 @@ plan. The Plugin API works on any tier. This is the "any tier" bridge.
 
 1. Build the plugin:
    ```bash
-   pnpm -F @max-core/figma-plugin build
+   pnpm -F @max-core-ds/figma-plugin build
    ```
 2. Open the Max Core file in Figma Desktop.
 3. **Plugins → Development → Import plugin from manifest…**
@@ -239,7 +239,7 @@ The plugin runs only when you have **edit access** to the file (Figma
 restriction on development plugins, even read-only ones).
 
 **Output.** Downloads `tokens.json` to your browser's Downloads folder.
-Then `pnpm -F @max-core/tokens sync` pulls it into the repo.
+Then `pnpm -F @max-core-ds/tokens sync` pulls it into the repo.
 
 **Skipped intentionally.** The Components-level collection (Layer 3 of the
 cascade) is not exported. Current atoms read semantic tokens directly;
@@ -303,7 +303,7 @@ Pages, Netlify, etc.
               ~/Downloads/tokens.json
                               ↓
 ┌─ Sync CLI ────────────────────────────────────────────────────┐
-│  Developer runs: pnpm -F @max-core/tokens sync                │
+│  Developer runs: pnpm -F @max-core-ds/tokens sync                │
 │  Validates shape, diffs vs current, writes to                 │
 │  packages/tokens/src/tokens.json.                             │
 └─────────────────────────────┬─────────────────────────────────┘
@@ -311,13 +311,13 @@ Pages, Netlify, etc.
        Developer commits the updated tokens.json
                               ↓
 ┌─ Build CLI ───────────────────────────────────────────────────┐
-│  pnpm -F @max-core/tokens build                               │
+│  pnpm -F @max-core-ds/tokens build                               │
 │  → packages/tokens/dist/tokens.css                            │
 └─────────────────────────────┬─────────────────────────────────┘
                               ↓
 ┌─ Consumers ───────────────────────────────────────────────────┐
 │  Storybook hot-reloads, atoms reflect the new value.          │
-│  Downstream consumer apps that import @max-core/tokens get    │
+│  Downstream consumer apps that import @max-core-ds/tokens get    │
 │  the same CSS when they rebuild.                              │
 └───────────────────────────────────────────────────────────────┘
 ```
@@ -337,7 +337,7 @@ Pages, Netlify, etc.
   Allows direct binding to tokens without a JS config file.
 - **CVA** for variant matrices. Cleanest known pattern for "3 variants × 4
   tones × 4 sizes" without combinatorial component duplication.
-- **No icon library in `@max-core/react`.** Icons are passed as `ReactNode`;
+- **No icon library in `@max-core-ds/react`.** Icons are passed as `ReactNode`;
   consumers pick `lucide-react` (matches Figma), `@heroicons/react`, or
   anything else. We don't lock the choice.
 - **Monorepo via pnpm + Turborepo.** Tokens, React, Figma plugin, Storybook
@@ -389,17 +389,17 @@ pnpm storybook                  # Storybook dev server
 
 ```bash
 # Tokens
-pnpm -F @max-core/tokens build         # tokens.json → tokens.css
-pnpm -F @max-core/tokens sync          # Figma export → tokens.json
-pnpm -F @max-core/tokens sync --dry-run
+pnpm -F @max-core-ds/tokens build         # tokens.json → tokens.css
+pnpm -F @max-core-ds/tokens sync          # Figma export → tokens.json
+pnpm -F @max-core-ds/tokens sync --dry-run
 
 # React library
-pnpm -F @max-core/react build          # ESM + CJS + .d.ts
-pnpm -F @max-core/react dev            # tsup watch mode
+pnpm -F @max-core-ds/react build          # ESM + CJS + .d.ts
+pnpm -F @max-core-ds/react dev            # tsup watch mode
 
 # Figma plugin
-pnpm -F @max-core/figma-plugin build   # esbuild → dist/
-pnpm -F @max-core/figma-plugin dev     # esbuild watch mode
+pnpm -F @max-core-ds/figma-plugin build   # esbuild → dist/
+pnpm -F @max-core-ds/figma-plugin dev     # esbuild watch mode
 
 # Storybook
 pnpm -F storybook dev                  # http://localhost:6006

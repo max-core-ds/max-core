@@ -1,4 +1,4 @@
-import { IconOnlyButton } from '@max-core/react';
+import { IconOnlyButton } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Heart } from 'lucide-react';
 

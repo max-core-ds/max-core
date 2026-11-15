@@ -1,4 +1,4 @@
-import { Tag } from '@max-core/react';
+import { Tag } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Hash, Star, X } from 'lucide-react';
 import { useState } from 'react';

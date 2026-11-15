@@ -501,7 +501,7 @@ export function generateThemeCss(tokens: TokensFile): string {
     '/**',
     ' * Max Core Tailwind v4 theme — auto-generated. Do not edit by hand.',
     ` * Source: packages/tokens/src/tokens.json  (v${tokens.$version})`,
-    " * Use after: @import 'tailwindcss'; @import '@max-core/tokens/tokens.css';",
+    " * Use after: @import 'tailwindcss'; @import '@max-core-ds/tokens/tokens.css';",
     ' */',
     '',
     ...(theme.length ? ['@theme {', ...theme, '}', ''] : []),

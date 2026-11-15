@@ -1,4 +1,4 @@
-import { Avatar, Pin } from '@max-core/react';
+import { Avatar, Pin } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { User } from 'lucide-react';
 

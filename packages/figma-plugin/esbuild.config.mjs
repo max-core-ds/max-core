@@ -1,7 +1,7 @@
-import { build, context } from 'esbuild';
 import { copyFileSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { build, context } from 'esbuild';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const watch = process.argv.includes('--watch');

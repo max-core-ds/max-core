@@ -2,7 +2,7 @@
 /**
  * Token drift check (Phase 3 conformance gate).
  *
- *   pnpm -F @max-core/tokens drift
+ *   pnpm -F @max-core-ds/tokens drift
  *
  * Two checks, exit non-zero on either:
  *
@@ -15,7 +15,7 @@
  *    vars its Figma tokens resolve to; `component` mode (Phase 4.7 migrated)
  *    binds its own component vars. Unmapped families are skipped.
  */
-import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
@@ -26,6 +26,7 @@ import {
   localVarsIn,
   usedVarsIn,
 } from './conformance.js';
+import { reactSourceFiles } from './contract.js';
 import { generateThemeCss, generateTokensCss } from './transform.js';
 import type { TokensFile } from './types.js';
 
@@ -524,15 +525,7 @@ const defined = new Set([
   ...definedVarsIn(generateThemeCss(tokens)),
   ...definedVarsIn(readFileSync(resolve(here, 'scrollbar.css'), 'utf8')),
 ]);
-const sourceFiles: string[] = [];
-const walk = (dir: string): void => {
-  for (const f of readdirSync(dir)) {
-    const p = resolve(dir, f);
-    if (statSync(p).isDirectory()) walk(p);
-    else if (/\.(tsx?|css)$/.test(f) && !/\.(stories|test)\.tsx?$/.test(f)) sourceFiles.push(p);
-  }
-};
-walk(reactSrc);
+const sourceFiles = reactSourceFiles(reactSrc);
 const sources = sourceFiles.map((f) => [f, readFileSync(f, 'utf8')] as const);
 const local = new Set(sources.flatMap(([, s]) => [...localVarsIn(s)]));
 const unknown: string[] = [];

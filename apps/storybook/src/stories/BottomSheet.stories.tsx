@@ -17,7 +17,7 @@ import {
   Tag,
   TextBlock,
   Textarea,
-} from '@max-core/react';
+} from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
   AtSign,

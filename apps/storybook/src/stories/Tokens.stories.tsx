@@ -33,13 +33,9 @@ const colorTokens = [
   ['status/warning/subtle', '--status-warning-subtle'],
 ] as const;
 
-const spacingTokens = [
-  '04', '08', '12', '16', '20', '24', '32', '48', '64',
-] as const;
+const spacingTokens = ['04', '08', '12', '16', '20', '24', '32', '48', '64'] as const;
 
-const radiusTokens = [
-  'none', 'xs', 'sm', 'md', 'l', 'xl', '2xl', '3xl', 'full',
-] as const;
+const radiusTokens = ['none', 'xs', 'sm', 'md', 'l', 'xl', '2xl', '3xl', 'full'] as const;
 
 function Swatch({ name, cssVar }: { name: string; cssVar: string }) {
   return (

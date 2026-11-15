@@ -9,7 +9,7 @@ import {
   SideBarTrigger,
   Thumbnail,
   useRailCollapsed,
-} from '@max-core/react';
+} from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { FileText, Home, LifeBuoy, PanelLeft, PieChart, Plus, Settings, Users } from 'lucide-react';
 import { useState } from 'react';

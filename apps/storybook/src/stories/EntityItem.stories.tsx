@@ -1,4 +1,4 @@
-import { Avatar, Badge, EntityItem, Thumbnail } from '@max-core/react';
+import { Avatar, Badge, EntityItem, Thumbnail } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ChevronRight } from 'lucide-react';
 

@@ -1,6 +1,6 @@
+import { Button } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ArrowRight, Check, Download, Plus } from 'lucide-react';
-import { Button } from '@max-core/react';
 
 const meta = {
   title: 'Atoms/Standard Button',

@@ -20,10 +20,10 @@ importers:
 
   apps/showcase:
     dependencies:
-      '@max-core/react':
+      '@max-core-ds/react':
         specifier: workspace:*
         version: link:../../packages/react
-      '@max-core/tokens':
+      '@max-core-ds/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
       lucide-react:
@@ -60,10 +60,10 @@ importers:
 
   apps/storybook:
     dependencies:
-      '@max-core/react':
+      '@max-core-ds/react':
         specifier: workspace:*
         version: link:../../packages/react
-      '@max-core/tokens':
+      '@max-core-ds/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
       lucide-react:
@@ -112,7 +112,7 @@ importers:
       '@figma/plugin-typings':
         specifier: ^1.111.0
         version: 1.127.0
-      '@max-core/tokens':
+      '@max-core-ds/tokens':
         specifier: workspace:*
         version: link:../tokens
       esbuild:
@@ -140,6 +140,9 @@ importers:
         specifier: ^3.0.0
         version: 3.6.0
     devDependencies:
+      '@max-core-ds/tokens':
+        specifier: workspace:*
+        version: link:../tokens
       '@types/react':
         specifier: ^18.3.0
         version: 18.3.29
@@ -164,6 +167,9 @@ importers:
       '@types/node':
         specifier: ^22.10.0
         version: 22.19.19
+      tsup:
+        specifier: ^8.5.1
+        version: 8.5.1(jiti@2.7.0)(postcss@8.5.15)(tsx@4.22.3)(typescript@5.9.3)
       tsx:
         specifier: ^4.19.2
         version: 4.22.3

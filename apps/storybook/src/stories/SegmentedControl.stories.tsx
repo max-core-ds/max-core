@@ -1,4 +1,4 @@
-import { SegmentedControl } from '@max-core/react';
+import { SegmentedControl } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { List, Map as MapIcon } from 'lucide-react';
 

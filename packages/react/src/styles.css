@@ -1,0 +1,12 @@
+/*
+ * @max-core-ds/react — Tailwind v4 entry for consumers.
+ *
+ *   @import 'tailwindcss';
+ *   @import '@max-core-ds/react/styles.css';
+ *   @import '@max-core-ds/tokens/tokens.css';
+ *   @import '@max-core-ds/tokens/theme.css';
+ *
+ * The components ship Tailwind class names, not compiled CSS. This tells the
+ * consumer's Tailwind to scan the built package (this folder) so it emits them.
+ */
+@source './';

@@ -1,4 +1,4 @@
-import { Button, Tooltip } from '@max-core/react';
+import { Button, Tooltip } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {

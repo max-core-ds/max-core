@@ -1,4 +1,4 @@
-import { ProgressBar } from '@max-core/react';
+import { ProgressBar } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {

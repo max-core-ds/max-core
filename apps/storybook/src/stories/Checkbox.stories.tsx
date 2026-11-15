@@ -1,4 +1,4 @@
-import { Checkbox } from '@max-core/react';
+import { Checkbox } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {

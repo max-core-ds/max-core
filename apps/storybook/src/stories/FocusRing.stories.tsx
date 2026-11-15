@@ -1,4 +1,4 @@
-import { Button, Input } from '@max-core/react';
+import { Button, Input } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
 

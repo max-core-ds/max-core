@@ -1,22 +1,37 @@
 {
-  "name": "@max-core/tokens",
-  "version": "0.0.0",
-  "description": "Max Core design tokens \u2014 JSON source of truth and CSS variable generator",
+  "name": "@max-core-ds/tokens",
+  "version": "0.1.0",
+  "description": "Max Core design tokens — Figma-exported tokens.json, the CSS/Tailwind generator and the max-core-tokens CLI",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/max-core-ds/max-core.git",
+    "directory": "packages/tokens"
+  },
   "type": "module",
+  "bin": {
+    "max-core-tokens": "./dist/cli.js"
+  },
   "exports": {
     "./tokens.css": "./dist/tokens.css",
     "./theme.css": "./dist/theme.css",
     "./scrollbar.css": "./dist/scrollbar.css",
-    "./tokens.json": "./src/tokens.json",
-    "./types": "./src/types.ts",
+    "./tokens.json": "./dist/tokens.json",
+    "./contract.json": "./dist/contract.json",
+    "./types": {
+      "types": "./dist/types.d.ts"
+    },
     "./package.json": "./package.json"
   },
-  "files": [
-    "dist",
-    "src/tokens.json"
-  ],
+  "files": ["dist"],
+  "sideEffects": ["**/*.css"],
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "scripts": {
-    "build": "tsx src/cli.ts",
+    "build": "tsup && node dist/cli.js",
     "sync": "tsx src/sync.ts",
     "drift": "tsx src/drift.ts",
     "contrast": "tsx src/contrast-audit.ts",
@@ -24,6 +39,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
+    "tsup": "^8.5.1",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
   }

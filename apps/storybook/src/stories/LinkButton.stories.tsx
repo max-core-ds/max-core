@@ -1,4 +1,4 @@
-import { LinkButton } from '@max-core/react';
+import { LinkButton } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ArrowRight, ExternalLink } from 'lucide-react';
 

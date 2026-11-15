@@ -1,4 +1,4 @@
-import { TimePicker } from '@max-core/react';
+import { TimePicker } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 /**

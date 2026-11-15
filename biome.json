@@ -7,12 +7,24 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": ["dist", "build", "node_modules", ".turbo", "storybook-static", "coverage"]
+    "ignore": [
+      "dist",
+      "build",
+      "node_modules",
+      ".turbo",
+      "storybook-static",
+      "coverage",
+      "figma-node-links/pages",
+      "figma-node-links/*.json"
+    ]
   },
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "recommended": true,
+      "style": {
+        "noNonNullAssertion": "off"
+      }
     }
   },
   "overrides": [
@@ -38,6 +50,11 @@
       "quoteStyle": "single",
       "semicolons": "always",
       "trailingCommas": "all"
+    }
+  },
+  "css": {
+    "formatter": {
+      "quoteStyle": "single"
     }
   }
 }

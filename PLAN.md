@@ -6,7 +6,7 @@ Max Core is a design system **template**, not a fixed instance. The 4-level toke
 
 This plan covers the **foundation phase**: setting up the project, the token pipeline, tooling, and the first 3–5 atoms to prove the architecture before scaling. It does **not** cover the full ~50-component buildout — that's planned separately once the foundation is validated.
 
-The library targets React first. The two downstream consumers are (1) `npm install @max-core/react` for normal users and (2) later, a shadcn-style copy-in CLI for teams that want to fork.
+The library targets React first. The two downstream consumers are (1) `npm install @max-core-ds/react` for normal users and (2) later, a shadcn-style copy-in CLI for teams that want to fork.
 
 ---
 
@@ -23,12 +23,12 @@ The library targets React first. The two downstream consumers are (1) `npm insta
 │  Reads variables → emits tokens.json                         │
 └──────────────────────────┬───────────────────────────────────┘
                            │
-┌─ @max-core/tokens (CLI + transform) ─────────────────────────┐
+┌─ @max-core-ds/tokens (CLI + transform) ─────────────────────────┐
 │  tokens.json → tokens.css (CSS custom properties)            │
 │                tailwind.preset.ts (Tailwind v4 @theme)       │
 └──────────────────────────┬───────────────────────────────────┘
                            │
-┌─ @max-core/react (component library) ────────────────────────┐
+┌─ @max-core-ds/react (component library) ────────────────────────┐
 │  Base UI primitives + Tailwind v4 classes reading CSS vars   │
 └──────────────────────────┬───────────────────────────────────┘
                            │
@@ -107,7 +107,7 @@ max-core/
 ├── biome.json
 ├── tsconfig.base.json
 ├── packages/
-│   ├── tokens/                     # @max-core/tokens
+│   ├── tokens/                     # @max-core-ds/tokens
 │   │   ├── src/
 │   │   │   ├── tokens.json         # Hand-authored seed; later overwritten by plugin
 │   │   │   ├── transform.ts        # JSON → CSS vars + Tailwind preset
@@ -116,7 +116,7 @@ max-core/
 │   │       ├── tokens.css
 │   │       ├── tokens.dark.css
 │   │       └── tailwind.preset.ts
-│   ├── react/                      # @max-core/react
+│   ├── react/                      # @max-core-ds/react
 │   │   ├── src/
 │   │   │   ├── components/
 │   │   │   │   ├── Button/
@@ -147,7 +147,7 @@ max-core/
 - Biome for lint/format
 - `.gitignore` covering Node/Vite/Storybook artifacts
 
-### 2. `@max-core/tokens` package
+### 2. `@max-core-ds/tokens` package
 - Hand-author `tokens.json` from `MAX-CORE-SUMMARY.md` (primitives + semantics + colors for both modes). Treat this as the seed file the Figma plugin will later overwrite.
 - Write `transform.ts` that produces:
   - `tokens.css` — `:root { --bg-surface: ...; }` + `[data-theme="dark"] { ... }`
@@ -155,7 +155,7 @@ max-core/
 - CLI entrypoint `max-core-tokens build` for regeneration
 - Define the **tokens.json contract** as the input/output schema (this is what the Figma plugin will emit later)
 
-### 3. `@max-core/react` package — first 5 atoms
+### 3. `@max-core-ds/react` package — first 5 atoms
 
 Selected to stress every layer of the stack:
 
@@ -212,12 +212,12 @@ Reused conventions from existing docs:
 
 After phase 1 build is complete:
 
-1. **Token pipeline**: `pnpm -F @max-core/tokens build` produces `dist/tokens.css`. Open the file and confirm `--bg-surface`, `--text-primary`, `--accent-default` exist with values matching `MAX-CORE-SUMMARY.md`.
+1. **Token pipeline**: `pnpm -F @max-core-ds/tokens build` produces `dist/tokens.css`. Open the file and confirm `--bg-surface`, `--text-primary`, `--accent-default` exist with values matching `MAX-CORE-SUMMARY.md`.
 2. **Token swap test**: Edit a Level 1 primitive in `tokens.json` (e.g. change indigo `#6366F1` → `#FF0000`), rebuild, refresh Storybook. Every accent-tinted element should turn red. This proves the template architecture works.
 3. **Storybook visual check**: `pnpm -F storybook dev` opens. All 5 atoms render in light and dark modes. Dark mode toggle in the preview flips correctly.
 4. **Comparison against Figma**: For each atom, side-by-side screenshot of Storybook vs. the Figma showcase page. No hardcoded values should differ from the token-driven CSS output.
 5. **Tests**: `pnpm test` passes. axe finds zero a11y violations on each atom.
-6. **Build**: `pnpm -F @max-core/react build` produces `dist/` with ESM + CJS + `.d.ts`. Import path `@max-core/react` resolves in a scratch app.
+6. **Build**: `pnpm -F @max-core-ds/react build` produces `dist/` with ESM + CJS + `.d.ts`. Import path `@max-core-ds/react` resolves in a scratch app.
 7. **MCP smoke test**: With Figma Dev Mode MCP enabled and a frame selected in Figma Desktop, I can run a tool call that reads the variable definitions for that frame and confirm they match `tokens.json`.
 
 ---
@@ -243,7 +243,7 @@ Phase 1 shipped tokens + 5 atoms, with tokens verified against Figma via manual 
 
 The cleanest path is a CLI that talks to Figma's REST API, but **the Variables REST API is Enterprise-only** (verified at [Figma Variables docs](https://developers.figma.com/docs/rest-api/variables/)). The user is on Starter plan with a Full seat — that path is blocked for development testing.
 
-**Hybrid approach (chosen):** a Figma plugin exports `tokens.json` to the designer's Downloads folder (Plugin API works on any tier, fully testable now), and a CLI extension to `@max-core/tokens` ingests that JSON file into the repo. End-state matches a pure CLI workflow. Enterprise consumers can later swap the plugin step for a direct REST API call — the JSON contract and downstream pipeline stay identical.
+**Hybrid approach (chosen):** a Figma plugin exports `tokens.json` to the designer's Downloads folder (Plugin API works on any tier, fully testable now), and a CLI extension to `@max-core-ds/tokens` ingests that JSON file into the repo. End-state matches a pure CLI workflow. Enterprise consumers can later swap the plugin step for a direct REST API call — the JSON contract and downstream pipeline stay identical.
 
 ## Recommended approach
 
@@ -254,10 +254,10 @@ The cleanest path is a CLI that talks to Figma's REST API, but **the Variables R
   ↓ opens Max Core Token Export plugin → clicks Export
 [Figma Plugin — new packages/figma-plugin]
   ↓ reads Primitives, Semantics, Colors via Plugin API
-  ↓ builds tokens.json matching @max-core/tokens contract
+  ↓ builds tokens.json matching @max-core-ds/tokens contract
   ↓ triggers browser download
 [Designer's ~/Downloads/tokens.json]
-  ↓ developer runs: pnpm -F @max-core/tokens sync
+  ↓ developer runs: pnpm -F @max-core-ds/tokens sync
 [CLI sync.ts — new]
   ↓ validates schema, diffs vs current, writes to packages/tokens/src/tokens.json
 [Existing build pipeline]
@@ -334,7 +334,7 @@ For the plugin package:
 - `@figma/plugin-typings` — TypeScript types for the Plugin API (devDep)
 - `esbuild` — bundler for the sandbox code (devDep; could substitute Vite, but esbuild is lighter for single-file output)
 
-For `@max-core/tokens` — none.
+For `@max-core-ds/tokens` — none.
 
 ## Verification
 
@@ -342,11 +342,11 @@ For `@max-core/tokens` — none.
 2. **Plugin runs**: open Max Core file, run plugin, click Export. UI shows correct collection counts (matches what we saw via `use_figma`: 113 primitives, 117 colors, 50ish semantics).
 3. **Download fires**: `tokens.json` appears in `~/Downloads/` with current timestamp.
 4. **JSON contract holds**: diff downloaded JSON vs current `packages/tokens/src/tokens.json`. Structure identical; values match what we already verified against Figma.
-5. **CLI ingests**: `pnpm -F @max-core/tokens sync` reads from Downloads, reports diff stats, writes to repo. Exit code 0.
-6. **Existing build still works**: `pnpm -F @max-core/tokens build` regenerates `tokens.css`. Variable count unchanged.
+5. **CLI ingests**: `pnpm -F @max-core-ds/tokens sync` reads from Downloads, reports diff stats, writes to repo. Exit code 0.
+6. **Existing build still works**: `pnpm -F @max-core-ds/tokens build` regenerates `tokens.css`. Variable count unchanged.
 7. **Storybook unaffected**: refresh Storybook (already running) — no visual changes (since we just round-tripped the same data).
 8. **Round-trip test (the real proof)**: in Figma, change `spacing/scale/16` from 16 → 18. Re-run plugin → re-run sync → re-run build → refresh Storybook. Any component using `--spacing-16` (most atoms) shows the new spacing. Reset Figma value when done.
-9. **Dry-run safety**: `pnpm -F @max-core/tokens sync --dry-run` prints diff but does not modify `tokens.json`.
+9. **Dry-run safety**: `pnpm -F @max-core-ds/tokens sync --dry-run` prints diff but does not modify `tokens.json`.
 
 ## Out of scope for Phase 2
 
@@ -489,7 +489,7 @@ description text.
 > landed — see the per-batch notes below and `PROGRESS.md`. What the lean v1s left out
 > is listed in the **On-demand backlog** at the end of this file. The test-infra batch
 > (formerly Batch 13) moved to its own **Phase 6**. Also landed: the **contrast
-> guardrail** (`pnpm -F @max-core/tokens contrast`, WCAG AA text/bg pairings,
+> guardrail** (`pnpm -F @max-core-ds/tokens contrast`, WCAG AA text/bg pairings,
 > light+dark), which pre-empts part of Phase 6's a11y goal.
 
 ## Scope
@@ -619,7 +619,7 @@ README "Status" gaps, not component work.
 | 5 | **Typography** | Text style per text node (drift never sees this). |
 | 6 | **Anatomy** | Sub-components / internals / slot structure and order. |
 | 7 | **Focus (hybrid model)** | Bordered **field** → own border `border/focus` 2px, React `focusBorder`, no ring. **Pressable** → `.Focus-ring` instance in Figma, React `focusRing` (keyboard-only `focus-visible`). Focused = BOOLEAN. Disabled = no focus. Ring covers only the focusable area. |
-| 8 | **A11y** | Semantic element / role / aria, keyboard interaction, contrast (`pnpm -F @max-core/tokens contrast`). |
+| 8 | **A11y** | Semantic element / role / aria, keyboard interaction, contrast (`pnpm -F @max-core-ds/tokens contrast`). |
 | 9 | **Doc page accuracy** | Doc text vs master (stale token names, usage lists, counts) → designer list. |
 | 10 | **Story** | Exposes every axis via Controls, plus matrix stories only where needed. |
 
@@ -761,7 +761,7 @@ The output goes to the scratchpad and fixes the exact name→path mappings below
 
 ### 4.6.5 Re-export + sync
 1. Build the plugin. **You** run it in Figma Desktop on `sX5tik…`; it downloads `tokens.json`.
-2. Run `pnpm -F @max-core/tokens sync --dry-run`, then `sync`, then `build`.
+2. Run `pnpm -F @max-core-ds/tokens sync --dry-run`, then `sync`, then `build`.
 3. Review the diff: Max's colour changes arrive here (accent ramp, `text/secondary` / `text/muted`, `overlay/scrim`, `chart/*`, `opacity/faint`, new component tokens).
 4. Reconcile the plain-number list against Max's 15 (send him our list if it differs).
 
@@ -947,19 +947,25 @@ The output goes to the scratchpad and fixes the exact name→path mappings below
 > (dropdown / popover / tooltip). Verified: option on top inside the sheet; page Select 400,
 > Dialog 900, Toast 1000. Local stacking (`z-10` focus lift, `z-[1]`, `-z-[1]`) stays.
 >
-> **NEXT — close 4.7:** the motion note for Max (spring proposals; Bottom Sheet still uses its own
-> 450ms / cubic-bezier slide, the only motion not on `--motion-*`) — ask first. Then 4.8
-> publishing pipeline.
+> **Motion note — draft, NOT committed (waiting for Max; may be dropped):** `docs/motion-note-for-max.md` — inventory (~35 colour/opacity transitions on
+> Tailwind's 150ms default, not `--motion-*`; popups have no motion; Bottom Sheet's own 450ms
+> iOS curve), three spring proposals as duration + bounce (`snappy` 250 / 0, `smooth` 400 / 0.1,
+> `bouncy` 500 / 0.25) with their computed CSS `linear()` curves, where each applies, and 4
+> questions. Code waits for Max's answer (then: map Tailwind's default transition to
+> `--motion-duration-fast` / `--motion-easing-default`, add popup enter/exit, move Bottom Sheet).
+>
+> **Phase 4.7 ✅ closed (2026-11-11)** except the motion note above (on hold until Max answers). **NEXT — 4.8 publishing pipeline** — ask first.
 >
 > **Per-batch loop:** read the master's bindings (`use_figma`, read-only, file `sX5tik…`) + the
 > component's tokens in `packages/tokens/dist/tokens.css` → swap to component vars + `type-*` +
 > `capTrim` (`utils/cap-trim.ts`) where a label must trim → spec to `mode: 'component'` in
 > `drift.ts` (exempt unused tokens with a reason) → gate: react typecheck + build, `pnpm -F
-> @max-core/tokens drift` + `contrast`, `cd apps/storybook && pnpm run build`, biome →
+> @max-core-ds/tokens drift` + `contrast`, `cd apps/storybook && pnpm run build`, biome →
 > `docs/audit/scripts/{shots,measure}.mjs` against the static build → PLAN batch note → report,
 > wait for the user's go-ahead (commit only when asked).
 
 > **Notes for Max — round 2 (collected during 4.7):**
+> - Motion: draft in `docs/motion-note-for-max.md` (uncommitted, on hold — the user may drop it).
 > - Data Table cell text: the `_Cell Item / Simple Text` master is Caption/300, but the page's
 >   tables mix it with Body/MD/300 (167 vs 64 cells). React keeps Body/MD/300 — which is meant?
 >   The footer's "Showing 1–5" text has no text style (raw 12px light).
@@ -1013,23 +1019,80 @@ Motion: propose spring values (duration + bounce) for Max to add as `motion/*` t
 
 ---
 
-# Phase 4.8 — Publishing pipeline (Figma → GitHub → npm → projects) — ⏳ NOT STARTED
-- **GitHub setup** (the user does this by hand, from my checklist): org `max-core`, repo transfer, Max invited, Max's fine-grained PAT, a `packages:read` token for consumers, branch protection.
-- **Make the packages publishable:**
-  - `@max-core/react` ships `styles.css` (`@source "./";`) plus `exports` and `publishConfig` (GitHub Packages), version `0.1.0`.
-  - `@max-core/tokens` gets `publishConfig`, a `bin` (`max-core-tokens build`, prepared for template use) and Changesets.
-  - Consumer CSS becomes: `@import 'tailwindcss'; @import '@max-core/react/styles.css'; @import '@max-core/tokens/tokens.css'; @import '@max-core/tokens/theme.css';`.
-- **CI** (`ci.yml`): build, typecheck, lint, drift (blocking), contrast (reported). Token PRs get a diff comment through a new `packages/tokens/src/diff.ts`, extracted from `sync.ts`.
-- **Release** (`release.yml`) on merge to main: `changeset version`, then publish to GitHub Packages, push tags, and create a GitHub Release with the `.tgz` files.
-- **Plugin "Publish to GitHub":**
-  - manifest allows `api.github.com`
-  - settings saved in `figma.clientStorage`
-  - flow: GET current tokens → diff → branch → PUT `tokens.json` → write a `.changeset` file → open a PR → show the link
-  - keep the Download button as a fallback
-- **Docs:** consumer setup (`.npmrc`, `dependabot.yml`). Migrate `react-forms` after the first release, and ask first.
+# Phase 4.8 — Publishing pipeline (Figma → GitHub → registry → projects) — 🔄 IN PROGRESS (started 2026-11-15)
+
+> Refined 2026-11-14/15 (planning session). Each step ends with a report and waits for the go-ahead.
+
+**Goal:** Max clicks **Publish to GitHub** in the plugin → a PR with the token diff → CI gates it
+(build, typecheck, lint, drift) → merge → release `@max-core-ds/tokens` + `@max-core-ds/react` → projects
+upgrade (react-forms first).
+
+**Decisions so far**
+- **CI yes, release manual first.** `ci.yml` is the safety net for PRs Max opens from Figma with no
+  dev in the loop. Releases start as a local `pnpm release` script; a `release.yml` comes later,
+  only when releases get frequent or someone else cuts them.
+- **Lockstep versions** (Changesets `fixed`): one version number = one Figma state.
+- **Template projects** (rebrand: same components, own Figma copy with other values) need no
+  pipeline. They install `@max-core-ds/react`, export their own `tokens.json` (plugin Publish pointed
+  at their repo), and generate CSS with `max-core-tokens build` in `predev`/`prebuild`. The build
+  fails loudly when their tokens lack a name the installed React version needs (version-skew check).
+- **Registry: GitHub Packages, private (decided 2026-11-15).** The GitHub name `max-core` belongs
+  to an unrelated user, so the org is **`max-core-ds`** and the scope became **`@max-core-ds/*`**
+  (renamed repo-wide). Free plan quotas (500 MB storage, 1 GB/month transfer outside Actions)
+  are far above our ~0.4 MB per release. Consumers need a classic `read:packages` PAT.
+- **Versions:** first release **0.1.0** (`^0.0.x` ranges never pick up updates). Token value
+  changes / fixes = patch, API or token renames = minor, 1.0.0 when the API is declared stable.
+  The plugin carries the same number in its UI and release zip; apps + scripts stay 0.0.0.
+- **Open:** plugin distribution to other teams (Figma private org plugin vs a zip per release).
+
+## 4.8.0 Prerequisites
+- [x] Lint baseline cleared (95 → 0): `figma-node-links/` data ignored, `noNonNullAssertion` off
+  (redundant with `noUncheckedIndexedAccess`), CSS single quotes, `@source` moved below the
+  `@import`s in both apps, safe formatting fixes. Build, typecheck, drift green.
+- [x] Org `max-core-ds` created, repo transferred, `origin` = `git@github.com:max-core-ds/max-core.git`.
+- [ ] Max invited (Write) · org Actions + fine-grained PAT settings · Max's PAT (Contents + PRs RW
+  on the one repo) · branch protection on `main` requiring `ci` (after 4.8.3).
+
+## 4.8.1 Make the packages publishable — ✅ done (2026-11-15)
+> Done: both packages 0.1.0 with `repository` + `publishConfig`; react ships `dist/styles.css`
+> (`@source './'`), peer `@max-core-ds/tokens ^0.1.0`; tokens built by tsup (`dist/cli.js` bin,
+> `types.d.ts`, `tokens.json`, **`contract.json`** = the 649 vars react reads, from new
+> `src/contract.ts`, also reused by drift). Apps use the consumer CSS block; Storybook CSS came
+> out byte-identical. Verified with the packed tarballs in a scratch Vite + Tailwind v4 app
+> (light + dark render) and the CLI: full tokens → OK, missing vars → exit 1 with the names.
+- `@max-core-ds/react` 0.1.0: `dist/styles.css` (`@source "./";`, copied in tsup `onSuccess`),
+  `exports["./styles.css"]`, `sideEffects` for CSS, `repository`, `@max-core-ds/tokens` as peer.
+- `@max-core-ds/tokens` 0.1.0: `tokens.json` + `types.d.ts` shipped from `dist/`, fix `./types`,
+  compiled `bin: max-core-tokens` → `build [--input] [--out]` + the token-contract check against
+  the installed `@max-core-ds/react` (React ships the list of token vars it uses).
+- Consumer CSS (both apps dogfood it): `tailwindcss` → `@max-core-ds/react/styles.css` →
+  `@max-core-ds/tokens/tokens.css` → `theme.css`. The workspace `@source` into `packages/react/src` goes.
+
+## 4.8.2 Changesets
+- `@changesets/cli` + `changelog-github`, `fixed: [["@max-core-ds/tokens","@max-core-ds/react"]]`,
+  apps + plugin ignored. Seed changeset for 0.1.0. Changeset entries name added/renamed tokens.
+
+## 4.8.3 CI — `.github/workflows/ci.yml`
+- build → typecheck → lint → drift (blocking) → contrast (reported, job summary).
+- New `packages/tokens/src/diff.ts` (extracted from `sync.ts`), sticky PR comment with the token
+  diff on PRs touching `tokens.json`. Warn when `packages/*/src` changes with no changeset.
+
+## 4.8.4 Release (manual first)
+- Root `pnpm release` = `changeset version` → build → `changeset publish` → tags → `gh release`
+  with the `.tgz` files (+ the plugin zip). `release.yml` later.
+
+## 4.8.5 Plugin "Publish to GitHub"
+- `allowedDomains: ["https://api.github.com"]`; settings (owner/repo/base/PAT) in
+  `figma.clientStorage`, so template projects point it at their own repo.
+- GET tokens.json → diff (bundled `diff.ts`) → branch → PUT tokens.json → PUT `.changeset` file
+  (Max Core repo only) → open PR → show link. Download stays as fallback.
+
+## 4.8.6 Docs + first release
+- `docs/consuming.md`, `docs/publishing.md` (Max's flow + manual fallback),
+  `docs/template-usage.md` (rebrand setup, `predev`/`prebuild`). README status, PROGRESS, memory.
+- First release 0.1.0. **react-forms migration: ask first.**
 
 ---
-
 ## Critical files
 - **Plugin:** `packages/figma-plugin/src/transform.ts` (`figmaNameToTokenPath`, `buildComponents`, `buildEffects`, new `buildTypography`), `code.ts`, `ui.html`
 - **Tokens:** `packages/tokens/src/types.ts`, `transform.ts` (`generateTokensCss`, new `generateThemeCss`), `cli.ts`, `sync.ts` (`validateShape`), `drift.ts`, `conformance.ts`, `contrast-audit.ts`, `package.json` (exports for `theme.css` and types)

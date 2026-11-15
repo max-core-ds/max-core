@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
- * Sync CLI: ingest a tokens.json produced by @max-core/figma-plugin into the
+ * Sync CLI: ingest a tokens.json produced by @max-core-ds/figma-plugin into the
  * repo. Validates shape, prints a diff vs the current source file, writes
  * unless --dry-run.
  *
- *   pnpm -F @max-core/tokens sync               # reads ~/Downloads/tokens.json
- *   pnpm -F @max-core/tokens sync --input X     # explicit path
- *   pnpm -F @max-core/tokens sync --dry-run     # preview without writing
+ *   pnpm -F @max-core-ds/tokens sync               # reads ~/Downloads/tokens.json
+ *   pnpm -F @max-core-ds/tokens sync --input X     # explicit path
+ *   pnpm -F @max-core-ds/tokens sync --dry-run     # preview without writing
  */
 
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -127,9 +127,7 @@ console.log('');
 console.log(
   `Incoming: ${incomingPaths.size} tokens · ${Object.keys((incoming.colors as { light: object }).light).length} light · ${Object.keys((incoming.colors as { dark: object }).dark).length} dark`,
 );
-console.log(
-  `Existing: ${existingPaths.size} tokens` + (existing ? '' : ' (no current tokens.json)'),
-);
+console.log(`Existing: ${existingPaths.size} tokens${existing ? '' : ' (no current tokens.json)'}`);
 console.log('');
 console.log(`+ ${added.length} added   - ${removed.length} removed   ~ ${changed.length} changed`);
 
@@ -138,17 +136,17 @@ function sample(arr: string[], n: number): string[] {
 }
 
 if (added.length) {
-  console.log(`\nAdded (showing first 10):`);
+  console.log('\nAdded (showing first 10):');
   for (const p of sample(added, 10)) console.log(`  + ${p}`);
   if (added.length > 10) console.log(`  … and ${added.length - 10} more`);
 }
 if (removed.length) {
-  console.log(`\nRemoved (showing first 10):`);
+  console.log('\nRemoved (showing first 10):');
   for (const p of sample(removed, 10)) console.log(`  - ${p}`);
   if (removed.length > 10) console.log(`  … and ${removed.length - 10} more`);
 }
 if (changed.length) {
-  console.log(`\nChanged (showing first 10):`);
+  console.log('\nChanged (showing first 10):');
   for (const p of sample(changed, 10)) {
     const before = leafByPath(existing!, p);
     const after = leafByPath(incoming, p);
@@ -163,5 +161,5 @@ if (dryRun) {
 } else {
   writeFileSync(targetPath, `${JSON.stringify(incoming, null, 2)}\n`, 'utf8');
   console.log(`\n✓ Wrote ${targetPath}`);
-  console.log('  Next: pnpm -F @max-core/tokens build');
+  console.log('  Next: pnpm -F @max-core-ds/tokens build');
 }

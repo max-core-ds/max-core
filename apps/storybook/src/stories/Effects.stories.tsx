@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
 
-// Foundations doc for the effect styles shipped in @max-core/tokens (the
+// Foundations doc for the effect styles shipped in @max-core-ds/tokens (the
 // `effects` block → --effect-* CSS vars). Classes are full literals so
 // Tailwind's static extractor keeps them. Shadows carry a branded tint via
 // shadow-color 1–4 (light/dark-aware variables).

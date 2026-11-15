@@ -14,7 +14,7 @@ import {
   StatsMetric,
   Tabs,
   chartTheme,
-} from '@max-core/react';
+} from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { BadgeDollarSign, Briefcase, ChevronDown, Ellipsis, Plus, Triangle } from 'lucide-react';
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';

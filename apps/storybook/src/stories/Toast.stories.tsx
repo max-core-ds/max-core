@@ -1,4 +1,4 @@
-import { Button, ToastProvider, useToast } from '@max-core/react';
+import { Button, ToastProvider, useToast } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta = {

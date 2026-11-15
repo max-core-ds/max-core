@@ -1,4 +1,4 @@
-import { Switcher } from '@max-core/react';
+import { Switcher } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Grid, List } from 'lucide-react';
 

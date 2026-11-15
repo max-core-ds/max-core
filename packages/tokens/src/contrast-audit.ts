@@ -2,7 +2,7 @@
 /**
  * Colour-contrast conformance gate (WCAG AA, both modes).
  *
- *   pnpm -F @max-core/tokens contrast
+ *   pnpm -F @max-core-ds/tokens contrast
  *
  * Resolves the `Max Core - Colors` collection to hex per mode, extracts each
  * React component's text/background pairings, and asserts every pairing meets

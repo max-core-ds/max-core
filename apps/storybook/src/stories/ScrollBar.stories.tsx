@@ -1,4 +1,4 @@
-import { ScrollArea, ScrollBar } from '@max-core/react';
+import { ScrollArea, ScrollBar } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
@@ -25,7 +25,7 @@ export const InContext: Story = {
 };
 
 // Restyling the *native* browser scrollbar via the `.styled-scrollbar` utility
-// (from @max-core/tokens/scrollbar.css). This skins the real scroll region's own
+// (from @max-core-ds/tokens/scrollbar.css). This skins the real scroll region's own
 // scrollbar with tokens — distinct from the decorative ScrollBar atom above.
 // Firefox gets the thin themed bar; Chromium/Safari get the full rounded thumb.
 export const NativeScrollbar: Story = {

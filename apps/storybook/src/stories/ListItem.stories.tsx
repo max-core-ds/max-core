@@ -1,4 +1,4 @@
-import { ListItem } from '@max-core/react';
+import { ListItem } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ChevronDown, ChevronRight, Settings, Trash2, User } from 'lucide-react';
 

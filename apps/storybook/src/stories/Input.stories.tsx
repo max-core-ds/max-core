@@ -1,4 +1,4 @@
-import { Input } from '@max-core/react';
+import { Input } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Mail, X } from 'lucide-react';
 

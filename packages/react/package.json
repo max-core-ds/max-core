@@ -1,7 +1,12 @@
 {
-  "name": "@max-core/react",
-  "version": "0.0.0",
+  "name": "@max-core-ds/react",
+  "version": "0.1.0",
   "description": "Max Core React component library",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/max-core-ds/max-core.git",
+    "directory": "packages/react"
+  },
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -12,11 +17,14 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
+    "./styles.css": "./dist/styles.css",
     "./package.json": "./package.json"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist", "README.md"],
+  "sideEffects": ["**/*.css"],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -30,10 +38,12 @@
     "tailwind-merge": "^3.0.0"
   },
   "peerDependencies": {
+    "@max-core-ds/tokens": "workspace:^",
     "react": ">=18",
     "react-dom": ">=18"
   },
   "devDependencies": {
+    "@max-core-ds/tokens": "workspace:*",
     "@types/react": "^18.3.0",
     "@types/react-dom": "^18.3.0",
     "react": "^18.3.1",

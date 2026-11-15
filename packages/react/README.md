@@ -1,7 +1,7 @@
-# @max-core/react
+# @max-core-ds/react
 
 React + Tailwind component library for the Max Core design system. Components are
-token-bound (CSS custom properties emitted from Figma via `@max-core/tokens`) and
+token-bound (CSS custom properties emitted from Figma via `@max-core-ds/tokens`) and
 built on [Base UI](https://base-ui.com) for the headless primitives.
 
 ## State ownership convention
@@ -22,7 +22,7 @@ domain-named equivalent) and let the consumer pick either mode:
 Reconcile the two with the shared hook rather than re-implementing it:
 
 ```ts
-import { useControllableState } from '@max-core/react';
+import { useControllableState } from '@max-core-ds/react';
 
 const [value, setValue] = useControllableState<T>(
   controlled,     // the `value` prop (undefined ⇒ uncontrolled)
@@ -61,7 +61,7 @@ The collapse **trigger** is composed into the `topBar` slot rather than baked in
 a fixed spot:
 
 ```tsx
-import { SideBar, SideBarTrigger, useRailCollapsed } from '@max-core/react';
+import { SideBar, SideBarTrigger, useRailCollapsed } from '@max-core-ds/react';
 import { PanelLeft } from 'lucide-react';
 
 function Brand() {

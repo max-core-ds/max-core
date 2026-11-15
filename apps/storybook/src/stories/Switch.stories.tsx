@@ -1,4 +1,4 @@
-import { Switch } from '@max-core/react';
+import { Switch } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {

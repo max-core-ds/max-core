@@ -1,4 +1,4 @@
-import { Fab } from '@max-core/react';
+import { Fab } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Image, Plus, Share2, UserPlus } from 'lucide-react';
 

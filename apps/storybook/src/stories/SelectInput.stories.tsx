@@ -1,4 +1,4 @@
-import { SelectInput } from '@max-core/react';
+import { SelectInput } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Globe } from 'lucide-react';
 

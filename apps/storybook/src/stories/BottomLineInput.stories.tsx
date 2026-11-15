@@ -1,4 +1,4 @@
-import { BottomLineInput } from '@max-core/react';
+import { BottomLineInput } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { User } from 'lucide-react';
 

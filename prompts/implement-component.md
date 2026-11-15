@@ -1,7 +1,7 @@
 # Prompt — Implement a new component + its story
 
 > **How to use:** paste the block below to start a conversation that builds a **new**
-> `@max-core/react` component and its Storybook story, following the established convention.
+> `@max-core-ds/react` component and its Storybook story, following the established convention.
 > After building, verify Figma parity with the audit recipe in [`component-audit.md`](./component-audit.md)
 > (read scripts + verify gate in `docs/audit/README.md`) — the same flow, applied to a fresh component.
 
@@ -46,17 +46,17 @@ CONVENTION:
   Add a new util only when 2+ components share the literals.
 
 STORY (apps/storybook/src/stories/<Name>.stories.tsx):
-- import { <Name> } from '@max-core/react';
+- import { <Name> } from '@max-core-ds/react';
 - meta.title = '<Tier>/<Theme>/<Component>' (Tier ∈ Foundations/Atoms/Molecules/Organisms;
   pick the theme from PROGRESS.md's grouping, e.g. Atoms/Data Display, Molecules/Overlays).
 - argTypes mirror the cva axes; provide a Default story + an AllVariants/matrix story.
 - Light + dark render automatically via .storybook/preview.tsx (withThemeByDataAttribute).
 
 VERIFY GATE (before commit):
-  pnpm -F @max-core/react typecheck
-  pnpm -F @max-core/react build            # rebuild dist BEFORE the two below
+  pnpm -F @max-core-ds/react typecheck
+  pnpm -F @max-core-ds/react build            # rebuild dist BEFORE the two below
   cd apps/storybook && npx tsc --noEmit -p tsconfig.json
-  pnpm -F @max-core/tokens drift           # green if the component's token spec is mapped
+  pnpm -F @max-core-ds/tokens drift           # green if the component's token spec is mapped
   npx biome check --write <changed files>
 
 THEN:

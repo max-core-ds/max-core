@@ -1,4 +1,4 @@
-import { Avatar, ShareItem } from '@max-core/react';
+import { Avatar, ShareItem } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Copy, Link, Mail, Trash2 } from 'lucide-react';
 

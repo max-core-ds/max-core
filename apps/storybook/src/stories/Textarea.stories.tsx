@@ -1,4 +1,4 @@
-import { Textarea } from '@max-core/react';
+import { Textarea } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {

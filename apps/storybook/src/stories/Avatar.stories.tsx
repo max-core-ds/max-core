@@ -1,4 +1,4 @@
-import { Avatar } from '@max-core/react';
+import { Avatar } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {

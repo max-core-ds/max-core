@@ -3,7 +3,7 @@
 - **Figma page:** "ScollBar" (sic) `2344:8063` (doc frame `7160:626`), working file `sX5tikviuBEhNbu2iPVya5`
 - **Master:** ScrollBar `2344:8067`, a standalone COMPONENT (no set, no properties)
 - **React:** `ScrollBar` (standalone + driven rail), `ScrollArea` (external rail driven by scroll), the
-  `.styled-scrollbar` / `.scrollbar-none` utilities (`@max-core/tokens/scrollbar.css`)
+  `.styled-scrollbar` / `.scrollbar-none` utilities (`@max-core-ds/tokens/scrollbar.css`)
 - **Audited:** 2026-10-24, via read-only `use_figma` bound-variable reads + doc-page text
 
 Legend: ✅ match · ❌ finding · n/a. Class: **[code]** · **[designer]** · **[deviation]**.

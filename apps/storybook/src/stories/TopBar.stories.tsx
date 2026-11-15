@@ -6,7 +6,7 @@ import {
   IconOnlyButton,
   SearchBar,
   TopBar,
-} from '@max-core/react';
+} from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Menu, Plus, Search } from 'lucide-react';
 

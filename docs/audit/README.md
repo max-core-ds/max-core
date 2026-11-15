@@ -44,11 +44,11 @@ async function walk(n,acc,d,max,dims){const s=await sig(n,dims);if(s)acc.push(" 
 
 ## Verify gate
 ```bash
-pnpm -F @max-core/react typecheck && pnpm -F @max-core/react build   # apps consume dist
+pnpm -F @max-core-ds/react typecheck && pnpm -F @max-core-ds/react build   # apps consume dist
 (cd apps/storybook && npx tsc --noEmit -p tsconfig.json)
 (cd apps/showcase && npx tsc --noEmit -p tsconfig.json)               # green since the Badge audit
-pnpm -F @max-core/tokens drift
-pnpm -F @max-core/tokens contrast     # compare with the baseline in PROGRESS.md
+pnpm -F @max-core-ds/tokens drift
+pnpm -F @max-core-ds/tokens contrast     # compare with the baseline in PROGRESS.md
 npx biome check --write <changed files>
 ```
 Run them as separate commands (or echo each exit code): a chained `&& … | tail` hides which step failed.

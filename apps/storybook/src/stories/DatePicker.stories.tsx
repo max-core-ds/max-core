@@ -1,4 +1,4 @@
-import { DateInput, DatePicker, DualDatePicker } from '@max-core/react';
+import { DateInput, DatePicker, DualDatePicker } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 /**

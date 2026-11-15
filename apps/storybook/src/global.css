@@ -1,25 +1,25 @@
 @import 'tailwindcss';
 
-/**
- * Tell Tailwind to scan our component source files (outside this app)
- * so utility classes used in @max-core/react are emitted.
- */
-@source '../../../packages/react/src/**/*.{ts,tsx}';
-@source '../src/**/*.{ts,tsx}';
+/* Max Core components: tells Tailwind to scan the built @max-core-ds/react
+   package so the utility classes the components use are emitted. */
+@import '@max-core-ds/react/styles.css';
 
 /**
  * Max Core design tokens.
  * Loaded after Tailwind so :root overrides take precedence on shared names
  * (e.g. --radius-md).
  */
-@import '@max-core/tokens/tokens.css';
+@import '@max-core-ds/tokens/tokens.css';
 
 /* Tailwind layer generated from the same tokens: type-* / glass-* utilities,
    font-sans / font-brand, shadow-* / ease-* names, breakpoints. */
-@import '@max-core/tokens/theme.css';
+@import '@max-core-ds/tokens/theme.css';
 
 /* Opt-in .styled-scrollbar utility (skins the native browser scrollbar). */
-@import '@max-core/tokens/scrollbar.css';
+@import '@max-core-ds/tokens/scrollbar.css';
+
+/* This app's own sources (stories). */
+@source '../src/**/*.{ts,tsx}';
 
 html,
 body {

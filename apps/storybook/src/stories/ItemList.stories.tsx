@@ -1,4 +1,4 @@
-import { ItemList, ListItem } from '@max-core/react';
+import { ItemList, ListItem } from '@max-core-ds/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Triangle } from 'lucide-react';
 import { useState } from 'react';

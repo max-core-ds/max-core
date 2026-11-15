@@ -11,7 +11,7 @@
 //     node query-tree.mjs "5:23"           # exact node id
 //     node query-tree.mjs "Data table" 2   # name match, 2 levels deep
 //
-import { readFileSync, readdirSync, existsSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -55,8 +55,7 @@ if (!found.length) {
 }
 
 const render = (n, depth, indent) => {
-  const tag =
-    n.type === 'COMPONENT_SET' ? ' [SET]' : n.type === 'COMPONENT' ? ' [cmp]' : '';
+  const tag = n.type === 'COMPONENT_SET' ? ' [SET]' : n.type === 'COMPONENT' ? ' [cmp]' : '';
   console.log(`${'  '.repeat(indent)}${n.name} · ${n.type}${tag} · ${n.id}`);
   if (depth <= 0) {
     const k = (n.children ?? []).length;

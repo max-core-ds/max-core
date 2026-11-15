@@ -421,8 +421,8 @@ export function RatingStars({ value, max = 5, className, ...rest }: RatingStarsP
       {...rest}
     >
       {Array.from({ length: max }, (_, i) => (
-        // biome-ignore lint/suspicious/noArrayIndexKey: fixed-length star list, order is stable
         <Star
+          // biome-ignore lint/suspicious/noArrayIndexKey: fixed-length star list, order is stable
           key={i}
           fill={halves >= (i + 1) * 2 ? 'full' : halves === i * 2 + 1 ? 'half' : 'empty'}
         />
