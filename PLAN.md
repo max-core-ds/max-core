@@ -214,7 +214,7 @@ After phase 1 build is complete:
 
 1. **Token pipeline**: `pnpm -F @max-core-ds/tokens build` produces `dist/tokens.css`. Open the file and confirm `--bg-surface`, `--text-primary`, `--accent-default` exist with values matching `MAX-CORE-SUMMARY.md`.
 2. **Token swap test**: Edit a Level 1 primitive in `tokens.json` (e.g. change indigo `#6366F1` → `#FF0000`), rebuild, refresh Storybook. Every accent-tinted element should turn red. This proves the template architecture works.
-3. **Storybook visual check**: `pnpm -F storybook dev` opens. All 5 atoms render in light and dark modes. Dark mode toggle in the preview flips correctly.
+3. **Storybook visual check**: `pnpm -F @max-core-ds/storybook dev` opens. All 5 atoms render in light and dark modes. Dark mode toggle in the preview flips correctly.
 4. **Comparison against Figma**: For each atom, side-by-side screenshot of Storybook vs. the Figma showcase page. No hardcoded values should differ from the token-driven CSS output.
 5. **Tests**: `pnpm test` passes. axe finds zero a11y violations on each atom.
 6. **Build**: `pnpm -F @max-core-ds/react build` produces `dist/` with ESM + CJS + `.d.ts`. Import path `@max-core-ds/react` resolves in a scratch app.
@@ -1068,7 +1068,13 @@ upgrade (react-forms first).
 - Consumer CSS (both apps dogfood it): `tailwindcss` → `@max-core-ds/react/styles.css` →
   `@max-core-ds/tokens/tokens.css` → `theme.css`. The workspace `@source` into `packages/react/src` goes.
 
-## 4.8.2 Changesets
+## 4.8.2 Changesets — ✅ done (2026-11-15)
+> Done: `@changesets/cli` v3, `.changeset/config.json` (`fixed` lockstep, restricted access,
+> private apps/plugin not versioned, built-in changelog — `changelog-github` needs a GitHub token
+> even locally, so it comes back with `release.yml`). Package versions back to 0.0.0: the seeded
+> `minor` changeset (`.changeset/first-release.md`) makes them 0.1.0 at release (trial run on a
+> scratch copy: both 0.1.0 + CHANGELOGs). Apps renamed `@max-core-ds/storybook|showcase` (the
+> app named `storybook` clashed with the `storybook` npm dep in Changesets). `pnpm changeset` to add one.
 - `@changesets/cli` + `changelog-github`, `fixed: [["@max-core-ds/tokens","@max-core-ds/react"]]`,
   apps + plugin ignored. Seed changeset for 0.1.0. Changeset entries name added/renamed tokens.
 

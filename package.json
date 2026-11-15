@@ -15,12 +15,14 @@
     "format": "biome format --write .",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
-    "storybook": "pnpm --filter storybook dev",
-    "showcase": "pnpm --filter showcase dev"
+    "storybook": "pnpm --filter @max-core-ds/storybook dev",
+    "showcase": "pnpm --filter @max-core-ds/showcase dev",
+    "changeset": "changeset"
   },
   "packageManager": "pnpm@11.2.2",
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
+    "@changesets/cli": "^3.0.3",
     "turbo": "^2.5.4",
     "typescript": "^5.7.2"
   }

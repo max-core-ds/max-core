@@ -272,7 +272,7 @@ pnpm storybook
 # → http://localhost:6006
 
 # Static build (for deployment)
-pnpm -F storybook build
+pnpm -F @max-core-ds/storybook build
 # → apps/storybook/storybook-static/
 ```
 
@@ -402,8 +402,8 @@ pnpm -F @max-core-ds/figma-plugin build   # esbuild → dist/
 pnpm -F @max-core-ds/figma-plugin dev     # esbuild watch mode
 
 # Storybook
-pnpm -F storybook dev                  # http://localhost:6006
-pnpm -F storybook build                # storybook-static/
+pnpm -F @max-core-ds/storybook dev                  # http://localhost:6006
+pnpm -F @max-core-ds/storybook build                # storybook-static/
 ```
 
 ### Toolchain versions
