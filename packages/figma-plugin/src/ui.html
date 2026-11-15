@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Max Core Token Export</title>
+<title>Max Core Tokens</title>
 <style>
   :root {
     --bg: var(--figma-color-bg, #ffffff);
@@ -12,9 +12,11 @@
     --border: var(--figma-color-border, #e5e5e5);
     --accent: var(--figma-color-bg-brand, #0d99ff);
     --accent-text: var(--figma-color-text-onbrand, #ffffff);
-    --danger: var(--figma-color-bg-danger, #f24822);
+    --danger: var(--figma-color-text-danger, #f24822);
+    --success: var(--figma-color-text-success, #14ae5c);
   }
   * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
   body {
     margin: 0;
     padding: 16px;
@@ -22,23 +24,13 @@
     font-size: 12px;
     color: var(--text);
     background: var(--bg);
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    min-height: 220px;
   }
-  h1 {
-    margin: 0;
-    font-size: 13px;
-    font-weight: 700;
-  }
-  p {
-    margin: 0;
-    color: var(--text-secondary);
-    line-height: 1.45;
-  }
+  section { display: flex; flex-direction: column; gap: 12px; }
+  header { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+  h1 { margin: 0; font-size: 13px; font-weight: 700; }
+  #version { color: var(--text-secondary); font-size: 11px; }
+  p { margin: 0; color: var(--text-secondary); line-height: 1.45; }
   .status {
-    flex: 1;
     padding: 12px;
     border: 1px solid var(--border);
     border-radius: 4px;
@@ -46,15 +38,29 @@
     font-family: ui-monospace, 'SF Mono', Menlo, monospace;
     font-size: 11px;
     white-space: pre-wrap;
+    word-break: break-word;
     overflow-y: auto;
     min-height: 60px;
+    max-height: 320px;
   }
-  .status.error { color: var(--danger); }
-  .actions {
-    display: flex;
-    gap: 8px;
-    justify-content: flex-end;
+  .status[data-kind='error'] { color: var(--danger); }
+  .status[data-kind='ok'] { color: var(--success); }
+  label { display: flex; flex-direction: column; gap: 4px; color: var(--text-secondary); }
+  label.check { flex-direction: row; align-items: center; gap: 6px; }
+  input[type='text'], input[type='password'], textarea {
+    font: inherit;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 6px 8px;
   }
+  textarea { min-height: 56px; resize: vertical; }
+  .row { display: flex; gap: 8px; }
+  .row > label { flex: 1; }
+  .hint { font-size: 11px; }
+  .actions { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+  .actions .spacer { flex: 1; }
   button {
     border: 1px solid var(--border);
     background: var(--bg);
@@ -66,82 +72,55 @@
     border-radius: 4px;
     cursor: pointer;
   }
-  button.primary {
-    background: var(--accent);
-    color: var(--accent-text);
-    border-color: var(--accent);
-  }
+  button.primary { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
   button:disabled { opacity: 0.5; cursor: not-allowed; }
+  a { color: var(--accent); }
 </style>
 </head>
 <body>
-  <h1>Max Core Token Export</h1>
-  <p>Reads Primitives, Semantics, Colors and Components collections plus shadow effect styles from the open Figma file and downloads a <code>tokens.json</code> matching the <code>@max-core-ds/tokens</code> contract.</p>
-  <div class="status" id="status">Ready to export.</div>
-  <div class="actions">
-    <button id="cancel">Cancel</button>
-    <button id="export" class="primary">Export tokens.json</button>
-  </div>
+  <section id="main">
+    <header><h1>Max Core Tokens</h1><span id="version"></span></header>
+    <p>Exports the Primitives, Semantics, Colors and Components collections, text styles and effect styles as <code>tokens.json</code>. <b>Publish</b> opens a pull request with the changes; <b>Download</b> saves the file.</p>
+    <div class="status" id="status">Ready.</div>
+    <label id="note-row" hidden>
+      What changed? (optional — becomes the PR title and changelog line)
+      <textarea id="note" placeholder="e.g. Darker accent ramp for dark mode"></textarea>
+    </label>
+    <div class="actions">
+      <button id="open-settings">Settings</button>
+      <button id="cancel">Close</button>
+      <span class="spacer"></span>
+      <button id="back" hidden>Back</button>
+      <button id="download">Download</button>
+      <button id="publish" class="primary">Publish to GitHub</button>
+      <button id="confirm" class="primary" hidden>Open pull request</button>
+      <button id="open-pr" class="primary" hidden>View pull request</button>
+    </div>
+  </section>
 
-  <script>
-    const statusEl = document.getElementById('status');
-    const exportBtn = document.getElementById('export');
-    const cancelBtn = document.getElementById('cancel');
+  <section id="settings" hidden>
+    <header><h1>GitHub settings</h1></header>
+    <p>Saved in Figma on this computer only. Max Core defaults are filled in; a template project points these at its own repo.</p>
+    <div class="row">
+      <label>Owner<input id="s-owner" type="text" spellcheck="false" /></label>
+      <label>Repository<input id="s-repo" type="text" spellcheck="false" /></label>
+    </div>
+    <div class="row">
+      <label>Base branch<input id="s-base" type="text" spellcheck="false" /></label>
+    </div>
+    <label>Path of tokens.json in the repo<input id="s-path" type="text" spellcheck="false" /></label>
+    <label>
+      GitHub token
+      <input id="s-token" type="password" spellcheck="false" autocomplete="off" placeholder="github_pat_…" />
+      <span class="hint">Fine-grained token, only this repository, with <b>Contents</b> and <b>Pull requests</b>: Read and write.</span>
+    </label>
+    <label class="check"><input id="s-changeset" type="checkbox" /> Add a changeset (Max Core repo; turn off if the repo has no Changesets)</label>
+    <div class="actions">
+      <button id="close-settings">Cancel</button>
+      <button id="save-settings" class="primary">Save</button>
+    </div>
+  </section>
 
-    function setStatus(text, isError) {
-      statusEl.textContent = text;
-      statusEl.classList.toggle('error', !!isError);
-    }
-
-    function triggerDownload(payload, counts, warnings) {
-      const json = JSON.stringify(payload, null, 2);
-      const blob = new Blob([json], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'tokens.json';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-      const summary =
-        '✓ Downloaded tokens.json\n' +
-        '  ' + counts.primitives + ' primitives\n' +
-        '  ' + counts.semantics + ' semantics\n' +
-        '  ' + counts.light + ' light colors\n' +
-        '  ' + counts.dark + ' dark colors\n' +
-        '  ' + counts.components + ' components\n' +
-        '  ' + counts.typography + ' text styles\n' +
-        '  ' + counts.effects + ' effect styles' +
-        (warnings && warnings.length
-          ? '\n\n⚠ ' + warnings.length + ' warning(s):\n  ' + warnings.join('\n  ')
-          : '');
-      setStatus(summary, false);
-      exportBtn.disabled = false;
-    }
-
-    exportBtn.onclick = () => {
-      exportBtn.disabled = true;
-      setStatus('Exporting…');
-      parent.postMessage({ pluginMessage: { type: 'export' } }, '*');
-    };
-
-    cancelBtn.onclick = () => {
-      parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*');
-    };
-
-    window.onmessage = (event) => {
-      const msg = event.data && event.data.pluginMessage;
-      if (!msg) return;
-      if (msg.type === 'tokens') {
-        triggerDownload(msg.payload, msg.counts, msg.warnings);
-      } else if (msg.type === 'status') {
-        setStatus(msg.text);
-      } else if (msg.type === 'error') {
-        setStatus('Error: ' + msg.message, true);
-        exportBtn.disabled = false;
-      }
-    };
-  </script>
+  <!-- UI_SCRIPT -->
 </body>
 </html>

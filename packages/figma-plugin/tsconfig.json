@@ -8,5 +8,6 @@
     "moduleResolution": "bundler",
     "jsx": "preserve"
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["src/ui.ts", "src/github.ts"]
 }

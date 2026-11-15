@@ -1091,7 +1091,7 @@ upgrade (react-forms first).
 - New `packages/tokens/src/diff.ts` (extracted from `sync.ts`), sticky PR comment with the token
   diff on PRs touching `tokens.json`. Warn when `packages/*/src` changes with no changeset.
 
-## 4.8.4 Release (manual first) — script ready (2026-11-15), first publish pending
+## 4.8.4 Release (manual first) — ✅ done: **v0.1.0 published 2026-11-15** (`7404953`, both packages private, linked to the repo)
 > `pnpm release` (`scripts/release.mjs`): preflight (main, clean, in sync with origin, pending
 > changesets, `GITHUB_PACKAGES_TOKEN` set) → `changeset version` → same gate as CI → commit
 > `chore(release): vX` → `changeset publish` with a temporary npmrc (token never in the repo) →
@@ -1103,16 +1103,41 @@ upgrade (react-forms first).
 - Root `pnpm release` = `changeset version` → build → `changeset publish` → tags → `gh release`
   with the `.tgz` files (+ the plugin zip). `release.yml` later.
 
-## 4.8.5 Plugin "Publish to GitHub"
+## 4.8.5 Plugin "Publish to GitHub" — ✅ built (2026-11-15), live test in Figma pending
+> Done: UI logic moved to `src/ui.ts` (bundled + inlined into `dist/ui.html`, version from the
+> tokens package → "v0.1.0" in the header); GitHub client `src/github.ts` (fetch only):
+> preview = ref + `contents` at the base commit → `diffTokens` ("Already up to date" when
+> empty); publish = branch `figma/tokens-<yyyymmdd-hhmm>` (suffix on 422) → PUT tokens.json
+> (sync formatting) → `.changeset/figma-tokens-<stamp>.md` (minor if tokens removed, else patch;
+> names added/removed tokens) → PR with the markdown diff → "View pull request". Settings in
+> `figma.clientStorage` (owner/repo/base/path/token/changeset), Max Core defaults. Manifest:
+> `api.github.com`. Separate `tsconfig.ui.json` (DOM). Tested with a fake GitHub API under Node
+> (15 checks incl. 401/403/404 messages) + UI screenshots.
 - `allowedDomains: ["https://api.github.com"]`; settings (owner/repo/base/PAT) in
   `figma.clientStorage`, so template projects point it at their own repo.
 - GET tokens.json → diff (bundled `diff.ts`) → branch → PUT tokens.json → PUT `.changeset` file
   (Max Core repo only) → open PR → show link. Download stays as fallback.
 
-## 4.8.6 Docs + first release
-- `docs/consuming.md`, `docs/publishing.md` (Max's flow + manual fallback),
-  `docs/template-usage.md` (rebrand setup, `predev`/`prebuild`). README status, PROGRESS, memory.
-- First release 0.1.0. **react-forms migration: ask first.**
+## 4.8.6 Docs + consumers (first release 0.1.0 already done in 4.8.4)
+- **README "Release workflow" section** (user request, 2026-11-15; write it after 4.8.5 so it
+  describes the real plugin flow). Steps, recapped in the 4.8 planning session:
+  - **A. Max changes tokens:** edit Figma (`Max core` mode) → plugin **Publish to GitHub**
+    (diff vs `main`, branch `figma/tokens-<date>`, `tokens.json` + changeset, PR link) → CI
+    (`ci` check incl. drift, token diff comment, contrast report) → user reviews; green = merge,
+    red = Max re-publishes or user fixes react on the branch.
+  - **B. User changes code:** change → `pnpm changeset` (patch/minor) → push or PR, merge on green.
+  - **C. Release (user, local, whenever):** `git pull` → `read -rs GITHUB_PACKAGES_TOKEN &&
+    export GITHUB_PACKAGES_TOKEN` → `pnpm release` → `git push --follow-tags origin main`.
+    Pending changesets batch into one version.
+  - **D. Projects pick it up:** Dependabot PR or `pnpm update`; template projects' build check
+    names new tokens to add to their Figma copy.
+  - Fallback without the plugin button: Export → `sync --input` → `pnpm changeset` → PR.
+  - Conventions: only the user merges; packages token (classic, `write:packages`) vs Max's
+    plugin token (fine-grained, repo-scoped) — which is used where.
+- `docs/consuming.md` (`.npmrc`, `read:packages` token, CSS block, dark mode, `dependabot.yml`),
+  `docs/template-usage.md` (rebrand setup, `predev`/`prebuild`, contract check). README status,
+  PROGRESS, memory. (`docs/publishing.md` folds into the README section above.)
+- **react-forms migration: ask first.**
 
 ---
 ## Critical files
