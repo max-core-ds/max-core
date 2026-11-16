@@ -1019,7 +1019,7 @@ Motion: propose spring values (duration + bounce) for Max to add as `motion/*` t
 
 ---
 
-# Phase 4.8 — Publishing pipeline (Figma → GitHub → registry → projects) — 🔄 IN PROGRESS (started 2026-11-15)
+# Phase 4.8 — Publishing pipeline (Figma → GitHub → registry → projects) — ✅ BUILT (2026-11-16; open: plugin test in Figma, react-forms migration)
 
 > Refined 2026-11-14/15 (planning session). Each step ends with a report and waits for the go-ahead.
 
@@ -1118,7 +1118,14 @@ upgrade (react-forms first).
 - GET tokens.json → diff (bundled `diff.ts`) → branch → PUT tokens.json → PUT `.changeset` file
   (Max Core repo only) → open PR → show link. Download stays as fallback.
 
-## 4.8.6 Docs + consumers (first release 0.1.0 already done in 4.8.4)
+## 4.8.6 Docs + consumers — ✅ docs done (2026-11-16); react-forms migration waits for the user
+> Done: README rewritten where stale (intro, tokens + plugin sections, **Release workflow**
+> A–D + fallback + conventions/tokens, status, commands, structure, doc links);
+> `docs/consuming.md` (access, classic `read:packages` token, `.npmrc`, CSS block, dark mode,
+> Inter, version policy, Dependabot with a grouped `@max-core-ds/*` + registry secret,
+> troubleshooting); `docs/template-usage.md` (Figma copy rules, plugin settings for another
+> repo, `tokens` script chained into dev/build — not `pre*` scripts, which depend on the package
+> manager — contract check). PROGRESS + memory updated.
 - **README "Release workflow" section** (user request, 2026-11-15; write it after 4.8.5 so it
   describes the real plugin flow). Steps, recapped in the 4.8 planning session:
   - **A. Max changes tokens:** edit Figma (`Max core` mode) → plugin **Publish to GitHub**
