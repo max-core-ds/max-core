@@ -954,7 +954,7 @@ The output goes to the scratchpad and fixes the exact name→path mappings below
 > questions. Code waits for Max's answer (then: map Tailwind's default transition to
 > `--motion-duration-fast` / `--motion-easing-default`, add popup enter/exit, move Bottom Sheet).
 >
-> **Phase 4.7 ✅ closed (2026-11-11)** except the motion note above (on hold until Max answers). **NEXT — 4.8 publishing pipeline** — ask first.
+> **Phase 4.7 ✅ closed (2026-11-11)** except the motion note above (on hold until Max answers). Then 4.8 publishing pipeline ✅ (2026-11-16) → Phase 6 tests ✅ + v0.1.1 (2026-11-17); current status: `PROGRESS.md → START HERE`.
 >
 > **Per-batch loop:** read the master's bindings (`use_figma`, read-only, file `sX5tik…`) + the
 > component's tokens in `packages/tokens/dist/tokens.css` → swap to component vars + `type-*` +
