@@ -48,6 +48,11 @@ export interface BottomNavItem {
   hideLabel?: boolean;
   /** Notification dot (the master's Dot: a 12px busy Status Dot on the item's corner). */
   dot?: boolean;
+  /**
+   * What the dot means, read after the label by screen readers ("Inbox, New activity").
+   * Defaults to "New activity"; the dot itself is decorative.
+   */
+  dotLabel?: string;
   disabled?: boolean;
   /**
    * Type=More: the item opens this menu (an Item List above the bar) instead of
@@ -77,6 +82,7 @@ export function BottomNavigation({
           <>
             {item.icon}
             <span className={item.hideLabel ? 'sr-only' : labelStyles}>{item.label}</span>
+            {item.dot ? <span className="sr-only">, {item.dotLabel ?? 'New activity'}</span> : null}
             {item.dot ? (
               // The master pins the dot 2px from the top, 3px from the right (unbound).
               <StatusDot

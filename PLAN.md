@@ -1327,6 +1327,18 @@ on the story smoke + axe layer.
 - **B3 Navigation + overlays:** Tabs, Pagination (constant-length window, no duplicate pages),
   Dropdown (`open`/`onOpenChange`), Tooltip, Dialog, BottomSheet, Toast, SideBar (collapse via
   `SideBarTrigger`), BottomNavigation (`menu`) — open/close, Escape, focus return, active item.
+  > ✅ **B3 done (2026-11-17):** 8 test files, 36 tests (139 in `packages/react`; Pagination
+  > kept its 4 from 6.1). One fix (patch changeset `bottom-nav-dot-label`): the BottomNav
+  > notification dot was visual only → sr-only ", New activity" + item `dotLabel`. Checked and
+  > **not** bugs (Base UI by design, tests document them): Tabs keep disabled tabs focusable
+  > but not selectable (ARIA tabs pattern); the Toast ✕ is `aria-hidden` until the stack
+  > expands or it takes focus (keeps "Close" out of the live read-out); a pointer click on a
+  > controlled-closed Dropdown doesn't call `onOpenChange` in jsdom only (verified in
+  > Chromium that it does) → that test opens with Enter. Covered: Dialog / BottomSheet names,
+  > description, focus in + back to trigger, Escape, ✕, controlled; Dropdown pick / disabled /
+  > Escape / defaultOpen; Tooltip hover + focus + Escape; Toast live region, action, dismiss;
+  > SideBar toggle + collapsed names (6.2 regression) + controlled; BottomNav current, More
+  > menu, disabled, hidden label.
 - **B4 Pickers + ranges:** DatePicker (ISO-string API, range, today), DateInput, TimePicker,
   Range, Knob, ScrollArea (`data-overflow-*`) — value in/out, keyboard steps, min/max.
 - Shared hooks: `useControllableState` unit tests.
