@@ -40,6 +40,25 @@ jobs:
       - name: Token drift (react ↔ Figma tokens)
         run: pnpm -F @max-core-ds/tokens drift
 
+      # Every switched-off / accepted a11y check is declared in docs/a11y-exceptions.md.
+      - name: A11y exceptions declared
+        run: pnpm -F @max-core-ds/storybook a11y:exceptions
+
+      # Story tests render every story in Chromium (Vitest browser mode + Playwright).
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Install Chromium (+ system deps)
+        run: pnpm -F @max-core-ds/storybook exec playwright install --with-deps chromium
+
+      # react: behaviour tests (jsdom) · storybook: every story renders + axe scan.
+      # Runs after Build, so the story tests use the freshly built @max-core-ds/react.
+      - name: Tests
+        run: pnpm test
+
       # Known findings are Figma-side (dark status/accent ramps), so this reports, never blocks.
       - name: Contrast (WCAG AA, report only)
         if: ${{ !cancelled() }}

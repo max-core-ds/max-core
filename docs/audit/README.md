@@ -49,8 +49,14 @@ pnpm -F @max-core-ds/react typecheck && pnpm -F @max-core-ds/react build   # app
 (cd apps/showcase && npx tsc --noEmit -p tsconfig.json)               # green since the Badge audit
 pnpm -F @max-core-ds/tokens drift
 pnpm -F @max-core-ds/tokens contrast     # compare with the baseline in PROGRESS.md
+pnpm -F @max-core-ds/react test          # behaviour tests (add / update <Name>.test.tsx)
+pnpm -F @max-core-ds/storybook test      # every story renders + axe (after the react build)
+pnpm -F @max-core-ds/storybook a11y:exceptions
 npx biome check --write <changed files>
 ```
+Tests (Phase 6): a fix that changes behaviour gets a test in `<Name>.test.tsx` (query by role +
+accessible name); a new or changed story is axe-scanned automatically. An a11y check that must
+stay off goes in `docs/a11y-exceptions.md` with a tagged marker — never a silent skip.
 Run them as separate commands (or echo each exit code): a chained `&& … | tail` hides which step failed.
 
 ## Gotchas found so far

@@ -1205,7 +1205,7 @@ each `docs/audit/<slug>.md` page and close the carry-over in `PROGRESS.md`.
 
 ---
 
-# Phase 6 — Test infrastructure — ⏳ NOT STARTED (planned 2026-11-17)
+# Phase 6 — Test infrastructure — ✅ DONE (2026-11-17)
 
 > Formerly Phase 4 Batch 13 — the honest gap from Phase 3. Today's gates (CI `ci` check):
 > build, typecheck, lint, drift; contrast is report-only. **Nothing checks that a component
@@ -1358,7 +1358,15 @@ on the story smoke + axe layer.
   > clear / error; Range names (6.2), arrows, Home / End, dual, disabled; ScrollArea Tab stop
   > (6.2) with faked metrics; `useControllableState` incl. `false` / `0` / `null` as values.
 
-## 6.5 CI
+## 6.5 CI — ✅ done (2026-11-17)
+
+> Done: `ci.yml` (required `ci` job) after drift → **A11y exceptions declared** (guard) →
+> Playwright browser cache (`~/.cache/ms-playwright`, keyed on the lockfile) → `playwright
+> install --with-deps chromium` → **Tests** (`pnpm test` = turbo: react behaviour + storybook
+> stories, after Build so stories use the fresh dist). Verified locally through the root
+> `pnpm test` (177 + 173, 4 turbo tasks). README (Testing section, Status, commands,
+> toolchain, new-component steps), `docs/audit/README.md` verify gate, PROGRESS updated.
+> First real CI run happens on the next push.
 
 - Add `pnpm test` to the required `ci` job after build (Playwright Chromium install, cached),
   plus the exception guard script.

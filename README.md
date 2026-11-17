@@ -179,7 +179,8 @@ audited against its Figma master (Phase 4.5, per-page notes in
 [`docs/audit/`](docs/audit/), status in [`PROGRESS.md`](PROGRESS.md)). Expect
 visual tweaks while the designer list is worked through, and note the deferred
 pieces (some Stacked List row types, Data Table mobile / expandable rows, four
-Bottom Sheet premades) and that there are no tests yet.
+Bottom Sheet premades). Behaviour and accessibility tests run in CI (see
+[Testing](#testing)).
 
 Because it's a workspace package at `0.0.0` (not published to npm), "consume"
 today means inside this monorepo, via `pnpm link`, or from a tarball — not a
@@ -351,7 +352,9 @@ commit or PR. Everything from A.3 on is the same.
   all share workspace types and build in topological order.
 - **Published to GitHub Packages, lockstep.** `@max-core-ds/tokens` and `@max-core-ds/react`
   always share one version (Changesets `fixed`), so a version names one Figma state.
-- **No tests yet.** Honest gap. See "Status" below.
+- **Two test layers.** Behaviour tests (Vitest + React Testing Library, jsdom) for every
+  component with logic; every Storybook story rendered in Chromium and scanned with axe. Known
+  accessibility exceptions are declared, never silent ([`docs/a11y-exceptions.md`](docs/a11y-exceptions.md)).
 
 ---
 
@@ -361,13 +364,14 @@ commit or PR. Everything from A.3 on is the same.
   Figma collection, text style and effect style
 - ✅ **55 components** on their own Figma component tokens, drift-green, audited against Figma
 - ✅ Storybook with dark-mode toggle and per-component stories
-- ✅ CI on every PR and push (build, typecheck, lint, drift; contrast reported)
+- ✅ CI on every PR and push (build, typecheck, lint, drift, a11y exception guard, tests;
+  contrast reported)
+- ✅ **Tests:** 177 behaviour tests + 173 story tests (render + axe), blocking in CI
 - ✅ **Published:** `@max-core-ds/tokens` + `@max-core-ds/react` **0.1.0** on GitHub Packages
 - ✅ Plugin **Publish to GitHub** (token PRs straight from Figma)
 
 Open:
 
-- ❌ No tests yet (Vitest + axe — Phase 6)
 - ⚠️ Contrast: 9/34 components have WCAG AA findings, Figma-side (dark status/accent ramps)
 - ⏳ Releases are run locally; a `release.yml` workflow can take over later
 
@@ -384,6 +388,7 @@ pnpm install                    # Install all workspace deps
 pnpm build                      # Build everything (turbo + cache)
 pnpm typecheck                  # Run tsc across all packages
 pnpm lint                       # Biome check
+pnpm test                       # Behaviour tests + story tests (build first: stories use the built react)
 pnpm format                     # Biome format (--write)
 pnpm storybook                  # Storybook dev server
 pnpm changeset                  # describe a change for the next release
@@ -402,6 +407,8 @@ pnpm -F @max-core-ds/tokens sync --input <file> [--dry-run]   # manual import
 # React library
 pnpm -F @max-core-ds/react build          # ESM + CJS + .d.ts
 pnpm -F @max-core-ds/react dev            # tsup watch mode
+pnpm -F @max-core-ds/react test           # behaviour tests (jsdom)
+pnpm -F @max-core-ds/react test:watch     # … in watch mode
 
 # Figma plugin
 pnpm -F @max-core-ds/figma-plugin build   # esbuild → dist/
@@ -410,6 +417,8 @@ pnpm -F @max-core-ds/figma-plugin dev     # esbuild watch mode
 # Storybook
 pnpm -F @max-core-ds/storybook dev                  # http://localhost:6006
 pnpm -F @max-core-ds/storybook build                # storybook-static/
+pnpm -F @max-core-ds/storybook test                 # every story: render + axe (Chromium)
+pnpm -F @max-core-ds/storybook a11y:exceptions      # exceptions ↔ docs/a11y-exceptions.md
 ```
 
 ### Toolchain versions
@@ -421,7 +430,8 @@ pnpm -F @max-core-ds/storybook build                # storybook-static/
 - Turborepo 2.9
 - React 18.3 (peer 18 or 19)
 - Base UI 1.5+
-- Storybook 10.4+
+- Storybook 10.6+
+- Vitest 5.1 (jsdom 29; Playwright Chromium for the story tests — `pnpm -F @max-core-ds/storybook exec playwright install chromium` once)
 - Tailwind v4
 
 ### Adding a new component
@@ -430,13 +440,35 @@ pnpm -F @max-core-ds/storybook build                # storybook-static/
    - `YourComponent.tsx` — CVA + Tailwind classes reading `var(--token)`
    - `index.ts` — re-exports
 2. Add to `packages/react/src/index.ts` barrel.
-3. Add a story under `apps/storybook/src/stories/YourComponent.stories.tsx`.
-4. Run `pnpm typecheck && pnpm storybook` to verify.
+3. Add a story under `apps/storybook/src/stories/YourComponent.stories.tsx` — it is
+   rendered and axe-scanned by `pnpm -F @max-core-ds/storybook test` automatically.
+4. If it has logic (state, events, keyboard), add `YourComponent.test.tsx` next to it
+   (see [Testing](#testing)).
+5. Run `pnpm typecheck && pnpm test && pnpm storybook` to verify.
 
 Story discipline: keep named stories minimal. Use Controls for prop
 variations. Reserve separate stories for ReactNode compositions (icons,
 slots), matrix views (`AllVariants`), and states that need setup data
 (error states with prepopulated values).
+
+### Testing
+
+Two layers, both blocking in CI (`ci` job → **Tests**):
+
+| Layer | Where | What |
+|---|---|---|
+| Behaviour | `packages/react/src/**/*.test.tsx` (Vitest + React Testing Library + user-event, jsdom) | state, events, keyboard, names / descriptions / `aria-invalid`, controlled vs uncontrolled, form submission |
+| Stories | `apps/storybook` (Storybook `addon-vitest` + `addon-a11y`, Chromium) | every story renders without errors and passes an axe scan |
+
+- Query by role and accessible name (`getByRole('button', { name: 'Save' })`), as a user or
+  screen reader finds things. Shared contracts live in `packages/react/src/test/`
+  (e.g. `text-field-contract.tsx` for the text fields).
+- Contrast is not part of axe here (`color-contrast` off, A11Y-000): colours are Figma-owned
+  and reported by `pnpm -F @max-core-ds/tokens contrast`.
+- An accessibility check that must stay off is an **exception**: declare it in
+  [`docs/a11y-exceptions.md`](docs/a11y-exceptions.md) and tag the code; the guard fails
+  otherwise. `.only` is never allowed.
+- Story tests use the **built** `@max-core-ds/react` (like Storybook): `pnpm build` first.
 
 ---
 
@@ -445,6 +477,7 @@ slots), matrix views (`AllVariants`), and states that need setup data
 - **`docs/consuming.md`** — install and use the packages in a project
 - **`docs/template-usage.md`** — run your own brand on the Max Core components
 - **`.changeset/README.md`** — how to write a changeset
+- **`docs/a11y-exceptions.md`** — accessibility checks accepted in tests (declared + guarded)
 - **`PLAN.md`** — implementation plans per phase
 - **`PROGRESS.md`** — live component + Figma audit status (handoff doc)
 - **`prompts/`** — reusable copy-paste guides: `component-audit.md` (audit a
