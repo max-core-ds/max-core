@@ -1205,14 +1205,93 @@ each `docs/audit/<slug>.md` page and close the carry-over in `PROGRESS.md`.
 
 ---
 
-# Phase 6 — Test infrastructure — ⏳ NOT STARTED
+# Phase 6 — Test infrastructure — ⏳ NOT STARTED (planned 2026-11-17)
 
-> Formerly Phase 4 Batch 13 — the honest gap from Phase 3. The drift check and the contrast
-> guardrail are the only automated gates today.
+> Formerly Phase 4 Batch 13 — the honest gap from Phase 3. Today's gates (CI `ci` check):
+> build, typecheck, lint, drift; contrast is report-only. **Nothing checks that a component
+> renders or behaves.** Each step ends with a report and waits for the go-ahead.
 
-- **Vitest** + React Testing Library — render/interaction tests per component.
-- **axe** (jest-axe / vitest-axe) — automated a11y assertions on every story.
-- Wire into CI once CI exists (also currently missing — see README "Status").
+**Goal.** Every story is rendered and axe-scanned in a real browser; every component with
+logic has behaviour tests; both run in the required `ci` check, so a regression blocks the
+merge. Known a11y issues are **declared, not hidden** — CI is green from day one and the
+exception list only shrinks.
+
+**Two layers (decided 2026-11-17):**
+
+| Layer | Tool | Where | Covers |
+|---|---|---|---|
+| Story tests | Storybook 10 `@storybook/addon-vitest` + `@storybook/addon-a11y`, Vitest browser mode (Playwright, Chromium) | `apps/storybook` | every story renders without errors + axe scan; `play` functions only where a story already shows an interaction |
+| Behaviour tests | Vitest + React Testing Library + `@testing-library/user-event` (jsdom) | `packages/react/src/components/<Name>/<Name>.test.tsx` | logic: state, events, keyboard, ARIA, controlled/uncontrolled, edge cases |
+
+Story tests run against the **built** `@max-core-ds/react` (as Storybook does — run
+`pnpm build` first; CI already does). Behaviour tests import the source.
+
+## 6.1 Infrastructure
+
+- Add `@storybook/addon-vitest` + `@storybook/addon-a11y` (`npx storybook add …`), Vitest
+  browser mode + Playwright Chromium; `test` script in `apps/storybook`.
+- Vitest + RTL + user-event + jsdom in `packages/react`; `test` script; shared setup
+  (`@testing-library/jest-dom` matchers, `matchMedia` / `ResizeObserver` stubs for Base UI).
+- Turbo `test` task already exists (`dependsOn: ["^build"]`, root `pnpm test` calls it) —
+  only the per-package `test` scripts are missing.
+- One sample test per layer to prove the wiring. **Report.**
+
+## 6.2 Story smoke + axe — first run, triage
+
+- Run all stories (~55 components + Foundations: Tokens, Effects, FocusRing).
+- Defaults: `a11y.test: 'error'`; **`color-contrast` off globally** — colours are Figma-owned
+  and already tracked by `pnpm -F @max-core-ds/tokens contrast` (no double reporting).
+- Triage every violation into: **fix now** (small code fix, done in this step) / **Figma**
+  (→ "Notes for Max") / **accepted by decision** / **fix later**. Report the list and wait
+  for decisions before marking anything.
+
+## 6.3 Known exceptions
+
+- **`docs/a11y-exceptions.md`** — one row per exception: component/story, axe rule, reason,
+  owner (code / Figma-Max / accepted), date. Same idea as the contrast "declared" findings.
+- How an exception is marked, most precise first:
+  1. **Scoped rule off** — `parameters.a11y.config.rules: [{ id, selector, enabled: false }]`
+     (one rule, one element; the rest of the story still checked);
+  2. **Story `todo`** — `parameters.a11y.test: 'todo'` (warning in the a11y panel, test passes);
+  3. `'off'` — only for non-UI stories (e.g. token swatches), never for a component.
+  Every marker carries a `// A11Y-EXCEPTION: <id>` comment matching the doc row.
+- Behaviour tests: `it.fails` for a known bug (turns red once fixed → remove the exception),
+  `it.todo` for unwritten cases. No silent `it.skip`.
+- **Guard script** (`apps/storybook/scripts/check-a11y-exceptions.mjs`, runs in CI): every
+  `todo` / disabled rule / `it.fails` in the code has a row in the doc and vice versa, so an
+  exception can't be added or left behind silently.
+
+## 6.4 Behaviour tests — in batches (report after each)
+
+Only components with logic; display-only components (Avatar, Badge, Divider, Spinner,
+Thumbnail, StatusDot, ProgressBar, Pin, ContentBlocks, Card, StackedList, StatsCard, …) stay
+on the story smoke + axe layer.
+
+- **B1 Controls + buttons:** Button, IconOnlyButton, LinkButton, SplitButton, Fab (speed-dial
+  names), Checkbox, Radio, Switch, SegmentedControl (no deselect), Tag (filter chip
+  `aria-pressed`), Switcher — click/keyboard toggles, disabled blocks events, `onChange`
+  values, controlled vs uncontrolled.
+- **B2 Fields:** Input, BottomLineInput, Textarea, Stepper, SearchBar (clear ✕), SelectInput,
+  Multiselect (typeahead + `mode="list"`, Select all) — label association, `errorMessage` →
+  error text + `aria-invalid`, disabled, value shown (not raw value), keyboard pick.
+- **B3 Navigation + overlays:** Tabs, Pagination (constant-length window, no duplicate pages),
+  Dropdown (`open`/`onOpenChange`), Tooltip, Dialog, BottomSheet, Toast, SideBar (collapse via
+  `SideBarTrigger`), BottomNavigation (`menu`) — open/close, Escape, focus return, active item.
+- **B4 Pickers + ranges:** DatePicker (ISO-string API, range, today), DateInput, TimePicker,
+  Range, Knob, ScrollArea (`data-overflow-*`) — value in/out, keyboard steps, min/max.
+- Shared hooks: `useControllableState` unit tests.
+
+## 6.5 CI
+
+- Add `pnpm test` to the required `ci` job after build (Playwright Chromium install, cached),
+  plus the exception guard script.
+- Failing test or axe violation (not declared) → red PR. Contrast stays report-only.
+- Update README (Status, Commands), `docs/audit/README.md` (add the test step to the
+  per-component recipe) and PROGRESS.
+
+**Out of scope:** visual regression / screenshot diffs (Chromatic etc.), coverage targets,
+cross-browser runs, tests for the Figma plugin and the tokens CLI (separate follow-up if
+wanted).
 
 ---
 
