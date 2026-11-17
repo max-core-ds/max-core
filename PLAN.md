@@ -1266,7 +1266,15 @@ Story tests run against the **built** `@max-core-ds/react` (as Storybook does �
   (→ "Notes for Max") / **accepted by decision** / **fix later**. Report the list and wait
   for decisions before marking anything.
 
-## 6.3 Known exceptions
+## 6.3 Known exceptions — ✅ done (2026-11-17)
+
+> Done: `docs/a11y-exceptions.md` (table + owner types + "How to add one"); one row,
+> **A11Y-000** = the global `color-contrast` off (policy), now tagged in `preview.tsx`. Guard
+> `apps/storybook/scripts/check-a11y-exceptions.mjs` (`pnpm -F @max-core-ds/storybook
+> a11y:exceptions`) scans stories, `.storybook/` and `packages/react/src`: markers are
+> `test: 'todo'|'off'`, `enabled: false`, `.fails` / `.skip`; tag = `A11Y-EXCEPTION: A11Y-NNN`
+> on the line or ≤3 above (closest wins); `.only` always fails; stale doc rows fail. Probed
+> all failure modes with throwaway files (6 caught). `it.todo` needs no tag. CI wiring = 6.5.
 
 - **`docs/a11y-exceptions.md`** — one row per exception: component/story, axe rule, reason,
   owner (code / Figma-Max / accepted), date. Same idea as the contrast "declared" findings.

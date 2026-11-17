@@ -18,6 +18,7 @@ const preview: Preview = {
       test: 'error',
       config: {
         // Colours are Figma-owned and tracked by `pnpm -F @max-core-ds/tokens contrast`.
+        // A11Y-EXCEPTION: A11Y-000
         rules: [{ id: 'color-contrast', enabled: false }],
       },
     },
