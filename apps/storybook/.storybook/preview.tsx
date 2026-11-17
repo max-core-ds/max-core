@@ -12,6 +12,15 @@ const preview: Preview = {
       },
     },
     backgrounds: { disable: true },
+    a11y: {
+      // Story tests fail on axe violations; known ones are declared per story
+      // (docs/a11y-exceptions.md, Phase 6.3).
+      test: 'error',
+      config: {
+        // Colours are Figma-owned and tracked by `pnpm -F @max-core-ds/tokens contrast`.
+        rules: [{ id: 'color-contrast', enabled: false }],
+      },
+    },
     options: {
       // Foundations (tokens) first, then the component tiers.
       storySort: {

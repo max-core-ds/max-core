@@ -1226,7 +1226,17 @@ exception list only shrinks.
 Story tests run against the **built** `@max-core-ds/react` (as Storybook does — run
 `pnpm build` first; CI already does). Behaviour tests import the source.
 
-## 6.1 Infrastructure
+## 6.1 Infrastructure — ✅ done (2026-11-17)
+
+> Done: Storybook 10.4.1 → **10.6.7** (addon-vitest needs ≥10.4.6; Vitest 5 support from 10.6)
+> + `addon-a11y` + `addon-vitest`, **Vitest 5.1** in both packages, Playwright Chromium.
+> `apps/storybook/vitest.config.ts` (merges `vite.config.ts`; preview annotations are applied
+> by the plugin — no setup file). `preview.tsx`: `a11y.test: 'error'`, `color-contrast` off.
+> `packages/react/vitest.config.ts` + `src/test/setup.ts` (jest-dom, cleanup, `matchMedia` /
+> `ResizeObserver` stubs). **jsdom pinned to 29** — 30+ needs Node ≥22.22 (local is 22.14).
+> Samples: `Pagination.test.tsx` (4 tests incl. the constant-window regression) ✅; Pagination
+> stories ✅; a throwaway unnamed-button story failed on `button-name` → axe is live.
+> Storybook build, typecheck, lint green. Full story run = 6.2.
 
 - Add `@storybook/addon-vitest` + `@storybook/addon-a11y` (`npx storybook add …`), Vitest
   browser mode + Playwright Chromium; `test` script in `apps/storybook`.
