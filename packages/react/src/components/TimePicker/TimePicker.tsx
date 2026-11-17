@@ -130,6 +130,11 @@ function WheelColumn<T>({
   const ref = useRef<HTMLDivElement>(null);
   const accumulated = useRef(0);
   const selectedIndex = options.indexOf(selected);
+  // Focus stays on the column; aria-activedescendant points screen readers at the
+  // selected row. The id carries the value, so each step is a new active option
+  // (re-announced) rather than the same element with new text.
+  const columnId = useId();
+  const optionId = (value: T) => `${columnId}-${String(value)}`;
 
   const step = useCallback(
     (direction: 1 | -1) => {
@@ -189,6 +194,7 @@ function WheelColumn<T>({
       data-wheel-column
       role="listbox"
       aria-label={ariaLabel}
+      aria-activedescendant={selectedIndex >= 0 ? optionId(selected) : undefined}
       tabIndex={disabled ? -1 : 0}
       aria-disabled={disabled || undefined}
       onKeyDown={handleKeyDown}
@@ -220,6 +226,7 @@ function WheelColumn<T>({
           <button
             key={offset}
             type="button"
+            id={isCentre ? optionId(value) : undefined}
             role="option"
             aria-selected={isCentre}
             tabIndex={-1}
@@ -349,6 +356,9 @@ export function TimePicker({
   // voice-control user can say what they see (WCAG 2.5.3, axe label-content-name-mismatch).
   const labelId = `${triggerId}-label`;
   const valueId = `${triggerId}-value`;
+  // The trigger is a Popover button, not a Field control, so Base UI's Field doesn't
+  // link the helper / error to it or mark it invalid — wire both explicitly.
+  const messageId = `${triggerId}-message`;
 
   // Display parts: the value, or "now" (snapped to the step grid) as a starting
   // point so the wheel always shows something. Nothing is emitted until a pick.
@@ -451,6 +461,8 @@ export function TimePicker({
             id={triggerId}
             disabled={disabled}
             aria-labelledby={label ? `${labelId} ${valueId}` : undefined}
+            aria-describedby={errorMessage || helper ? messageId : undefined}
+            aria-invalid={errorMessage ? true : undefined}
             className={cn(
               'inline-flex w-full items-center gap-[var(--spacing-08)]',
               'rounded-[var(--radius-md)] px-[var(--spacing-12)] py-[var(--spacing-12)] text-sm',
@@ -501,11 +513,17 @@ export function TimePicker({
         </Popover.Root>
       </div>
       {errorMessage ? (
-        <Field.Error match={true} className="text-xs text-[var(--status-danger-default)]">
+        <Field.Error
+          id={messageId}
+          match={true}
+          className="text-xs text-[var(--status-danger-default)]"
+        >
           {errorMessage}
         </Field.Error>
       ) : helper ? (
-        <Field.Description className="text-xs text-[var(--text-muted)]">{helper}</Field.Description>
+        <Field.Description id={messageId} className="text-xs text-[var(--text-muted)]">
+          {helper}
+        </Field.Description>
       ) : null}
     </Field.Root>
   );

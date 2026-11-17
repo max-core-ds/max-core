@@ -1343,6 +1343,21 @@ on the story smoke + axe layer.
   Range, Knob, ScrollArea (`data-overflow-*`) — value in/out, keyboard steps, min/max.
 - Shared hooks: `useControllableState` unit tests.
 
+  > ✅ **B4 done (2026-11-17):** 5 test files, 38 tests (**177** in `packages/react`, 32 files).
+  > Knob dropped from the list — a visual-only `<span>`, covered by the story tests. Found +
+  > fixed (patch changeset `pickers-a11y`): TimePicker wheel columns had no
+  > `aria-activedescendant` (arrow keys changed the value silently for screen readers; the
+  > option id carries the value so each step is re-announced); DateInput + TimePicker popover
+  > triggers weren't described by helper / error nor `aria-invalid` (a Popover button isn't a
+  > Base UI Field control) → explicit `aria-describedby` + ids. Checked, by design: the wheel
+  > is circular and skips disabled values (Up from 09 with 08 blocked wraps to 10); a seeded
+  > range start is completed by the next click. Covered: DatePicker day names (6.2), pick →
+  > ISO, month paging, arrow-key grid focus + Enter, min / max, Apply / Clear, controlled;
+  > DualDatePicker new-range regression; DateInput open → pick → close, clear, helper / error;
+  > TimePicker columns, arrows, Left / Right, click, min / max, 12h AM / PM, popover name /
+  > clear / error; Range names (6.2), arrows, Home / End, dual, disabled; ScrollArea Tab stop
+  > (6.2) with faked metrics; `useControllableState` incl. `false` / `0` / `null` as values.
+
 ## 6.5 CI
 
 - Add `pnpm test` to the required `ci` job after build (Playwright Chromium install, cached),

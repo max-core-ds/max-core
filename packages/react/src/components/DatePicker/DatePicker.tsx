@@ -714,6 +714,9 @@ export function DateInput({
   // voice-control user can say what they see (WCAG 2.5.3, axe label-content-name-mismatch).
   const labelId = `${triggerId}-label`;
   const valueId = `${triggerId}-value`;
+  // The trigger is a Popover button, not a Field control, so Base UI's Field doesn't
+  // link the helper / error to it or mark it invalid — wire both explicitly.
+  const messageId = `${triggerId}-message`;
   const formatted = formatDateValue(value, format, locale);
   const isInvalid = Boolean(errorMessage);
   const showClear = clearable && Boolean(value) && !disabled;
@@ -735,6 +738,8 @@ export function DateInput({
             id={triggerId}
             disabled={disabled}
             aria-labelledby={label ? `${labelId} ${valueId}` : undefined}
+            aria-describedby={errorMessage || helper ? messageId : undefined}
+            aria-invalid={errorMessage ? true : undefined}
             className={cn(
               triggerStyles(size),
               showClear && clearPad[size],
@@ -810,11 +815,13 @@ export function DateInput({
         </Popover.Root>
       </div>
       {errorMessage ? (
-        <Field.Error match={true} className={fieldError}>
+        <Field.Error id={messageId} match={true} className={fieldError}>
           {errorMessage}
         </Field.Error>
       ) : helper ? (
-        <Field.Description className={fieldHelper}>{helper}</Field.Description>
+        <Field.Description id={messageId} className={fieldHelper}>
+          {helper}
+        </Field.Description>
       ) : null}
     </Field.Root>
   );
