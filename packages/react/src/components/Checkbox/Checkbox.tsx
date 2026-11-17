@@ -57,10 +57,16 @@ export function Checkbox({
   // Link the helper/error text to the control so it's announced with it.
   const descId = useId();
   const describedBy = errorMessage || helperText ? descId : undefined;
+  // Name = the label text only; the <label> also wraps the helper / error, which
+  // would otherwise be read as part of the name (and again as the description).
+  const labelTextId = useId();
   const box = (
     <BaseCheckbox.Root
       className={cn(boxStyles({ size, validation: effectiveValidation }), !hasText && className)}
       aria-describedby={describedBy}
+      // Error colours alone aren't announced — mark the control invalid too.
+      aria-invalid={effectiveValidation === 'error' || undefined}
+      aria-labelledby={label ? labelTextId : undefined}
       {...rest}
     >
       {/* Indicator mirrors the root state as data-* attrs; show a dash for
@@ -85,7 +91,9 @@ export function Checkbox({
           cap-trimmed by the type-* utilities. The control is top-aligned with the label. */}
       <span className="flex flex-col gap-(--selection-control-checkbox-text-gap)">
         {label ? (
-          <span className="type-body-sm-300 text-[var(--text-primary)]">{label}</span>
+          <span id={labelTextId} className="type-body-sm-300 text-[var(--text-primary)]">
+            {label}
+          </span>
         ) : null}
         {errorMessage ? (
           <span id={descId} className="type-caption-300 text-[var(--status-danger-default)]">

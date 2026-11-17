@@ -75,10 +75,16 @@ export function Switch({
   // Link the helper/error text to the control so it's announced with it.
   const descId = useId();
   const describedBy = errorMessage || helperText ? descId : undefined;
+  // Name = the label text only; the <label> also wraps the helper / error, which
+  // would otherwise be read as part of the name (and again as the description).
+  const labelTextId = useId();
   const track = (
     <BaseSwitch.Root
       className={cn(trackStyles({ size, validation: effectiveValidation }), !hasText && className)}
       aria-describedby={describedBy}
+      // Error colours alone aren't announced — mark the control invalid too.
+      aria-invalid={effectiveValidation === 'error' || undefined}
+      aria-labelledby={label ? labelTextId : undefined}
       {...rest}
     >
       <BaseSwitch.Thumb className={thumbStyles({ size, validation: effectiveValidation })} />
@@ -93,7 +99,9 @@ export function Switch({
           helper/error Caption/300, cap-trimmed. The control is top-aligned with the label. */}
       <span className="flex flex-col gap-(--selection-control-switch-text-gap)">
         {label ? (
-          <span className="type-body-sm-300 text-[var(--text-primary)]">{label}</span>
+          <span id={labelTextId} className="type-body-sm-300 text-[var(--text-primary)]">
+            {label}
+          </span>
         ) : null}
         {errorMessage ? (
           <span id={descId} className="type-caption-300 text-[var(--status-danger-default)]">

@@ -27,7 +27,10 @@ export function RadioGroup({
   ...rest
 }: RadioGroupProps) {
   const labelId = useId();
+  const descId = useId();
   const hasText = Boolean(label || helperText || errorMessage);
+  // The group-level helper / error is read with the group (and marks it invalid).
+  const describedBy = errorMessage || helperText ? descId : undefined;
   const group = (
     <BaseRadioGroup
       className={cn(
@@ -35,6 +38,8 @@ export function RadioGroup({
         className,
       )}
       aria-labelledby={label ? (ariaLabelledBy ?? labelId) : ariaLabelledBy}
+      aria-describedby={describedBy}
+      aria-invalid={errorMessage ? true : undefined}
       {...rest}
     />
   );
@@ -48,9 +53,13 @@ export function RadioGroup({
       ) : null}
       {group}
       {errorMessage ? (
-        <span className="type-caption-300 text-[var(--status-danger-default)]">{errorMessage}</span>
+        <span id={descId} className="type-caption-300 text-[var(--status-danger-default)]">
+          {errorMessage}
+        </span>
       ) : helperText ? (
-        <span className="type-caption-300 text-[var(--text-secondary)]">{helperText}</span>
+        <span id={descId} className="type-caption-300 text-[var(--text-secondary)]">
+          {helperText}
+        </span>
       ) : null}
     </div>
   );
@@ -105,10 +114,16 @@ export function Radio({
   // Link the helper/error text to the control so it's announced with it.
   const descId = useId();
   const describedBy = errorMessage || helperText ? descId : undefined;
+  // Name = the label text only; the <label> also wraps the helper / error, which
+  // would otherwise be read as part of the name (and again as the description).
+  const labelTextId = useId();
   const box = (
     <BaseRadio.Root
       className={cn(boxStyles({ size, validation: effectiveValidation }), !hasText && className)}
       aria-describedby={describedBy}
+      // Error colours alone aren't announced — mark the control invalid too.
+      aria-invalid={effectiveValidation === 'error' || undefined}
+      aria-labelledby={label ? labelTextId : undefined}
       {...rest}
     >
       <BaseRadio.Indicator className="size-full rounded-(--selection-control-radio-button-radius) bg-current" />
@@ -123,7 +138,9 @@ export function Radio({
           cap-trimmed by the type-* utilities. The control is top-aligned with the label. */}
       <span className="flex flex-col gap-(--selection-control-radio-button-text-gap)">
         {label ? (
-          <span className="type-body-sm-300 text-[var(--text-primary)]">{label}</span>
+          <span id={labelTextId} className="type-body-sm-300 text-[var(--text-primary)]">
+            {label}
+          </span>
         ) : null}
         {errorMessage ? (
           <span id={descId} className="type-caption-300 text-[var(--status-danger-default)]">

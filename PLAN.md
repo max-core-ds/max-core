@@ -1300,6 +1300,15 @@ on the story smoke + axe layer.
   names), Checkbox, Radio, Switch, SegmentedControl (no deselect), Tag (filter chip
   `aria-pressed`), Switcher — click/keyboard toggles, disabled blocks events, `onChange`
   values, controlled vs uncontrolled.
+  > ✅ **B1 done (2026-11-17):** 11 test files, 49 tests (+ Pagination's 4 → 53). Found + fixed
+  > (patch changeset `selection-controls-a11y`): Checkbox / Radio / Switch names included the
+  > helper / error text (the `<label>` wraps it) → now `aria-labelledby` the label text; no
+  > `aria-invalid` on error → added; RadioGroup helper / error not linked → `aria-describedby`
+  > + group `aria-invalid`. Covered: form submit (type=button default), Enter / Space,
+  > disabled, refs, SplitButton menu (open, pick, disabled item, Escape → focus back), Fab
+  > speed dial (names, toggle, Escape, outside), controlled vs uncontrolled, indeterminate =
+  > mixed, radio arrow keys skip disabled, Segmented / Switcher no deselect, Tag button /
+  > toggle. Story tests still 173 / 173.
 - **B2 Fields:** Input, BottomLineInput, Textarea, Stepper, SearchBar (clear ✕), SelectInput,
   Multiselect (typeahead + `mode="list"`, Select all) — label association, `errorMessage` →
   error text + `aria-invalid`, disabled, value shown (not raw value), keyboard pick.
