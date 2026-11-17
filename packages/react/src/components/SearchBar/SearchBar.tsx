@@ -2,7 +2,7 @@
 
 import { Input as BaseInput } from '@base-ui/react/input';
 import { type VariantProps, cva } from 'class-variance-authority';
-import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import { type ComponentPropsWithoutRef, type ReactNode, useRef } from 'react';
 import { cn } from '../../utils/cn.js';
 import { fieldBorder, fieldFill, fieldHover } from '../../utils/field.js';
 import { focusRing } from '../../utils/focus-ring.js';
@@ -69,6 +69,7 @@ export function SearchBar({
   placeholder = 'Search',
   ...rest
 }: SearchBarProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
   return (
     <div className={cn(rootStyles({ size }), className)}>
       {leadingIcon ? (
@@ -81,6 +82,7 @@ export function SearchBar({
           'min-w-0 flex-1 bg-transparent outline-none disabled:cursor-not-allowed',
           inputHeight[size ?? 'm'],
         )}
+        ref={inputRef}
         placeholder={placeholder}
         value={value}
         {...rest}
@@ -96,7 +98,11 @@ export function SearchBar({
       ) : onClear && value ? (
         <button
           type="button"
-          onClick={onClear}
+          onClick={() => {
+            onClear();
+            // The ✕ unmounts once the value is empty — keep focus in the field.
+            inputRef.current?.focus();
+          }}
           aria-label="Clear search"
           className={cn(
             'inline-flex shrink-0 rounded-[var(--radius-full)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]',

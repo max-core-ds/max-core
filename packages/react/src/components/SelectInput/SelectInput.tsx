@@ -80,6 +80,19 @@ export interface SelectInputProps extends VariantProps<typeof triggerStyles> {
   errorMessage?: ReactNode;
   /** Applied to the field wrapper (label + trigger + helper). */
   className?: string;
+  /**
+   * Field name for native form submission: Base UI renders hidden input(s) that
+   * mirror the current value, so `new FormData(form)` includes it.
+   * Optional and additive — `value` / `onValueChange` still own the state.
+   *
+   * Caveats:
+   * - A native form reset (`<button type="reset">`, `form.reset()`) empties the hidden
+   *   input(s) but not a **controlled** value; your state wins on the next render
+   *   (same as any controlled React input). Reset your state yourself.
+   * - With a form library that already reads `value` / `onValueChange`, leave `name`
+   *   out — passing both submits the value twice (library + FormData).
+   */
+  name?: string;
   'aria-label'?: string;
 }
 
@@ -94,6 +107,7 @@ export function SelectInput({
   onValueChange,
   disabled,
   label,
+  name,
   helper,
   errorMessage,
   className,
@@ -110,6 +124,7 @@ export function SelectInput({
     >
       {label ? <Field.Label className={fieldLabel(isInvalid)}>{label}</Field.Label> : null}
       <Select.Root
+        name={name}
         // items lets Select.Value show the label (not the raw value) once chosen.
         items={items}
         value={value}

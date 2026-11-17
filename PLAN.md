@@ -1312,6 +1312,18 @@ on the story smoke + axe layer.
 - **B2 Fields:** Input, BottomLineInput, Textarea, Stepper, SearchBar (clear ✕), SelectInput,
   Multiselect (typeahead + `mode="list"`, Select all) — label association, `errorMessage` →
   error text + `aria-invalid`, disabled, value shown (not raw value), keyboard pick.
+  > ✅ **B2 done (2026-11-17):** 7 test files, 47 tests (100 in `packages/react`). Shared
+  > `src/test/text-field-contract.tsx` (label-only name, aria-label, helper / error + invalid,
+  > typing, controlled, disabled, form `name`) for Input / BottomLineInput / Textarea — all
+  > clean (Base UI Field). Found + fixed (patch changeset `fields-a11y`): Multiselect
+  > typeahead `aria-label` landed on the chips wrapper, not the input; ItemList "Select all"
+  > checkbox took the surrounding field's label as its name; SearchBar clear lost focus to
+  > `<body>`. Covered too: Stepper buttons / arrows / min-max / disabled; SelectInput click +
+  > keyboard pick, label not raw value (regression), Escape, controlled; Multiselect filter,
+  > chips, remove, list mode toggle + filtered Select all. **`name` added** to SelectInput /
+  > Multiselect (user, 2026-11-17): hidden input(s) mirror the value, controlled or not;
+  > JSDoc caveats = native reset doesn't reset a controlled value; with a form library leave
+  > `name` out (double submit). Tests submit real forms (103 in `packages/react`).
 - **B3 Navigation + overlays:** Tabs, Pagination (constant-length window, no duplicate pages),
   Dropdown (`open`/`onOpenChange`), Tooltip, Dialog, BottomSheet, Toast, SideBar (collapse via
   `SideBarTrigger`), BottomNavigation (`menu`) — open/close, Escape, focus return, active item.

@@ -1,6 +1,6 @@
 'use client';
 
-import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import { type ComponentPropsWithoutRef, type ReactNode, useId } from 'react';
 import { capTrim } from '../../utils/cap-trim.js';
 import { cn } from '../../utils/cn.js';
 import { Checkbox, type CheckboxProps } from '../Checkbox/Checkbox.js';
@@ -107,11 +107,16 @@ export function ItemList({
 }
 
 function SelectAllRow({ label = 'Select all', ...checkbox }: ItemListSelectAllProps) {
+  // Name the checkbox explicitly: inside a field (Multiselect) Base UI would otherwise
+  // label it with the field's label instead of "Select all".
+  const labelId = useId();
   return (
     // biome-ignore lint/a11y/noLabelWithoutControl: wraps the Base UI checkbox button (a labelable control)
     <label className={cn(selectAllStyles, 'shrink-0')}>
-      <Checkbox size="s" {...checkbox} />
-      <span className={cn(capTrim, 'flex-1')}>{label}</span>
+      <Checkbox size="s" aria-labelledby={labelId} {...checkbox} />
+      <span id={labelId} className={cn(capTrim, 'flex-1')}>
+        {label}
+      </span>
     </label>
   );
 }

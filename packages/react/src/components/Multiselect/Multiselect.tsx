@@ -108,6 +108,21 @@ export interface MultiselectProps extends VariantProps<typeof chipsStyles> {
   searchPlaceholder?: string;
   /** Applied to the field wrapper (label + field + helper). */
   className?: string;
+  /**
+   * Field name for native form submission: Base UI renders hidden input(s) that
+   * mirror the current value, so `new FormData(form)` includes it.
+   * One hidden input per selected option, each carrying its `value`
+   * (`formData.getAll(name)` → `['react', 'vue']`).
+   * Optional and additive — `value` / `onValueChange` still own the state.
+   *
+   * Caveats:
+   * - A native form reset (`<button type="reset">`, `form.reset()`) empties the hidden
+   *   input(s) but not a **controlled** value; your state wins on the next render
+   *   (same as any controlled React input). Reset your state yourself.
+   * - With a form library that already reads `value` / `onValueChange`, leave `name`
+   *   out — passing both submits the value twice (library + FormData).
+   */
+  name?: string;
   'aria-label'?: string;
 }
 
@@ -121,6 +136,7 @@ export function Multiselect({
   disabled,
   placeholder = 'Select…',
   label,
+  name,
   helper,
   errorMessage,
   mode = 'typeahead',
@@ -163,6 +179,7 @@ export function Multiselect({
       {label ? <Field.Label className={fieldLabel(isInvalid)}>{label}</Field.Label> : null}
       <Combobox.Root
         multiple
+        name={name}
         disabled={disabled}
         items={items}
         value={selected}
@@ -220,7 +237,7 @@ export function Multiselect({
             </span>
           </Combobox.Trigger>
         ) : (
-          <Combobox.Chips ref={chipsRef} className={cn(chipsStyles({ size }), fill)} {...rest}>
+          <Combobox.Chips ref={chipsRef} className={cn(chipsStyles({ size }), fill)}>
             <span className={chipRowStyles}>
               <Combobox.Value>
                 {(selected: MultiselectOption[]) =>
@@ -239,6 +256,9 @@ export function Multiselect({
                 }
               </Combobox.Value>
               <Combobox.Input
+                // The input is the focusable control here — `aria-label` names it
+                // (on the chips wrapper it named nothing a screen reader reaches).
+                {...rest}
                 placeholder={placeholder}
                 className={cn(
                   'min-w-16 flex-1 bg-transparent text-[var(--text-primary)] outline-none disabled:cursor-not-allowed',
