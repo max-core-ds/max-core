@@ -160,7 +160,8 @@ const clearPad = { s: 'pr-[var(--size-32)]', m: 'pr-[var(--size-40)]', l: 'pr-[v
  * the accent/surface band with text/accent.
  */
 function DayItem(props: DayButtonProps) {
-  const { modifiers, className, ...buttonProps } = props;
+  // `day` is rdp's CalendarDay object — keep it off the DOM (it rendered as day="[object Object]").
+  const { day: _day, modifiers, className, ...buttonProps } = props;
   const ref = useRef<HTMLButtonElement>(null);
   // Preserve rdp's roving focus (keyboard grid navigation).
   useEffect(() => {
@@ -354,6 +355,26 @@ function DatePickerFooter({ onClear, onApply }: { onClear: () => void; onApply: 
 }
 
 /** Short weekday names ("Mon"), as the master's _Weekday Header. */
+/**
+ * Day button names that start with the visible number ("1, Tuesday, September 2026")
+ * — rdp's default "Tuesday, September 1st, 2026" hides the visible "1" inside "1st",
+ * so a voice-control user can't say what they see (WCAG 2.5.3).
+ */
+function useDayLabels(locale?: string) {
+  return useMemo(() => {
+    const weekday = new Intl.DateTimeFormat(locale, { weekday: 'long' });
+    const monthYear = new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' });
+    return {
+      labelDayButton: (date: Date, modifiers: { today?: boolean; selected?: boolean }) => {
+        let label = `${date.getDate()}, ${weekday.format(date)}, ${monthYear.format(date)}`;
+        if (modifiers.today) label = `Today, ${label}`;
+        if (modifiers.selected) label = `${label}, selected`;
+        return label;
+      },
+    };
+  }, [locale]);
+}
+
 function useWeekdayFormatter(locale?: string) {
   return useMemo(() => {
     const fmt = new Intl.DateTimeFormat(locale, { weekday: 'short' });
@@ -495,6 +516,7 @@ export function DatePicker({
   const openView = useCallback((next: 'month' | 'year') => setView(next), []);
   const components = useCalendarComponents(locale, granularity === 'day' ? openView : undefined);
   const formatters = useWeekdayFormatter(locale);
+  const labels = useDayLabels(locale);
 
   // A pick in a month/year grid: commit when it's the selection granularity,
   // otherwise treat it as navigation and drill back down to the base view.
@@ -528,6 +550,7 @@ export function DatePicker({
         classNames={calendarClassNames}
         components={components}
         formatters={formatters}
+        labels={labels}
       />
     );
   } else {
@@ -601,6 +624,7 @@ export function DualDatePicker({
   );
   const components = useCalendarComponents(locale);
   const formatters = useWeekdayFormatter(locale);
+  const labels = useDayLabels(locale);
 
   return (
     <div
@@ -632,6 +656,7 @@ export function DualDatePicker({
         classNames={calendarClassNames}
         components={components}
         formatters={formatters}
+        labels={labels}
       />
       {showFooter ? (
         <DatePickerFooter
@@ -685,6 +710,10 @@ export function DateInput({
   );
   const [open, setOpen] = useState(false);
   const triggerId = useId();
+  // The trigger's name keeps its visible text (label + value / placeholder), so a
+  // voice-control user can say what they see (WCAG 2.5.3, axe label-content-name-mismatch).
+  const labelId = `${triggerId}-label`;
+  const valueId = `${triggerId}-value`;
   const formatted = formatDateValue(value, format, locale);
   const isInvalid = Boolean(errorMessage);
   const showClear = clearable && Boolean(value) && !disabled;
@@ -696,7 +725,7 @@ export function DateInput({
       disabled={disabled}
     >
       {label ? (
-        <Field.Label htmlFor={triggerId} className={fieldLabel(isInvalid)}>
+        <Field.Label id={labelId} htmlFor={triggerId} className={fieldLabel(isInvalid)}>
           {label}
         </Field.Label>
       ) : null}
@@ -705,7 +734,7 @@ export function DateInput({
           <Popover.Trigger
             id={triggerId}
             disabled={disabled}
-            aria-label={ariaLabel ?? label ?? 'Select date'}
+            aria-labelledby={label ? `${labelId} ${valueId}` : undefined}
             className={cn(
               triggerStyles(size),
               showClear && clearPad[size],
@@ -729,7 +758,8 @@ export function DateInput({
                   (isInvalid ? 'text-[var(--status-danger-default)]' : 'text-[var(--text-muted)]'),
               )}
             >
-              {formatted || placeholder}
+              {!label && ariaLabel ? <span className="sr-only">{ariaLabel}, </span> : null}
+              <span id={valueId}>{formatted || placeholder}</span>
             </span>
           </Popover.Trigger>
           {showClear ? (

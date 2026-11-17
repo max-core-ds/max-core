@@ -345,6 +345,10 @@ export function TimePicker({
   );
   const [open, setOpen] = useState(false);
   const triggerId = useId();
+  // The trigger's name keeps its visible text (label + value / placeholder), so a
+  // voice-control user can say what they see (WCAG 2.5.3, axe label-content-name-mismatch).
+  const labelId = `${triggerId}-label`;
+  const valueId = `${triggerId}-value`;
 
   // Display parts: the value, or "now" (snapped to the step grid) as a starting
   // point so the wheel always shows something. Nothing is emitted until a pick.
@@ -433,7 +437,11 @@ export function TimePicker({
       disabled={disabled}
     >
       {label ? (
-        <Field.Label htmlFor={triggerId} className="text-sm text-[var(--text-secondary)]">
+        <Field.Label
+          id={labelId}
+          htmlFor={triggerId}
+          className="text-sm text-[var(--text-secondary)]"
+        >
           {label}
         </Field.Label>
       ) : null}
@@ -442,7 +450,7 @@ export function TimePicker({
           <Popover.Trigger
             id={triggerId}
             disabled={disabled}
-            aria-label={ariaLabel ?? label ?? 'Select time'}
+            aria-labelledby={label ? `${labelId} ${valueId}` : undefined}
             className={cn(
               'inline-flex w-full items-center gap-[var(--spacing-08)]',
               'rounded-[var(--radius-md)] px-[var(--spacing-12)] py-[var(--spacing-12)] text-sm',
@@ -453,7 +461,8 @@ export function TimePicker({
           >
             <ClockIcon />
             <span className={cn('flex-1 text-left', !formatted && 'text-[var(--text-muted)]')}>
-              {formatted || placeholder}
+              {!label && ariaLabel ? <span className="sr-only">{ariaLabel}, </span> : null}
+              <span id={valueId}>{formatted || placeholder}</span>
             </span>
           </Popover.Trigger>
           {clearable && value && !disabled ? (

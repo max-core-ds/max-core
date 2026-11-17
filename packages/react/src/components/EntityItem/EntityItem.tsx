@@ -49,7 +49,11 @@ export function EntityItem({
       {...rest}
     >
       {leading}
-      {!isCollapsed && (
+      {isCollapsed ? (
+        // Avatar-only when collapsed: the title stays for screen readers (it names the
+        // surrounding Entity Card / trigger).
+        <span className="sr-only">{title}</span>
+      ) : (
         <div className="flex flex-1 flex-col gap-(--entity-item-label-gap)">
           <span
             data-entity-title={type}

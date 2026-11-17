@@ -9,6 +9,7 @@ import {
   useState,
 } from 'react';
 import { cn } from '../../utils/cn.js';
+import { focusRing } from '../../utils/focus-ring.js';
 import { ScrollBar } from '../ScrollBar/ScrollBar.js';
 
 // Scroll container that hides the native scrollbar and renders the ScrollBar
@@ -24,6 +25,10 @@ import { ScrollBar } from '../ScrollBar/ScrollBar.js';
 const MIN_THUMB = 24;
 /** The rail's padding (-- Atoms/Scroll Bar/Padding, 4px) at each end of the lane. */
 const RAIL_PADDING = 4;
+
+/** Anything a keyboard user can already Tab into (then the viewport needn't be a stop). */
+const FOCUSABLE =
+  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]), [contenteditable="true"]';
 
 /** Thumb length for a lane of `track` px showing `client` of `scrollSize`. */
 const thumbLength = (track: number, client: number, scrollSize: number) =>
@@ -56,6 +61,9 @@ export function ScrollArea({
   const viewportRef = useRef<HTMLDivElement>(null);
   const [thumb, setThumb] = useState({ size: 0, offset: 0, visible: false });
   const [overflow, setOverflow] = useState({ start: false, end: false });
+  // Keyboard reach: an overflowing viewport with nothing focusable inside becomes a
+  // Tab stop so arrow keys / Page Up-Down can scroll it (axe scrollable-region-focusable).
+  const [needsFocus, setNeedsFocus] = useState(false);
 
   // Read scroll metrics for the active axis.
   const axis = useCallback(
@@ -74,6 +82,7 @@ export function ScrollArea({
     const start = pos > 1;
     const end = pos < scrollSize - client - 1;
     setOverflow((o) => (o.start === start && o.end === end ? o : { start, end }));
+    setNeedsFocus(scrollSize > client && !el.querySelector(FOCUSABLE));
     if (scrollSize <= client) {
       setThumb((t) => (t.visible ? { ...t, visible: false } : t));
       return;
@@ -142,8 +151,10 @@ export function ScrollArea({
         onScroll={measure}
         data-overflow-start={overflow.start || undefined}
         data-overflow-end={overflow.end || undefined}
+        tabIndex={needsFocus ? 0 : undefined}
         className={cn(
           'min-h-0 min-w-0 flex-1 scrollbar-none',
+          needsFocus && focusRing,
           horizontal ? 'overflow-x-auto' : 'overflow-y-auto',
           viewportClassName,
         )}

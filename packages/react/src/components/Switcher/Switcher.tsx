@@ -79,6 +79,9 @@ export function Switcher({
         setValue(next);
       }}
       className={cn(groupStyles, className)}
+      // Base UI puts aria-orientation on its role="group", where ARIA doesn't allow it
+      // (axe aria-allowed-attr); data-orientation stays for styling.
+      aria-orientation={undefined}
       {...rest}
     >
       {items.map((item) => (

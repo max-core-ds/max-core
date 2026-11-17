@@ -32,13 +32,18 @@ export const NativeScrollbar: Story = {
   render: () => {
     const lines = Array.from({ length: 14 }, (_, i) => `Line ${i + 1}`);
     return (
-      <div className="styled-scrollbar h-40 w-72 overflow-y-auto rounded-[var(--radius-md)] bg-[var(--bg-subtle)] p-[var(--spacing-16)] text-[var(--text-secondary)]">
+      <section
+        // biome-ignore lint/a11y/noNoninteractiveTabindex: a scroll box with no focusable content must be reachable by keyboard
+        tabIndex={0}
+        aria-label="Themed native scrollbar"
+        className="styled-scrollbar h-40 w-72 overflow-y-auto rounded-[var(--radius-md)] bg-[var(--bg-subtle)] p-[var(--spacing-16)] text-[var(--text-secondary)]"
+      >
         {lines.map((line) => (
           <p key={line} className="mb-[var(--spacing-12)]">
             {line} — scroll to see the themed native scrollbar.
           </p>
         ))}
-      </div>
+      </section>
     );
   },
 };

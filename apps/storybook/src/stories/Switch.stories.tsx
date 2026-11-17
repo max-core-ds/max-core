@@ -19,7 +19,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = { args: { defaultChecked: true } };
+// A bare switch still needs a name — `aria-label` when there's no visible label.
+export const Default: Story = { args: { 'aria-label': 'Notifications', defaultChecked: true } };
 
 export const WithLabel: Story = {
   args: {
@@ -37,8 +38,8 @@ export const Sizes: Story = {
   parameters: { layout: 'padded' },
   render: () => (
     <div className="flex items-center gap-[var(--spacing-16)]">
-      <Switch size="s" defaultChecked />
-      <Switch size="m" defaultChecked />
+      <Switch size="s" aria-label="Size S" defaultChecked />
+      <Switch size="m" aria-label="Size M" defaultChecked />
     </div>
   ),
 };

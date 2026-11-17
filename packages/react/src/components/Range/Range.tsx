@@ -31,6 +31,12 @@ export interface RangeProps
   showLabels?: boolean;
   /** Format the bound labels (e.g. `(v) => `$${v}``). */
   formatLabel?: (value: number) => ReactNode;
+  /** Accessible name of the slider input(s) — set this or `aria-labelledby`. */
+  'aria-label'?: string;
+  /** Id of a visible label for the slider input(s). */
+  'aria-labelledby'?: string;
+  /** Per-thumb name for a dual slider (e.g. `(i) => (i ? 'Max price' : 'Min price')`). */
+  getAriaLabel?: (index: number) => string;
 }
 
 export function Range({
@@ -43,6 +49,9 @@ export function Range({
   min = 0,
   max = 100,
   disabled,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledBy,
+  getAriaLabel,
   ...rest
 }: RangeProps) {
   const values = Array.isArray(value)
@@ -75,6 +84,10 @@ export function Range({
               // biome-ignore lint/suspicious/noArrayIndexKey: thumbs are a fixed, ordered set
               key={i}
               index={i}
+              // The name belongs on each thumb's <input>, not on the Root group.
+              aria-label={getAriaLabel ? undefined : ariaLabel}
+              aria-labelledby={ariaLabelledBy}
+              getAriaLabel={getAriaLabel}
               className={cn('relative flex rounded-(--knob-radius)', focusRingWithin)}
             >
               <Knob state={disabled ? 'default' : undefined} />

@@ -1246,7 +1246,18 @@ Story tests run against the **built** `@max-core-ds/react` (as Storybook does �
   only the per-package `test` scripts are missing.
 - One sample test per layer to prove the wiring. **Report.**
 
-## 6.2 Story smoke + axe — first run, triage
+## 6.2 Story smoke + axe — first run, triage — ✅ done (2026-11-17)
+
+> First run: 150 / 173 passed; 23 failures in 9 components, 7 issues — **all fixed in code,
+> no exceptions needed** (user: fix all; ScrollArea option (a)). SideBar collapsed rail buttons
+> unnamed (ListItem / EntityItem now keep the label `sr-only`); Range thumbs unlabellable (new
+> `aria-label` / `aria-labelledby` / `getAriaLabel` on the thumb inputs); DateInput +
+> TimePicker trigger `aria-label` hid the visible value (now `aria-labelledby` label + value);
+> DatePicker day names "1, Tuesday, September 2026" + `day="[object Object]"` leak fixed;
+> SegmentedControl / Switcher `aria-orientation` on `role="group"` (Base UI) overridden;
+> ScrollArea viewport becomes a Tab stop when it overflows with nothing focusable inside;
+> Switch + native-scrollbar stories labelled. **173 / 173 pass.** Patch changeset
+> `a11y-story-audit-fixes`. 6.3's exception list starts empty.
 
 - Run all stories (~55 components + Foundations: Tokens, Effects, FocusRing).
 - Defaults: `a11y.test: 'error'`; **`color-contrast` off globally** — colours are Figma-owned

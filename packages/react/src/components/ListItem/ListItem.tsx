@@ -117,7 +117,10 @@ export function ListItem({
     >
       {level ? <span aria-hidden="true" className={cn('shrink-0', levelSpacer[level])} /> : null}
       {leftIcon}
-      {!isCollapsed && (
+      {isCollapsed ? (
+        // Icon-only when collapsed: the label stays for screen readers (the button's name).
+        <span className="sr-only">{children}</span>
+      ) : (
         <span className="flex flex-1 flex-col gap-(--list-item-label-helper-gap)">
           <span className="type-caption-700">{children}</span>
           {supportText ? (
