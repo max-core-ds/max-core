@@ -1,6 +1,6 @@
 {
   "name": "@max-core-ds/tokens",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Max Core design tokens — Figma-exported tokens.json, the CSS/Tailwind generator and the max-core-tokens CLI",
   "repository": {
     "type": "git",
