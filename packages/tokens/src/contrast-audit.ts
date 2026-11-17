@@ -175,7 +175,7 @@ function tsxFiles(dir: string): string[] {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
     const full = resolve(dir, entry.name);
     if (entry.isDirectory()) out.push(...tsxFiles(full));
-    else if (entry.name.endsWith('.tsx') && !entry.name.endsWith('.stories.tsx')) {
+    else if (entry.name.endsWith('.tsx') && !/\.(stories|test)\.tsx$/.test(entry.name)) {
       out.push(full);
     }
   }
