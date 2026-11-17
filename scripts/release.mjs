@@ -50,12 +50,16 @@ if (!publishOnly) {
   console.log(`→ ${version()}`);
 }
 
-// ---- gate (same as CI) ----
-step('Gate: build · typecheck · lint · drift');
+// ---- gate (same as CI's required `ci` job) ----
+step('Gate: build · typecheck · lint · drift · a11y exceptions · tests');
 sh('pnpm build');
 sh('pnpm typecheck');
 sh('pnpm lint');
 sh('pnpm -F @max-core-ds/tokens drift');
+sh('pnpm -F @max-core-ds/storybook a11y:exceptions');
+// Behaviour tests + story tests (Chromium; after the build, so stories use the fresh dist).
+// Needs Playwright Chromium once: pnpm -F @max-core-ds/storybook exec playwright install chromium
+sh('pnpm test');
 
 // ---- commit ----
 const v = version();

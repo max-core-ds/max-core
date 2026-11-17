@@ -303,7 +303,7 @@ Pending changesets pile up; one release turns all of them into one version.
 ```bash
 git pull
 read -rs GITHUB_PACKAGES_TOKEN && export GITHUB_PACKAGES_TOKEN   # classic token, write:packages
-pnpm release                         # version + changelogs → CI checks → commit → publish → tag
+pnpm release                         # version + changelogs → CI checks (incl. tests) → commit → publish → tag
 git push --follow-tags origin main
 ```
 
