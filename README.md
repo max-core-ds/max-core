@@ -31,6 +31,9 @@ pnpm storybook
 pnpm build
 ```
 
+The demo app `apps/showcase` installs the **published** packages, so it has its own install
+(needs `GITHUB_PACKAGES_TOKEN`): see [`apps/showcase/README.md`](apps/showcase/README.md).
+
 ---
 
 ## Project structure
@@ -40,7 +43,7 @@ max-core/
 ├── CLAUDE.md                         # Agent guardrails and project rules
 ├── PLAN.md                           # Phase-by-phase implementation plan
 ├── PROGRESS.md                       # Live component + cross-check status
-├── .github/workflows/ci.yml          # CI: build, typecheck, lint, drift + token diff comment
+├── .github/workflows/ci.yml          # CI: build, typecheck, lint, drift, tests, showcase + token diff
 ├── .changeset/                       # Pending changesets (next release)
 ├── scripts/release.mjs               # pnpm release
 ├── docs/
@@ -285,7 +288,10 @@ projects; pushing to `main` alone publishes nothing.
    - **`ci` check** (required): build, typecheck, lint and **drift** — red if a token the
      components use was removed or renamed;
    - a **token diff comment** (added / removed / changed, per section);
-   - a **contrast report** in the run summary (never blocks).
+   - a **contrast report** in the run summary (never blocks);
+   - a **`showcase` check** (not required): installs the *published* packages into
+     `apps/showcase` and builds it, so a broken release shows up here
+     ([details](apps/showcase/README.md#the-showcase-ci-job)).
 4. Review and merge. **Green:** merge. **Red:** the designer fixes it in Figma and publishes
    again (the PR updates), or a developer adapts the components on the same branch.
 
@@ -399,6 +405,7 @@ pnpm lint                       # Biome check
 pnpm test                       # Behaviour tests + story tests (build first: stories use the built react)
 pnpm format                     # Biome format (--write)
 pnpm storybook                  # Storybook dev server
+pnpm showcase                   # showcase dev server (own install first: apps/showcase/README.md)
 pnpm changeset                  # describe a change for the next release
 pnpm release                    # publish a release (see Release workflow)
 ```
@@ -483,6 +490,7 @@ Two layers, both blocking in CI (`ci` job → **Tests**):
 ## Documentation
 
 - **`docs/consuming.md`** — install and use the packages in a project
+- **`apps/showcase/README.md`** — the in-repo consumer of the published packages + its CI job
 - **`docs/template-usage.md`** — run your own brand on the Max Core components
 - **`.changeset/README.md`** — how to write a changeset
 - **`docs/a11y-exceptions.md`** — accessibility checks accepted in tests (declared + guarded)
