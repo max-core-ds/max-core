@@ -1382,6 +1382,12 @@ wanted).
 
 # Phase 7 — Showcase as the first real consumer (2026-11-18)
 
+> ✅ Done 2026-11-18, merged to `main` (`dacc3ac`, PR #2). Verified: registry install (real
+> dirs at 0.1.1, not workspace links), typecheck + build, Chromium screenshots light + dark
+> styled, Inter at 300/400/700. Found + fixed one consumer bug in the docs: the suggested
+> `@fontsource-variable/inter` registers `'Inter Variable'`, so the tokens' `Inter` never
+> matched — now `@fontsource/inter`. Full how-to: `apps/showcase/README.md`.
+
 `apps/showcase` installs the **published** `@max-core-ds/react` + `tokens` from GitHub Packages
 instead of `workspace:*`, so packaging bugs (exports, `files`, peers, `styles.css` scanning
 from `node_modules`) surface here before they hit another project.
