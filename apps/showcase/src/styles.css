@@ -1,5 +1,13 @@
 @import 'tailwindcss';
 
+/* Inter, the Figma typeface. The tokens name it `Inter`, so use the static @fontsource/inter
+   (the variable package registers 'Inter Variable'). Weights: text styles use 300 / 700 / 900,
+   400 is the browser default for unstyled text. */
+@import '@fontsource/inter/300.css';
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/700.css';
+@import '@fontsource/inter/900.css';
+
 /* Max Core components: tells Tailwind to scan the built @max-core-ds/react
    package so the utility classes the components use are emitted. */
 @import '@max-core-ds/react/styles.css';
