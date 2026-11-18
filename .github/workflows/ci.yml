@@ -30,7 +30,7 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - name: Build (tokens, react, plugin, Storybook, showcase)
+      - name: Build (tokens, react, plugin, Storybook)
         run: pnpm build
 
       - run: pnpm typecheck
@@ -80,6 +80,39 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
           if [ "$code" -ne 0 ]; then echo "::warning title=Contrast::$(tail -n 1 contrast.txt)"; fi
           exit 0
+
+  # The showcase installs the *published* @max-core-ds packages from GitHub Packages
+  # (apps/showcase is its own pnpm root), so it catches packaging bugs the workspace hides.
+  # Needs this repo under each package's "Manage Actions access" (read).
+  showcase:
+    name: showcase (published packages)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    env:
+      GITHUB_PACKAGES_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    defaults:
+      run:
+        working-directory: apps/showcase
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: apps/showcase/package.json
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: apps/showcase/pnpm-lock.yaml
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm typecheck
+
+      - run: pnpm build
 
   token-diff:
     name: token diff

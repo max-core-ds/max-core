@@ -1,0 +1,9 @@
+# The showcase is its own pnpm root (the repo root workspace excludes it), so it installs
+# @max-core-ds/* from GitHub Packages like any outside consumer — see docs/consuming.md.
+
+allowBuilds:
+  esbuild: true
+
+# pnpm holds back freshly published versions; our own releases are installed right away.
+minimumReleaseAgeExclude:
+  - '@max-core-ds/*'

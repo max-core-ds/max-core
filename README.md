@@ -58,9 +58,9 @@ max-core/
 │   └── figma-plugin/                 # @max-core-ds/figma-plugin
 ├── apps/
 │   ├── storybook/                    # Storybook 10 component workshop (private)
-│   └── showcase/                     # Demo app (private)
+│   └── showcase/                     # Demo app on the published packages (own pnpm root)
 ├── package.json                      # Workspace root scripts
-├── pnpm-workspace.yaml               # Workspace package paths
+├── pnpm-workspace.yaml               # Workspace package paths (excludes apps/showcase)
 ├── turbo.json                        # Task orchestration
 ├── biome.json                        # Lint + format
 └── tsconfig.base.json                # Shared TypeScript config
@@ -315,6 +315,14 @@ overwritten — a mistake is fixed with the next patch.
 Consumers get a Dependabot PR (or run `pnpm update`); see
 [`docs/consuming.md`](docs/consuming.md). Template projects upgrade the same way; their build
 lists any new tokens to add to their Figma copy.
+
+The first consumer is this repo's own showcase (`apps/showcase`, its own pnpm root): after
+each release, bump it to the new version and commit its lockfile (the token must be exported):
+
+```bash
+pnpm -C apps/showcase update '@max-core-ds/*@<version>'
+pnpm showcase                        # check it renders, then commit apps/showcase/{package.json,pnpm-lock.yaml}
+```
 
 ### Manual fallback (without Publish)
 

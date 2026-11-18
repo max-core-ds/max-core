@@ -1,6 +1,8 @@
 packages:
   - "packages/*"
   - "apps/*"
+  # The showcase installs the published packages from GitHub Packages (its own pnpm root).
+  - "!apps/showcase"
 
 # Postinstall scripts that pnpm 11+ requires explicit approval for.
 # These are trusted, well-known packages; their build scripts download

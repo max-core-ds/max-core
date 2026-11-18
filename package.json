@@ -16,7 +16,7 @@
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "storybook": "pnpm --filter @max-core-ds/storybook dev",
-    "showcase": "pnpm --filter @max-core-ds/showcase dev",
+    "showcase": "pnpm -C apps/showcase dev",
     "changeset": "changeset",
     "release": "node scripts/release.mjs"
   },

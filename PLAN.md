@@ -1380,6 +1380,24 @@ wanted).
 
 ---
 
+# Phase 7 — Showcase as the first real consumer (2026-11-18)
+
+`apps/showcase` installs the **published** `@max-core-ds/react` + `tokens` from GitHub Packages
+instead of `workspace:*`, so packaging bugs (exports, `files`, peers, `styles.css` scanning
+from `node_modules`) surface here before they hit another project.
+
+- Standalone pnpm root inside the repo: root `pnpm-workspace.yaml` excludes `apps/showcase`;
+  the showcase has its own `pnpm-workspace.yaml`, `.npmrc` (as in `docs/consuming.md`),
+  lockfile and inlined `tsconfig.json`. Root installs need no token.
+- CI: separate `showcase` job (`GITHUB_TOKEN`, `packages: read`), not required at first —
+  needs the repo under each package's **Manage Actions access**.
+- After each release: `pnpm -C apps/showcase update '@max-core-ds/*@<version>'`, commit the
+  lockfile (README → Release workflow → D).
+- A break in the showcase is a package bug: fix it in the package + changeset, never with a
+  showcase workaround.
+
+---
+
 # On-demand backlog
 
 Left out of the Phase 4 lean v1s by design; build when a real project needs them.

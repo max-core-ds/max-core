@@ -64,8 +64,10 @@ body {
 }
 ```
 
-Load the **Inter** font yourself (e.g. `@fontsource-variable/inter` or Google Fonts); the tokens
-only name it.
+Load the **Inter** font yourself. The tokens name it `Inter`, so use a source that registers
+that exact name: `@fontsource/inter` (import the weights you need, e.g. `300.css`, `400.css`,
+`700.css`, `900.css`) or Google Fonts. `@fontsource-variable/inter` registers `'Inter Variable'`
+and silently falls back to the system font.
 
 **Dark mode:** set `data-theme="dark"` on `<html>` (or any ancestor). Remove it for light.
 
@@ -86,6 +88,9 @@ export function SignUp() {
 ```
 
 Storybook in this repo documents every component and its props.
+
+`apps/showcase` in this repo is a working reference: a standalone Vite app that installs the
+published packages exactly as described here (its own `.npmrc`, CSS imports in `src/styles.css`).
 
 ## 6. Staying up to date
 
