@@ -1404,9 +1404,9 @@ from `node_modules`) surface here before they hit another project.
 
 ---
 
-# Phase 8 — Showcase as a template consumer (2026-11-20)
+# Phase 8 — Showcase as a template consumer — ✅ DONE (2026-11-20)
 
-> ✅ Built 2026-11-20 on `feat/showcase-template-consumer` (PR pending). Prompt:
+> ✅ Done 2026-11-20, merged to `main` (`6bb52dd`, PR #5). Prompt:
 > `prompts/showcase-template-consumer.md`.
 
 `apps/showcase` now follows `docs/template-usage.md` instead of `docs/consuming.md`'s token
