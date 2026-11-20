@@ -1,6 +1,6 @@
 # Audit — User page (Phase 4.5)
 
-- **Figma page:** User `4952:44907`, working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** User `4952:44907`, Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Master:** User `5015:380` (standalone COMPONENT; `Name` TEXT, `Subtitle` TEXT, `Show Subtitle` BOOLEAN; 6 instances in the file)
 - **React:** none. Covered by `EntityItem` with an `Avatar size="m"` as `leading`
 - **Audited:** 2026-10-24, via a read-only `use_figma` read and the doc-page text

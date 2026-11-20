@@ -1,6 +1,6 @@
 # Audit — Bottom Navigation Bar page (Phase 4.5)
 
-- **Figma page:** Bottom Navigation Bar `2073:4511`, working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** Bottom Navigation Bar `2073:4511`, Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Masters:** Bottom Navigation `2600:2203` (COMPONENT_SET: `Type` Simple / More; `Items Slot` SLOT) · `_Nav Item` `2073:9271` (`State` Default / Hover / Pressed / Active / Disabled; `Dot` BOOLEAN; `Content Instance` swap) · Nav Item Content `2073:4684` (`Label` TEXT, `Icon Instance` swap) · Bottom Navigation Avatar `2073:9045` (Avatar S, no label)
 - **React:** `BottomNavigation` (`items`, `value`, `onValueChange`; pure-controlled by convention)
 - **Audited:** 2026-10-25, via read-only `use_figma` reads of the four masters (props, anatomy, bindings, per-state content colours, dot geometry, More menu), the doc-page text and `tokens.json`

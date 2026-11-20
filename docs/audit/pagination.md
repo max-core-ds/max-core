@@ -1,6 +1,6 @@
 # Audit — Pagination page (Phase 4.5)
 
-- **Figma page:** Pagination `2074:11130`, working file `sX5tikviuBEhNbu2iPVya5` (doc frame `7268:41`)
+- **Figma page:** Pagination `2074:11130`, Max Core file `sX5tikviuBEhNbu2iPVya5` (doc frame `7268:41`)
 - **Masters:** Pagination `2550:6528` (COMPONENT, no props: prev + 5 numbers + next, Buttons Gap 4); `.Pagination Button` `2550:6444` (State Default/Hover/Pressed/Active × Disabled Off/On, Focused BOOLEAN); `.Pagination Content` `2550:6429` (Type Number/Icon, Page text, Icon swap)
 - **React:** `Pagination` (controlled `page` / `count` / `onPageChange`, `siblings`)
 - **Audited:** 2026-10-24, via read-only `use_figma` bound-variable reads of the three masters, the doc-page text and `tokens.json`

@@ -1,6 +1,6 @@
 # Audit — User card page (Phase 4.5)
 
-- **Figma page:** User card `2011:669`, working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** User card `2011:669`, Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Master:** Entity Card `2011:1645` (COMPONENT_SET: `State` Default / Active / Hover / Pressed × `Collapse` Off / On; `Right Icon` BOOLEAN default true, `Focused` BOOLEAN; 5 instances in the file)
 - **React:** `EntityCard` (a `<button>` wrapping an `EntityItem`)
 - **Audited:** 2026-10-25, via a read-only `use_figma` read of the set, its nested instances, the doc-page text and `tokens.json`

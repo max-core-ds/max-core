@@ -1,6 +1,6 @@
 # Audit — Stacked List page (Phase 4.5)
 
-- **Figma page:** Stacked List `2080:11622`, working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** Stacked List `2080:11622`, Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Masters:** Stacked List `2080:23144` (COMPONENT_SET: `Type` Default / Social / Ride row / Delivery row / Media row / Product / Booking / Items grid / Transport; text, boolean and swap props per type; `Items Slot`) · `_Share Item` `2087:7987` (`Type` Item / Avatar / Danger / Warning / Success; `Title`, `Icon instance`) · internals (`_Image Placeholder`, `_Social Avatar Group`, `_Media Action`, `_Ride Avatar`, `_Transport Image`, pay logos …)
 - **React:** `StackedList` + `StackedListRow` (`variant` default / social / media / product) · `ShareItem` (`tone`, `icon`, `avatar`, `label`)
 - **Scope:** the four built row types + Share Item. Ride / Delivery / Booking / Items grid / Transport rows stay **deferred** (PROGRESS → Deferred); Items grid is covered by laying `ShareItem`s out in a row.

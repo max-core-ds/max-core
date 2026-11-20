@@ -1,6 +1,6 @@
 # Audit — Date picker page (Phase 4.5)
 
-- **Figma page:** Date picker `2070:9816`, working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** Date picker `2070:9816`, Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Masters:** `_Day Item` `2070:11287` (19 variants: Range None/Today/Start/End/Middle/Active × State Default/Hover/Pressed × Disabled), `_Weekday Header` `2070:11504`, Calendar Pane `2472:2567` (Month / Month Year), `_Date Picker Footer` `2070:11651`, Date Picker `2486:6242` (Type Date/Month/Year Picker; Show Footer, Show 6th row), Dual Date Picker `2499:12472`, Input Date Picker `2499:14039`
 - **React:** `DatePicker`, `DualDatePicker`, `DateInput` (react-day-picker restyled; see memory `project-datepicker-react-build`)
 - **Audited:** 2026-10-24, via read-only `use_figma` reads of every master (bindings, nested variants, icon fills), master screenshots, the doc-page text and `tokens.json`

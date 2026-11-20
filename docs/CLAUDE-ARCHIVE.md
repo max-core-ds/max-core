@@ -7,7 +7,7 @@ Max Core este un design system B2B end-to-end cu 3 layere:
 2. **Layer 2 — Plugin export JSON + audit WCAG** (în dezvoltare)
 3. **Layer 3 — React + Tailwind codegen** (în dezvoltare)
 
-**Fișier Figma:** `ouyi08XxN4l4VCsao1nNQu`
+**Fișier Figma:** `sX5tikviuBEhNbu2iPVya5` (`Max Core`)
 
 **Scopul principal:** eliminarea rupturii Figma ↔ Cod. Designer schimbă în Figma → export JSON → UI actualizat automat.
 

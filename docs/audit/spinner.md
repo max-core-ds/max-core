@@ -1,6 +1,6 @@
 # Audit — Spinner page (Phase 4.5)
 
-- **Figma page:** Spinner `51:181`, working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** Spinner `51:181`, Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Master:** Spinner `7192:12` (Size S/M/L/XL × Style Brand/Neutral/Inverse = 12 variants; `Show %` BOOLEAN, XL only)
 - **React:** `Spinner`
 - **Audited:** 2026-10-24, via read-only `use_figma` bound-variable reads, a master screenshot and doc-page text

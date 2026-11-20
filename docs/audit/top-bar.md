@@ -1,6 +1,6 @@
 # Audit — Top Bar page (Phase 4.5)
 
-- **Figma page:** Top Bar `2014:916`, working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** Top Bar `2014:916`, Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Masters:** Top Bar Desktop `2015:1175` (COMPONENT_SET: `Elevated` off / on; SLOTs `Leading slot`, `Center Slot`, `Trailing slot`) · Top Bar Mobile `2106:4460` (COMPONENT_SET: `Type` Mobile / Standard × `Elevated` off / on; `Left icon` / `Right icon` INSTANCE_SWAP, `Page title` TEXT, `Show right` BOOLEAN)
 - **React:** `TopBar` (`variant` desktop / mobile, `type` standard / mobile, `elevated`, `leading` / `center` / `trailing`)
 - **Audited:** 2026-10-25, via read-only `use_figma` reads of both sets (props, anatomy, bindings, gradient strokes, nested button variants, doc-page text) and `tokens.json`

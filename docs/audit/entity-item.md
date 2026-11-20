@@ -1,6 +1,6 @@
 # Audit — Entity Item page (Phase 4.5)
 
-- **Figma page:** Entity Item `2177:19`, working file `sX5tikviuBEhNbu2iPVya5` (doc frame `7224:12680`)
+- **Figma page:** Entity Item `2177:19`, Max Core file `sX5tikviuBEhNbu2iPVya5` (doc frame `7224:12680`)
 - **Master:** Entity Item `2597:2582` (COMPONENT_SET: `Type` User / Workspace; `Username`, `Subtitle`, `Workspace Title`, `Workspace Helper` TEXT; `Show Subtitle` BOOLEAN, default false)
 - **React:** `EntityItem` (leading slot + title / subtitle + trailing slot; collapses in a rail)
 - **Audited:** 2026-10-24, via a read-only `use_figma` read of the set, the doc-page text and `tokens.json`

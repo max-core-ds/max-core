@@ -1,6 +1,6 @@
 # Audit — Content blocks page (Phase 4.5)
 
-- **Figma page:** Content blocks `2860:8116`, working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** Content blocks `2860:8116`, Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Masters:** Heading Block `2874:2` (`Text` TEXT), Text Block `2874:4` (`Text` TEXT), Image Placeholder `2876:2` (no properties), all standalone COMPONENTs
 - **React:** `HeadingBlock`, `TextBlock`, `ImagePlaceholder`
 - **Audited:** 2026-10-24, via a read-only `use_figma` bound-variable read (the page has no doc text beyond the masters)

@@ -1,6 +1,6 @@
 # Audit — Time picker page (Phase 4.5)
 
-- **Figma page:** Time picker `2094:3643` (doc frame `7182:27`), working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** Time picker `2094:3643` (doc frame `7182:27`), Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Master:** Time Picker `2166:40`, a standalone COMPONENT (no properties): Container → Selector bar + Hour / Minutes / Period columns
 - **React:** `TimePicker` (`mode` inline | popover; `time.ts` helpers)
 - **Audited:** 2026-10-24, via read-only `use_figma` bound-variable reads, a master screenshot and doc-page text

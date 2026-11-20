@@ -1,6 +1,6 @@
 # Audit — Divider page (Phase 4.5)
 
-- **Figma page:** Divider `2080:11623`, working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** Divider `2080:11623`, Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Master:** Divider `7190:12` (one variant, Style=Default): a horizontal VECTOR line
 - **React:** `Divider` (Base UI `Separator`); also used inside `ItemList`
 - **Audited:** 2026-10-24, via read-only `use_figma` bound-variable reads + doc-page text

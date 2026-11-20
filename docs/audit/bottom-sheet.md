@@ -1,6 +1,6 @@
 # Build — Bottom sheet page (Phase 4 Batch 11)
 
-- **Figma page:** Bottom sheet `2075:11331`, working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** Bottom sheet `2075:11331`, Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Masters:** Bottom Sheet Builder `2867:1937` (Show Handle / Show Header / Show Footer, Title, Body Content + Footer Content slots) · Premade Bottom sheets `2881:9262` (`Type`, 18 values, each a Builder instance with slot content)
 - **React:** new `BottomSheet` on Base UI `Drawer` (`@base-ui/react@1.5`, already a dependency) + `Premade` story recipes. Shared `utils/close-button.tsx` (✕ styles + icon, now used by `Card` too).
 - **Built:** 2026-10-25, from read-only `use_figma` reads of the builder (props, anatomy, bindings), every premade's slot content, nested button variants, and `tokens.json` (`--Organism/Bottom Sheet/*`)

@@ -1,6 +1,6 @@
 # Audit — Status Dot page (Phase 4.5)
 
-- **Figma page:** Status Dot `2170:19`, working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** Status Dot `2170:19`, Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Master:** `.Status-avatar` `7201:12` (Type Default/Busy/Away/DND/Offline = 5 variants)
 - **React:** `StatusDot`
 - **Audited:** 2026-10-24, via read-only `use_figma` bound-variable reads, a master screenshot and the doc-page text

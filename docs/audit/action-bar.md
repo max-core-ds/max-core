@@ -1,6 +1,6 @@
 # Audit — Action bar page (Phase 4.5)
 
-- **Figma page:** Action bar `4036:11309`, working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** Action bar `4036:11309`, Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Master:** Action Bar `4112:93` (COMPONENT_SET: `Direction` Horizontal / Vertical; `Button Group` SLOT, 4 preferred Button sets; 26 instances)
 - **React:** `ActionBar` (layout-only; Buttons as children)
 - **Audited:** 2026-10-25, via a read-only `use_figma` read of the set, its slot content, the doc-page text and `tokens.json`
