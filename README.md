@@ -322,12 +322,14 @@ Consumers get a Dependabot PR (or run `pnpm update`); see
 [`docs/consuming.md`](docs/consuming.md). Template projects upgrade the same way; their build
 lists any new tokens to add to their Figma copy.
 
-The first consumer is this repo's own showcase (`apps/showcase`, its own pnpm root): after
-each release, bump it to the new version and commit its lockfile (the token must be exported):
+The first consumer is this repo's own showcase (`apps/showcase`, its own pnpm root, a
+**template** consumer). After each release, on a branch, bump the packages **and** copy the
+released `tokens.json` (the token must be exported):
 
 ```bash
 pnpm -C apps/showcase update '@max-core-ds/*@<version>'
-pnpm showcase                        # check it renders, then commit apps/showcase/{package.json,pnpm-lock.yaml}
+git show v<version>:packages/tokens/src/tokens.json > apps/showcase/tokens/tokens.json
+pnpm showcase                        # check it renders, then commit apps/showcase/{package.json,pnpm-lock.yaml,tokens/tokens.json}
 ```
 
 ### Manual fallback (without Publish)

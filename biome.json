@@ -15,7 +15,8 @@
       "storybook-static",
       "coverage",
       "figma-node-links/pages",
-      "figma-node-links/*.json"
+      "figma-node-links/*.json",
+      "apps/showcase/src/styles/brand"
     ]
   },
   "linter": {
