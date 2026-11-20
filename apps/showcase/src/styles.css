@@ -12,13 +12,14 @@
    package so the utility classes the components use are emitted. */
 @import '@max-core-ds/react/styles.css';
 
-/* Bring in the design tokens. This file defines :root and
+/* Our brand's design tokens, generated from tokens/tokens.json by `pnpm tokens`
+ * (max-core-tokens build, which also runs the contract check). This file defines the :root and
  * [data-theme="dark"] CSS variable scopes. */
-@import '@max-core-ds/tokens/tokens.css';
+@import './styles/brand/tokens.css';
 
 /* Tailwind layer generated from the same tokens: type-* / glass-* utilities,
    font-sans / font-brand, shadow-* / ease-* names, breakpoints. */
-@import '@max-core-ds/tokens/theme.css';
+@import './styles/brand/theme.css';
 
 /* This app's own sources. */
 @source './**/*.{ts,tsx}';

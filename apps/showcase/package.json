@@ -5,8 +5,9 @@
   "type": "module",
   "packageManager": "pnpm@11.2.2",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "tokens": "max-core-tokens build --input tokens/tokens.json --out src/styles/brand",
+    "dev": "pnpm tokens && vite",
+    "build": "pnpm tokens && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"
   },

@@ -1404,6 +1404,39 @@ from `node_modules`) surface here before they hit another project.
 
 ---
 
+# Phase 8 — Showcase as a template consumer (2026-11-20)
+
+> ✅ Built 2026-11-20 on `feat/showcase-template-consumer` (PR pending). Prompt:
+> `prompts/showcase-template-consumer.md`.
+
+`apps/showcase` now follows `docs/template-usage.md` instead of `docs/consuming.md`'s token
+imports: it builds its token CSS from its own `tokens/tokens.json`.
+
+- `tokens/tokens.json` = our tokens at the **release tag** the showcase installs (v0.1.1), the
+  stand-in for a template team's plugin Publish. Not `main`: unreleased token changes wouldn't
+  match the released components.
+- Scripts: `tokens` = `max-core-tokens build --input tokens/tokens.json --out src/styles/brand`;
+  `dev` / `build` run it first. `src/styles/brand/` is gitignored. `src/styles.css` imports the
+  generated files.
+- No CI change: the `showcase` job's `pnpm build` now also runs the CLI + contract check.
+- `biome.json` ignores `apps/showcase/src/styles/brand`: Biome 1.9 reads only the root
+  `.gitignore`, so the showcase's own `.gitignore` didn't keep the generated CSS out of `pnpm lint`.
+- After each release: bump the packages **and** copy `tokens.json` from the new tag (README →
+  Release workflow → D).
+- Verified: generated CSS byte-identical to published 0.1.1 (1113 vars, 18 utilities; contract
+  649 vars OK); typecheck + build; screenshots light + dark unchanged; a scratch copy with
+  primary 600 → `#E11D48` turned every accent rose; a scratch copy without `radius/md` failed
+  `max-core-tokens check` naming `--radius-md` (exit 1).
+- Doc fix: `template-usage.md`'s CSS block imported `./brand/…`, which only resolves from a CSS
+  file inside `src/styles/`; now `./styles/brand/…` from `src/styles.css`, with the path rule
+  spelled out.
+- CLI finding (not fixed): `max-core-tokens` has no `--help`; with no `--input` it looks for its
+  own `src/tokens.json` and fails.
+- Option, not decided: give the showcase its own Figma copy published by the plugin to
+  `apps/showcase/tokens/tokens.json`. Easier with per-file Publish settings (backlog → Tooling).
+
+---
+
 # On-demand backlog
 
 Left out of the Phase 4 lean v1s by design; build when a real project needs them.
@@ -1415,3 +1448,21 @@ Left out of the Phase 4 lean v1s by design; build when a real project needs them
 - **Bottom Sheet** — 5 of the 18 premades: Transport / Map, Ride ×2 and Booking / Place List
   wait on their Stacked List rows; Sort duplicates Settings in the master.
 - **Date Picker** — Figma's month/year scroll wheels (grids today, by decision).
+
+## Tooling
+
+- **Figma plugin — per-file Publish settings.** "Publish to GitHub" saves owner / repo / base
+  branch / path / add-changeset per person per machine (`figma.clientStorage`, `code.ts`), so
+  someone who publishes from two Figma files (e.g. "Max Core" → `packages/tokens/src/tokens.json`
+  and a showcase copy → `apps/showcase/tokens/tokens.json`) has to switch the path by hand; a
+  slip publishes one brand into the other's file.
+  - Save those settings **in the Figma file** (`figma.root.setPluginData`) so each file remembers
+    where its tokens go.
+  - Keep the GitHub token in `clientStorage` (per user); it must never go into a file others can open.
+  - A file with no saved settings starts from `DEFAULT_SETTINGS`, or seeds once from the old
+    clientStorage values (migration).
+  - Show the target `owner/repo:path` next to the Publish button: a duplicated file keeps its
+    source's settings.
+  - Changeset on `packages/figma-plugin`. Tests: `github.ts` is already Node-tested with a stubbed
+    `fetch`; the settings round-trip needs a `figma.root` stub.
+  - Why: a showcase Figma copy (optional for Phase 8) and every template team's own copy.

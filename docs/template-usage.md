@@ -15,6 +15,10 @@ You don't need this repo's pipeline (CI, Changesets, releases). You need:
 If you need different components or component structure, this isn't the right setup — fork
 the repo instead.
 
+**Working reference:** [`apps/showcase`](../apps/showcase/README.md) in this repo follows this
+page step by step (`tokens/tokens.json`, the `tokens` script, the generated imports in
+`src/styles.css`).
+
 ## 1. Figma: your copy
 
 1. Duplicate the Max Core Figma file (ask the Max Core team for access).
@@ -66,15 +70,19 @@ package manager and its settings.)
 The generator comes from your installed `@max-core-ds/tokens`, so it always matches your
 `@max-core-ds/react` version. Add `src/styles/brand/` to `.gitignore` (it's generated).
 
-**CSS** — the consumer block, with your generated files in place of the Max Core ones:
+**CSS** — the consumer block, with your generated files in place of the Max Core ones. The
+imports are relative to the CSS file; with `--out src/styles/brand` and the entry at
+`src/styles.css`:
 
 ```css
 @import 'tailwindcss';
 @import '@max-core-ds/react/styles.css';
-@import './brand/tokens.css';
-@import './brand/theme.css';
+@import './styles/brand/tokens.css';
+@import './styles/brand/theme.css';
 @import '@max-core-ds/tokens/scrollbar.css'; /* optional */
 ```
+
+Load the Inter font as in [`consuming.md`](consuming.md) (`@fontsource/inter`).
 
 ## 4. The contract check
 

@@ -89,8 +89,11 @@ export function SignUp() {
 
 Storybook in this repo documents every component and its props.
 
-`apps/showcase` in this repo is a working reference: a standalone Vite app that installs the
-published packages exactly as described here (its own `.npmrc`, CSS imports in `src/styles.css`).
+`apps/showcase` in this repo is a standalone Vite app that installs the published packages as
+described here (its own `.npmrc`, CSS setup in `src/styles.css`). It's a **template** consumer:
+it generates its token CSS from its own `tokens.json` ([`template-usage.md`](template-usage.md))
+instead of importing `tokens.css` + `theme.css`. Apart from those two imports, the setup on this
+page is the same.
 
 ## 6. Staying up to date
 
