@@ -1,6 +1,6 @@
 # Audit — Selection Controls page (Phase 4.5)
 
-- **Figma page:** Selection Controls `42:1366`, working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** Selection Controls `42:1366`, Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Masters:** Checkbox `2145:366` / .Checkbox-options `120:4621` · Radio Button `2145:10514` / .Radio-button option `48:943` · Switch `2145:10878` / .Switch-options `48:1282`
 - **React:** `Checkbox`, `Radio` (+ `RadioGroup`), `Switch`, `utils/validation.ts`
 - **Audited:** 2026-10-24, via read-only `use_figma` bound-variable reads + doc-page text

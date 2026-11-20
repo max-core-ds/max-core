@@ -1,6 +1,6 @@
 # Audit — Inputs page (Phase 4.5)
 
-- **Figma page:** Inputs `30:1348`, working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** Inputs `30:1348`, Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Masters (wrapper → options):** Base Input `119:13953` → `.Base-Input-Options` `32:1451` · Bottom Line Input `2278:3919` → `119:8125` · Stepper `120:2869` → `120:2418` · Textarea `120:2171` → `120:1238` · Select Input `2316:1293` → `2301:2906` · Multi-Select Input `2316:2233` → `.Multiselect-Options` `2316:1728`
 - **React:** `Input`, `BottomLineInput`, `Stepper`, `Textarea`, `SelectInput`, `Multiselect` (+ the shared `utils/field.ts`; the DatePicker/TimePicker triggers share it)
 - **Audited:** 2026-10-24, via read-only `use_figma` bound-variable reads of all 12 sets, a wrapper screenshot, and `tokens.json`

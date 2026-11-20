@@ -1,6 +1,6 @@
 # Audit — Side bar page (Phase 4.5)
 
-- **Figma page:** Side bar `2011:1382`, working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** Side bar `2011:1382`, Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Master:** Side Bar `2011:2473` (COMPONENT_SET: `Collapsed` off / On; SLOTs `Top Bar`, `Header`, `Sub Header`, `Body`, `Footer`, each with a `Show …` BOOLEAN — Sub Header hidden by default)
 - **React:** `SideBar` (`collapsed` / `defaultCollapsed` / `onCollapsedChange`, `topBar` / `header` / `subHeader` / `children` / `footer`) + `SideBarTrigger`
 - **Audited:** 2026-10-25, via read-only `use_figma` reads of the set (props, anatomy, bindings, stroke weights + gradient, slot contents, icon fills), the doc-page text and `tokens.json`

@@ -1,6 +1,6 @@
 # Audit — Data table page (Phase 4.5)
 
-- **Figma page:** Data table `2040:1575`, working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** Data table `2040:1575`, Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Masters audited:** Table Builder `2768:2` (Desktop) · `_Header Row` `2044:1561` · `_Header Cell` `2043:3165` + `_Header Cell / Label` `2056:17687` · `_Table Cell` `5092:17952` / `2046:10615` · `_Table Row` `2043:2698` (Default / Hover / Selected) · `_Table Footer` `2050:60145` (Desktop) · `_Cell Item / Rating Group` + `Rating Star` · `_Cell Item / Simple Text`, `.Text-simple`, `Product Info`, `Flags`, `Time Tracker` (content reference)
 - **React:** `DataTable` (column config, sort, selection, `header` / `footer` / new `footerInfo`) + primitives `Table` / `HeaderCell` / `TableRow` / `TableCell` + `RatingStars`
 - **Scope:** the desktop table. Still **deferred** (PROGRESS → Deferred): Table Builder Mobile (scroll + Button footer), `_Table Row Expanded` (the cell's Show Icon chevron), the `_Table` header content (Title Group, Stats Line / Cards, View Switcher), and the prebuilt tables.

@@ -1,6 +1,6 @@
 # Audit — Tabs page (Phase 4.5)
 
-- **Figma page:** Tabs `2074:10898`, working file `sX5tikviuBEhNbu2iPVya5` (two doc frames: Switcher `7248:19`, Tabs Group `7249:35`)
+- **Figma page:** Tabs `2074:10898`, Max Core file `sX5tikviuBEhNbu2iPVya5` (two doc frames: Switcher `7248:19`, Tabs Group `7249:35`)
 - **Masters:** Navigation / Switcher `3076:24` (COMPONENT, no props) + `.Switcher Item` `3074:36` (State Default/Active/Hover/Pressed, Label, Show Icon, Icon swap); Navigation / Tabs Group `2050:50076` (Show Divider BOOLEAN, Tabs Slots SLOT) + `_Internals / Tab Item` `2050:50042` (State × Fill Underline/Full × Disabled × Start × End, 30 variants)
 - **React:** `Switcher` (Base UI ToggleGroup), `Tabs` (Base UI Tabs)
 - **Audited:** 2026-10-24, via read-only `use_figma` bound-variable reads of all four masters, master screenshots, the doc-page text and `tokens.json`

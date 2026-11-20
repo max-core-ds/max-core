@@ -1,6 +1,6 @@
 # Audit — Stats card page (Phase 4.5)
 
-- **Figma page:** Stats card `2015:2240`, working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** Stats card `2015:2240`, Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Masters:** Stats card big `4920:960` (`Size` Desktop / Mobile; Heading, Top Actions, Tabs, Filter, Footer Action swaps; Show … booleans) · Stats card small `4912:713` (`Size` S 360 / L 560; Icon Leading / Trailing, Heading, Legend, Chart, Action Bar) · Stats card compact `4986:434` (`Size` Vertical / Horizontal) · `Chart` `4733:1424` (14 types × XS / S / M / L) · `_Chart Legend` (+ Item) · `_Metric Standard` / `_Metric Headline` / `_Metric Avatars` / `_Metric User` · `_Comparison Metric` / `_Comparison Group`
 - **React:** `StatsCard` (`variant` big / small / compact, `size`, `orientation`, slots) + `StatsMetric`, `StatsComparison`, `ChartLegend`, `chartTheme`
 - **Audited:** 2026-10-25, via read-only `use_figma` reads of the three card sets, every internal, the Chart set's colour / stroke / text bindings, and `tokens.json`

@@ -1,6 +1,6 @@
 # Audit — ScollBar page (Phase 4.5)
 
-- **Figma page:** "ScollBar" (sic) `2344:8063` (doc frame `7160:626`), working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** "ScollBar" (sic) `2344:8063` (doc frame `7160:626`), Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Master:** ScrollBar `2344:8067`, a standalone COMPONENT (no set, no properties)
 - **React:** `ScrollBar` (standalone + driven rail), `ScrollArea` (external rail driven by scroll), the
   `.styled-scrollbar` / `.scrollbar-none` utilities (`@max-core-ds/tokens/scrollbar.css`)

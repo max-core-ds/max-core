@@ -4,7 +4,7 @@
 
 <!-- docs/CLAUDE-ARCHIVE.md holds completed per-component QA logs. Not auto-imported (too large) — read it on demand when a task touches past component work. -->
 <!-- React library work: PROGRESS.md tracks live component + Figma audit status; prompts/ holds copy-paste guides (component-audit.md, implement-component.md) for continuing that work in a fresh conversation. -->
-<!-- Two Figma files (see Context general): sX5tikviuBEhNbu2iPVya5 (pt-razvan-max-core) is the current working/cross-check file; ouyi08XxN4l4VCsao1nNQu is the production/original. -->
+<!-- One Figma file (see Context general): sX5tikviuBEhNbu2iPVya5 ("Max Core", owned by Max) is the source of truth for the DS. -->
 
 
 
@@ -15,8 +15,7 @@ Max Core este un design system B2B end-to-end cu 3 layere:
 2. **Layer 2 — Plugin export JSON + audit WCAG** (in dezvoltare)
 3. **Layer 3 — React + Tailwind codegen** (in dezvoltare)
 
-**Fisier Figma (curent — working, cross-check + tree export):** `sX5tikviuBEhNbu2iPVya5` (`pt-razvan-max-core`)
-**Fisier Figma (productie / original):** `ouyi08XxN4l4VCsao1nNQu`
+**Fisier Figma (sursa de adevar a DS-ului):** `sX5tikviuBEhNbu2iPVya5` (`Max Core`)
 
 **Faza curenta:** QA + Showcase + Token test per componenta (Faza 2+3). Detalii componente deja completate → `docs/CLAUDE-ARCHIVE.md`.
 

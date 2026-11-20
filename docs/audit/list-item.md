@@ -1,6 +1,6 @@
 # Audit — List item page (Phase 4.5)
 
-- **Figma page:** List item `127:1524` (doc frame `7198:17`), working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** List item `127:1524` (doc frame `7198:17`), Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Master:** List item `7198:27` (State Default/Active/Hover/Pressed × Disabled × Collapsed = 10 variants)
 - **React:** `ListItem` (also used by `ItemList`, `SideBar`)
 - **Audited:** 2026-10-24, via read-only `use_figma` bound-variable reads + doc-page text. The colours and

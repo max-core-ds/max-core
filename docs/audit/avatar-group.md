@@ -1,6 +1,6 @@
 # Audit — Avatar group page (Phase 4.5)
 
-- **Figma page:** Avatar group `2177:1782`, working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** Avatar group `2177:1782`, Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Master:** Avatar group `2177:1795` (standalone COMPONENT; `Show Counter` BOOLEAN default true, `Slot` SLOT accepting Avatar; 4 instances)
 - **React:** `AvatarGroup` (data-driven `avatars[]` + `max` → +N counter)
 - **Audited:** 2026-10-25, via a read-only `use_figma` read of the master, the doc-page text and `tokens.json`

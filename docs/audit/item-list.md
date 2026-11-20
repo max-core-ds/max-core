@@ -1,6 +1,6 @@
 # Audit — Item List page (Phase 4.5)
 
-- **Figma page:** Item List `2330:6702`, working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** Item List `2330:6702`, Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Master:** Item List `2344:4399` (standalone COMPONENT + Slot). Also used by the Select Input / Multi-Select Input wrappers' `State=Active` (`2316:1293`, `2316:2233`).
 - **React:** `ItemList`; now also the popup of `SelectInput` and `Multiselect mode="list"` (carry-overs from the Inputs page)
 - **Audited:** 2026-10-24, via read-only `use_figma` reads of the master, the Active states of Select / Multiselect, and the doc-page text. `ItemList` itself was rebuilt to the master on 2026-10-23 (`4941d6f`); this pass re-confirms it.

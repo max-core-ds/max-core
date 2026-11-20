@@ -1,6 +1,6 @@
 # Audit — Segmented controls page (Phase 4.5)
 
-- **Figma page:** Segmented controls `2106:573`, working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** Segmented controls `2106:573`, Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Masters:** Segmented control `7181:19` (set with 1 variant `Options=Default` + `Items` SLOT, 2 preferred values) · .Segmented control-item `7181:28` (`Active` off/on, `Item text`)
 - **React:** `SegmentedControl` (Base UI ToggleGroup + Toggle)
 - **Audited:** 2026-10-24, via read-only `use_figma` bound-variable reads + doc-page text

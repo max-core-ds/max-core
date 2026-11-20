@@ -1,6 +1,6 @@
 # Audit — Buttons page (Phase 4.5)
 
-- **Figma page:** Buttons `7:16`, working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** Buttons `7:16`, Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Masters:** Button `119:5296` / .Button-options `11:146` · Icon Only Button `3311:14619` / .Icon-Only-Options `19:4462` · Split Button `7145:412` / .Split-Button-Option `7145:430` · FAB `7145:12327` / _FAB options `7145:12348` · Button Link `19:5415`
 - **React:** `Button`, `IconOnlyButton`, `SplitButton`, `Fab`, `LinkButton` (+ `utils/state-layer.ts`, `utils/focus-ring.ts`, `utils/tone.ts`)
 - **Audited:** 2026-10-24, via read-only `use_figma` bound-variable reads (ground truth) and the doc-page text

@@ -1,6 +1,6 @@
 # Audit — Search bar page (Phase 4.5)
 
-- **Figma page:** Search bar `2106:2`, working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** Search bar `2106:2`, Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Master:** Searchbar `2106:546` (one set, 6 variants: Size S/M/L × Button On/Off; no wrapper / states set)
 - **React:** `SearchBar` (also used size-S inside `ItemList`'s `search`)
 - **Audited:** 2026-10-24, via read-only `use_figma` bound-variable reads, a master screenshot, the doc-page text and `tokens.json`

@@ -1,6 +1,6 @@
 # Audit — Pin page (Phase 4.5)
 
-- **Figma page:** Pin `2080:24931`, working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** Pin `2080:24931`, Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Master:** Pin `2080:24877` (COMPONENT_SET: `Type` Icon / Avatar; `Icon instance` INSTANCE_SWAP, default `li:user`; 5 instances)
 - **React:** `Pin` (circle + tail, content as children)
 - **Audited:** 2026-10-25, via a read-only `use_figma` read of the set, the doc-page text and `tokens.json`

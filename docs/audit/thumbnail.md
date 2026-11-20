@@ -1,6 +1,6 @@
 # Audit — Thumbnail page (Phase 4.5)
 
-- **Figma page:** Thumbnail `2595:2477`, working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** Thumbnail `2595:2477`, Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Master:** Thumbnail `2595:2478` (Size XS/S/M/L/XL × Type Circle/Rounded/Square = 15 variants)
 - **React:** `Thumbnail`
 - **Audited:** 2026-10-24, via a read-only `use_figma` bound-variable read and the doc-page text

@@ -1,6 +1,6 @@
 # Audit — Dialogs page (Phase 4.5)
 
-- **Figma page:** Dialogs `2106:621`, working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** Dialogs `2106:621`, Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Master:** Dialogs `2106:793` (COMPONENT_SET: `Type` Horizontal / Vertical × `Tone` Danger / Success / Warning; `Show Icon` BOOLEAN; `Icon Danger` / `Icon Success` / `Icon Warning` INSTANCE_SWAP)
 - **React:** `Dialog` (Base UI Dialog; `tone`, `showIcon`, `icon`, `actionsLayout` = Type, `actions`)
 - **Audited:** 2026-10-25, via a read-only `use_figma` read of the set, its icon / Action Bar instances, the doc-page text and `tokens.json`

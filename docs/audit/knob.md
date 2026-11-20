@@ -1,6 +1,6 @@
 # Audit — Knob page (Phase 4.5)
 
-- **Figma page:** Knob `2508:11169` (doc frame `7152:11894`), working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** Knob `2508:11169` (doc frame `7152:11894`), Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Master:** Knob `7152:11904` (State Default/Hover/Pressed × Disabled off/on = 4 variants; `Focused` BOOLEAN)
 - **React:** `Knob` (a visual atom; used as the thumb in `Range`)
 - **Audited:** 2026-10-24, via read-only `use_figma` bound-variable reads + doc-page text

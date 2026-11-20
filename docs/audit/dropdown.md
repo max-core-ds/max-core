@@ -1,6 +1,6 @@
 # Audit — Dropdown page (Phase 4.5)
 
-- **Figma page:** Dropdown `127:1526`, working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** Dropdown `127:1526`, Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Master:** Dropdown `2380:9128` (standalone COMPONENT: `Trigger` INSTANCE_SWAP, default Entity Card, 7 preferred values; `Active` BOOLEAN)
 - **React:** `Dropdown` (Base UI Menu); its popup (`DropdownMenu`, internal) is now shared with `SplitButton`'s chevron menu
 - **Audited:** 2026-10-24, via read-only `use_figma` bound-variable reads of the master, a master screenshot, the doc-page text and `tokens.json`
@@ -36,4 +36,4 @@ Legend: ✅ match · ❌ finding · n/a. Class: **[code]** · **[designer]** · 
 ## For the designer (→ PROGRESS.md)
 - `-- Molecule/Dropdown/Item List Padding` is bound on the left of the list container only (the list is 4px narrower than the trigger, flush right). React aligns the list with the trigger.
 - `zIndex/dropdown` (doc page) isn't exported as a variable.
-- The trigger's 7 preferred values can't be resolved from the working file (library keys).
+- The trigger's 7 preferred values can't be resolved from the Max Core file (library keys).

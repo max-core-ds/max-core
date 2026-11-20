@@ -16,7 +16,7 @@ The library targets React first. The two downstream consumers are (1) `npm insta
 
 ```
 ┌─ Figma file (designer source of truth) ──────────────────────┐
-│  ouyi08XxN4l4VCsao1nNQu                                      │
+│  sX5tikviuBEhNbu2iPVya5 ("Max Core")                        │
 └──────────────────────────┬───────────────────────────────────┘
                            │
 ┌─ Figma Plugin (Layer 2) ─▼───────────────────────────────────┐
@@ -93,7 +93,7 @@ Two consumers of "Max Core" can ship identical component code but visually diffe
 | **Filesystem** | Already covered by Claude Code's built-in tools | — |
 | **Chrome DevTools MCP** (optional, later) | Browser-driven verification of Storybook | Add when verification work starts |
 
-The Dev Mode MCP gives me direct access to the Figma file already referenced in `CLAUDE.md` (`ouyi08XxN4l4VCsao1nNQu`). I'll be able to fetch variable definitions, component metadata, and screenshots without you exporting anything manually.
+The Dev Mode MCP gives me direct access to the Figma file already referenced in `CLAUDE.md` (`sX5tikviuBEhNbu2iPVya5`, "Max Core"). I'll be able to fetch variable definitions, component metadata, and screenshots without you exporting anything manually.
 
 ---
 
@@ -584,7 +584,7 @@ README "Status" gaps, not component work.
 - **Never hand-edit colour values in `tokens.json`.** Fix contrast in component code (with a
   comment) or flag it to the designer.
 - **One page = one audit doc, one review with the user, one commit** (the user pushes).
-- File: working file `sX5tikviuBEhNbu2iPVya5`. Call `create_session` first; re-auth via
+- File: Max Core file `sX5tikviuBEhNbu2iPVya5`. Call `create_session` first; re-auth via
   `/plugin` if MCP auth dropped.
 
 ## Per-page process
@@ -678,7 +678,7 @@ Max answered (`~/projects/max-core-answers-for-dev.md`): **everything in Figma d
 - the whole Primitives collection (z-index, motion, breakpoints, …)
 - **the 720 component tokens** (Q8: "the code should read the component tokens directly")
 
-He also made three rounds of fixes in the **working file `sX5tikviuBEhNbu2iPVya5`**, including accent ramp, text colours, states, API changes and new tokens.
+He also made three rounds of fixes in the **Max Core file `sX5tikviuBEhNbu2iPVya5`**, including accent ramp, text colours, states, API changes and new tokens.
 
 The order the user chose: **(A) exporter → (B) one pass per component → (C) publishing pipeline.**
 The token format is stabilised first, each of the 55 components is touched once, and publishing is automated on the final format.

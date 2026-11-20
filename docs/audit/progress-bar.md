@@ -1,6 +1,6 @@
 # Audit — Progress Bar page (Phase 4.5)
 
-- **Figma page:** Progress Bar `2205:29`, working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** Progress Bar `2205:29`, Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Master:** Progress bar `7193:12` (Value 0/25/50/75/100 × Size S/M/L = 15 variants; `Show Range Labels` BOOLEAN, default on)
 - **React:** `ProgressBar` (track + fill shared with `Range` via `utils/progress.ts`)
 - **Audited:** 2026-10-24, via read-only `use_figma` bound-variable reads and the doc-page text

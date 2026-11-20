@@ -1,6 +1,6 @@
 # Audit — Tag page (Phase 4.5)
 
-- **Figma page:** Tag `2183:5208`, working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** Tag `2183:5208`, Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Masters:** Tag `121:2323` (wrapper: State Default/Focused/Hover/Pressed × Disabled, 5 variants) · .Tag-option `54:34` (Size S/M × Variant Primary/Outline/Ghost × Tone ×4 × Selected; 32 variants, Selected=On on Primary only)
 - **React:** `Tag`
 - **Audited:** 2026-10-24, via read-only `use_figma` bound-variable reads + doc-page text

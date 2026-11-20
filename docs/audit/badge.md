@@ -1,6 +1,6 @@
 # Audit — Badge page (Phase 4.5)
 
-- **Figma page:** Badge `2183:163`, working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** Badge `2183:163`, Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Master:** Badge `51:656` (Size S/M/L × Variant Default/Outline/Ghost × Tone ×4 = 36 variants; `Label` text)
 - **React:** `Badge`
 - **Audited:** 2026-10-24, via read-only `use_figma` bound-variable reads + doc-page text

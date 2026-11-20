@@ -1,6 +1,6 @@
 # Audit — Range page (Phase 4.5)
 
-- **Figma page:** Range `2092:8276`, working file `sX5tikviuBEhNbu2iPVya5` (doc frame `7255:11`)
+- **Figma page:** Range `2092:8276`, Max Core file `sX5tikviuBEhNbu2iPVya5` (doc frame `7255:11`)
 - **Master:** Range `2508:11276` (standalone COMPONENT, 300 × 33: `Show Tooltip` BOOLEAN, default true; Progress bar `Value=50, Size=S` with its Labels on; a `Knob` frame = Tooltips `Position=Bottom` + Knob `Default`, gap 16)
 - **React:** `Range` (Base UI Slider, composed from the Progress Bar track/fill, `Knob` and the Tooltip surface)
 - **Audited:** 2026-10-24, via read-only `use_figma` bound-variable reads of the master, the doc-page text and `tokens.json`

@@ -1,6 +1,6 @@
 # Audit — Avatar page (Phase 4.5)
 
-- **Figma page:** Avatar `2169:5639`, working file `sX5tikviuBEhNbu2iPVya5`
+- **Figma page:** Avatar `2169:5639`, Max Core file `sX5tikviuBEhNbu2iPVya5`
 - **Master:** Avatar `2169:5640` (Size XS/S/M/L/XL × Type Image/Text = 10 variants; `ShowStatus` BOOLEAN, `Text` TEXT)
 - **React:** `Avatar` (+ `StatusDot`, audited on its own page)
 - **Audited:** 2026-10-24, via read-only `use_figma` bound-variable reads and the doc-page text
